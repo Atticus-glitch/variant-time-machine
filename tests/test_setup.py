@@ -1,0 +1,46 @@
+"""Tests for package configuration and setup utilities."""
+
+from pathlib import Path
+
+import variant_time_machine
+from variant_time_machine.config import (
+    DATA_DIR,
+    IMPORTANT_FILES,
+    PROJECT_ROOT,
+    REQUIRED_DIRECTORIES,
+)
+from variant_time_machine.utils import missing_paths, path_is_within
+
+
+def test_package_imports() -> None:
+    """The local package should expose its initial version."""
+    assert variant_time_machine.__version__ == "0.1.0"
+
+
+def test_expected_directories_exist() -> None:
+    """Every configured project directory should resolve and exist."""
+    assert not missing_paths(REQUIRED_DIRECTORIES)
+    assert all(path.is_dir() for path in REQUIRED_DIRECTORIES)
+
+
+def test_important_files_exist() -> None:
+    """Core project files should be available from configuration."""
+    assert not missing_paths(IMPORTANT_FILES)
+
+
+def test_configuration_stays_inside_repository() -> None:
+    """Configured storage paths must not escape the repository."""
+    configured_paths = (*REQUIRED_DIRECTORIES, *IMPORTANT_FILES, DATA_DIR)
+    assert PROJECT_ROOT.name == "variant-time-machine"
+    assert all(path_is_within(path, PROJECT_ROOT) for path in configured_paths)
+
+
+def test_setup_path_utilities(tmp_path: Path) -> None:
+    """Path checks should detect missing files and reject outside locations."""
+    present = tmp_path / "present.txt"
+    present.write_text("test", encoding="utf-8")
+    absent = tmp_path / "absent.txt"
+
+    assert missing_paths([present, absent]) == [absent.resolve()]
+    assert path_is_within(present, tmp_path)
+    assert not path_is_within(PROJECT_ROOT.parent, PROJECT_ROOT)

@@ -1,0 +1,30 @@
+# Research Notebook
+
+## 2026-07-26 — Project Setup
+
+### Work Recorded
+
+- Created the initial repository structure, Python package, documentation, validation script, and automated setup tests.
+- Defined the initial research question: can only historically available information predict whether a ClinVar VUS later moves toward harmful, moves toward harmless, or remains uncertain?
+- Deliberately did not download data, select releases, implement matching, or train models during setup.
+
+### Initial Assumptions
+
+- Archived ClinVar releases provide enough information to identify a meaningful set of variants classified as uncertain at an older date.
+- At least one stable identifier or a carefully normalized genomic representation can support cross-release matching.
+- Classification categories and review status will require explicit, version-aware definitions.
+- The date on which each candidate feature became available can be determined well enough to avoid using future information.
+
+### Next Actions
+
+1. Choose two scientifically useful ClinVar release dates.
+2. Compare available archive formats and fields, especially identifiers and classification dates.
+3. Design and manually inspect a small proof-of-concept cross-release match.
+
+### Unresolved Questions
+
+- Which release interval provides enough reclassifications without making historical fields incomparable?
+- Should classifications be analyzed at the variant, condition, or variant-condition level?
+- Which ClinVar identifier remains most stable across the selected formats and dates?
+- How should conflicting submissions, multiple conditions, withdrawn records, and merged records be labeled?
+- What evidence proves that a feature was available by the older cutoff date?
