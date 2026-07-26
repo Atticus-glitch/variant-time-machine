@@ -1,5 +1,6 @@
 """Central paths and project-wide configuration."""
 
+from datetime import date
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -11,6 +12,17 @@ OUTPUTS_DIR = PROJECT_ROOT / "outputs"
 FIGURES_DIR = OUTPUTS_DIR / "figures"
 TABLES_DIR = OUTPUTS_DIR / "tables"
 MODELS_DIR = OUTPUTS_DIR / "models"
+
+OLDER_CLINVAR_RELEASE = date(2022, 1, 6)
+NEWER_CLINVAR_RELEASE = date(2024, 1, 4)
+OLDER_VARIANT_SUMMARY_URL = (
+    "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/archive/2022/"
+    "variant_summary_2022-01.txt.gz"
+)
+NEWER_VARIANT_SUMMARY_URL = (
+    "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/archive/2024/"
+    "variant_summary_2024-01.txt.gz"
+)
 
 REQUIRED_DIRECTORIES: tuple[Path, ...] = (
     PROJECT_ROOT / "research",

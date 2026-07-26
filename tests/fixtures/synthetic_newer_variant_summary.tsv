@@ -1,0 +1,7 @@
+AlleleID	VariationID	ClinicalSignificance	Assembly
+100	1000	Pathogenic	GRCh37
+100	1000	Pathogenic	GRCh38
+101	2001	Benign	GRCh38
+102	2002	Uncertain significance	GRCh38
+102	2003	Likely benign	GRCh38
+999	1003	Pathogenic	GRCh38

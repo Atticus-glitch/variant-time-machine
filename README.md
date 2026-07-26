@@ -12,7 +12,7 @@ Variant Time Machine is a computational genetics research project investigating 
 
 ## Current Status
 
-The repository contains the initial project structure, research plan, documentation, validation tooling, and placeholders for the future data pipeline. No ClinVar releases have been selected or processed, and no models have been trained or evaluated.
+The repository contains the initial project structure, research plan, documentation, validation tooling, selected candidate release dates, and an identifier-only matcher tested with synthetic fixtures. No real ClinVar release has been downloaded or processed, no biological outcomes have been assigned, and no models have been trained or evaluated.
 
 ## Planned Workflow
 

@@ -6,7 +6,9 @@ The planned study is a retrospective historical prediction experiment. Variants 
 
 ## Matching Before Modeling
 
-Stable identifiers will be preferred, then checked against available genomic assembly, coordinate, reference allele, alternate allele, and condition information. A small sample will be manually reviewed before scaling. Match confidence and exclusion reasons will be retained so sensitivity analyses can test whether conclusions depend on uncertain matches.
+The identifier-only proof of concept collapses duplicate assembly rows and first seeks an exact `AlleleID + VariationID` pair. A unique Allele ID candidate with a changed Variation ID is retained under a separate status. Multiple candidates, identifier conflicts, complex included records, and unmatched records are preserved rather than resolved automatically. Coordinates, RCVs, conditions, genes, names, and rs numbers are not used as sole keys. Coordinate fallback and VCV/RCV lifecycle resolution will require separate validation before implementation.
+
+The proof of concept is tested only with explicitly synthetic fixtures. Before scaling, a small sample from the selected 2022-01-06 and 2024-01-04 snapshots must be manually reviewed. Match rule, candidate count, original identifiers, classifications, and exclusion reason will be retained for audit.
 
 ## Leakage Control
 
@@ -16,4 +18,4 @@ Every predictor must have been available by the older release cutoff. Fields fro
 
 The evaluation will begin with majority and “all remain uncertain” baselines, followed by a transparent biological score and logistic regression. A tree-based model may be tested later. Held-out variants or later time periods will be used for evaluation. Planned metrics include accuracy, balanced accuracy, per-class precision, recall, F1 score, confusion matrices, and calibration where appropriate. Class balance and uncertainty must accompany any metric.
 
-No data have been processed and no models have been run yet.
+No real ClinVar release has been downloaded or processed, no biological outcomes have been assigned, and no models have been run yet.

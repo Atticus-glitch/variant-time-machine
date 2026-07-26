@@ -1,0 +1,8 @@
+AlleleID	VariationID	ClinicalSignificance	Assembly
+100	1000	Uncertain significance	GRCh37
+100	1000	Uncertain significance	GRCh38
+101	1001	Uncertain significance	GRCh38
+102	1002	Uncertain significance	GRCh38
+103	1003	Uncertain significance	GRCh38
+104	1004	Uncertain significance	GRCh38
+105	clinvar:6000	Uncertain significance	GRCh38
