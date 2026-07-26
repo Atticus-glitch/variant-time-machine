@@ -1,8 +1,8 @@
 # Variant Time Machine
 
-**Early research and development — results are not yet available.**
+**Early research and development: results are not yet available.**
 
-Variant Time Machine is a computational genetics research project investigating whether information available about a ClinVar variant at an earlier date can predict its later reclassification. The project will follow variants initially labeled as variants of uncertain significance (VUS), build a carefully time-stamped dataset, and compare explainable predictive approaches. Its purpose is to support research prioritization, not clinical decision-making.
+Variant Time Machine is a computational genetics research project that asks whether information available about a ClinVar variant at an earlier date can help predict its later classification. I plan to follow variants first labeled as variants of uncertain significance (VUS), build a carefully dated dataset, and compare explainable prediction methods. The goal is to help prioritize research questions, not to make clinical decisions.
 
 > This project is for research and education only. It is not a medical device, does not provide diagnoses, and must not be used to make healthcare decisions.
 
@@ -12,7 +12,7 @@ Variant Time Machine is a computational genetics research project investigating 
 
 ## Current Status
 
-The repository contains the initial project structure, research plan, documentation, validation tooling, selected candidate release dates, and an identifier-only matcher tested with synthetic fixtures. No real ClinVar release has been downloaded or processed, no biological outcomes have been assigned, and no models have been trained or evaluated.
+The repository now contains the project structure, research plan, documentation, setup checks, selected candidate release dates, and an identifier-only matcher tested with synthetic examples. I have not downloaded or processed a real ClinVar release, assigned biological outcomes, or trained or evaluated any models.
 
 ## Planned Workflow
 

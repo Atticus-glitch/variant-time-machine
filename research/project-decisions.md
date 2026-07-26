@@ -18,8 +18,8 @@ A wrong cross-release match creates a wrong outcome label, and no model can repa
 
 ## Initial Release Pair: January 2022 to January 2024
 
-The first planned comparison uses the archived monthly `variant_summary` releases dated 2022-01-06 and 2024-01-04. Both are official first-Thursday snapshots and are two years apart. They also precede the late-January 2024 addition of somatic-classification columns, reducing one source of schema mismatch. This is a provisional design choice: class counts, actual headers, missingness, and matching yield must be checked before it becomes the final study interval.
+I chose the archived monthly `variant_summary` releases dated 2022-01-06 and 2024-01-04 for the first comparison. Both are official first-Thursday snapshots, and they are two years apart. They also come before ClinVar added somatic-classification columns later in January 2024, which avoids one known schema difference. This choice is not final. I still need to check the actual headers, class counts, missing values, and number of usable matches.
 
 ## Begin With Identifier-Only Matching
 
-The proof of concept accepts exact `AlleleID + VariationID` pairs and separately flags unique Allele ID matches where the Variation ID changed. It preserves multiple candidates, conflicting identifiers, complex records, and unmatched records instead of forcing a match. Coordinate fallback and lifecycle resolution are deferred because they require assembly-aware normalization and VCV/RCV replacement evidence.
+The proof of concept accepts exact `AlleleID + VariationID` pairs and separately flags unique Allele ID matches when the Variation ID changed. It keeps multiple candidates, conflicting identifiers, complex records, and unmatched records visible instead of forcing a match. I am delaying coordinate matching and record-history checks because they require careful genome-assembly normalization and evidence from VCV or RCV records.

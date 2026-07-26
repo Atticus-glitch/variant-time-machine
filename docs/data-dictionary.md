@@ -5,7 +5,7 @@ This is a preliminary schema for discussion. Exact names and types will be final
 | Field | Proposed meaning | Leakage or quality note |
 | --- | --- | --- |
 | `allele_id` | ClinVar Allele ID for an individual allele | Primary allele-level identifier; column context matters |
-| `variation_id` | ClinVar Variation ID for a classified allele set | Can represent complex sets and can change through record lifecycle events |
+| `variation_id` | ClinVar Variation ID for a classified allele set | Can represent complex sets and can change during a record's history |
 | `older_release_date` | Date of the predictor ClinVar release | Defines the information cutoff |
 | `newer_release_date` | Date of the outcome ClinVar release | Must be later than the cutoff |
 | `older_classification` | Classification in the older release | Inclusion should require an explicit uncertain definition |

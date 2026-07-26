@@ -43,7 +43,7 @@
 - Both selected files exist in official NCBI archive listings and are exactly two years apart.
 - Both snapshots precede a documented 2024-01-29 `variant_summary` schema expansion for somatic classifications.
 - `AlleleID + VariationID` is treated as the strongest key available in `variant_summary`, while neither identifier is assumed to be permanently simple or one-to-one.
-- The selected interval is provisional until actual headers, class counts, missingness, and manually reviewed matches are examined.
+- The selected interval is a starting choice until I examine the actual headers, class counts, missing values, and manually reviewed matches.
 
 ### Next Actions
 
@@ -54,6 +54,6 @@
 ### Unresolved Questions
 
 - Should VUS subtiers (`VUS-high`, `VUS-mid`, and `VUS-low`) be included in the initial cohort?
-- How often does `AlleleID` persist when `VariationID` changes, and what fraction requires XML lifecycle resolution?
+- How often does `AlleleID` stay the same when `VariationID` changes, and what fraction requires XML record-history checks?
 - What manually reviewed error rate is acceptable before full-release matching?
 - Should the final study remain variant-level or move to condition-specific RCV records?

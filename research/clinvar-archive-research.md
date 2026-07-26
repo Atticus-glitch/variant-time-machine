@@ -42,7 +42,7 @@ https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/archive/<year>/variant_su
 4. If an Allele ID has multiple later candidates, report ambiguity rather than choosing one.
 5. If a Variation ID points to a different Allele ID, report conflicting identifiers.
 6. Do not automatically match included or complex identifiers.
-7. Do not infer mergers, replacements, or deletions from absence or coordinate similarity. Those cases require VCV/RCV lifecycle information.
+7. Do not infer mergers, replacements, or deletions from absence or coordinate similarity. Those cases require VCV or RCV record-history information.
 8. Do not assign harmful, harmless, or uncertain outcomes until classification mapping rules are separately reviewed.
 
 The current code implements only these identifier rules on synthetic fixtures. Coordinate fallback and full-release processing remain unimplemented.
@@ -51,8 +51,8 @@ The current code implements only these identifier rules on synthetic fixtures. C
 
 - `variant_summary` includes variants with genomic locations and can contain multiple rows per biological allele because of assemblies.
 - `ClinicalSignificance` is a variant-level aggregate and may combine evidence associated with different conditions.
-- A missing later row could reflect deletion, replacement, changed mapping, or another lifecycle event.
-- Archived files can be modified by NCBI for privacy remediation, so retrieval dates and checksums must be recorded.
+- A missing later row could reflect deletion, replacement, changed mapping, or another change in the record's history.
+- NCBI may modify archived files to remove private information that was submitted by mistake, so retrieval dates and checksums must be recorded.
 - Current field documentation may differ from old headers; parsing must use each file's actual header rather than fixed column positions.
 - File sizes are large enough that downloads should be deliberate, checksum-verified, and excluded from Git.
 
