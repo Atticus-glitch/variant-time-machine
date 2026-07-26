@@ -1,9 +1,8 @@
-"""Future baseline and explainable model training functions."""
+"""Placeholder for model training after timeline validation."""
 
 
 def train_baseline_models() -> None:
-    """Train models only after timeline data and evaluation splits are verified."""
+    """Refuse model training while historical matching is unvalidated."""
     raise NotImplementedError(
-        "Model training is deferred until matching, labels, and temporal splits "
-        "pass review."
+        "Model training will begin only after historical matching has been validated."
     )

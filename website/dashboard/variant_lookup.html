@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Look up one current ClinVar variant through the official NCBI API"
+    >
+    <title>ClinVar Variant Lookup | Variant Time Machine</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/lookup.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header lookup-header">
+      <div class="header-grid">
+        <div>
+          <p class="eyebrow">Live official data connection</p>
+          <h1>ClinVar Variant Lookup</h1>
+          <p class="subtitle">
+            Request one current variant summary from NCBI ClinVar. No large dataset
+            is downloaded.
+          </p>
+        </div>
+        <div class="milestone-card">
+          <span>Example identifier</span>
+          <strong>14206 or VCV000014206</strong>
+          <small>Official NCBI documented example</small>
+        </div>
+      </div>
+    </header>
+
+    <main class="lookup-main">
+      <p><a class="text-link" href="/">Return to dashboard</a></p>
+
+      <section class="panel" aria-labelledby="lookup-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">One record</p>
+            <h2 id="lookup-title">Enter a ClinVar Identifier</h2>
+          </div>
+          <p>Use a numeric Variation ID or a VCV accession.</p>
+        </div>
+        <form id="lookup-form" class="lookup-form">
+          <label for="variant-id">Variant identifier</label>
+          <div class="lookup-controls">
+            <input
+              id="variant-id"
+              name="variant_id"
+              value="14206"
+              autocomplete="off"
+              required
+            >
+            <button type="submit">Look up variant</button>
+          </div>
+        </form>
+        <p class="plain-language-note">
+          This displays current submitted ClinVar information for research and
+          education. It is not medical advice and does not interpret a person's DNA.
+        </p>
+      </section>
+
+      <section class="panel" aria-labelledby="result-title">
+        <div class="section-heading compact">
+          <div>
+            <p class="section-number">API response</p>
+            <h2 id="result-title">Lookup Result</h2>
+          </div>
+        </div>
+        <p id="lookup-status" class="loading">No lookup has been run.</p>
+        <dl id="lookup-result" class="status-list lookup-result" hidden>
+          <div><dt>Variant</dt><dd id="result-variant"></dd></div>
+          <div><dt>Variation ID</dt><dd id="result-variation-id"></dd></div>
+          <div><dt>Gene</dt><dd id="result-gene"></dd></div>
+          <div><dt>Classification</dt><dd id="result-classification"></dd></div>
+          <div><dt>Conditions</dt><dd id="result-conditions"></dd></div>
+          <div><dt>Review status</dt><dd id="result-review"></dd></div>
+          <div><dt>Evidence summary</dt><dd id="result-evidence"></dd></div>
+          <div><dt>Source</dt><dd><a id="result-source" target="_blank" rel="noreferrer"></a></dd></div>
+        </dl>
+      </section>
+    </main>
+
+    <footer>
+      <p>Current ClinVar summary from the official NCBI E-utilities API.</p>
+      <p>Not a diagnostic or medical interpretation service.</p>
+    </footer>
+  </body>
+</html>

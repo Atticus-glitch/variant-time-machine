@@ -54,7 +54,7 @@ def test_setup_path_utilities(tmp_path: Path) -> None:
 
 def test_setup_validator_accepts_valid_setup() -> None:
     """Validator functions should accept the supported local setup."""
-    assert validate_python_version((3, 11)) == []
+    assert validate_python_version((3, 12)) == []
     assert validate_paths() == []
     assert validate_dependencies({"pathlib": "pathlib"}) == []
     assert validate_dataframe_round_trip() == []
@@ -67,7 +67,7 @@ def test_setup_validator_reports_failures(tmp_path: Path) -> None:
     directory_instead_of_file = tmp_path / "not-a-file"
     directory_instead_of_file.mkdir()
 
-    assert "Python 3.11 or newer" in validate_python_version((3, 10))[0]
+    assert "Python 3.12 is required" in validate_python_version((3, 14))[0]
     path_errors = validate_paths(
         [file_instead_of_directory], [directory_instead_of_file]
     )

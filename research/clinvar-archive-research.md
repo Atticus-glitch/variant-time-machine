@@ -1,5 +1,9 @@
 # ClinVar Archive and Identifier Research
 
+> Pilot update, 2026-07-26: this earlier TSV research remains background for a
+> possible full-table study. The active 16-record pilot uses official VCV XML
+> releases dated 2024-02-01 and 2025-02-06. See `historical-data-plan.md`.
+
 Research performed 2026-07-26 using official NCBI sources. No ClinVar release files were downloaded.
 
 ## Selected Initial Releases
@@ -45,7 +49,7 @@ https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/archive/<year>/variant_su
 7. Do not infer mergers, replacements, or deletions from absence or coordinate similarity. Those cases require VCV or RCV record-history information.
 8. Do not assign harmful, harmless, or uncertain outcomes until classification mapping rules are separately reviewed.
 
-The current code implements only these identifier rules on synthetic fixtures. Coordinate fallback and full-release processing remain unimplemented.
+The current code implements these identifier rules and a compressed-table parser. It has been tested only with synthetic fixtures and a tiny compressed test file. It has not been run on either selected real release, and coordinate fallback remains unimplemented.
 
 ## Known Limitations
 
@@ -54,7 +58,7 @@ The current code implements only these identifier rules on synthetic fixtures. C
 - A missing later row could reflect deletion, replacement, changed mapping, or another change in the record's history.
 - NCBI may modify archived files to remove private information that was submitted by mistake, so retrieval dates and checksums must be recorded.
 - Current field documentation may differ from old headers; parsing must use each file's actual header rather than fixed column positions.
-- File sizes are large enough that downloads should be deliberate, checksum-verified, and excluded from Git.
+- File sizes are large enough that downloads should be deliberate, checked against the official listed size, hash-recorded, and excluded from Git.
 
 ## Official Sources
 

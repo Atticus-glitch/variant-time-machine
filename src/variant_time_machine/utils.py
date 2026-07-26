@@ -4,12 +4,14 @@ import logging
 from collections.abc import Iterable
 from pathlib import Path
 
+from variant_time_machine.config import DEFAULT_LOG_FORMAT, DEFAULT_LOG_LEVEL
 
-def configure_logging(level: int = logging.INFO) -> None:
+
+def configure_logging(level: int = DEFAULT_LOG_LEVEL) -> None:
     """Configure concise console logging for project scripts."""
     logging.basicConfig(
         level=level,
-        format="%(levelname)s: %(message)s",
+        format=DEFAULT_LOG_FORMAT,
         force=True,
     )
 

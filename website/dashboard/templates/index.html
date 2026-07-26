@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Beginner-friendly local research dashboard for Variant Time Machine"
+    >
+    <title>Variant Time Machine | Development Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-grid">
+        <div>
+          <p class="eyebrow">Local development dashboard</p>
+          <h1 id="project-name">Variant Time Machine</h1>
+          <p class="subtitle">
+            A simple view of what the project does, what exists now, and what comes next.
+          </p>
+        </div>
+        <div class="milestone-card">
+          <span>Current milestone</span>
+          <strong id="current-milestone">Historical ClinVar matching pipeline</strong>
+          <small>No machine learning yet</small>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel explanation-panel" aria-labelledby="explanation-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">Start here</p>
+            <h2 id="explanation-title">What Is This Project?</h2>
+          </div>
+        </div>
+        <p id="project-explanation" class="large-explanation">
+          Loading the project explanation...
+        </p>
+        <p class="plain-language-note">
+          The goal right now is to match old and new records correctly. A reliable
+          small dataset matters more than an impressive but incorrect model.
+        </p>
+      </section>
+
+      <section class="panel connection-panel" aria-labelledby="connection-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">Live data</p>
+            <h2 id="connection-title">Live ClinVar Connection</h2>
+          </div>
+          <a class="text-link" href="/variant_lookup.html">Open variant lookup</a>
+        </div>
+        <div class="connection-grid">
+          <div>
+            <span class="connection-label">Connection status</span>
+            <strong id="clinvar-connection-status">Not connected</strong>
+            <p id="clinvar-connection-message">
+              No live lookup has been run in this dashboard session.
+            </p>
+          </div>
+          <dl class="lookup-summary">
+            <div><dt>Variant</dt><dd id="last-variant">No lookup yet</dd></div>
+            <div><dt>Gene</dt><dd id="last-gene">No lookup yet</dd></div>
+            <div>
+              <dt>Classification</dt>
+              <dd id="last-classification">No lookup yet</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="panel history-panel" aria-labelledby="history-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">Manual research</p>
+            <h2 id="history-title">Historical Variant Comparison</h2>
+          </div>
+          <a class="text-link" href="/historical_pilot.html">Open historical pilot</a>
+        </div>
+        <dl class="history-grid">
+          <div>
+            <dt>Total verified variants</dt>
+            <dd id="verified-total">0</dd>
+          </div>
+          <div>
+            <dt>Variants with classification changes</dt>
+            <dd id="verified-changes">0</dd>
+          </div>
+          <div>
+            <dt>Last verified comparison</dt>
+            <dd id="last-comparison">None yet</dd>
+          </div>
+        </dl>
+        <p class="plain-language-note">
+          The table is intentionally empty until a real variant history is checked
+          against official sources.
+        </p>
+      </section>
+
+      <section class="panel progress-panel" aria-labelledby="progress-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">01</p>
+            <h2 id="progress-title">Project Progress</h2>
+          </div>
+          <p>These statuses describe development progress, not scientific results.</p>
+        </div>
+        <div id="progress-grid" class="progress-grid" aria-live="polite">
+          <p class="loading">Loading project progress...</p>
+        </div>
+      </section>
+
+      <section class="panel dataset-panel" aria-labelledby="dataset-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">02</p>
+            <h2 id="dataset-title">Fake Example Dataset</h2>
+          </div>
+          <p id="dataset-source">Loading source...</p>
+        </div>
+        <p id="dataset-notice" class="synthetic-notice">
+          Synthetic example data. Not real scientific results.
+        </p>
+        <p class="table-introduction">
+          This table demonstrates the kind of comparison the project will eventually
+          make. The variant records and outcomes below are examples only.
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Variant ID</th>
+                <th scope="col">Gene</th>
+                <th scope="col">Old Classification</th>
+                <th scope="col">New Classification</th>
+                <th scope="col">Result</th>
+              </tr>
+            </thead>
+            <tbody id="dataset-body">
+              <tr><td colspan="5" class="loading">Loading fake example data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel folders-panel" aria-labelledby="folders-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">03</p>
+            <h2 id="folders-title">What Each Folder Does</h2>
+          </div>
+          <p>A map of the repository so it is easier to know where to look.</p>
+        </div>
+        <div id="folder-grid" class="folder-grid" aria-live="polite">
+          <p class="loading">Loading folder guide...</p>
+        </div>
+      </section>
+
+      <section class="panel next-panel" aria-labelledby="next-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">04</p>
+            <h2 id="next-title">Next Three Tasks</h2>
+          </div>
+          <p>Small steps that move the scientific milestone forward.</p>
+        </div>
+        <ol id="next-tasks" class="next-tasks">
+          <li class="loading">Loading next tasks...</li>
+        </ol>
+      </section>
+
+      <div class="two-column-grid">
+        <section class="panel status-panel" aria-labelledby="status-title">
+          <div class="section-heading compact">
+            <div>
+              <p class="section-number">05</p>
+              <h2 id="status-title">Computer Status</h2>
+            </div>
+          </div>
+          <dl id="system-status" class="status-list" aria-live="polite">
+            <div><dt>Status</dt><dd class="loading">Loading...</dd></div>
+          </dl>
+        </section>
+
+        <section class="panel notes-panel" aria-labelledby="notes-title">
+          <div class="section-heading compact">
+            <div>
+              <p class="section-number">06</p>
+              <h2 id="notes-title">Latest Research Note</h2>
+            </div>
+          </div>
+          <article>
+            <h3 id="notes-entry-title">Loading latest entry...</h3>
+            <pre id="notes-entry-content" class="notes-content"></pre>
+          </article>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <p>Local development dashboard. Not a medical device or diagnostic tool.</p>
+      <p id="dashboard-health">Connecting to local API...</p>
+    </footer>
+  </body>
+</html>

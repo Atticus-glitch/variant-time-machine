@@ -26,6 +26,7 @@ DEPENDENCIES: dict[str, str] = {
     "tqdm": "tqdm",
     "pyarrow": "pyarrow",
     "pydantic": "pydantic",
+    "Flask": "flask",
     "pytest": "pytest",
     "ruff": "ruff",
 }
@@ -34,9 +35,12 @@ DEPENDENCIES: dict[str, str] = {
 def validate_python_version(
     version: tuple[int, int] = sys.version_info[:2],
 ) -> list[str]:
-    """Return an error when Python is older than the supported minimum."""
-    if version < (3, 11):
-        return [f"Python 3.11 or newer is required; found {version[0]}.{version[1]}."]
+    """Return an error unless the documented Python 3.12 environment is active."""
+    if version != (3, 12):
+        return [
+            "Python 3.12 is required for the documented research environment; "
+            f"found {version[0]}.{version[1]}."
+        ]
     return []
 
 

@@ -1,5 +1,6 @@
 # Python environments and caches
 .venv/
+.venv312/
 venv/
 env/
 __pycache__/
@@ -32,8 +33,13 @@ data/raw/*
 !data/raw/.gitkeep
 data/interim/*
 !data/interim/.gitkeep
+!data/interim/example_clinvar_timeline.csv
 data/processed/*
 !data/processed/.gitkeep
+data/manual_review/extracted/*
+!data/manual_review/extracted/.gitkeep
+data/manual_review/pilot_review.json
+*.xml.gz
 
 # Generated outputs
 outputs/figures/*

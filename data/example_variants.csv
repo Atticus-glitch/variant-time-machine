@@ -1,0 +1,5 @@
+Data Label,Variant ID,Gene,Old Classification,New Classification,Result
+Synthetic example data. Not real scientific results.,Variant001,CFTR,VUS,Pathogenic,Became more concerning
+Synthetic example data. Not real scientific results.,Variant002,BRCA1,VUS,Benign,Became less concerning
+Synthetic example data. Not real scientific results.,Variant003,LDLR,VUS,VUS,Stayed uncertain
+Synthetic example data. Not real scientific results.,Variant004,DEMO_GENE,VUS,Conflicting,Needs careful review

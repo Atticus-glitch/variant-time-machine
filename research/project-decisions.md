@@ -16,10 +16,18 @@ The outcome classes may be imbalanced, with many variants remaining uncertain. A
 
 A wrong cross-release match creates a wrong outcome label, and no model can repair that error. Variant names, genome assemblies, coordinates, alleles, conditions, and identifiers can change or be represented differently. Matching rules must prioritize stable identifiers, verify genomic details, preserve ambiguous cases, and be tested through manual inspection before large-scale processing.
 
-## Initial Release Pair: January 2022 to January 2024
+## Pilot Release Pair: February 2024 to February 2025
 
-I chose the archived monthly `variant_summary` releases dated 2022-01-06 and 2024-01-04 for the first comparison. Both are official first-Thursday snapshots, and they are two years apart. They also come before ClinVar added somatic-classification columns later in January 2024, which avoids one known schema difference. This choice is not final. I still need to check the actual headers, class counts, missing values, and number of usable matches.
+The small record-history pilot uses official VCV XML releases dated 2024-02-01 and 2025-02-06. Both use the same current XML family, but their documented schema revisions are 2.0 and 2.2. XML was selected because it exposes record status, replacement history, and separate germline, somatic clinical impact, and oncogenicity classifications. The older January 2022 to January 2024 `variant_summary` choice is deferred rather than treated as pilot evidence.
 
 ## Begin With Identifier-Only Matching
 
 The proof of concept accepts exact `AlleleID + VariationID` pairs and separately flags unique Allele ID matches when the Variation ID changed. It keeps multiple candidates, conflicting identifiers, complex records, and unmatched records visible instead of forcing a match. I am delaying coordinate matching and record-history checks because they require careful genome-assembly normalization and evidence from VCV or RCV records.
+
+## Stream Instead of Retaining Full XML
+
+The two source archives total about 7.89 GB compressed. The pilot reads compressed XML directly from NCBI and retains only requested records. A metadata-only dry run is the default safe first step, and a body scan requires an explicit confirmation flag. Transfer and output limits fail closed. This saves local disk but does not remove the possible multi-gigabyte bandwidth cost.
+
+## Require Human Review
+
+The pilot selects 16 current records through official NCBI ESummary and leaves all historical fields blank before extraction. Exact Variation ID matches are automatic candidates only. Record status, replacement metadata, missing values, and separate classification types remain visible. No automatic comparison is scientifically verified until a person checks both archived records and saves a review state.

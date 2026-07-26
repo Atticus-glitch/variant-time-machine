@@ -5,7 +5,8 @@ This file will record official documentation, release dates, retrieval dates, UR
 ## ClinVar
 
 - Intended role: historical and newer variant classifications, submission evidence, review status, and stable identifiers.
-- Initial releases selected for testing: monthly `variant_summary` snapshots dated 2022-01-06 and 2024-01-04.
+- Earlier full-table candidates: monthly `variant_summary` snapshots dated 2022-01-06 and 2024-01-04. These were not downloaded and are not the active pilot pair.
+- Active bounded pilot: VCV XML releases dated 2024-02-01 and 2025-02-06, with official sizes and MD5 values recorded in `historical-data-plan.md`.
 - [ClinVar release cycle](https://www.ncbi.nlm.nih.gov/clinvar/docs/release_cycle/): monthly archive timing; accessed 2026-07-26.
 - [ClinVar FTP guide](https://www.ncbi.nlm.nih.gov/clinvar/docs/ftp_primer/): format coverage and use; accessed 2026-07-26.
 - [ClinVar identifiers](https://www.ncbi.nlm.nih.gov/clinvar/docs/identifiers/): relationships among Allele ID, Variation ID, VCV, RCV, and SCV; accessed 2026-07-26.

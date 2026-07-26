@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Review the small real-data ClinVar historical pilot">
+    <title>Historical Pilot | Variant Time Machine</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/pilot.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header lookup-header">
+      <div class="header-grid">
+        <div>
+          <p class="eyebrow">Small real-data research step</p>
+          <h1>Historical Pilot</h1>
+          <p class="subtitle">
+            Compare 16 selected ClinVar records across two official archived XML
+            releases, then record a human review decision.
+          </p>
+        </div>
+        <div class="milestone-card">
+          <span>Safety rule</span>
+          <strong>Automatic matches are not verified results</strong>
+          <small>No machine learning</small>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <p><a class="text-link" href="/">Return to dashboard</a></p>
+
+      <section class="panel" aria-labelledby="release-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">Official sources</p>
+            <h2 id="release-title">Release Pair</h2>
+          </div>
+          <p>VCV XML from the same current format family, with documented schema revisions.</p>
+        </div>
+        <div id="release-grid" class="release-grid">
+          <p class="loading">Loading release metadata...</p>
+        </div>
+        <p id="pilot-data-status" class="plain-language-note">Loading extraction status...</p>
+      </section>
+
+      <section class="panel" aria-labelledby="review-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">Manual verification</p>
+            <h2 id="review-title">Pilot Records</h2>
+          </div>
+          <p>Current facts come from NCBI ESummary. Blank archive fields mean no claim was made.</p>
+        </div>
+        <p id="pilot-notice" class="synthetic-notice pilot-notice">Loading source notice...</p>
+        <div class="table-scroll">
+          <table class="pilot-table">
+            <thead>
+              <tr>
+                <th scope="col">Variant</th>
+                <th scope="col">Current NCBI facts</th>
+                <th scope="col">2024-02 archive</th>
+                <th scope="col">2025-02 archive</th>
+                <th scope="col">Automatic comparison</th>
+                <th scope="col">Human review</th>
+              </tr>
+            </thead>
+            <tbody id="pilot-body">
+              <tr><td colspan="6" class="loading">Loading pilot records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Research and education only. Not a medical interpretation.</p>
+      <p>Full ClinVar archives are not retained by this pilot.</p>
+    </footer>
+  </body>
+</html>

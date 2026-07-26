@@ -1,9 +1,9 @@
-"""Future model evaluation functions."""
+"""Placeholder for model evaluation after timeline and model validation."""
 
 
 def evaluate_models() -> None:
-    """Evaluate models using a predeclared leakage-safe protocol."""
+    """Refuse evaluation until a valid historical dataset and model exist."""
     raise NotImplementedError(
-        "Evaluation is deferred until outcomes, baselines, and held-out tests "
-        "are defined."
+        "Model evaluation is unavailable until historical matching is validated "
+        "and a model is intentionally trained."
     )
