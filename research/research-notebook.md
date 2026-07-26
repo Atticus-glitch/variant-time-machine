@@ -1,6 +1,6 @@
-# Research Notebook
+# 2026-07-26 Research Notebook
 
-## 2026-07-26 — Project Setup
+## Project Setup
 
 ### Work Recorded
 

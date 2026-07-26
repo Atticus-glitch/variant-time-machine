@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Explainable historical prediction of uncertain genetic variant reclassification"
 readme = "README.md"
 requires-python = ">=3.11"
-license = { file = "LICENSE" }
+license = "MIT"
 authors = [{ name = "Variant Time Machine contributors" }]
 dependencies = [
     "matplotlib>=3.8",
@@ -20,6 +20,9 @@ dependencies = [
     "scikit-learn>=1.4",
     "tqdm>=4.66",
 ]
+
+[project.urls]
+Repository = "https://github.com/Atticus-glitch/variant-time-machine"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.4"]

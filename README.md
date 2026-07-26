@@ -30,7 +30,7 @@ The repository contains the initial project structure, research plan, documentat
 - `research/`: research plan, notebook, decisions, sources, and competition notes
 - `data/`: local raw, interim, and processed data areas; downloaded data are not committed
 - `src/variant_time_machine/`: installable Python package and future pipeline modules
-- `scripts/`: command-line entry points and setup validation
+- `scripts/`: setup validation and honest placeholders for future pipeline commands
 - `notebooks/`: guidance for exploratory notebooks
 - `tests/`: automated setup and package tests
 - `outputs/`: generated figures, tables, and models

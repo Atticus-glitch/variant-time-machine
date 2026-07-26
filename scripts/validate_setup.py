@@ -4,6 +4,7 @@
 import importlib
 import sys
 import tempfile
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -15,7 +16,6 @@ from variant_time_machine.config import (  # noqa: E402
     IMPORTANT_FILES,
     REQUIRED_DIRECTORIES,
 )
-from variant_time_machine.utils import missing_paths  # noqa: E402
 
 DEPENDENCIES: dict[str, str] = {
     "pandas": "pandas",
@@ -31,24 +31,40 @@ DEPENDENCIES: dict[str, str] = {
 }
 
 
-def validate_paths() -> list[str]:
-    """Return errors for missing required directories or files."""
+def validate_python_version(
+    version: tuple[int, int] = sys.version_info[:2],
+) -> list[str]:
+    """Return an error when Python is older than the supported minimum."""
+    if version < (3, 11):
+        return [f"Python 3.11 or newer is required; found {version[0]}.{version[1]}."]
+    return []
+
+
+def validate_paths(
+    required_directories: Sequence[Path] = REQUIRED_DIRECTORIES,
+    important_files: Sequence[Path] = IMPORTANT_FILES,
+) -> list[str]:
+    """Return errors for missing or incorrectly typed project paths."""
     errors: list[str] = []
-    for path in missing_paths(REQUIRED_DIRECTORIES):
-        errors.append(f"Missing required directory: {path}")
-    for path in missing_paths(IMPORTANT_FILES):
-        errors.append(f"Missing important file: {path}")
+    for path in required_directories:
+        if not path.is_dir():
+            errors.append(f"Missing required directory: {path.resolve()}")
+    for path in important_files:
+        if not path.is_file():
+            errors.append(f"Missing important file: {path.resolve()}")
     return errors
 
 
-def validate_dependencies() -> list[str]:
+def validate_dependencies(
+    dependencies: Mapping[str, str] = DEPENDENCIES,
+) -> list[str]:
     """Return errors for dependencies that cannot be imported."""
     errors: list[str] = []
-    for display_name, module_name in DEPENDENCIES.items():
+    for display_name, module_name in dependencies.items():
         try:
             importlib.import_module(module_name)
-        except ImportError as exc:
-            errors.append(f"Cannot import {display_name}: {exc}")
+        except Exception as exc:
+            errors.append(f"Cannot import {display_name} ({type(exc).__name__}): {exc}")
     return errors
 
 
@@ -77,7 +93,8 @@ def main() -> int:
     print(f"Python: {sys.version.split()[0]}")
     print(f"Project root: {PROJECT_ROOT}")
 
-    errors = validate_paths()
+    errors = validate_python_version()
+    errors.extend(validate_paths())
     errors.extend(validate_dependencies())
     errors.extend(validate_dataframe_round_trip())
 
