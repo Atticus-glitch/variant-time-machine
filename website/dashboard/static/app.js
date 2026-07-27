@@ -128,6 +128,7 @@ function renderStatus(data) {
   renderHistoricalComparison(data.historical_comparison);
   renderTransferSafety(data.transfer_safety);
   renderCurrentPilot(data.current_pilot_variant);
+  renderResearchProgress(data.research_progress);
 
   const list = document.querySelector("#system-status");
   list.replaceChildren();
@@ -142,6 +143,30 @@ function renderStatus(data) {
     data.research_notes.title;
   document.querySelector("#notes-entry-content").textContent =
     data.research_notes.content;
+}
+
+function renderResearchProgress(progress) {
+  const list = document.querySelector("#research-progress");
+  list.replaceChildren();
+  const fields = [
+    ["Candidates selected", progress.candidates_selected],
+    ["Current VCV records retrieved", progress.current_records_retrieved],
+    ["Histories explored", progress.histories_explored],
+    ["Versions retrieved", progress.versions_retrieved],
+    ["Histories with germline changes", progress.histories_with_germline_change],
+    ["Histories manually verified", progress.manually_verified],
+    ["Recorded history transfer", `${progress.total_recorded_history_transfer_bytes.toLocaleString()} bytes`],
+    ["Local VCV pilot storage", progress.storage],
+  ];
+  for (const [label, value] of fields) {
+    const wrapper = document.createElement("div");
+    const term = document.createElement("dt");
+    const detail = document.createElement("dd");
+    term.textContent = label;
+    detail.textContent = value;
+    wrapper.append(term, detail);
+    list.append(wrapper);
+  }
 }
 
 function renderCurrentPilot(pilot) {

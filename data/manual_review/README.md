@@ -32,3 +32,37 @@ records and is limited to ten. Browser saves create `pilot_workspace.backup.json
 which is ignored by Git, before atomically replacing the main file. Current fields,
 manual past fields, exact classification categories, checklist answers, notes, sources,
 statuses, and timestamps stay together in each record.
+
+## VCV Version-History Artifacts
+
+The Version History Explorer is the normal pilot workflow. Its artifacts are ignored
+by Git except for `vcv_history/.gitkeep` and use this exact layout:
+
+```text
+data/manual_review/vcv_history/
+|-- .gitkeep
+|-- .vcv_history.lock
+`-- VCV#########/
+    |-- metadata.json
+    |-- versions.json
+    |-- comparisons.json
+    |-- manifest.json
+    |-- review.json
+    `-- raw/
+        |-- VCV#########.xml
+        `-- VCV#########.version.xml
+```
+
+The unversioned XML is the current EFetch response used to establish the latest
+official version. Versioned files are decoded XML text from individual exact-version
+EFetch responses. Raw XML text is saved whenever a response body was received,
+including a body later classified as missing or a parsing failure; request failures
+have no body. Therefore the exact set of files depends on the completed and partial
+outcomes.
+
+`metadata.json`, `versions.json`, `comparisons.json`, and `manifest.json` are
+automatic artifacts. `review.json` separately stores reviewer decisions, notes,
+manual corrections, sources, status, and ten verification flags. Refreshing a history
+preserves an existing review, and manual corrections never overwrite parsed JSON or
+raw XML. Cancelled work is saved only when at least one historical response was
+received.

@@ -306,3 +306,58 @@ Use the browser to select the first real pilot variant for a written method-base
 reason. Record one official low-bandwidth historical source, verify its date and
 classification type, complete the checklist, and inspect the resulting timeline. Then
 repeat the exact same manual process on a few more records before automating any rule.
+
+## 2026-07-27 Bounded VCV Version History Implementation
+
+### Date
+
+2026-07-27
+
+### Implementation Recorded
+
+- Added the Version History Explorer as the dashboard startup target and normal pilot workflow.
+- Kept current candidate discovery separate: gene ESearch returns at most five identifiers and ESummary retrieves each current candidate individually.
+- Added strict canonical VCV validation, an unversioned EFetch lookup for the latest official accession version, and exact `.version` requests in all, custom inclusive-range, or endpoint mode.
+- Limited each plan to 25 historical requests after the current lookup, each response to 10 MiB (approximately 10 MB), and each exploration to 50 MiB.
+- Used official NCBI endpoints only, 0.34-second sequential pacing, 10-second connect and 30-second read timeouts, two limited retries, and cancellation checks between requests.
+- Parsed record identity, genes, HGVS, dates, conditions, status/replacement fields, warnings, and separate germline, somatic clinical impact, and oncogenicity blocks.
+- Added automatic consecutive-available-version comparison labels while preserving holes and warnings.
+- Saved raw XML, parsed versions, comparisons, metadata, and provenance below the ignored `data/manual_review/vcv_history/<VCV>/` tree.
+- Kept reviewer decisions, notes, sources, manual corrections, and the ten-item verification checklist in a separate `review.json`; manual edits do not overwrite automatic artifacts.
+
+### Scientific Boundary
+
+The first live dashboard demonstration used `VCV000014026` (Variation ID 14026;
+TACR3). The current request returned `VCV000014026.3` in 27,828 bytes. The approved
+history plan then requested versions 1, 2, and 3 separately. All three were available
+and transferred 16,806, 23,508, and 27,828 bytes. Total current-plus-history response
+bytes were 95,970.
+
+All three parsed aggregate germline classifications were `Pathogenic`, so the
+comparison correctly reported `No_Classification_Change` for both transitions. The
+aggregate review status changed from `no assertion criteria provided` in version 1,
+to `criteria provided, single submitter` in version 2, to `criteria provided, multiple
+submitters, no conflicts` in version 3. Aggregate submission counts were 2, 3, and 4.
+No parser warnings remained after correcting aggregate classification scope to avoid
+using condition-specific RCV classifications.
+
+This is a real multi-version timeline, but it is not manually verified and does not
+show that the variant was formerly a VUS. The review checklist remains unchecked. The
+implementation and automatic comparison can establish what the parser detected, not
+that the method is scientifically sufficient.
+
+VCV history is useful because it can expose exact changes to one aggregate record
+without a multi-gigabyte archive transfer. It is not a monthly snapshot series and
+cannot by itself prove what all of ClinVar showed at an arbitrary date. Archived
+monthly summaries or releases may eventually still be needed.
+
+### Environment Finding
+
+The system is Ubuntu 26.04 LTS. `python3.12` is not installed, the existing `.venv`
+uses Python 3.14.4, and migration was not successful. The documented recovery uses a
+reviewed user-level `uv` installer and a separate `.venv312`; no privileged commands
+were run.
+
+### Next Milestone
+
+Build and manually verify a pilot set of approximately 10–25 genuine VCV histories, then evaluate whether this version-history method is sufficient for selecting and validating the first historical examples.

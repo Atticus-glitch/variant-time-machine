@@ -40,6 +40,8 @@ data/manual_review/extracted/*
 !data/manual_review/extracted/.gitkeep
 data/manual_review/pilot_review.json
 data/manual_review/pilot_workspace.backup.json
+data/manual_review/vcv_history/*
+!data/manual_review/vcv_history/.gitkeep
 *.xml.gz
 
 # Generated outputs

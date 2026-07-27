@@ -12,18 +12,17 @@ Variant Time Machine is a computational genetics research project that asks whet
 
 ## Current Status
 
-The project intentionally begins with a small pilot dataset to validate methods before considering larger historical releases. The local dashboard is now the main pilot interface. It can plan and approve small current lookups, add up to ten variants, save manual historical review, enforce verification checks, and display an honest timeline. No historical result is assumed in advance, no biological claims have been made, and no models exist.
+The project now uses a bounded VCV version-history pilot to validate methods before considering larger historical releases. The local dashboard and its **Version History Explorer** are the normal workflow: find a current candidate, confirm its latest official VCV record, request a bounded set of exact versions, inspect the automatic comparison, and complete a separate manual review. No live VCV history has yet been recorded as a scientific result, no biological claims have been made, and no models exist.
 
-## Planned Workflow
+## Research Workflow
 
-1. Select an archived ClinVar release and a newer comparison release.
-2. Identify variants classified as uncertain in the older release.
-3. Match those variants across time using stable identifiers and verified genomic information.
-4. Assign later outcomes while preserving ambiguous and unusable cases for review.
-5. Construct features using only information available at the prediction date.
-6. Compare simple baselines, a biological score, logistic regression, and possibly a tree-based model.
-7. Evaluate on held-out variants or time periods with classification and calibration metrics.
-8. Communicate methods, limitations, and individual model explanations through a public demonstration.
+1. Select a genuine current VCV candidate for a written reason.
+2. Use official unversioned VCV EFetch to establish the latest accession version.
+3. Request all, a custom inclusive range, or only endpoint versions within the safety limits.
+4. Inspect parsed fields and automatic consecutive-version comparisons without treating them as verified conclusions.
+5. Complete all ten manual checks and record sources, decisions, corrections, and ambiguities separately.
+6. Repeat for approximately 10–25 genuine VCV histories before deciding whether monthly summaries or releases are still needed.
+7. Consider features or models only after the historical method is scientifically reliable.
 
 ## Repository Structure
 
@@ -39,36 +38,27 @@ The project intentionally begins with a small pilot dataset to validate methods 
 
 ## Setup
 
-Python 3.12 is the required reproducible environment. The current VM does not yet
-have Python 3.12 installed, so migration is not complete and the existing `.venv`
-has been kept unchanged.
+Python 3.12 is the required reproducible environment. This system is Ubuntu 26.04
+LTS, `python3.12` is not installed, and the existing `.venv` uses Python 3.14.4.
+Migration was **not successful**, so do not claim that Python 3.12 is active.
 
-```bash
-python3.12 -m venv .venv312
-source .venv312/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-python scripts/validate_setup.py
-pytest
-ruff check .
-ruff format --check .
-```
-
-Run commands from the repository root. Initial setup and validation do not download ClinVar or any other large dataset.
-
-On this Ubuntu 26.04 VM, `python3.12` was not installed or listed by the configured
-APT repositories. One user-level option is:
+Review the third-party `uv` installer before running it. The safe user-level setup
+commands are:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ~/.local/bin/uv python install 3.12
 ~/.local/bin/uv venv --python 3.12 .venv312
-source .venv312/bin/activate
-~/.local/bin/uv pip install --python .venv312/bin/python -e ".[dev]"
+~/.local/bin/uv pip install --python .venv312/bin/python -e '.[dev]'
+.venv312/bin/python scripts/validate_setup.py
+.venv312/bin/python -m pytest
+.venv312/bin/ruff check .
+.venv312/bin/ruff format --check .
 ```
 
-Review third-party installer commands before running them. Do not remove `.venv`
-until `.venv312` passes setup validation and all tests.
+Run commands from the repository root. No privileged commands were run. Initial
+setup and validation do not download ClinVar or any other large dataset. Do not
+remove `.venv` until `.venv312` passes every command above.
 
 ## Timeline Command
 
@@ -94,17 +84,23 @@ The command refuses to replace an existing output unless `--overwrite` is suppli
 
 ## Local Dashboard
 
-Start the dashboard once from the repository root:
+After installing into `.venv312`, start the dashboard from the repository root:
 
 ```bash
-python scripts/start_dashboard.py
+.venv312/bin/python scripts/start_dashboard.py
 ```
 
-The server opens `http://127.0.0.1:5000/pilot_workspace.html` in the default browser. Use `python scripts/start_dashboard.py --no-browser` only when automatic browser opening is not wanted.
+The server opens the **Version History Explorer** at `http://127.0.0.1:5000/version_history.html`. Use `.venv312/bin/python scripts/start_dashboard.py --no-browser` when automatic browser opening is not wanted. Until the Python 3.12 migration succeeds, `.venv/bin/python scripts/start_dashboard.py` is only a temporary current fallback; it uses Python 3.14.4 and must not be described as Python 3.12.
 
-Normal pilot research happens in the **Pilot Workspace**. From the browser you can review a transfer estimate, approve a small current ClinVar lookup, add a record with a selection reason, edit past and newer classifications, save notes and sources, change review status, complete the verification checklist, and view a timeline. The dashboard never exposes the paused full-archive scan.
+Normal pilot research happens in the **Version History Explorer**. Its optional gene search uses current ESearch plus individual ESummary lookups for at most five candidates. The history itself uses EFetch: it first requests the unversioned VCV to learn the latest official version, then offers all versions, a custom inclusive range, or endpoints (version 1 and latest). It accepts only canonical uppercase `VCV#########` or `VCV#########.version` input; in the dashboard, a supplied suffix is validated but the current lookup still resolves the unversioned accession before history planning. Exact versioned EFetch responses are checked against the requested `.version`.
 
-Current lookups and historical verification are different tasks. A current result can be saved immediately, but a past classification remains blank until a person records an official source, exact dates, category type, and review notes. `Verified` means all required fields and checklist items were completed; it does not mean ClinVar itself is infallible.
+Each approved exploration uses only official NCBI endpoints, at most 25 historical version requests, sequential 0.34-second pacing, a 10-second connect and 30-second read timeout, and two limited retries for connection/read failures or HTTP 429, 500, 502, 503, and 504 responses. Every response has a 10 MiB hard cap (approximately 10 MB), and the complete exploration has a 50 MiB hard cap. Cancellation is checked between requests; it cannot interrupt the active HTTP request. There is no full-archive control.
+
+Saved automatic XML, parsed records, comparisons, provenance, and a separate manual review live under the ignored `data/manual_review/vcv_history/<VCV>/` tree. Germline, somatic clinical impact, and oncogenicity remain separate. Manual corrections never overwrite automatic parsed fields, and `manually_verified` requires all ten checks.
+
+The first live demonstration used `VCV000014026` (Variation ID 14026; TACR3). Official EFetch returned versions 1, 2, and 3. All three aggregate germline classifications were `Pathogenic`, so the software detected no germline classification change. Review status and submission count did change. The current lookup plus the three exact-version requests transferred 95,970 response bytes. This case still requires manual verification and is not evidence that the variant was formerly a VUS.
+
+In the separate older Pilot Workspace, current lookup and manual historical verification remain different tasks: a past classification stays blank until a person records an official source, exact dates, category type, and review notes. Its `verified` status and the Version History Explorer's `manually_verified` status mean only that the applicable checklist was completed; neither means ClinVar is infallible.
 
 The dashboard also contains clearly labeled synthetic display data. Synthetic examples are software demonstrations and must not be presented as research results.
 
@@ -166,7 +162,9 @@ The command-line workflow confirms the small API request and asks again before s
 
 ## Current Milestone
 
-Complete one source-backed historical review through the Pilot Workspace, then repeat the same checked method on a small set. The pilot dataset is not suitable for model training. No machine-learning work will begin until historical matching is reliable.
+Build and manually verify a pilot set of approximately 10–25 genuine VCV histories, then evaluate whether this version-history method is sufficient for selecting and validating the first historical examples.
+
+This is a bounded VCV version-history pilot: no machine learning, no full archive, and no claim that VCV versions are equivalent to monthly snapshots. VCV history is useful for locating exact changes to one aggregate record, but eventual archived monthly summaries or releases may still be needed to reconstruct what ClinVar showed at a chosen calendar cutoff.
 
 ## Reproducibility
 

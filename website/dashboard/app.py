@@ -5,6 +5,7 @@ import json
 import shutil
 import sys
 import threading
+import uuid
 import webbrowser
 from datetime import UTC, datetime
 from pathlib import Path
@@ -31,10 +32,10 @@ from variant_time_machine.config import (  # noqa: E402
     LARGE_DOWNLOAD_THRESHOLD_BYTES,
     PILOT_CURRENT_API_ESTIMATE_BYTES,
     PILOT_EXTRACTED_DIR,
-    PILOT_HISTORICAL_API_LIMIT_BYTES,
     PILOT_WORKSPACE_PATH,
     RAW_DATA_DIR,
     TABLES_DIR,
+    VCV_HISTORY_DIR,
 )
 from variant_time_machine.pilot_workspace import (  # noqa: E402
     CHECKLIST_FIELDS,
@@ -50,6 +51,31 @@ from variant_time_machine.pilot_workspace import (  # noqa: E402
     public_record,
     refresh_current_record,
     update_record,
+)
+from variant_time_machine.vcv_history import (  # noqa: E402
+    CLINVAR_EFETCH_URL,
+    DEFAULT_MAX_REQUESTS,
+    MAX_RESPONSE_BYTES,
+    MAX_TOTAL_BYTES,
+    InvalidVCVAccession,
+    RequestLimitError,
+    RetrievalCancelled,
+    TransferLimitError,
+    VCVHistoryError,
+    VCVHistoryResult,
+    VersionResult,
+    fetch_current_vcv,
+    fetch_vcv_history,
+    plan_version_range,
+    validate_vcv_accession,
+)
+from variant_time_machine.vcv_history_store import (  # noqa: E402
+    VCVHistoryStoreError,
+    list_histories,
+    load_history,
+    progress_metrics,
+    save_history,
+    update_review,
 )
 
 SYNTHETIC_NOTICE = "Synthetic example data. Not real scientific results."
@@ -69,7 +95,8 @@ PROGRESS_ITEMS: tuple[dict[str, str | int], ...] = (
         "name": "Project setup",
         "status": "Complete",
         "explanation": (
-            "The folders, Python environment, documentation, and tests are set up."
+            "The code, documentation, and tests exist. Python 3.12 migration is still "
+            "pending on this VM."
         ),
     },
     {
@@ -77,7 +104,8 @@ PROGRESS_ITEMS: tuple[dict[str, str | int], ...] = (
         "name": "Load genetic data",
         "status": "Working",
         "explanation": (
-            "Loading tools exist, but no large real ClinVar release is stored locally."
+            "Small official VCV EFetch records can be loaded individually. No full "
+            "ClinVar release is stored locally."
         ),
     },
     {
@@ -85,8 +113,8 @@ PROGRESS_ITEMS: tuple[dict[str, str | int], ...] = (
         "name": "Clean and organize variants",
         "status": "Working",
         "explanation": (
-            "The parser creates a standard table and still needs testing on full "
-            "releases."
+            "The VCV parser keeps aggregate germline, somatic, and oncogenicity fields "
+            "separate and preserves missing values."
         ),
     },
     {
@@ -94,7 +122,8 @@ PROGRESS_ITEMS: tuple[dict[str, str | int], ...] = (
         "name": "Compare historical records",
         "status": "Working",
         "explanation": (
-            "The manual review workspace exists, but no historical match is complete."
+            "One real three-version VCV history exists; its human verification is "
+            "still incomplete."
         ),
     },
     {
@@ -102,7 +131,8 @@ PROGRESS_ITEMS: tuple[dict[str, str | int], ...] = (
         "name": "Timeline dataset",
         "status": "Working",
         "explanation": (
-            "The output format exists, but no verified research dataset exists yet."
+            "One real unverified history is stored. No verified research dataset "
+            "exists yet."
         ),
     },
     {
@@ -150,6 +180,53 @@ NEXT_TASKS: tuple[str, ...] = (
 )
 
 
+def _json_body() -> dict[str, object]:
+    """Return a JSON object or raise a consistent request error."""
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        raise ValueError("A JSON request object is required.")
+    return body
+
+
+def _vcv_base(value: object) -> str:
+    """Validate strict VCV input and return its canonical base accession."""
+    if not isinstance(value, str):
+        raise InvalidVCVAccession("VCV accession must be text.")
+    return validate_vcv_accession(value).accession
+
+
+def _public_version_result(result: VersionResult) -> dict[str, object]:
+    """Serialize a source result without exposing retained XML."""
+    value = result.to_dict()
+    value.pop("raw_xml", None)
+    return value
+
+
+def _public_history_result(result: VCVHistoryResult) -> dict[str, object]:
+    """Serialize a history result without exposing retained XML."""
+    value = result.to_dict()
+    current = value.get("current_result")
+    if isinstance(current, dict):
+        current.pop("raw_xml", None)
+    for item in value.get("results", []):
+        if isinstance(item, dict):
+            item.pop("raw_xml", None)
+    return value
+
+
+def _git_commit() -> str:
+    """Read the local Git revision without starting a subprocess."""
+    head_path = PROJECT_ROOT / ".git" / "HEAD"
+    try:
+        head = head_path.read_text(encoding="utf-8").strip()
+        if head.startswith("ref: "):
+            reference = PROJECT_ROOT / ".git" / head.removeprefix("ref: ")
+            return reference.read_text(encoding="utf-8").strip()
+        return head
+    except OSError:
+        return "unavailable"
+
+
 def _latest_notebook_entry() -> dict[str, str]:
     """Return the latest main entry from the research notebook."""
     if not NOTEBOOK_PATH.is_file():
@@ -192,6 +269,7 @@ def _system_status() -> dict[str, Any]:
     timeline_files = sorted(TABLES_DIR.glob("*.csv"))
     disk = shutil.disk_usage(PROJECT_ROOT)
     extracted_files = sorted(PILOT_EXTRACTED_DIR.glob("*.json"))
+    history_count = len(list_histories(VCV_HISTORY_DIR))
     files_created = [str(path.relative_to(PROJECT_ROOT)) for path in timeline_files]
     if EXAMPLE_DATA_PATH.is_file():
         files_created.insert(0, str(EXAMPLE_DATA_PATH.relative_to(PROJECT_ROOT)))
@@ -211,9 +289,12 @@ def _system_status() -> dict[str, Any]:
         "last_pipeline_run": _latest_pipeline_output(),
         "files_created": files_created,
         "raw_clinvar_files": len(raw_files),
-        "pilot_strategy": "Five to ten one-record API lookups",
+        "pilot_strategy": "Ten to twenty-five manually reviewed VCV histories",
         "archive_scan": "Paused; metadata inspection only",
-        "pilot_outputs": f"{len(extracted_files)} small JSON output files",
+        "pilot_outputs": (
+            f"{history_count} VCV history case(s); "
+            f"{len(extracted_files)} legacy extracted JSON file(s)"
+        ),
         "storage": (
             f"{disk.free / (1024**3):.1f} GiB free; full XML archives retained: no"
         ),
@@ -246,8 +327,9 @@ def _transfer_safety_status(
     session_bytes = int((transfer_state or {}).get("total_api_bytes", 0))
     return {
         "largest_planned_download": (
-            "One versioned VCV API record, capped at "
-            f"{PILOT_HISTORICAL_API_LIMIT_BYTES / 1_000_000:.0f} MB"
+            "One VCV history exploration, capped at "
+            f"{MAX_TOTAL_BYTES / (1024**2):.0f} MiB total; each response has a "
+            f"{MAX_RESPONSE_BYTES / (1024**2):.0f} MiB (approximately 10 MB) hard cap"
         ),
         "current_transfer": str(
             (transfer_state or {}).get("current_transfer", "0 bytes; idle")
@@ -393,6 +475,9 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     app = Flask(__name__)
     app.config.from_mapping(
         PILOT_WORKSPACE_PATH=PILOT_WORKSPACE_PATH,
+        VCV_HISTORY_ROOT=VCV_HISTORY_DIR,
+        VCV_CURRENT_FETCHER=fetch_current_vcv,
+        VCV_HISTORY_FETCHER=fetch_vcv_history,
     )
     if test_config:
         app.config.update(test_config)
@@ -407,6 +492,10 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         "total_api_bytes": 0,
         "last_request": None,
     }
+    state_lock = threading.RLock()
+    ncbi_request_lock = threading.Lock()
+    current_vcv_cache: dict[str, VersionResult] = {}
+    operations: dict[str, dict[str, object]] = {}
 
     def transfer_result(
         plan: dict[str, object], actual_bytes: int
@@ -419,34 +508,166 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             "is_small": plan["is_small"],
             "large_download_blocked": plan["large_download_blocked"],
         }
-        transfer_state["total_api_bytes"] = (
-            int(transfer_state["total_api_bytes"]) + actual_bytes
-        )
-        transfer_state["current_transfer"] = "0 bytes; idle"
-        transfer_state["last_request"] = result
+        with state_lock:
+            transfer_state["total_api_bytes"] = (
+                int(transfer_state["total_api_bytes"]) + actual_bytes
+            )
+            transfer_state["current_transfer"] = "0 bytes; idle"
+            transfer_state["last_request"] = result
         return result
 
     def perform_lookup(plan: dict[str, object]) -> tuple[list[dict[str, object]], int]:
         """Run only the approved small API calls declared by a lookup plan."""
-        transfer_state["current_transfer"] = "Small approved request in progress"
+        with state_lock:
+            transfer_state["current_transfer"] = "Small approved request in progress"
         variants = []
         actual_bytes = 0
-        if plan["query_type"] == "variant":
-            variant = lookup_clinvar_variant(str(plan["normalized_query"]))
-            variants.append(variant)
-            actual_bytes += variant.response_bytes or 0
-        else:
-            search = search_clinvar_gene_result(str(plan["normalized_query"]))
-            actual_bytes += search.response_bytes
-            for identifier in search.identifiers:
-                variant = lookup_clinvar_variant(identifier)
+        with ncbi_request_lock:
+            if plan["query_type"] == "variant":
+                variant = lookup_clinvar_variant(str(plan["normalized_query"]))
                 variants.append(variant)
                 actual_bytes += variant.response_bytes or 0
+            else:
+                search = search_clinvar_gene_result(str(plan["normalized_query"]))
+                actual_bytes += search.response_bytes
+                for identifier in search.identifiers:
+                    variant = lookup_clinvar_variant(identifier)
+                    variants.append(variant)
+                    actual_bytes += variant.response_bytes or 0
         payloads = []
         for variant in variants:
             lookup_cache[variant.variation_id] = variant
             payloads.append(variant.to_dict())
         return payloads, actual_bytes
+
+    def reset_transfer() -> None:
+        with state_lock:
+            transfer_state["current_transfer"] = "0 bytes; idle"
+
+    def history_root() -> Path:
+        return Path(app.config["VCV_HISTORY_ROOT"])
+
+    def history_plan(body: dict[str, object]) -> dict[str, object]:
+        accession = _vcv_base(body.get("accession", body.get("identifier")))
+        with state_lock:
+            current = current_vcv_cache.get(accession)
+        if current is None or current.status != "available" or current.record is None:
+            raise LookupError(
+                "Run and approve a successful current VCV lookup before planning "
+                "history."
+            )
+        current_version = current.record.version
+        mode = body.get("mode", "all")
+        if mode not in {"all", "custom", "endpoints"}:
+            raise ValueError("mode must be 'all', 'custom', or 'endpoints'.")
+        versions = None
+        start_version = None
+        end_version = None
+        if mode == "custom":
+            start = body.get("start_version", body.get("start"))
+            end = body.get("end_version", body.get("end"))
+            if (
+                not isinstance(start, int)
+                or isinstance(start, bool)
+                or not isinstance(end, int)
+                or isinstance(end, bool)
+            ):
+                raise ValueError(
+                    "Custom mode requires integer start_version and end_version."
+                )
+            if start > end:
+                raise ValueError("Custom start_version cannot exceed end_version.")
+            start_version = start
+            end_version = end
+            versions = range(start, end + 1)
+        if mode == "all" and current_version > DEFAULT_MAX_REQUESTS:
+            raise RequestLimitError(
+                f"All {current_version} versions exceed the 25-request limit; "
+                "use custom or endpoints mode."
+            )
+        requested = plan_version_range(
+            current_version,
+            mode=mode,  # type: ignore[arg-type]
+            versions=versions,
+            max_requests=DEFAULT_MAX_REQUESTS,
+        )
+        count = len(requested)
+        maximum = min(count * MAX_RESPONSE_BYTES, MAX_TOTAL_BYTES)
+        plan = {
+            "accession": accession,
+            "current_version": current_version,
+            "mode": mode,
+            "requested_versions": list(requested),
+            "request_count": count,
+            "estimated_max_bytes": maximum,
+            "max_possible_transfer_bytes": maximum,
+            "estimated_storage_bytes": maximum,
+            "source": CLINVAR_EFETCH_URL,
+            "purpose": "Retrieve exact official historical VCV versions for comparison",
+            "confirmation": (
+                "I approve these bounded sequential official ClinVar EFetch requests."
+            ),
+            "requires_approval": True,
+        }
+        if mode == "custom":
+            plan["start_version"] = start_version
+            plan["end_version"] = end_version
+        return plan
+
+    def history_metrics() -> dict[str, object]:
+        root = history_root()
+        base = progress_metrics(root)
+        available = 0
+        recorded_transfer = 0
+        for accession in list_histories(root):
+            artifact = load_history(root, accession)
+            versions = artifact["versions"]
+            manifest = artifact["manifest"]
+            if isinstance(versions, dict):
+                available += sum(
+                    isinstance(item, dict) and item.get("record") is not None
+                    for item in versions.get("versions", [])
+                )
+            if isinstance(manifest, dict):
+                recorded_transfer += int(manifest.get("total_bytes", 0))
+        return {
+            "histories_explored": base["histories"],
+            "versions_retrieved": available,
+            "histories_with_germline_change": base["changed_histories"],
+            "manually_verified": base["verified"],
+            "total_recorded_history_transfer_bytes": recorded_transfer,
+            "storage_bytes": base["bytes"],
+            "storage": base["storage"],
+        }
+
+    def research_progress() -> dict[str, object]:
+        workspace = load_workspace(Path(app.config["PILOT_WORKSPACE_PATH"]))
+        metrics = history_metrics()
+        with state_lock:
+            current_count = len(current_vcv_cache)
+        return {
+            "candidates_selected": len(workspace["records"]),
+            "current_records_retrieved": max(
+                int(metrics["histories_explored"]), current_count
+            ),
+            "current_records_retrieved_this_session": current_count,
+            **metrics,
+        }
+
+    def dynamic_next_tasks(progress: dict[str, object]) -> tuple[str, ...]:
+        if progress["candidates_selected"] == 0:
+            first = "Select a current ClinVar candidate for the pilot workspace."
+        else:
+            first = "Confirm the selected candidate's current official VCV record."
+        if progress["histories_explored"] == 0:
+            second = "Plan and explore one bounded official VCV version history."
+        else:
+            second = "Review the saved version comparison and document ambiguities."
+        if progress["manually_verified"] == 0:
+            third = "Complete the history verification checklist before analysis."
+        else:
+            third = "Choose the next candidate using the recorded research criteria."
+        return (first, second, third)
 
     @app.get("/")
     def index() -> str:
@@ -464,27 +685,403 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     def pilot_workspace_page():
         return send_from_directory(Path(__file__).parent, "pilot_workspace.html")
 
+    @app.get("/version_history.html")
+    def version_history_page():
+        return send_from_directory(Path(__file__).parent, "version_history.html")
+
     @app.get("/api/status")
     def api_status():
+        try:
+            progress = research_progress()
+        except (OSError, ValueError, json.JSONDecodeError, VCVHistoryStoreError):
+            progress = {
+                "candidates_selected": 0,
+                "current_records_retrieved": 0,
+                "current_records_retrieved_this_session": 0,
+                "histories_explored": 0,
+                "versions_retrieved": 0,
+                "histories_with_germline_change": 0,
+                "manually_verified": 0,
+                "total_recorded_history_transfer_bytes": 0,
+                "storage_bytes": 0,
+                "storage": "0 B",
+            }
+        with state_lock:
+            transfer_snapshot = dict(transfer_state)
         return jsonify(
             {
                 "project_name": "Variant Time Machine",
                 "project_explanation": PROJECT_EXPLANATION,
-                "current_milestone": "First single-variant research workflow",
+                "current_milestone": "First multi-version VCV pilot review",
                 "folders": FOLDER_GUIDE,
-                "next_tasks": NEXT_TASKS,
+                "next_tasks": dynamic_next_tasks(progress),
+                "research_progress": progress,
                 "system": _system_status(),
                 "research_notes": _latest_notebook_entry(),
                 "clinvar_connection": lookup_state,
                 "historical_comparison": _historical_comparison_status(
                     Path(app.config["PILOT_WORKSPACE_PATH"])
                 ),
-                "transfer_safety": _transfer_safety_status(transfer_state),
+                "transfer_safety": {
+                    **_transfer_safety_status(transfer_snapshot),
+                    "vcv_history_storage": progress["storage"],
+                    "vcv_history_storage_bytes": progress["storage_bytes"],
+                },
                 "current_pilot_variant": _current_pilot_status(
                     Path(app.config["PILOT_WORKSPACE_PATH"])
                 ),
             }
         )
+
+    @app.post("/api/vcv-history/current-plan")
+    def api_vcv_current_plan():
+        try:
+            body = _json_body()
+            accession = _vcv_base(body.get("accession", body.get("identifier")))
+            return jsonify(
+                {
+                    "plan": {
+                        "accession": accession,
+                        "request_count": 1,
+                        "estimated_max_bytes": MAX_RESPONSE_BYTES,
+                        "source": CLINVAR_EFETCH_URL,
+                        "purpose": (
+                            "Retrieve the current official VCV record and version"
+                        ),
+                        "requires_approval": True,
+                    }
+                }
+            )
+        except (InvalidVCVAccession, ValueError) as exc:
+            return jsonify({"error": str(exc)}), 400
+
+    @app.post("/api/vcv-history/current")
+    def api_vcv_current():
+        try:
+            body = _json_body()
+            if body.get("approved") is not True:
+                return jsonify(
+                    {"error": "Review and approve the current-record transfer first."}
+                ), 428
+            accession = _vcv_base(body.get("accession", body.get("identifier")))
+            with state_lock:
+                transfer_state["current_transfer"] = (
+                    "One approved current VCV request in progress"
+                )
+            fetcher = app.config["VCV_CURRENT_FETCHER"]
+            with ncbi_request_lock:
+                result = fetcher(accession)
+            if not isinstance(result, VersionResult):
+                raise VCVHistoryError("Current VCV fetcher returned an invalid result.")
+            if result.status != "available" or result.record is None:
+                with state_lock:
+                    transfer_state["current_transfer"] = "0 bytes; idle"
+                status = 404 if result.status == "missing" else 502
+                return jsonify(
+                    {
+                        "error": result.message
+                        or f"Current VCV record was {result.status}."
+                    }
+                ), status
+            if result.record.accession != accession:
+                raise VCVHistoryError("Current VCV response accession did not match.")
+            with state_lock:
+                current_vcv_cache[accession] = result
+            plan = {
+                "source": result.source_request,
+                "estimated_max_bytes": MAX_RESPONSE_BYTES,
+                "purpose": "Retrieve the current official VCV record and version",
+                "is_small": True,
+                "large_download_blocked": False,
+            }
+            transfer = transfer_result(plan, result.response_bytes)
+            return jsonify(
+                {
+                    "accession": accession,
+                    "current_version": result.record.version,
+                    "current_identifier": result.record.accession_version,
+                    "record": result.record.to_dict(),
+                    "provenance": {
+                        "source_request": result.source_request,
+                        "retrieved_at_utc": result.retrieved_at_utc,
+                        "status": result.status,
+                    },
+                    "transfer": transfer,
+                }
+            )
+        except (InvalidVCVAccession, ValueError) as exc:
+            with state_lock:
+                transfer_state["current_transfer"] = "0 bytes; idle"
+            return jsonify({"error": str(exc)}), 400
+        except TransferLimitError as exc:
+            with state_lock:
+                transfer_state["current_transfer"] = "0 bytes; idle"
+            return jsonify({"error": str(exc)}), 413
+        except (VCVHistoryError, OSError) as exc:
+            with state_lock:
+                transfer_state["current_transfer"] = "0 bytes; idle"
+            return jsonify({"error": str(exc)}), 502
+
+    @app.post("/api/vcv-history/plan")
+    def api_vcv_plan():
+        try:
+            return jsonify({"plan": history_plan(_json_body())})
+        except LookupError as exc:
+            return jsonify({"error": str(exc)}), 409
+        except RequestLimitError as exc:
+            return jsonify({"error": str(exc)}), 413
+        except (InvalidVCVAccession, ValueError) as exc:
+            return jsonify({"error": str(exc)}), 400
+
+    def run_history_operation(
+        operation_id: str,
+        plan: dict[str, object],
+        current: VersionResult,
+        cancel_event: threading.Event,
+    ) -> None:
+        def report(event: dict[str, object]) -> None:
+            with state_lock:
+                operation = operations[operation_id]
+                events = operation["progress_events"]
+                assert isinstance(events, list)
+                events.append({**event, "sequence": len(events) + 1})
+                operation["progress"] = dict(events[-1])
+
+        try:
+            with state_lock:
+                transfer_state["current_transfer"] = (
+                    f"VCV history operation {operation_id} in progress"
+                )
+            fetcher = app.config["VCV_HISTORY_FETCHER"]
+            with ncbi_request_lock:
+                result = fetcher(
+                    str(plan["accession"]),
+                    mode="custom",
+                    versions=tuple(plan["requested_versions"]),
+                    max_requests=DEFAULT_MAX_REQUESTS,
+                    max_total_bytes=MAX_TOTAL_BYTES,
+                    cancel=cancel_event,
+                    progress=report,
+                    current_result=current,
+                )
+            if not isinstance(result, VCVHistoryResult):
+                raise VCVHistoryError("History fetcher returned an invalid result.")
+            saved_accession = None
+            if not result.cancelled or result.results:
+                save_history(
+                    history_root(),
+                    result,
+                    app_version="0.1.0",
+                    git_commit=_git_commit(),
+                )
+                saved_accession = result.requested_accession.split(".", 1)[0]
+            historical_bytes = max(
+                0, result.total_response_bytes - current.response_bytes
+            )
+            transfer = transfer_result(
+                {
+                    "source": CLINVAR_EFETCH_URL,
+                    "estimated_max_bytes": plan["estimated_max_bytes"],
+                    "purpose": plan["purpose"],
+                    "is_small": True,
+                    "large_download_blocked": False,
+                },
+                historical_bytes,
+            )
+            with state_lock:
+                operation = operations[operation_id]
+                operation["state"] = "cancelled" if result.cancelled else "completed"
+                operation["result"] = {
+                    "history": _public_history_result(result),
+                    "saved_accession": saved_accession,
+                    "transfer": transfer,
+                }
+                operation["finished_at_utc"] = datetime.now(UTC).isoformat()
+        except RetrievalCancelled as exc:
+            with state_lock:
+                transfer_state["current_transfer"] = "0 bytes; idle"
+                operations[operation_id].update(
+                    state="cancelled",
+                    error=str(exc),
+                    finished_at_utc=datetime.now(UTC).isoformat(),
+                )
+        except Exception as exc:  # background failures must remain observable
+            with state_lock:
+                transfer_state["current_transfer"] = "0 bytes; idle"
+                operations[operation_id].update(
+                    state="failed",
+                    error=str(exc),
+                    finished_at_utc=datetime.now(UTC).isoformat(),
+                )
+
+    @app.post("/api/vcv-history/explore")
+    def api_vcv_explore():
+        try:
+            body = _json_body()
+            if body.get("approved") is not True:
+                return jsonify(
+                    {"error": "Review and approve the exact history plan first."}
+                ), 428
+            supplied_plan = body.get("plan", body)
+            if not isinstance(supplied_plan, dict):
+                raise ValueError("plan must be a JSON object.")
+            plan = history_plan(supplied_plan)
+            if (
+                "requested_versions" in supplied_plan
+                and supplied_plan["requested_versions"] != plan["requested_versions"]
+            ):
+                raise ValueError("Submitted requested_versions do not match the plan.")
+            accession = str(plan["accession"])
+            with state_lock:
+                if any(item["state"] == "running" for item in operations.values()):
+                    return jsonify(
+                        {"error": "A VCV history exploration is already running."}
+                    ), 409
+                current = current_vcv_cache[accession]
+                operation_id = uuid.uuid4().hex
+                cancel_event = threading.Event()
+                operations[operation_id] = {
+                    "operation_id": operation_id,
+                    "state": "running",
+                    "plan": plan,
+                    "progress": None,
+                    "progress_events": [],
+                    "result": None,
+                    "error": None,
+                    "created_at_utc": datetime.now(UTC).isoformat(),
+                    "finished_at_utc": None,
+                    "cancel_event": cancel_event,
+                }
+            thread = threading.Thread(
+                target=run_history_operation,
+                args=(operation_id, plan, current, cancel_event),
+                daemon=True,
+                name=f"vcv-history-{operation_id[:8]}",
+            )
+            thread.start()
+            return jsonify({"operation_id": operation_id, "state": "running"}), 202
+        except LookupError as exc:
+            return jsonify({"error": str(exc)}), 409
+        except RequestLimitError as exc:
+            return jsonify({"error": str(exc)}), 413
+        except (InvalidVCVAccession, ValueError, KeyError) as exc:
+            return jsonify({"error": str(exc)}), 400
+
+    @app.get("/api/vcv-history/operations/<operation_id>")
+    def api_vcv_operation(operation_id: str):
+        with state_lock:
+            operation = operations.get(operation_id)
+            if operation is None:
+                return jsonify({"error": "VCV history operation not found."}), 404
+            public = {
+                key: value for key, value in operation.items() if key != "cancel_event"
+            }
+            return jsonify(public)
+
+    @app.post("/api/vcv-history/operations/<operation_id>/cancel")
+    def api_cancel_vcv_operation(operation_id: str):
+        with state_lock:
+            operation = operations.get(operation_id)
+            if operation is None:
+                return jsonify({"error": "VCV history operation not found."}), 404
+            if operation["state"] != "running":
+                return jsonify(
+                    {"operation_id": operation_id, "state": operation["state"]}
+                )
+            cancel_event = operation["cancel_event"]
+            assert isinstance(cancel_event, threading.Event)
+            cancel_event.set()
+            operation["cancellation_requested"] = True
+            return jsonify(
+                {
+                    "operation_id": operation_id,
+                    "state": "running",
+                    "cancellation_requested": True,
+                }
+            )
+
+    @app.get("/api/vcv-histories")
+    def api_vcv_histories():
+        try:
+            histories = []
+            for accession in list_histories(history_root()):
+                artifact = load_history(history_root(), accession)
+                histories.append(
+                    {
+                        "accession": accession,
+                        "summary": artifact["metadata"]["summary"],
+                        "review": artifact["review"],
+                        "total_response_bytes": artifact["manifest"]["total_bytes"],
+                    }
+                )
+            return jsonify({"histories": histories, "metrics": history_metrics()})
+        except (OSError, VCVHistoryStoreError) as exc:
+            return jsonify({"error": f"VCV histories unavailable: {exc}"}), 503
+
+    @app.get("/api/vcv-histories/<accession>")
+    def api_vcv_history(accession: str):
+        try:
+            canonical = _vcv_base(accession)
+            if canonical != accession:
+                raise InvalidVCVAccession("Use an unversioned canonical VCV accession.")
+            if canonical not in list_histories(history_root()):
+                return jsonify({"error": "VCV history not found."}), 404
+            return jsonify(load_history(history_root(), canonical))
+        except InvalidVCVAccession as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, VCVHistoryStoreError) as exc:
+            return jsonify({"error": f"VCV history unavailable: {exc}"}), 503
+
+    @app.patch("/api/vcv-histories/<accession>/review")
+    def api_vcv_review(accession: str):
+        actions = {
+            "add_note": None,
+            "mark_needs_review": "needs_review",
+            "mark_ambiguous": "ambiguous",
+            "mark_manually_verified": "manually_verified",
+            "exclude": "excluded",
+        }
+        allowed = {
+            "notes",
+            "reviewer_decision",
+            "manual_corrections",
+            "verification",
+            "sources",
+        }
+        try:
+            canonical = _vcv_base(accession)
+            if canonical != accession:
+                raise InvalidVCVAccession("Use an unversioned canonical VCV accession.")
+            if canonical not in list_histories(history_root()):
+                return jsonify({"error": "VCV history not found."}), 404
+            body = _json_body()
+            action = body.get("action")
+            if action not in actions:
+                raise ValueError("Unknown review action.")
+            changes = body.get("changes", body)
+            if not isinstance(changes, dict):
+                raise ValueError("Review changes must be a JSON object.")
+            unknown = set(changes).difference(allowed | {"action", "changes"})
+            if unknown:
+                raise ValueError("Only manual review fields may be changed.")
+            values = {key: changes[key] for key in allowed if key in changes}
+            if action == "add_note":
+                note = values.get("notes")
+                if not isinstance(note, str) or not note.strip():
+                    raise ValueError("add_note requires non-empty notes.")
+                existing = load_history(history_root(), canonical)["review"]["notes"]
+                values["notes"] = f"{existing}\n{note}".strip()
+            review = update_review(
+                history_root(),
+                canonical,
+                status=actions[action],  # type: ignore[arg-type]
+                **values,
+            )
+            return jsonify({"accession": canonical, "review": review, "saved": True})
+        except (InvalidVCVAccession, ValueError, VCVHistoryStoreError) as exc:
+            return jsonify({"error": str(exc)}), 400
+        except OSError as exc:
+            return jsonify({"error": f"Could not save review: {exc}"}), 503
 
     @app.get("/api/progress")
     def api_progress():
@@ -690,21 +1287,33 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             )
             return jsonify({"variants": variants, "transfer": transfer})
         except InvalidVariantIdentifier as exc:
-            transfer_state["current_transfer"] = "0 bytes; idle"
+            reset_transfer()
             return jsonify({"error": str(exc)}), 400
         except ClinVarRecordNotFound as exc:
-            transfer_state["current_transfer"] = "0 bytes; idle"
+            reset_transfer()
             return jsonify({"error": str(exc)}), 404
         except ClinVarConnectionError as exc:
-            transfer_state["current_transfer"] = "0 bytes; idle"
+            reset_transfer()
             return jsonify({"error": str(exc)}), 502
         except ClinVarAPIError as exc:
-            transfer_state["current_transfer"] = "0 bytes; idle"
+            reset_transfer()
             return jsonify({"error": str(exc)}), 502
 
     @app.get("/api/transfer-safety")
     def api_transfer_safety():
-        return jsonify(_transfer_safety_status(transfer_state))
+        with state_lock:
+            snapshot = dict(transfer_state)
+        try:
+            metrics = history_metrics()
+        except (OSError, VCVHistoryStoreError):
+            metrics = {"storage": "Unavailable", "storage_bytes": 0}
+        return jsonify(
+            {
+                **_transfer_safety_status(snapshot),
+                "vcv_history_storage": metrics["storage"],
+                "vcv_history_storage_bytes": metrics["storage_bytes"],
+            }
+        )
 
     @app.get("/api/clinvar/status")
     def api_clinvar_status():
@@ -720,7 +1329,7 @@ def run_dashboard(*, open_browser: bool = True) -> None:
     """Run the dashboard locally without Flask debug mode."""
     if open_browser:
         threading.Timer(
-            0.8, lambda: webbrowser.open("http://127.0.0.1:5000/pilot_workspace.html")
+            0.8, lambda: webbrowser.open("http://127.0.0.1:5000/version_history.html")
         ).start()
     app.run(host="127.0.0.1", port=5000, debug=False)
 

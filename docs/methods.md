@@ -2,7 +2,7 @@
 
 ## Current Scientific Milestone
 
-The current goal is to produce a verified table connecting variants classified as uncertain in an older ClinVar snapshot with their classifications in a newer snapshot. No model training or biological feature engineering is part of this stage.
+The current goal is to build and manually verify a bounded pilot of approximately 10–25 genuine VCV histories. This stage tests whether exact VCV versions are sufficient for selecting and validating the first historical examples. It includes no machine learning, model training, or biological feature engineering.
 
 ## Historical Time Separation
 
@@ -12,27 +12,43 @@ The planned study asks what could have been predicted at an earlier date. The ol
 
 Future information leakage occurs when a predictor contains information that was not available at the prediction date. Examples include a later review status, a newer submitter count, or a current annotation added after the older snapshot. Leakage can make a weak method look accurate. For this reason, newer fields are retained only to check outcomes and matches. Any future predictor will need a documented source and availability date no later than the older release.
 
-## Selected Releases and Format
+## Active VCV Version-History Pilot
 
-The original XML pilot considered official VCV releases dated 2024-02-01 and 2025-02-06. Their compressed sizes total about 7.89 GB. That strategy is paused because streaming can still consume the full transfer even when no archive is retained.
+The original XML pilot considered official VCV releases dated 2024-02-01 and 2025-02-06. Their compressed sizes total about 7.89 GB. That full-archive strategy remains paused because streaming can still consume the complete transfer.
 
-The active browser workspace starts with zero records and is limited to ten. ESummary retrieves one current Variation ID, or ESearch finds at most five current candidates for a gene. If a reviewer identifies an explicit historical VCV accession version, the optional command-line EFetch tool can retrieve only that version with a 10 MB cap. The version must be linked to a date and reviewed; it is not automatically treated as a monthly snapshot.
+The dashboard's Version History Explorer is the normal workflow. Its optional ESearch/ESummary helper finds at most five current candidates through individual current requests. History uses EFetch instead: an unversioned VCV request establishes the latest official version, followed by exact `.version` requests in `all`, custom inclusive-range, or endpoint mode. Strict canonical VCV validation and exact returned-version checks prevent a different record or version from being accepted silently.
 
 ## Transfer Protection
 
-Before any download, the software reports source, estimated size, purpose, and whether the plan crosses 500 MB. It waits for an explicit confirmation flag. The archive inspection command is metadata-only and has no body-scan option.
+Planning is local and does not contact NCBI. Every operation shows its official source, purpose, request count, maximum transfer, and storage estimate before explicit approval. The initial latest-version request does not count toward the maximum 25 historical requests. Historical EFetch requests are individual, sequential, and paced by 0.34 seconds; they use a 10-second connect timeout, a 30-second read timeout, and two limited retries for connect/read failures and selected transient HTTP statuses.
 
-Pilot mode also waits for explicit confirmation even though its requests are small. Current ESummary planning reserves 1 MB. Versioned EFetch is streamed and stops at 10 MB. The CSV is written atomically, and failed temporary output is removed.
+Each response has a 10 MiB hard cap (approximately 10 MB), and the complete exploration has a 50 MiB hard cap. Cancellation is observed between requests, not during the active request. Only official NCBI endpoints are used, only one dashboard exploration runs at once, and no archive action is exposed.
 
-The browser Pilot Workspace is now the normal interface. A local planning request does not contact NCBI. After approval, one Variation ID or VCV request has a 1 MB estimate; a gene search has a 6 MB estimate and returns at most five candidates. Actual JSON body bytes are recorded. The 500 MB protection remains active, and no archive action is exposed by the dashboard.
+Partial or complete results with received historical data are saved under the ignored `data/manual_review/vcv_history/<VCV>/` tree. Individual JSON and XML replacements are bounded and atomic, symlinks are refused, and readers use the same lock as writers so they do not observe an in-progress refresh. An interrupted process can still leave a mixed generation across files, so manifests and source records must be checked during review.
+
+## Automatic Parsing and Comparison
+
+Each EFetch record preserves accession/version, Variation ID, record type, genes, name, HGVS expressions, record dates, conditions, record status, replacement/deletion metadata, and warnings. Germline, somatic clinical impact, and oncogenicity are parsed into separate classification blocks; each block has independent classification, review status, last-evaluated date, and submission count where supplied.
+
+Only `available` versions are compared, sorted by version. The comparison skips unavailable holes and warns when the two available versions are not numerically consecutive. Automatic germline change labels are:
+
+- `No_Classification_Change`
+- `VUS_to_Pathogenic`, `VUS_to_Likely_Pathogenic`, `VUS_to_Benign`, `VUS_to_Likely_Benign`
+- `Pathogenic_to_VUS`, `Benign_to_VUS`
+- `Became_Conflicting`, `Conflict_Resolved`, `Other_Germline_Change`
+- `Non_Germline_Change`, `Missing_Classification`
+
+`Non_Germline_Change` means the normalized germline classification was unchanged but a somatic or oncogenicity block differed. The timeline also reports review-status values, whether known germline submission counts changed, warnings, and `high` or `limited` confidence. `Unable_to_Compare` and `unable` confidence are declared schema values but are not currently emitted by this comparison path. These are automatic labels, not manually verified scientific outcomes.
 
 ## Manual Pilot Review
 
-The browser stores current ClinVar wording without converting it to harmful or harmless. A reviewer separately enters an older date and classification, newer comparison date and classification, classification type, official NCBI source URL, notes, ambiguity reason, and checklist answers. Allowed classification labels keep uncertain, pathogenic, likely pathogenic, benign, likely benign, conflicting, protective, risk factor, drug response, oncogenic, likely oncogenic, other, and unable-to-determine categories separate.
+Version histories begin `unreviewed` and can become `needs_review`, `ambiguous`, `manually_verified`, or `excluded`. Ambiguous and excluded histories require notes. `manually_verified` requires all ten checks: VCV identity, Variation ID, gene, classification type, old/new versions, relevant dates, official source requests, manually checked classification change, documented missing/conflicting information, and acknowledgement that versions are not monthly snapshots.
 
-Records begin `unreviewed` and can move to `reviewing`, `verified`, `ambiguous`, or `excluded`. Ambiguous and excluded records require an explanation. Verified records require both dates, both classifications, an official source, classification type, every checklist item, and an older date before the newer date. The calculated timeline never fills absent values.
+Reviewer decisions, notes, sources, verification flags, and manual corrections are stored only in `review.json`. Manual corrections are annotations and never mutate `metadata.json`, `versions.json`, `comparisons.json`, `manifest.json`, or raw XML. This separation keeps automatic extraction reproducible and human interpretation auditable.
 
-The workspace is a small versioned JSON file. Every mutation is validated, copied to one backup, written to a temporary file, and atomically replaced. Command-line tools remain available for reproducibility but are not required for normal pilot research.
+The manifest and review store the same SHA-256 digest of the automatic evidence. If a
+refresh changes that evidence, a previously verified case returns to `needs_review`
+with all checks false. Human notes, sources, and corrections remain preserved.
 
 ## Parsing
 
@@ -65,4 +81,4 @@ For the XML pilot, germline, somatic clinical impact, and oncogenicity are separ
 
 The included CSV is synthetic test data and is not a ClinVar extract. It tests parsing, matching, missing data, output labels, and command-line formatting. Before full-release processing, a small real sample from every match category must be checked against the archived records and, when necessary, VCV or RCV history.
 
-The browser workspace begins with zero records and is limited to ten. No archived XML body has been processed, no historical classification has been verified, no biological conclusion has been made, and no model has been trained.
+One real three-version history, `VCV000014026`, has been retrieved and automatically compared. All three aggregate germline classifications were `Pathogenic`; review status and submission counts changed, but no germline classification change was detected. The case remains `needs_review` with zero completed verification checks. The next validation step is to build and manually verify approximately 10–25 genuine histories, preserving unsuccessful, ambiguous, deleted/replaced, missing, and parsing-failure cases. Only then will the project evaluate whether VCV history is sufficient or whether archived monthly summaries/releases are required.

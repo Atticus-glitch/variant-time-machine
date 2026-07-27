@@ -16,7 +16,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--no-browser",
         action="store_true",
-        help="Start the server without opening the Pilot Workspace",
+        help="Start the server without opening the Version History Explorer",
     )
     args = parser.parse_args()
     run_dashboard(open_browser=not args.no_browser)

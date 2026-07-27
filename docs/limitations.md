@@ -15,7 +15,7 @@
 - Exact outcome mapping is intentionally conservative. Explicit conflict text becomes `VUS_to_Conflicting`, while unfamiliar mixed terms become `Unable_to_Verify`.
 - The synthetic timeline verifies software behavior only. Its counts and outcomes say nothing about real ClinVar reclassification rates.
 - The current parser reads a release table into memory. Memory use and a possible chunked approach must be tested before processing the full archives.
-- The five to ten pilot variants will be manually selected. They will not be representative of ClinVar and cannot estimate a reclassification rate.
+- The approximately 10–25 VCV pilot histories will be manually selected. They will not be representative of ClinVar and cannot estimate a reclassification rate; the separate older Pilot Workspace remains capped at ten records.
 - Streaming saves local disk, but a missing late record can still require transferring an entire 3.33 GB or 4.56 GB compressed archive.
 - The two pilot releases use VCV schema revisions 2.0 and 2.2. Named fields can still be absent or change meaning, so extraction tests do not replace source review.
 - Official MD5 values identify the complete source files. A stream that stops early cannot calculate and verify the complete archive MD5 from transferred bytes.
@@ -30,5 +30,19 @@
 - The local JSON backup stores only the immediately previous workspace state. It is not a complete audit-history system.
 - A record marked `verified` means the project checklist was completed. It does not mean ClinVar is ground truth or that the classification is medically correct.
 - The Pilot Workspace is local and intended for one researcher. It does not implement user accounts or multi-user conflict resolution.
+- ESummary/ESearch candidate lookup reports current aggregate summaries only. It is separate from official VCV EFetch and cannot establish history.
+- An unversioned VCV EFetch establishes the latest version at retrieval time, not the version active at a chosen past date. Exact `.version` requests recover specific records but do not provide a monthly calendar index.
+- A VCV version changes when aggregate record content changes. It is not equivalent to a complete monthly ClinVar snapshot, and a version increment does not necessarily mean the germline classification changed.
+- VCV is an aggregate variant record across conditions. Condition-specific meaning may require RCV/SCV evidence that this pilot does not retrieve or interpret.
+- Automatic parsing keeps germline, somatic clinical impact, and oncogenicity separate, but tolerant XML paths may still miss an untested schema shape. Missing fields and warnings require source review.
+- Automatic comparison skips unavailable version holes and compares the next available records. A nonconsecutive warning does not reconstruct the missing transitions.
+- String-based classification labels recognize only exact normalized categories plus conflict text. `Other_Germline_Change`, `Non_Germline_Change`, and `Missing_Classification` need human interpretation.
+- The safety bounds can truncate the feasible history: at most 25 historical version requests, 10 MiB per response, and 50 MiB per exploration. A VCV with more than 25 versions requires a custom range or endpoints rather than `all`.
+- Sequential requests wait 0.34 seconds and use 10-second connect and 30-second read timeouts with two limited retries. Network or NCBI failures may leave a partial history.
+- Cancellation is cooperative between requests and cannot stop an active HTTP request immediately. A partial exploration is not a complete history.
+- The saved tree preserves exact automatic artifacts and separate manual annotations, but `manually_verified` means only that this project's ten-item checklist was completed; it does not make the interpretation medically correct.
+- Each artifact file is replaced atomically and dashboard readers are locked during refresh, but a process interruption between file replacements can still leave files from different generations. The evidence digest and manual source review help detect this; they do not provide a transactional database.
+- Refreshing changed automatic evidence resets manual verification to `needs_review` and clears the checklist while preserving notes, sources, and corrections. Identical evidence preserves the review state.
+- The bounded VCV pilot is intentionally manually selected and cannot estimate ClinVar-wide rates. Eventual archived monthly summaries or releases may still be required for cohort construction and exact calendar cutoffs.
 
-All conclusions will be restricted to the chosen releases, matching rules, feature availability, and evaluation design. These limitations will be updated as empirical problems are discovered.
+All conclusions will be restricted to the requested VCV versions or chosen releases, matching and comparison rules, feature availability, and evaluation design. These limitations will be updated as empirical problems are discovered.

@@ -1,29 +1,42 @@
 # Local Development Dashboard
 
-This simple Flask dashboard helps a new researcher understand what Variant Time Machine does, what has been built, and what should happen next. It is not the final public website, a medical tool, or a report of scientific results.
+This local Flask dashboard is the normal bounded VCV history workflow. Its startup target is the **Version History Explorer**, not a report of scientific results or a medical tool.
 
 ## Start the Dashboard
 
 From the repository root:
 
 ```bash
-source .venv/bin/activate
-python scripts/start_dashboard.py
+.venv312/bin/python scripts/start_dashboard.py
 ```
 
-The Pilot Workspace normally opens automatically. Its address is:
+After the documented Python 3.12 installation succeeds, that command is recommended.
+The current `.venv` is Python 3.14.4, not Python 3.12; use
+`.venv/bin/python scripts/start_dashboard.py` only as a temporary fallback.
+
+The Version History Explorer normally opens automatically at:
 
 ```text
-http://127.0.0.1:5000/pilot_workspace.html
+http://127.0.0.1:5000/version_history.html
 ```
 
 To start without opening a browser:
 
 ```bash
-python scripts/start_dashboard.py --no-browser
+.venv312/bin/python scripts/start_dashboard.py --no-browser
 ```
 
 Press `Ctrl+C` in the server terminal when you want to stop it.
+
+## Version History Workflow
+
+1. Optionally plan and approve a gene search. ESearch returns at most five identifiers, followed by individual current ESummary requests; these are candidate hints, not history.
+2. Enter canonical uppercase `VCV#########` or `VCV#########.version`, plan one official current VCV EFetch, and approve it. The route normalizes to the base accession and uses unversioned EFetch to establish the latest official version.
+3. Choose `all`, `custom`, or `endpoints`. Custom is an inclusive integer range; endpoints means version 1 and the latest version. The server rebuilds and validates the plan before starting it.
+4. Approve the exact list. Up to 25 historical versions are requested individually and sequentially from official NCBI EFetch. An exact `.version` response is rejected as missing if NCBI returns a different version.
+5. Inspect the parsed timeline, warnings, source requests, and comparisons, then complete the separate manual review. A cancellation request takes effect between requests, after any active request finishes.
+
+The initial latest-version lookup is separate from the maximum 25 historical requests. Requests use 0.34-second sequential pacing, 10-second connect and 30-second read timeouts, and two limited retries for connection/read errors and selected transient statuses. Each response has a 10 MiB hard cap (approximately 10 MB); one exploration has a 50 MiB hard cap. Only official NCBI ESearch, ESummary, and EFetch endpoints are used, and no archive control is exposed.
 
 ## What Each Section Means
 
@@ -37,7 +50,8 @@ Press `Ctrl+C` in the server terminal when you want to stop it.
 - Live ClinVar Connection shows whether this dashboard session has completed a current one-record NCBI lookup.
 - Historical Variant Comparison counts only browser workspace records that passed every verification rule. It starts at zero by design.
 - Data Transfer Safety shows the largest planned request, current transfer, total raw download size, data storage use, and that large-download protection is on.
-- Pilot Workspace is the main control center. It plans a small lookup before network access, adds current records, prevents duplicates, saves review drafts, enforces verification checks, and displays exact classification categories on a timeline.
+- Version History Explorer is the main control center for current VCV confirmation, exact version plans, progress, cancellation, saved histories, automatic timelines, and ten-item manual verification.
+- Pilot Workspace remains available for the older current-record/manual-date workflow, but it is not the startup target.
 
 ## How This Helps Development
 
@@ -54,10 +68,17 @@ The browser loads information from these Flask API endpoints:
 - `POST /api/clinvar/lookup`
 - `GET`, `POST`, and `PATCH` routes under `/api/pilot`
 - `/api/transfer-safety`
+- `POST /api/vcv-history/current-plan` and `/api/vcv-history/current`
+- `POST /api/vcv-history/plan` and `/api/vcv-history/explore`
+- `GET /api/vcv-history/operations/<operation_id>` and its cancellation route
+- `GET /api/vcv-histories` and `GET /api/vcv-histories/<VCV>`
+- `PATCH /api/vcv-histories/<VCV>/review`
 
-The separate browser lookup remains available for simple current checks, but normal pilot work should use the Pilot Workspace. Current API results are not historical results. Command-line scripts remain optional developer tools for reproducibility and testing.
+The separate browser lookup and Pilot Workspace remain available, but normal pilot work should use the Version History Explorer. Current ESummary candidate results are not historical results, and VCV versions are not monthly snapshots.
 
 Pilot Workspace records are stored in `data/manual_review/pilot_workspace.json`. Each change uses validation, a backup, and an atomic file replacement. The workspace stores no secrets and runs no shell commands. It has no route or button for the paused multi-gigabyte archive scan.
+
+Version-history artifacts are stored under the Git-ignored `data/manual_review/vcv_history/<VCV>/` layout documented in `data/manual_review/README.md`. Automatic parsed data and XML are never overwritten by manual corrections; review annotations and status remain in `review.json`.
 
 To update progress, edit `PROGRESS_ITEMS` in `website/dashboard/app.py`. Change a status only when the explanation is accurate. Do not mark historical comparison complete until real matches have been checked manually.
 

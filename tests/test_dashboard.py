@@ -1,5 +1,7 @@
 """Tests for the local Flask research dashboard."""
 
+from pathlib import Path
+
 import pytest
 from flask import Flask
 from flask.testing import FlaskClient
@@ -8,13 +10,22 @@ from variant_time_machine.clinvar_api import (
     ClinVarConnectionError,
     ClinVarVariant,
 )
+from variant_time_machine.pilot_workspace import empty_workspace, save_workspace
 from website.dashboard.app import SYNTHETIC_NOTICE, create_app
 
 
 @pytest.fixture
-def dashboard_app() -> Flask:
+def dashboard_app(tmp_path: Path) -> Flask:
     """Create a dashboard configured for Flask testing."""
-    return create_app({"TESTING": True})
+    workspace = tmp_path / "pilot_workspace.json"
+    save_workspace(workspace, empty_workspace())
+    return create_app(
+        {
+            "TESTING": True,
+            "PILOT_WORKSPACE_PATH": workspace,
+            "VCV_HISTORY_ROOT": tmp_path / "vcv_history",
+        }
+    )
 
 
 @pytest.fixture
@@ -45,6 +56,7 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert client.get("/static/app.js").status_code == 200
     assert client.get("/static/lookup.js").status_code == 200
     assert client.get("/static/workspace.js").status_code == 200
+    assert client.get("/static/version_history.js").status_code == 200
     lookup_page = client.get("/variant_lookup.html")
     assert lookup_page.status_code == 200
     assert "ClinVar Variant Lookup" in lookup_page.get_data(as_text=True)
@@ -52,6 +64,38 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert pilot_page.status_code == 200
     assert "Pilot Workspace" in pilot_page.get_data(as_text=True)
     assert client.get("/pilot_workspace.html").status_code == 200
+
+
+def test_version_history_explorer_page_has_safety_copy_and_navigation(
+    client: FlaskClient,
+) -> None:
+    """The dedicated explorer should expose its workflow and scientific limits."""
+    dashboard_dir = Path(__file__).parents[1] / "website" / "dashboard"
+    page = (dashboard_dir / "version_history.html").read_text(encoding="utf-8")
+
+    assert "Version History Explorer" in page
+    assert "/static/version_history.js" in page
+    assert "Explore Version History" in page
+    assert "Saved Histories" in page
+    assert "Save as Pilot Case" in page
+    assert "Mark Manually Verified" in page
+    assert (
+        "A VCV version changes when content in the aggregated variant record changes. "
+        "A new version does not necessarily mean the medical classification changed."
+        in page
+    )
+    assert (
+        "This pilot version history is not the same thing as comparing complete "
+        "monthly ClinVar release snapshots." in page
+    )
+
+    home = client.get("/").get_data(as_text=True)
+    pilot = client.get("/pilot_workspace.html").get_data(as_text=True)
+    explorer = client.get("/version_history.html")
+    assert explorer.status_code == 200
+    assert "Version History Explorer" in explorer.get_data(as_text=True)
+    assert '<a href="/version_history.html">Version History Explorer</a>' in home
+    assert '<a href="/version_history.html">Version History Explorer</a>' in pilot
 
 
 def test_progress_endpoint_reports_all_stages_honestly(client: FlaskClient) -> None:
@@ -110,7 +154,7 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     assert response.status_code == 200
     payload = response.get_json()
     assert payload["project_name"] == "Variant Time Machine"
-    assert payload["current_milestone"] == "First single-variant research workflow"
+    assert payload["current_milestone"] == "First multi-version VCV pilot review"
     assert "uncertain genetic variant" in payload["project_explanation"]
     assert len(payload["folders"]) == 8
     assert len(payload["next_tasks"]) == 3
@@ -130,9 +174,11 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
         "storage",
     }.issubset(payload["system"])
     assert "data/example_variants.csv" in payload["system"]["files_created"]
-    assert payload["research_notes"]["title"] == ("2026-07-26 Browser Pilot Workspace")
+    assert payload["research_notes"]["title"] == (
+        "2026-07-27 Bounded VCV Version History Implementation"
+    )
     assert (
-        "dashboard became the main pilot research interface"
+        "first live dashboard demonstration used `VCV000014026`"
         in payload["research_notes"]["content"]
     )
     assert payload["clinvar_connection"]["connection_status"] == "Not connected"

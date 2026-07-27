@@ -1,135 +1,101 @@
-# ClinVar API Connection
+# ClinVar API Connections
 
-## Purpose
+## Two Current Lookups
 
-The browser Pilot Workspace retrieves current ClinVar summaries without downloading a database. Before a request, a local planning route reports source, maximum estimated transfer, purpose, whether the action is small, and whether protection blocked it. The user must approve the plan before the backend contacts NCBI.
+The dashboard uses only official NCBI E-utilities, with a local plan and explicit
+approval before every network operation. It does not scrape pages or contact a
+third-party service.
 
-This feature does not perform historical comparison, diagnosis, or machine learning.
+The optional candidate helper uses ESearch and ESummary:
 
-## Official Connection
+- ESearch accepts one strictly validated gene symbol and returns at most five current ClinVar identifiers.
+- Each candidate is retrieved by an individual ESummary request. A Variation ID or VCV entered in the older lookup workflow is normalized to a numeric Variation ID and also retrieved individually.
+- ESummary supplies a small current aggregate overview: Variation ID, current VCV accession/version when present, genes, aggregate germline classification, conditions, review status, limited evidence metadata, official source URL, retrieval time, and measured JSON bytes.
+- ESummary is useful for finding candidates, but it is not the official VCV history response and does not establish a historical classification.
 
-The project uses the NCBI Entrez E-utilities `esummary` endpoint:
+The Version History Explorer uses official VCV EFetch XML:
 
 ```text
-https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi
+https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi
 ```
 
-The request specifies:
+It first requests the unversioned VCV accession to establish the latest official
+accession and version. Only then can it plan exact historical requests. `all`
+requests versions 1 through latest, `custom` requests an inclusive integer range,
+and `endpoints` requests version 1 and latest (or only version 1 when latest is 1).
+Each historical version is a separate request such as `VCV000014206.1`.
 
-- database: `clinvar`
-- one numeric ClinVar Variation ID
-- JSON response format
-- tool name: `variant_time_machine`
+## Strict Validation
 
-NCBI documents ClinVar support for `esearch`, `esummary`, `elink`, and `efetch`. This project uses `esummary` because it provides a small structured overview suitable for one-record testing. It does not scrape an HTML page.
+VCV input must exactly match uppercase `VCV#########` with nine digits and an
+optional positive version suffix, for example `VCV000014206` or
+`VCV000014206.1`. `VCV000000000`, lowercase or unpadded accessions, whitespace,
+zero/negative versions, URLs, RCV/SCV accessions, rs identifiers, free text, and
+shell-like input are rejected.
+
+The dashboard accepts an optional suffix but normalizes the current lookup to the
+base accession: it always runs unversioned EFetch to discover the latest version
+before planning history. The reusable history client can plan one supplied exact
+version after that same current lookup. For every explicitly versioned request, a
+response with a different accession version is recorded as `missing`, not silently
+accepted.
+
+## Request Bounds
+
+- The initial unversioned current EFetch is separate from the limit of 25 historical version requests.
+- Historical requests run sequentially, with 0.34 seconds of pacing before each request.
+- Connect timeout is 10 seconds and read timeout is 30 seconds.
+- The session permits two limited retries for connect/read failures and HTTP 429, 500, 502, 503, and 504 responses, with backoff. Only GET requests are retried.
+- Each streamed response has a 10 MiB (10,485,760-byte) hard cap, approximately 10 MB.
+- The complete current-plus-history result has a 50 MiB (52,428,800-byte) hard cap. The dashboard describes this as one exploration's maximum.
+- Cancellation is checked before retrieval and between version requests. It cannot interrupt an HTTP request already in progress; that request finishes safely before cancellation takes effect.
+- Only one dashboard history exploration can run at a time.
+
+The server reconstructs the plan from validated input when exploration begins and
+rejects a submitted version list that does not match. `all` fails when the latest
+version would require more than 25 historical requests; the user must choose a
+custom range or endpoints. No full-archive request is available in the dashboard.
+
+## Parsed EFetch Fields
+
+The namespace-tolerant XML parser records the VCV accession/version, Variation ID,
+record type, genes, the first parsed variant name, HGVS expressions, creation/update/deletion
+dates, conditions, record status, replacement metadata, deleted state, and warnings.
+It deliberately keeps three classification categories separate:
+
+- germline classification, review status, last-evaluated date, and submission count;
+- somatic clinical impact with its own corresponding metadata;
+- oncogenicity classification with its own corresponding metadata.
+
+Missing fields remain missing and produce warnings where relevant. Outcomes are
+`available`, `missing`, `deleted/replaced`, `request failure`, or `parsing failure`.
+Decoded XML text and exact source/retrieval provenance are retained locally when a
+response body was received; the public API response omits raw XML.
+
+## Failure Handling
+
+Invalid input and invalid plans fail before network access. HTTP/network failures,
+oversized responses, no-record responses, malformed XML, accession-version
+mismatches, and total-limit failures remain explicit; the software does not create
+substitute data. Transfer-limit failures stop the operation. A cancelled partial
+exploration is saved only if at least one historical response was received.
+
+## Why VCV History
+
+Exact VCV versions provide a low-bandwidth way to inspect how one aggregate ClinVar
+variant record changed and can reveal classification, review, submission, condition,
+replacement, or metadata changes. They are useful for selecting and manually
+validating a small historical pilot.
+
+A VCV version is not a complete monthly ClinVar snapshot: versions change when
+record content changes, not on a monthly schedule, and a version alone does not
+prove what was visible at an arbitrary calendar cutoff. Eventual archived monthly
+summaries or releases may still be needed for release-wide cohort selection and
+date-specific reconstruction.
 
 Official documentation:
 
 - https://www.ncbi.nlm.nih.gov/clinvar/docs/programmatic_access/
 - https://www.ncbi.nlm.nih.gov/clinvar/docs/maintenance_use/
 
-Sources accessed 2026-07-26.
-
-## Accepted Identifiers
-
-The Pilot Workspace search accepts:
-
-- a numeric ClinVar Variation ID, such as `14206`
-- a VCV accession, such as `VCV000014206` or `VCV000014206.1`
-- a short gene symbol, such as `BRCA1`, which returns at most five current candidates
-
-The VCV number is normalized to its numeric Variation ID before the request. Gene searches use an official ESearch query limited to five records. RCV accessions, SCV accessions, rs numbers, unrestricted free text, URLs, and shell-like input are not accepted.
-
-## Returned Fields
-
-`src/variant_time_machine/clinvar_api.py` returns a `ClinVarVariant` record containing:
-
-- variant identifier returned by NCBI,
-- numeric Variation ID,
-- gene symbol or symbols,
-- current aggregate germline classification,
-- associated germline conditions when listed,
-- current aggregate germline review status,
-- a short evidence metadata summary when available,
-- official ClinVar source URL,
-- UTC retrieval time.
-- measured JSON response bytes when available.
-
-The local `POST /api/clinvar/plan` route performs no external request. The approved `POST /api/clinvar/lookup` route accepts only validated query text and a true approval value. It never executes commands. The response includes the transfer source, estimate, actual bytes, purpose, small-request state, and protection result.
-
-The evidence summary reports only metadata present in ESummary, such as the number of listed SCV and RCV accessions, last evaluation date, and molecular consequence. It does not summarize the scientific arguments inside individual submissions.
-
-## Why Use This Instead of a Large Download
-
-For learning and interface development, a one-record API call is faster, smaller, and easier to inspect than a complete ClinVar release. It proves that requests, validation, structured parsing, dashboard display, and failure reporting work with a real source.
-
-Large archived files are still necessary later for reproducible historical comparison. The live API represents current ClinVar data and cannot replace fixed old and new snapshots for the main research question.
-
-The pilot uses this endpoint for one manually selected current record at a time. Historical fields begin blank. NCBI also documents EFetch for one explicit VCV accession version. Pilot mode can request that small XML record, but a reviewer must establish its date and scope.
-
-## Pilot Workspace
-
-Start the dashboard once and use:
-
-```text
-http://127.0.0.1:5000/pilot_workspace.html
-```
-
-The browser is the normal interface for search, add, review, notes, sources, statuses, and timelines. The routes under `/api/pilot` write only the bounded local workspace file. There is no normal dashboard route for archive extraction.
-
-## Optional Pilot Command
-
-Display the five manual slots without a request:
-
-```bash
-python scripts/pilot_mode.py
-```
-
-Display one current API plan without starting it:
-
-```bash
-python scripts/pilot_mode.py 14206 --reason "Manually selected test record"
-```
-
-Add `--confirm-api-requests` only after reviewing the source, estimate, and reason. The optional `--historical-vcv` value must include a version. Full archive scanning is paused.
-
-## Failure Handling
-
-The client reports separate errors for:
-
-- an invalid identifier,
-- no ClinVar record,
-- network or HTTP failure,
-- malformed or incomplete JSON.
-
-If the internet or NCBI service is unavailable, the script and dashboard say the connection failed. They do not create substitute data.
-
-## Limitations
-
-- The response reflects current ClinVar, not an archived release.
-- ClinVar classifications are submitted by outside organizations and may conflict or change.
-- ESummary is an overview and does not include all evidence in full VCV, RCV, or SCV records.
-- Some fields may be missing.
-- The first client supports one identifier per request and does not implement bulk lookup.
-- Repeated automated use must follow NCBI rate and usage guidance.
-- This information is not medical advice and must not be used for healthcare decisions.
-
-## Run the Command-Line Test
-
-```bash
-python scripts/test_clinvar_connection.py
-```
-
-Use another supported identifier:
-
-```bash
-python scripts/test_clinvar_connection.py VCV000014206
-```
-
-## Simple Browser Lookup
-
-Start the dashboard and open:
-
-```text
-http://127.0.0.1:5000/variant_lookup.html
-```
+Sources accessed 2026-07-26 and 2026-07-27.

@@ -115,6 +115,7 @@ PILOT_VARIANTS_PATH = DATA_DIR / "manual_review" / "pilot_variants.csv"
 PILOT_RECORD_PATH = DATA_DIR / "manual_review" / "pilot_variant_001.json"
 PILOT_REVIEW_PATH = DATA_DIR / "manual_review" / "pilot_review.json"
 PILOT_WORKSPACE_PATH = DATA_DIR / "manual_review" / "pilot_workspace.json"
+VCV_HISTORY_DIR = DATA_DIR / "manual_review" / "vcv_history"
 
 REQUIRED_DIRECTORIES: tuple[Path, ...] = (
     PROJECT_ROOT / "research",
@@ -162,6 +163,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PILOT_VARIANTS_PATH,
     PILOT_RECORD_PATH,
     PILOT_WORKSPACE_PATH,
+    VCV_HISTORY_DIR / ".gitkeep",
     PILOT_EXTRACTED_DIR / ".gitkeep",
     INTERIM_DATA_DIR / "example_clinvar_timeline.csv",
     RAW_DATA_DIR / ".gitkeep",
@@ -177,6 +179,8 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "src" / "variant_time_machine" / "pilot_record.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "pilot_workspace.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "remote_archive.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "vcv_history.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "vcv_history_store.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "features.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "train.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "evaluate.py",
@@ -204,10 +208,12 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "website" / "dashboard" / "templates" / "index.html",
     PROJECT_ROOT / "website" / "dashboard" / "variant_lookup.html",
     PROJECT_ROOT / "website" / "dashboard" / "pilot_workspace.html",
+    PROJECT_ROOT / "website" / "dashboard" / "version_history.html",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "styles.css",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "app.js",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "lookup.js",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "workspace.js",
+    PROJECT_ROOT / "website" / "dashboard" / "static" / "version_history.js",
     PROJECT_ROOT / "docs" / "data-dictionary.md",
     PROJECT_ROOT / "docs" / "methods.md",
     PROJECT_ROOT / "docs" / "limitations.md",

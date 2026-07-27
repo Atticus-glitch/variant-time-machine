@@ -1,6 +1,6 @@
 # Data Dictionary
 
-The pipeline uses three related tables. The parser creates a standardized release table, the matcher creates a historical timeline table, and the downloader creates a JSON provenance record. Exact ClinVar header meanings must still be checked against the documentation for each selected release.
+The repository contains three older release-pipeline artifacts plus the active bounded VCV history artifacts. The parser creates a standardized release table, the matcher creates a historical timeline table, and the downloader creates a JSON provenance record. The Version History Explorer separately stores one artifact tree per VCV. Exact ClinVar meanings must still be checked against the documentation for each source and version.
 
 ## Standardized Release Table
 
@@ -118,28 +118,74 @@ Current `match_status` values include:
 | `verification_status` | What was retrieved and what still needs manual checking |
 | `notes` | Retrieval date, version warning, and unresolved questions |
 
-## Extracted VCV Record
+## VCV History Artifacts
+
+The active Version History Explorer saves each result below the Git-ignored
+`data/manual_review/vcv_history/<VCV>/` directory. See
+`data/manual_review/README.md` for the exact tree. Automatic files are bounded and
+written atomically; manual review remains separate.
+
+### Parsed VCV Record
 
 | Field | Meaning |
 | --- | --- |
-| `variation_id` | `VariationID` on `VariationArchive` |
-| `accession`, `version` | VCV accession and archive version |
-| `record_type`, `record_status` | Archive record type and current, replaced, or other stated status |
-| `name` | Name from the classified allele or allele set when present |
-| `allele_ids`, `genes`, `conditions` | Lists found within that archive record |
-| `germline_classification` | Aggregate germline description only |
-| `germline_review_status` | Germline review status only |
-| `germline_last_evaluated` | Germline evaluation date attribute when present |
-| `germline_submission_count` | Germline submission count attribute when present |
-| `somatic_clinical_impact` | Somatic clinical impact description only |
-| `oncogenicity_classification` | Oncogenicity description only |
-| `replaced_by`, `replacement_list` | Record-history accessions stated by ClinVar |
+| `accession`, `version`, `accession_version` | Canonical base VCV, positive integer version, and combined exact identifier |
+| `variation_id`, `record_type` | `VariationArchive` identifiers and type when present |
+| `genes`, `name`, `hgvs`, `conditions` | Parsed variant and condition context; lists preserve unique source values |
+| `date_created`, `date_last_updated`, `date_deleted` | Record-level dates supplied by ClinVar; missing dates remain null |
+| `germline` | Independent classification block with `classification`, `review_status`, `date_last_evaluated`, and `submission_count` |
+| `somatic_clinical_impact` | Separate block with the same four fields; never folded into germline |
+| `oncogenicity` | Separate block with the same four fields; never folded into germline |
+| `record_status`, `replaced_by`, `replacements`, `deleted` | Status, record-history links, and calculated deletion flag |
+| `warnings` | Missing-field, deletion/replacement, or source warning text |
 
-## Paused XML Outputs
+Each requested outcome also records `requested_identifier`, exact `source_request`,
+`retrieved_at_utc`, `response_bytes`, `status`, parsed `record`, and `message`.
+Status is `available`, `missing`, `deleted/replaced`, `request failure`, or
+`parsing failure`. Raw XML is retained in a separate file when a response body was
+received rather than embedded in the JSON.
 
-The code can represent a small extracted VCV record, but full archive extraction is not part of the active pilot. No archive manifest or comparison output currently exists. The archive inspection command reads metadata only.
+### Version Comparison
 
-`pilot_review.json` stores a status, notes, and update time for each reviewed Variation ID. Allowed states are `Not reviewed`, `Confirmed match`, `Needs follow-up`, and `Rejected automatic match`.
+| Field | Meaning |
+| --- | --- |
+| `earlier_version`, `later_version` | Two available versions being compared; unavailable holes are skipped and warned about |
+| `earlier_identifier`, `later_identifier` | Exact VCV accession versions |
+| `earlier_germline_classification`, `later_germline_classification` | Unmodified germline descriptions |
+| `earlier_review_status`, `later_review_status` | Germline review-status text |
+| `detected_classification_change` | Automatic comparison label |
+| `submissions_changed` | Boolean when both germline counts exist; otherwise null |
+| `warnings`, `confidence` | Comparison caveats and `high` or `limited` confidence |
+
+Implemented detected labels are `No_Classification_Change`,
+`VUS_to_Pathogenic`, `VUS_to_Likely_Pathogenic`, `VUS_to_Benign`,
+`VUS_to_Likely_Benign`, `Pathogenic_to_VUS`, `Benign_to_VUS`,
+`Became_Conflicting`, `Conflict_Resolved`, `Other_Germline_Change`,
+`Non_Germline_Change`, and `Missing_Classification`. `Unable_to_Compare` and
+`unable` confidence are declared schema values but are not currently emitted by
+the consecutive-available-version comparison path.
+
+### Saved JSON Files
+
+| File | Contents |
+| --- | --- |
+| `metadata.json` | Requested accession, latest identifier, exact version plan, current-result metadata, summary, byte total, and cancellation state |
+| `versions.json` | Historical request outcomes and parsed records, without embedded raw XML |
+| `comparisons.json` | Automatic consecutive-available-version comparisons |
+| `manifest.json` | Exact requests, statuses, response sizes, retrieval times, application/Git versions, warnings, total bytes, automatic-artifact digest, and manual-verification flag |
+| `review.json` | Independent reviewer status, decision, notes, corrections, sources, timestamps, matching automatic-artifact digest, and ten verification booleans |
+| `raw/<identifier>.xml` | Decoded unversioned-current or versioned XML response text when a body was received |
+
+The five review statuses are `unreviewed`, `needs_review`, `ambiguous`,
+`manually_verified`, and `excluded`. All ten verification values must be true for
+`manually_verified`; ambiguous and excluded reviews require notes. Manual
+corrections are annotations and do not alter any automatic file.
+If refreshed automatic evidence has a different digest, an earlier manual verification
+is reset to `needs_review` and all checks become false. Existing notes, sources, and
+manual corrections remain separate and are preserved.
+
+The older `pilot_review.json` belongs to the paused archive pilot and stores a
+status, notes, and update time for reviewed Variation IDs.
 
 ## Single Pilot Variant JSON
 

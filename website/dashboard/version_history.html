@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Explore bounded official ClinVar VCV version histories">
+    <title>Version History Explorer | Variant Time Machine</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/version_history.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header history-explorer-header">
+      <div class="header-grid">
+        <div>
+          <p class="eyebrow">Official VCV records, one bounded request at a time</p>
+          <h1>Version History Explorer</h1>
+          <p class="subtitle">Inspect exact versions of one aggregated ClinVar variant record without treating a version change as a medical conclusion.</p>
+        </div>
+        <div class="milestone-card">
+          <span>Transfer protection</span>
+          <strong>Plan first. Confirm exact requests. Cancel at any time.</strong>
+          <small>Maximum 25 sequential version requests</small>
+        </div>
+      </div>
+    </header>
+
+    <nav class="workspace-nav" aria-label="Main navigation">
+      <a href="/">Project Dashboard</a>
+      <a href="/pilot_workspace.html">Pilot Workspace</a>
+      <a href="/version_history.html" aria-current="page">Version History Explorer</a>
+      <a href="#saved-histories">Saved Histories</a>
+    </nav>
+
+    <main class="history-explorer-main">
+      <section class="panel explorer-intro" aria-labelledby="explorer-intro-title">
+        <div class="section-heading compact"><div><p class="section-number">Read before exploring</p><h2 id="explorer-intro-title">What A Version Can Tell You</h2></div></div>
+        <p class="large-explanation">A VCV version changes when content in the aggregated variant record changes. A new version does not necessarily mean the medical classification changed.</p>
+        <p class="plain-language-note">This pilot version history is not the same thing as comparing complete monthly ClinVar release snapshots.</p>
+      </section>
+
+      <div class="explorer-layout">
+        <div>
+          <section class="panel" aria-labelledby="candidate-title">
+            <div class="section-heading">
+              <div><p class="section-number">Optional helper</p><h2 id="candidate-title">Find VCV Candidates By Gene</h2></div>
+              <p>Search one gene. At most five current records are shown.</p>
+            </div>
+            <form id="gene-form" class="workspace-form">
+              <label for="gene-query">One gene symbol</label>
+              <div class="lookup-controls">
+                <input id="gene-query" name="gene" required autocomplete="off" maxlength="40" placeholder="BRCA1">
+                <button type="submit">Plan Candidate Search</button>
+              </div>
+            </form>
+            <div id="candidate-plan" class="approval-box" hidden>
+              <dl id="candidate-plan-details" class="compact-plan"></dl>
+              <div class="button-row">
+                <button id="approve-candidates" type="button">Confirm Current Search</button>
+                <button id="dismiss-candidates" type="button" class="button-secondary">Cancel</button>
+              </div>
+            </div>
+            <p class="current-only-notice"><strong>Candidate results describe current ClinVar records only.</strong> They do not show that a candidate was formerly a VUS. A version above 1 is only a hint that earlier record content may exist. Current classification and classification category limitations are preserved.</p>
+            <p id="candidate-status" aria-live="polite">No candidate search planned.</p>
+            <div id="candidate-results" class="candidate-grid history-candidates"></div>
+          </section>
+
+          <section class="panel" aria-labelledby="current-title">
+            <div class="section-heading">
+              <div><p class="section-number">Step 1</p><h2 id="current-title">Confirm The Current VCV</h2></div>
+              <p>Use a strict VCV accession, optionally with a positive version suffix.</p>
+            </div>
+            <form id="current-form" class="workspace-form">
+              <label for="vcv-accession">VCV accession</label>
+              <div class="lookup-controls">
+                <input id="vcv-accession" name="accession" required autocomplete="off" spellcheck="false" pattern="VCV[0-9]{9}(\.[1-9][0-9]*)?" placeholder="VCV000014206" aria-describedby="vcv-format">
+                <button type="submit">Plan Current Lookup</button>
+              </div>
+              <small id="vcv-format">Exact format: VCV followed by nine digits, with an optional positive version.</small>
+            </form>
+            <div id="current-plan" class="approval-box" hidden>
+              <h3>Confirm current EFetch request</h3>
+              <dl id="current-plan-details" class="transfer-details explorer-transfer"></dl>
+              <label class="check-line"><input id="current-confirmation" type="checkbox"> I approve this one official current-record request.</label>
+              <button id="fetch-current" type="button" disabled>Fetch Current Record</button>
+            </div>
+            <p id="current-status" aria-live="polite">No current lookup has been planned.</p>
+            <article id="current-result" class="current-record-card" hidden>
+              <p class="section-number">Current official EFetch result</p>
+              <h3 id="current-identifier"></h3>
+              <dl id="current-fields" class="history-grid current-result-grid"></dl>
+            </article>
+          </section>
+
+          <section id="history-plan-section" class="panel" aria-labelledby="history-plan-title">
+            <div class="section-heading">
+              <div><p class="section-number">Step 2</p><h2 id="history-plan-title">Choose Exact Versions</h2></div>
+              <p>Ranges are inclusive. Endpoints requests version 1 and the current version.</p>
+            </div>
+            <form id="history-plan-form" class="workspace-form">
+              <fieldset class="mode-picker">
+                <legend>History choice</legend>
+                <label><input type="radio" name="history-mode" value="all" checked> All versions</label>
+                <label><input type="radio" name="history-mode" value="custom"> Custom inclusive range</label>
+                <label><input type="radio" name="history-mode" value="endpoints"> Endpoints only</label>
+              </fieldset>
+              <div id="custom-range" class="range-fields" hidden>
+                <label for="start-version">Start version <input id="start-version" type="number" min="1" step="1"></label>
+                <label for="end-version">End version <input id="end-version" type="number" min="1" step="1"></label>
+              </div>
+              <button type="submit">Build Exact Plan</button>
+            </form>
+            <div id="exact-plan" class="approval-box exact-plan" hidden>
+              <h3>Exact transfer plan</h3>
+              <dl id="exact-plan-details" class="transfer-details explorer-transfer"></dl>
+              <p><strong>Exact requested versions:</strong> <span id="requested-versions"></span></p>
+              <label class="check-line"><input id="history-confirmation" type="checkbox"> I approve these bounded sequential official ClinVar EFetch requests.</label>
+              <button id="explore-history" type="button" disabled>Explore Version History</button>
+            </div>
+            <p id="plan-status" aria-live="polite">Fetch a current record before building a history plan.</p>
+          </section>
+
+          <section id="operation-panel" class="panel operation-panel" aria-labelledby="operation-title" hidden>
+            <div class="section-heading">
+              <div><p class="section-number">Live background operation</p><h2 id="operation-title">Request Progress</h2></div>
+              <button id="cancel-operation" type="button" class="button-danger">Cancel</button>
+            </div>
+            <p id="operation-status" aria-live="polite"></p>
+            <ol id="operation-events" class="event-log"></ol>
+          </section>
+        </div>
+
+        <aside id="saved-histories" class="panel saved-histories" aria-labelledby="saved-title">
+          <div class="section-heading compact"><div><p class="section-number">Local artifacts</p><h2 id="saved-title">Saved Histories</h2></div></div>
+          <p>Completed and partial explorations are saved automatically when data was received.</p>
+          <div id="saved-history-list" class="saved-history-list"><p class="loading">Loading saved histories...</p></div>
+          <button id="refresh-histories" type="button" class="button-secondary">Refresh List</button>
+        </aside>
+      </div>
+
+      <section id="history-result" class="panel" aria-labelledby="result-title" hidden>
+        <div class="section-heading">
+          <div><p class="section-number">Automatic parsed result</p><h2 id="result-title">Version Timeline</h2></div>
+          <p id="result-summary"></p>
+        </div>
+        <div class="result-limitations">
+          <p>A VCV version changes when content in the aggregated variant record changes. A new version does not necessarily mean the medical classification changed.</p>
+          <p>This pilot version history is not the same thing as comparing complete monthly ClinVar release snapshots.</p>
+        </div>
+        <div id="timeline" class="version-timeline"></div>
+      </section>
+
+      <section id="history-review" class="panel" aria-labelledby="history-review-title" hidden>
+        <div class="section-heading">
+          <div><p class="section-number">Human review, stored separately</p><h2 id="history-review-title">Review Saved History</h2></div>
+          <p id="review-state"></p>
+        </div>
+        <p class="plain-language-note">Manual corrections never overwrite the automatic timeline above. They are retained separately as reviewer annotations.</p>
+        <form id="history-review-form" class="workspace-form form-grid">
+          <label>Review notes <textarea id="history-notes" maxlength="20000"></textarea></label>
+          <label>Reviewer decision <textarea id="reviewer-decision" maxlength="4000"></textarea></label>
+          <label>Manual corrections JSON <textarea id="manual-corrections" spellcheck="false" placeholder='{"versions.0.record.germline.classification": "..."}'></textarea></label>
+          <label>Official sources, one per line <textarea id="review-sources" spellcheck="false"></textarea></label>
+          <fieldset id="verification-checklist" class="checklist">
+            <legend>Verification checklist</legend>
+            <label><input type="checkbox" data-verification="VCV identity confirmed"> VCV identity confirmed</label>
+            <label><input type="checkbox" data-verification="Variation ID confirmed"> Variation ID confirmed</label>
+            <label><input type="checkbox" data-verification="gene confirmed"> gene confirmed</label>
+            <label><input type="checkbox" data-verification="classification type confirmed"> classification type confirmed</label>
+            <label><input type="checkbox" data-verification="old and new versions recorded"> old and new versions recorded</label>
+            <label><input type="checkbox" data-verification="relevant dates recorded"> relevant dates recorded</label>
+            <label><input type="checkbox" data-verification="official source requests recorded"> official source requests recorded</label>
+            <label><input type="checkbox" data-verification="classification change manually checked"> classification change manually checked</label>
+            <label><input type="checkbox" data-verification="missing/conflicting information documented"> missing/conflicting information documented</label>
+            <label><input type="checkbox" data-verification="versions-vs-monthly-snapshots limitation acknowledged"> versions-vs-monthly-snapshots limitation acknowledged</label>
+          </fieldset>
+          <div class="button-row review-actions">
+            <button id="save-pilot-case" type="button">Save as Pilot Case</button>
+            <button type="submit" data-review-action="add_note">Add Review Note</button>
+            <button type="submit" data-review-action="mark_needs_review">Mark Needs Review</button>
+            <button type="submit" data-review-action="mark_ambiguous">Mark Ambiguous</button>
+            <button type="submit" data-review-action="mark_manually_verified">Mark Manually Verified</button>
+            <button type="submit" data-review-action="exclude" class="button-danger">Exclude</button>
+          </div>
+        </form>
+        <p id="review-status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <footer><p>Local research explorer. Not a medical tool.</p><p>Official bounded requests only. No archive controls.</p></footer>
+  </body>
+</html>
