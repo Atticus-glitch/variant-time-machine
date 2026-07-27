@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The live lookup demonstrates that Variant Time Machine can communicate with a real genetics resource without downloading a large database. It retrieves one current ClinVar variant summary for research and development visibility.
+The browser Pilot Workspace retrieves current ClinVar summaries without downloading a database. Before a request, a local planning route reports source, maximum estimated transfer, purpose, whether the action is small, and whether protection blocked it. The user must approve the plan before the backend contacts NCBI.
 
 This feature does not perform historical comparison, diagnosis, or machine learning.
 
@@ -32,12 +32,13 @@ Sources accessed 2026-07-26.
 
 ## Accepted Identifiers
 
-The lookup accepts:
+The Pilot Workspace search accepts:
 
 - a numeric ClinVar Variation ID, such as `14206`
 - a VCV accession, such as `VCV000014206` or `VCV000014206.1`
+- a short gene symbol, such as `BRCA1`, which returns at most five current candidates
 
-The VCV number is normalized to its numeric Variation ID before the request. RCV accessions, SCV accessions, rs numbers, gene names, and free-text descriptions are not accepted by this first interface.
+The VCV number is normalized to its numeric Variation ID before the request. Gene searches use an official ESearch query limited to five records. RCV accessions, SCV accessions, rs numbers, unrestricted free text, URLs, and shell-like input are not accepted.
 
 ## Returned Fields
 
@@ -52,6 +53,9 @@ The VCV number is normalized to its numeric Variation ID before the request. RCV
 - a short evidence metadata summary when available,
 - official ClinVar source URL,
 - UTC retrieval time.
+- measured JSON response bytes when available.
+
+The local `POST /api/clinvar/plan` route performs no external request. The approved `POST /api/clinvar/lookup` route accepts only validated query text and a true approval value. It never executes commands. The response includes the transfer source, estimate, actual bytes, purpose, small-request state, and protection result.
 
 The evidence summary reports only metadata present in ESummary, such as the number of listed SCV and RCV accessions, last evaluation date, and molecular consequence. It does not summarize the scientific arguments inside individual submissions.
 
@@ -61,23 +65,33 @@ For learning and interface development, a one-record API call is faster, smaller
 
 Large archived files are still necessary later for reproducible historical comparison. The live API represents current ClinVar data and cannot replace fixed old and new snapshots for the main research question.
 
-The pilot list uses this endpoint for 16 current candidate records. Historical fields are deliberately blank. A separate confirmed streaming command reads the official February 2024 and February 2025 VCV XML archives. API and archive values are never substituted for one another.
+The pilot uses this endpoint for one manually selected current record at a time. Historical fields begin blank. NCBI also documents EFetch for one explicit VCV accession version. Pilot mode can request that small XML record, but a reviewer must establish its date and scope.
 
-## Archived XML Command
+## Pilot Workspace
 
-Inspect source headers and official MD5 text without requesting archive bodies:
+Start the dashboard once and use:
 
-```bash
-python scripts/extract_pilot_history.py --dry-run
+```text
+http://127.0.0.1:5000/pilot_workspace.html
 ```
 
-Only after reviewing the possible 7.89 GB transfer, run:
+The browser is the normal interface for search, add, review, notes, sources, statuses, and timelines. The routes under `/api/pilot` write only the bounded local workspace file. There is no normal dashboard route for archive extraction.
+
+## Optional Pilot Command
+
+Display the five manual slots without a request:
 
 ```bash
-python scripts/extract_pilot_history.py --confirm-large-transfer
+python scripts/pilot_mode.py
 ```
 
-An optional `--max-transfer-gb` limit applies to each release. Hitting the limit is a safe failure, not a partial scientific result.
+Display one current API plan without starting it:
+
+```bash
+python scripts/pilot_mode.py 14206 --reason "Manually selected test record"
+```
+
+Add `--confirm-api-requests` only after reviewing the source, estimate, and reason. The optional `--historical-vcv` value must include a version. Full archive scanning is paused.
 
 ## Failure Handling
 
@@ -112,7 +126,7 @@ Use another supported identifier:
 python scripts/test_clinvar_connection.py VCV000014206
 ```
 
-## Use the Browser Lookup
+## Simple Browser Lookup
 
 Start the dashboard and open:
 

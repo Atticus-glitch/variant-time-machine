@@ -17,6 +17,18 @@ Each variant must be manually verified before inclusion. A reviewer must check:
 
 Every populated row is treated as manually verified by the dashboard. Therefore, incomplete or provisional work should remain in the research notebook rather than this table.
 
-`pilot_variants.csv` is different. It contains 16 real current ESummary records selected on 2026-07-26, but its historical fields are blank. Inclusion in that file does not mean a historical match was verified.
+`pilot_variants.csv` begins with five empty rows and the declared manual pilot columns. Use `scripts/pilot_mode.py` to plan one current API lookup. The script makes no request until `--confirm-api-requests` is provided. An optional explicit VCV version can supply a small historical record, but its date and scope still need manual verification.
 
-`extracted/` is reserved for small JSON records, source manifests, and automatic comparisons created by the confirmed streaming command. Full archives do not belong there. `pilot_review.json` is created only when a person saves a dashboard review decision.
+`extracted/` is reserved for small reviewed records if they are needed later. Full archives do not belong there. `pilot_review.json` is created only when a person saves a dashboard review decision.
+
+`pilot_variant_001.json` is the separate single-variant workflow record. It begins with
+empty strings and lists. `select_pilot_variant.py` never changes it.
+`run_pilot_workflow.py` writes it only after the current API request and the selection
+are separately confirmed. An empty `historical_records_found` list means no historical
+claim has been verified.
+
+`pilot_workspace.json` is the canonical browser pilot list. It starts with zero
+records and is limited to ten. Browser saves create `pilot_workspace.backup.json`,
+which is ignored by Git, before atomically replacing the main file. Current fields,
+manual past fields, exact classification categories, checklist answers, notes, sources,
+statuses, and timestamps stay together in each record.

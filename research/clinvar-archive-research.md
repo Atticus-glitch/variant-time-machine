@@ -1,8 +1,8 @@
 # ClinVar Archive and Identifier Research
 
 > Pilot update, 2026-07-26: this earlier TSV research remains background for a
-> possible full-table study. The active 16-record pilot uses official VCV XML
-> releases dated 2024-02-01 and 2025-02-06. See `historical-data-plan.md`.
+> possible full-table study. The active pilot uses five empty manual slots and
+> one-record API requests. See `historical-data-plan.md`.
 
 Research performed 2026-07-26 using official NCBI sources. No ClinVar release files were downloaded.
 

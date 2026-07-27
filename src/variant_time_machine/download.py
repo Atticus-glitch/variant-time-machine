@@ -13,11 +13,57 @@ import requests
 from variant_time_machine.config import (
     DOWNLOAD_CHUNK_SIZE,
     DOWNLOAD_TIMEOUT_SECONDS,
+    LARGE_DOWNLOAD_THRESHOLD_BYTES,
     RAW_DATA_DIR,
     ClinVarRelease,
 )
 
 LOGGER = logging.getLogger(__name__)
+
+
+class DownloadConfirmationRequired(ValueError):
+    """Raised before a transfer when the user has not confirmed its plan."""
+
+
+def transfer_plan_message(
+    source_url: str,
+    estimated_size_bytes: int | None,
+    reason: str,
+) -> str:
+    """Describe source, estimated size, purpose, and the 500 MB safety boundary."""
+    size = (
+        f"{estimated_size_bytes:,} bytes ({estimated_size_bytes / 1_000_000:.1f} MB)"
+        if estimated_size_bytes is not None
+        else "unknown"
+    )
+    protection = (
+        "This exceeds the 500 MB large-download limit."
+        if estimated_size_bytes is None
+        or estimated_size_bytes > LARGE_DOWNLOAD_THRESHOLD_BYTES
+        else "This is below the 500 MB large-download limit."
+    )
+    return (
+        f"Source: {source_url}\n"
+        f"Estimated size: {size}\n"
+        f"Why needed: {reason}\n"
+        f"Large download protection: ON. {protection}"
+    )
+
+
+def require_transfer_confirmation(
+    source_url: str,
+    estimated_size_bytes: int | None,
+    reason: str,
+    *,
+    confirmed: bool,
+) -> None:
+    """Show the transfer plan and fail before network access unless confirmed."""
+    message = transfer_plan_message(source_url, estimated_size_bytes, reason)
+    LOGGER.warning("Transfer plan:\n%s", message)
+    if not confirmed:
+        raise DownloadConfirmationRequired(
+            f"{message}\nTransfer not started. Explicit confirmation is required."
+        )
 
 
 @dataclass(frozen=True)
@@ -41,6 +87,7 @@ def download_clinvar_release(
     *,
     confirm: bool = False,
     overwrite: bool = False,
+    reason: str = "Create a fixed historical ClinVar summary snapshot",
 ) -> tuple[Path, Path]:
     """Download one configured release and write a JSON provenance record.
 
@@ -48,11 +95,12 @@ def download_clinvar_release(
     calling the function cannot start a large download. The returned paths point to
     the downloaded file and its metadata sidecar.
     """
-    if not confirm:
-        raise ValueError(
-            "Large download not started. Pass confirm=True only after checking the "
-            "release URL, expected size, and available disk space."
-        )
+    require_transfer_confirmation(
+        release.source_url,
+        release.expected_size_bytes,
+        reason,
+        confirmed=confirm,
+    )
 
     destination_dir = Path(destination_dir).resolve()
     destination_dir.mkdir(parents=True, exist_ok=True)

@@ -180,4 +180,129 @@ The active `.venv` uses Python 3.14.4. Python 3.12 and `uv` were not installed, 
 
 ### Next Step
 
-Run the metadata-only dry run. Review its URLs, sizes, and MD5 results. Run a real archive scan only after explicitly accepting the possible 7.89 GB transfer, then manually inspect every extracted comparison before making any historical claim.
+This earlier next step was superseded by the small pilot decision below. The archive scan is paused; only metadata inspection remains available.
+
+## 2026-07-26 Small Pilot Strategy
+
+### Decision
+
+The full archive approach was paused because the two selected compressed XML files
+could transfer about 7.89 GB. Internet data use is limited and not measured reliably,
+so that transfer is not justified for a five-record methods test.
+
+### Changes
+
+- Removed the command-line option that could start the XML archive body scan.
+- Added a 500 MB large-download protection rule that shows source, estimated size,
+  and purpose before requiring explicit confirmation.
+- Replaced the populated candidate table with five empty manual pilot slots.
+- Added `scripts/pilot_mode.py` for one-record ESummary requests and optional explicit
+  VCV-version EFetch requests.
+- Limited a historical VCV response to 10 MB and kept historical verification manual.
+- Added transfer safety status to the dashboard.
+- Compared XML, summary, VCF, API, and indexed-query options without downloading data
+  files.
+
+### Why This Is Better
+
+The smaller pilot improves reproducibility because every selected record, request,
+source, reason, and verification state can be inspected. It prevents unnecessary
+downloads and tests the most error-prone parts of the method before scale. Empty
+historical cells are scientifically preferable to values inferred from current data.
+
+### Next Step
+
+Choose the first real variant for a clear written reason. Run pilot mode without the
+confirmation flag to inspect its transfer plan. Approve the small API request only
+after checking the source and estimate, then manually investigate whether an explicit
+historical VCV version can be dated and interpreted safely.
+
+## 2026-07-26 First Pilot Variant Workflow
+
+### Date
+
+2026-07-26
+
+### Milestone
+
+First pilot variant workflow created.
+
+### Work Recorded
+
+- Added a preview-only selection tool for a Variation ID, VCV accession, or gene.
+- Added a declared JSON format for one selected pilot variant.
+- Added an interactive workflow that confirms the API request and confirms selection
+  separately before saving.
+- Added a Current Pilot Variant dashboard section and an empty timeline state.
+- Left historical records empty and manual verification pending.
+
+### Why One Example Is Useful
+
+One carefully checked example can reveal identifier problems, missing fields, unclear
+condition scope, source-recording mistakes, and dashboard errors before those problems
+are repeated across many variants. It tests whether the full path is understandable
+and reproducible.
+
+### Why This Is Not a Result
+
+Selecting and displaying one current ClinVar record does not show that its
+classification changed. It cannot estimate a reclassification rate or support a
+biological conclusion. Historical evidence has not been verified, and the variant may
+not represent other ClinVar records.
+
+### Why Manual Verification Comes First
+
+Automation can quickly repeat a wrong identifier match or misunderstand a versioned
+record. A person must first confirm the identifier, classification type, condition
+scope, source, and historical date. The rules should be automated only after this
+single example passes the manual checklist.
+
+### Next Step
+
+Preview several reasonable candidates without saving them. Choose one for a written,
+method-based reason. Run the workflow, confirm the current record, and then investigate
+one official low-bandwidth historical source while keeping unverified fields empty.
+
+## 2026-07-26 Browser Pilot Workspace
+
+### Date
+
+2026-07-26
+
+### Milestone
+
+The dashboard became the main pilot research interface.
+
+### Work Recorded
+
+- Added a browser Pilot Workspace for planning and approving small current ClinVar
+  lookups.
+- Added browser controls for adding unique pilot variants, saving reasons and notes,
+  filtering records, opening review, and updating current metadata.
+- Added manual older and newer dates, exact classification categories, source links,
+  classification type, verification notes, and ambiguity notes.
+- Added `unreviewed`, `reviewing`, `verified`, `ambiguous`, and `excluded` states.
+- Required all checklist items and source-backed historical fields before a record can
+  be marked verified.
+- Added a simple timeline that leaves missing history missing.
+- Added measured API response bytes and kept 500 MB large-download protection active.
+- Added validated local JSON storage with a backup and atomic replacement.
+- Kept command-line tools as optional reproducibility and developer tools.
+
+### Scientific Boundary
+
+A successful current lookup is still only current information. Adding it to the pilot
+does not show a classification change. A record marked verified means a person
+completed this project's source, date, identifier, category, and ambiguity checklist;
+it does not make ClinVar an error-free ground truth.
+
+The pilot list is not representative, contains too few records for modeling, and is
+not suitable for machine learning. No full ClinVar archive route or browser control
+was added.
+
+### Next Step
+
+Use the browser to select the first real pilot variant for a written method-based
+reason. Record one official low-bandwidth historical source, verify its date and
+classification type, complete the checklist, and inspect the resulting timeline. Then
+repeat the exact same manual process on a few more records before automating any rule.

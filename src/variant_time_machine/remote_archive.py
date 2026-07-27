@@ -15,11 +15,13 @@ from urllib3.util.retry import Retry
 
 from variant_time_machine.clinvar_api import normalize_variant_identifier
 from variant_time_machine.config import (
+    LARGE_DOWNLOAD_THRESHOLD_BYTES,
     PILOT_MAX_RECORDS,
     PILOT_MAX_TEMP_BYTES,
     PILOT_PROGRESS_BYTES,
     ClinVarXMLRelease,
 )
+from variant_time_machine.download import require_transfer_confirmation
 
 LOGGER = logging.getLogger(__name__)
 USER_AGENT = "VariantTimeMachine/0.1 research-education"
@@ -315,11 +317,15 @@ def extract_remote_records(
     session: requests.Session | None = None,
 ) -> ExtractionResult:
     """Stream one gzip archive and retain only explicitly requested records."""
-    if not confirmed:
-        raise ConfirmationRequired(
-            "Archive extraction requires --confirm because the remote compressed "
-            f"file is about {release.compressed_size_bytes / 1_000_000_000:.2f} GB."
+    try:
+        require_transfer_confirmation(
+            release.source_url,
+            release.compressed_size_bytes,
+            "Read selected historical records from a fixed ClinVar XML release",
+            confirmed=confirmed,
         )
+    except ValueError as exc:
+        raise ConfirmationRequired(str(exc)) from exc
     identifiers = tuple(
         dict.fromkeys(normalize_variant_identifier(value) for value in requested_ids)
     )
@@ -329,7 +335,10 @@ def extract_remote_records(
         raise ExtractionLimitError(
             f"Requested {len(identifiers)} records; the limit is {max_records}."
         )
-    transfer_limit = max_transfer_bytes or release.compressed_size_bytes + 1024
+    transfer_limit = max_transfer_bytes or min(
+        release.compressed_size_bytes + 1024,
+        LARGE_DOWNLOAD_THRESHOLD_BYTES,
+    )
     wanted = set(identifiers)
     found: dict[str, ExtractedVCVRecord] = {}
     output_bytes = 0

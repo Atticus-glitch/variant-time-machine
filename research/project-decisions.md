@@ -16,18 +16,18 @@ The outcome classes may be imbalanced, with many variants remaining uncertain. A
 
 A wrong cross-release match creates a wrong outcome label, and no model can repair that error. Variant names, genome assemblies, coordinates, alleles, conditions, and identifiers can change or be represented differently. Matching rules must prioritize stable identifiers, verify genomic details, preserve ambiguous cases, and be tested through manual inspection before large-scale processing.
 
-## Pilot Release Pair: February 2024 to February 2025
+## Pause the February 2024 to February 2025 Archive Pair
 
-The small record-history pilot uses official VCV XML releases dated 2024-02-01 and 2025-02-06. Both use the same current XML family, but their documented schema revisions are 2.0 and 2.2. XML was selected because it exposes record status, replacement history, and separate germline, somatic clinical impact, and oncogenicity classifications. The older January 2022 to January 2024 `variant_summary` choice is deferred rather than treated as pilot evidence.
+The considered VCV XML releases are dated 2024-02-01 and 2025-02-06. They are valid fixed historical sources, but together they can transfer about 7.89 GB. This pair is paused and is not the active pilot input. The active pilot uses one-record API requests.
 
 ## Begin With Identifier-Only Matching
 
 The proof of concept accepts exact `AlleleID + VariationID` pairs and separately flags unique Allele ID matches when the Variation ID changed. It keeps multiple candidates, conflicting identifiers, complex records, and unmatched records visible instead of forcing a match. I am delaying coordinate matching and record-history checks because they require careful genome-assembly normalization and evidence from VCV or RCV records.
 
-## Stream Instead of Retaining Full XML
+## Do Not Stream Full XML for the Pilot
 
-The two source archives total about 7.89 GB compressed. The pilot reads compressed XML directly from NCBI and retains only requested records. A metadata-only dry run is the default safe first step, and a body scan requires an explicit confirmation flag. Transfer and output limits fail closed. This saves local disk but does not remove the possible multi-gigabyte bandwidth cost.
+Streaming avoids storing a full archive, but it does not avoid transferring the archive when records are missing or late. The command-line body scan was removed. Metadata-only inspection remains available, and the reusable reader defaults to a 500 MB transfer ceiling.
 
 ## Require Human Review
 
-The pilot selects 16 current records through official NCBI ESummary and leaves all historical fields blank before extraction. Exact Variation ID matches are automatic candidates only. Record status, replacement metadata, missing values, and separate classification types remain visible. No automatic comparison is scientifically verified until a person checks both archived records and saves a review state.
+The pilot begins with five empty rows. Each variant must be manually selected for a written reason. Current ESummary and explicit-version VCV EFetch results remain separate, and no historical classification is verified until a person checks the record date, condition scope, and source.

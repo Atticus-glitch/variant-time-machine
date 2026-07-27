@@ -30,6 +30,11 @@ def main(argv: list[str] | None = None) -> int:
         help="Confirm that the URL, size, disk space, and download were reviewed",
     )
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument(
+        "--reason",
+        default="Create a fixed historical ClinVar summary snapshot",
+        help="Explain why this transfer is needed",
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -38,6 +43,7 @@ def main(argv: list[str] | None = None) -> int:
             args.destination,
             confirm=args.confirm_large_download,
             overwrite=args.overwrite,
+            reason=args.reason,
         )
     except (FileExistsError, OSError, RuntimeError, ValueError) as exc:
         LOGGER.error("%s", exc)

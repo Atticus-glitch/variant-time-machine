@@ -19,6 +19,9 @@ DEFAULT_LOG_LEVEL = logging.INFO
 DEFAULT_LOG_FORMAT = "%(levelname)s: %(message)s"
 DOWNLOAD_CHUNK_SIZE = 1024 * 1024
 DOWNLOAD_TIMEOUT_SECONDS = 120
+LARGE_DOWNLOAD_THRESHOLD_BYTES = 500_000_000
+PILOT_CURRENT_API_ESTIMATE_BYTES = 1_000_000
+PILOT_HISTORICAL_API_LIMIT_BYTES = 10_000_000
 
 
 @dataclass(frozen=True)
@@ -104,12 +107,14 @@ PILOT_XML_RELEASES: dict[str, ClinVarXMLRelease] = {
     ),
 }
 
-PILOT_MAX_RECORDS = 25
+PILOT_MAX_RECORDS = 10
 PILOT_MAX_TEMP_BYTES = 50 * 1024 * 1024
 PILOT_PROGRESS_BYTES = 100 * 1024 * 1024
 PILOT_EXTRACTED_DIR = DATA_DIR / "manual_review" / "extracted"
 PILOT_VARIANTS_PATH = DATA_DIR / "manual_review" / "pilot_variants.csv"
+PILOT_RECORD_PATH = DATA_DIR / "manual_review" / "pilot_variant_001.json"
 PILOT_REVIEW_PATH = DATA_DIR / "manual_review" / "pilot_review.json"
+PILOT_WORKSPACE_PATH = DATA_DIR / "manual_review" / "pilot_workspace.json"
 
 REQUIRED_DIRECTORIES: tuple[Path, ...] = (
     PROJECT_ROOT / "research",
@@ -144,6 +149,8 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "research" / "one-page-research-plan.md",
     PROJECT_ROOT / "research" / "clinvar-data-plan.md",
     PROJECT_ROOT / "research" / "historical-data-plan.md",
+    PROJECT_ROOT / "research" / "data-size-options.md",
+    PROJECT_ROOT / "research" / "how-to-select-first-variant.md",
     PROJECT_ROOT / "research" / "research-notebook.md",
     PROJECT_ROOT / "research" / "project-decisions.md",
     PROJECT_ROOT / "research" / "sources.md",
@@ -153,6 +160,8 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     DATA_DIR / "manual_review" / "README.md",
     DATA_DIR / "manual_review" / "test_variants.csv",
     PILOT_VARIANTS_PATH,
+    PILOT_RECORD_PATH,
+    PILOT_WORKSPACE_PATH,
     PILOT_EXTRACTED_DIR / ".gitkeep",
     INTERIM_DATA_DIR / "example_clinvar_timeline.csv",
     RAW_DATA_DIR / ".gitkeep",
@@ -165,6 +174,8 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "src" / "variant_time_machine" / "parse.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "match.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "pilot.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "pilot_record.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "pilot_workspace.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "remote_archive.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "features.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "train.py",
@@ -178,6 +189,9 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "scripts" / "test_clinvar_connection.py",
     PROJECT_ROOT / "scripts" / "review_variant.py",
     PROJECT_ROOT / "scripts" / "extract_pilot_history.py",
+    PROJECT_ROOT / "scripts" / "pilot_mode.py",
+    PROJECT_ROOT / "scripts" / "select_pilot_variant.py",
+    PROJECT_ROOT / "scripts" / "run_pilot_workflow.py",
     PROJECT_ROOT / "notebooks" / "README.md",
     PROJECT_ROOT / "tests" / "__init__.py",
     PROJECT_ROOT / "tests" / "test_setup.py",
@@ -189,11 +203,11 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "website" / "dashboard" / "app.py",
     PROJECT_ROOT / "website" / "dashboard" / "templates" / "index.html",
     PROJECT_ROOT / "website" / "dashboard" / "variant_lookup.html",
-    PROJECT_ROOT / "website" / "dashboard" / "historical_pilot.html",
+    PROJECT_ROOT / "website" / "dashboard" / "pilot_workspace.html",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "styles.css",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "app.js",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "lookup.js",
-    PROJECT_ROOT / "website" / "dashboard" / "static" / "pilot.js",
+    PROJECT_ROOT / "website" / "dashboard" / "static" / "workspace.js",
     PROJECT_ROOT / "docs" / "data-dictionary.md",
     PROJECT_ROOT / "docs" / "methods.md",
     PROJECT_ROOT / "docs" / "limitations.md",

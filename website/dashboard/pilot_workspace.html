@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Browser workspace for the small ClinVar pilot">
+    <title>Pilot Workspace | Variant Time Machine</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/workspace.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header workspace-header">
+      <div class="header-grid">
+        <div>
+          <p class="eyebrow">Main research control center</p>
+          <h1>Pilot Workspace</h1>
+          <p class="subtitle">
+            Find current ClinVar information, build a small pilot list, and check past
+            classifications one record at a time.
+          </p>
+        </div>
+        <div class="milestone-card">
+          <span>Scientific rule</span>
+          <strong>Current information is not a historical result</strong>
+          <small>Manual sources and checks are required</small>
+        </div>
+      </div>
+    </header>
+
+    <nav class="workspace-nav" aria-label="Main navigation">
+      <a href="/">Project Dashboard</a>
+      <a href="#find-variant">Find a Variant</a>
+      <a href="#pilot-list">Pilot List</a>
+      <a href="#review-workspace">Open Review</a>
+    </nav>
+
+    <main class="workspace-main">
+      <section id="first-run-guide" class="panel first-run" hidden>
+        <div class="section-heading compact">
+          <div>
+            <p class="section-number">First visit</p>
+            <h2>Start With Three Steps</h2>
+          </div>
+        </div>
+        <ol class="guide-steps">
+          <li><strong>Search for a variant.</strong><span>Use a Variation ID, VCV accession, or gene symbol.</span></li>
+          <li><strong>Add it to your pilot list.</strong><span>Write why you chose it and confirm that current data is not history.</span></li>
+          <li><strong>Find and verify its past classification.</strong><span>Record exact dates, categories, notes, and an official source.</span></li>
+        </ol>
+        <p class="plain-language-note">
+          Example walkthrough: search for <code>[identifier]</code>, review
+          <code>[current information]</code>, then save <code>[official past source]</code>.
+          These placeholders are instructions, not a fake variant history.
+        </p>
+      </section>
+
+      <section class="panel transfer-panel" aria-labelledby="workspace-transfer-title">
+        <div class="section-heading compact">
+          <div>
+            <p class="section-number">Before every request</p>
+            <h2 id="workspace-transfer-title">Transfer Safety</h2>
+          </div>
+          <strong class="protection-pill">Large-download protection: ON</strong>
+        </div>
+        <dl id="workspace-transfer" class="transfer-details">
+          <div><dt>Source</dt><dd id="transfer-source">No request planned</dd></div>
+          <div><dt>Maximum transfer</dt><dd id="transfer-estimate">0 bytes</dd></div>
+          <div><dt>Actual transfer</dt><dd id="transfer-actual">0 bytes</dd></div>
+          <div><dt>Purpose</dt><dd id="transfer-purpose">No request planned</dd></div>
+          <div><dt>Request size</dt><dd id="transfer-size-status">No request planned</dd></div>
+          <div><dt>Protection result</dt><dd id="transfer-blocked">Nothing blocked</dd></div>
+        </dl>
+      </section>
+
+      <section id="find-variant" class="panel" aria-labelledby="find-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">Step 1</p>
+            <h2 id="find-title">Find a Variant</h2>
+          </div>
+          <p>Enter one Variation ID, VCV accession, or gene symbol.</p>
+        </div>
+        <form id="workspace-lookup-form" class="workspace-form">
+          <label for="workspace-query">ClinVar identifier or gene</label>
+          <div class="lookup-controls">
+            <input id="workspace-query" name="query" autocomplete="off" required placeholder="14206, VCV000014206, or BRCA1">
+            <button type="submit">Look Up Variant</button>
+          </div>
+        </form>
+        <div id="lookup-plan" class="approval-box" hidden>
+          <p id="lookup-plan-message"></p>
+          <button id="approve-lookup" type="button">Approve Small Request</button>
+          <button id="cancel-lookup" type="button" class="button-secondary">Cancel</button>
+        </div>
+        <p id="workspace-lookup-status" class="loading" aria-live="polite">No lookup has been run.</p>
+        <p class="current-only-notice">
+          <strong>Current ClinVar information — not a historical result.</strong>
+        </p>
+        <div id="lookup-results" class="candidate-grid"></div>
+      </section>
+
+      <section id="add-panel" class="panel" aria-labelledby="add-title" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="section-number">Step 2</p>
+            <h2 id="add-title">Add to Pilot</h2>
+          </div>
+          <p id="add-candidate-name">Choose a lookup result first.</p>
+        </div>
+        <form id="add-pilot-form" class="workspace-form form-grid">
+          <label>Why did you choose this variant? <textarea id="selection-reason" maxlength="1000" required></textarea></label>
+          <label>Short notes <textarea id="selection-notes" maxlength="4000"></textarea></label>
+          <label>Past date you hope to investigate <input id="intended-date" type="date"></label>
+          <label class="check-line"><input id="current-only-confirmation" type="checkbox" required> I understand this current result is not yet a historical comparison.</label>
+          <div class="button-row">
+            <button type="submit">Add to Pilot</button>
+            <button id="cancel-add" type="button" class="button-secondary">Cancel</button>
+          </div>
+        </form>
+        <div id="duplicate-panel" class="warning-box" hidden>
+          <p>This variant is already in the pilot. Choose what to do.</p>
+          <button id="open-duplicate" type="button">Open Existing Record</button>
+          <button id="update-duplicate" type="button">Update Current Lookup</button>
+          <button id="cancel-duplicate" type="button" class="button-secondary">Cancel</button>
+        </div>
+        <p id="add-status" aria-live="polite"></p>
+      </section>
+
+      <section id="pilot-list" class="panel" aria-labelledby="list-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">Your saved work</p>
+            <h2 id="list-title">Pilot List</h2>
+          </div>
+          <p>At most ten variants. Filters do not change saved data.</p>
+        </div>
+        <div class="list-tools">
+          <label>Filter by status
+            <select id="status-filter">
+              <option value="all">All</option>
+              <option value="unreviewed">Unreviewed</option>
+              <option value="reviewing">Reviewing</option>
+              <option value="verified">Verified</option>
+              <option value="ambiguous">Ambiguous</option>
+              <option value="excluded">Excluded</option>
+            </select>
+          </label>
+          <label>Search identifier or gene <input id="pilot-search" type="search"></label>
+        </div>
+        <div class="table-scroll">
+          <table class="workspace-table">
+            <thead><tr><th>Identifier</th><th>Gene</th><th>Current classification</th><th>Past classification</th><th>Review status</th><th>Selected</th><th>Last updated</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="workspace-pilot-body"><tr><td colspan="9" class="loading">Loading pilot list...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="review-workspace" class="panel" aria-labelledby="review-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">Step 3</p>
+            <h2 id="review-title">Review One Variant</h2>
+          </div>
+          <p id="review-heading-note">Open a pilot record to begin.</p>
+        </div>
+        <div id="review-empty" class="plain-language-note">No pilot record is open.</div>
+        <div id="review-content" hidden>
+          <div id="review-warnings" class="warning-box"></div>
+          <div class="review-columns">
+            <article class="review-summary">
+              <h3>Current ClinVar Result</h3>
+              <dl id="review-current" class="status-list"></dl>
+              <p><strong>Why selected:</strong> <span id="review-selection-reason"></span></p>
+              <p><strong>Current source:</strong> <a id="review-current-source" target="_blank" rel="noreferrer"></a></p>
+            </article>
+            <form id="review-form" class="workspace-form form-grid">
+              <label>Past release date <input id="older-release-date" type="date"></label>
+              <label>Past classification <select id="older-classification"></select></label>
+              <label>Newer comparison date <input id="newer-comparison-date" type="date"></label>
+              <label>Newer classification <select id="newer-classification"></select></label>
+              <label>Classification type <select id="classification-type"></select></label>
+              <label>Official historical source URL <input id="historical-source-url" type="url" placeholder="https://www.ncbi.nlm.nih.gov/..."></label>
+              <label>General notes <textarea id="review-notes" maxlength="4000"></textarea></label>
+              <label>Verification notes <textarea id="verification-notes" maxlength="4000"></textarea></label>
+              <label>Why ambiguous or excluded <textarea id="ambiguity-reason" maxlength="4000"></textarea></label>
+              <fieldset class="checklist">
+                <legend>Verification checklist</legend>
+                <label><input type="checkbox" data-check="identifier_confirmed"> Identifier confirmed</label>
+                <label><input type="checkbox" data-check="gene_confirmed"> Gene confirmed</label>
+                <label><input type="checkbox" data-check="current_classification_confirmed"> Current classification confirmed</label>
+                <label><input type="checkbox" data-check="historical_source_recorded"> Past classification source recorded</label>
+                <label><input type="checkbox" data-check="release_dates_recorded"> Release dates recorded</label>
+                <label><input type="checkbox" data-check="classification_type_checked"> Classification type checked</label>
+                <label><input type="checkbox" data-check="ambiguities_documented"> Ambiguities documented</label>
+              </fieldset>
+              <div class="button-row review-actions">
+                <button type="submit" data-action="save_draft">Save Draft</button>
+                <button type="submit" data-action="mark_reviewing">Mark Reviewing</button>
+                <button type="submit" data-action="mark_verified">Mark Verified</button>
+                <button type="submit" data-action="mark_ambiguous">Mark Ambiguous</button>
+                <button type="submit" data-action="exclude" class="button-danger">Exclude Record</button>
+              </div>
+            </form>
+          </div>
+          <section class="timeline-box" aria-labelledby="timeline-title">
+            <h3 id="timeline-title">Timeline</h3>
+            <div id="workspace-timeline"></div>
+          </section>
+          <p id="review-save-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="panel help-panel">
+        <div class="section-heading compact"><div><p class="section-number">Quick help</p><h2>What These Words Mean</h2></div></div>
+        <div class="help-grid">
+          <p><strong>VUS:</strong> A variant of uncertain significance does not yet have enough evidence for a clear classification.</p>
+          <p><strong>Current is not past:</strong> Today’s ClinVar page cannot prove what ClinVar showed on an older date.</p>
+          <p><strong>Verified:</strong> Every required identifier, date, category, source, and checklist item was checked by a person.</p>
+          <p><strong>Sources matter:</strong> Another researcher needs the exact official link to repeat the check.</p>
+          <p><strong>Categories stay separate:</strong> Protective, drug response, oncogenic, benign, and pathogenic describe different kinds of claims.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer><p>Local research workspace. Not a medical tool.</p><p>No full archive controls are available here.</p></footer>
+  </body>
+</html>

@@ -10,7 +10,10 @@ import pytest
 
 from scripts.build_timeline_dataset import main as build_timeline_main
 from variant_time_machine.config import CLINVAR_RELEASES, ClinVarRelease
-from variant_time_machine.download import download_clinvar_release
+from variant_time_machine.download import (
+    download_clinvar_release,
+    transfer_plan_message,
+)
 from variant_time_machine.match import (
     classify_vus_change,
     match_variants_across_releases,
@@ -255,9 +258,23 @@ def test_command_line_pipeline_writes_output_and_summary(
 
 def test_download_requires_explicit_confirmation(tmp_path: Path) -> None:
     """Calling the downloader without confirmation must not access the network."""
-    with pytest.raises(ValueError, match="Large download not started"):
+    with pytest.raises(ValueError, match="Explicit confirmation is required"):
         download_clinvar_release(CLINVAR_RELEASES["older"], tmp_path)
     assert list(tmp_path.iterdir()) == []
+
+
+def test_transfer_plan_discloses_large_download_boundary() -> None:
+    """Plans above 500 MB must clearly show source, size, reason, and protection."""
+    message = transfer_plan_message(
+        "https://example.test/large.xml.gz",
+        500_000_001,
+        "Historical comparison",
+    )
+    assert "Source: https://example.test/large.xml.gz" in message
+    assert "500.0 MB" in message
+    assert "Why needed: Historical comparison" in message
+    assert "exceeds the 500 MB" in message
+    assert "Large download protection: ON" in message
 
 
 def test_download_records_provenance_and_checksum(

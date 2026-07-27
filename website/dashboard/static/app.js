@@ -126,6 +126,8 @@ function renderStatus(data) {
   renderNextTasks(data.next_tasks);
   renderClinVarConnection(data.clinvar_connection);
   renderHistoricalComparison(data.historical_comparison);
+  renderTransferSafety(data.transfer_safety);
+  renderCurrentPilot(data.current_pilot_variant);
 
   const list = document.querySelector("#system-status");
   list.replaceChildren();
@@ -140,6 +142,57 @@ function renderStatus(data) {
     data.research_notes.title;
   document.querySelector("#notes-entry-content").textContent =
     data.research_notes.content;
+}
+
+function renderCurrentPilot(pilot) {
+  document.querySelector("#pilot-current-variant").textContent = pilot.variant;
+  document.querySelector("#pilot-current-gene").textContent = pilot.gene;
+  document.querySelector("#pilot-current-classification").textContent =
+    pilot.current_classification;
+  document.querySelector("#pilot-historical-status").textContent =
+    pilot.historical_status;
+  document.querySelector("#pilot-verification-status").textContent =
+    pilot.verification_status;
+  const timeline = document.querySelector("#pilot-timeline");
+  timeline.replaceChildren();
+  if (!pilot.selected) {
+    const empty = document.createElement("li");
+    empty.textContent = "No timeline exists until a pilot variant is selected.";
+    timeline.append(empty);
+    return;
+  }
+  if (pilot.timeline.older.classification) {
+    const older = document.createElement("li");
+    older.textContent = `${pilot.timeline.older.date}: ${pilot.timeline.older.classification}`;
+    timeline.append(older);
+  }
+  const change = document.createElement("li");
+  change.textContent = pilot.timeline.change_category;
+  timeline.append(change);
+}
+
+function renderTransferSafety(safety) {
+  const list = document.querySelector("#transfer-safety");
+  list.replaceChildren();
+  const fields = [
+    ["Largest planned download", safety.largest_planned_download],
+    ["Current transfer", safety.current_transfer],
+    ["Total downloaded", safety.total_downloaded],
+    ["Storage used", safety.storage_used],
+    ["Large download protection", safety.large_download_protection],
+  ];
+  for (const [label, value] of fields) {
+    const wrapper = document.createElement("div");
+    const term = document.createElement("dt");
+    const description = document.createElement("dd");
+    term.textContent = label;
+    description.textContent = value;
+    if (label === "Large download protection") {
+      description.className = "protection-on";
+    }
+    wrapper.append(term, description);
+    list.append(wrapper);
+  }
 }
 
 function renderHistoricalComparison(history) {

@@ -104,22 +104,19 @@ Current `match_status` values include:
 
 ## Current Pilot CSV
 
-`data/manual_review/pilot_variants.csv` contains current ESummary facts and empty historical placeholders.
+`data/manual_review/pilot_variants.csv` begins with five empty rows. It may contain at most ten manually selected variants.
 
 | Field group | Meaning |
 | --- | --- |
-| `variation_id` | Numeric ClinVar Variation ID selected for extraction |
-| `current_accession` | Current VCV accession and version returned by ESummary |
-| `current_name` | Current variant title returned by ESummary |
-| `current_gene` | Current gene symbol or symbols |
-| `current_germline_classification` | Current aggregate germline classification only |
-| `current_review_status` | Current aggregate germline review status |
-| `current_conditions` | Current germline condition names, including literal `not provided` values |
-| `current_source_url` | Official current ClinVar record URL |
-| `current_retrieved_date` | Date the current summary was retrieved |
-| `older_*`, `newer_*` | Historical placeholders; blank until archive extraction |
-| `manual_review_status` | Initial review state; does not claim verification |
-| `manual_review_notes` | Optional reviewer notes |
+| `variant_id` | Numeric ClinVar Variation ID chosen manually |
+| `VCV_accession` | Current VCV accession and version returned by ESummary |
+| `gene` | Current gene symbol or symbols |
+| `reason_selected` | Student-written reason for including this variant |
+| `current_classification` | Current aggregate germline classification from ESummary |
+| `historical_classification` | Classification from one explicit historical source; blank until retrieved |
+| `source` | Exact official current and historical record URLs used |
+| `verification_status` | What was retrieved and what still needs manual checking |
+| `notes` | Retrieval date, version warning, and unresolved questions |
 
 ## Extracted VCV Record
 
@@ -138,10 +135,61 @@ Current `match_status` values include:
 | `oncogenicity_classification` | Oncogenicity description only |
 | `replaced_by`, `replacement_list` | Record-history accessions stated by ClinVar |
 
-## Pilot Manifest and Comparison
+## Paused XML Outputs
 
-Each release manifest records the exact URL, release date, schema revision, expected full-file size and MD5, compressed bytes read, requested and missing IDs, output hash, and whether the full scan completed. `source_archive_retained` is always false for this command. The expected full-file MD5 is provenance, not a claim that an early-stopped stream verified the entire archive.
-
-Pilot comparisons include `match_status`, `classification_change`, separate old and new classification types, `record_history_flags`, and `automatic_verification_status`. Supported XML pilot match states are exact Variation ID, missing in older, missing in newer, and missing in both. Every automatic verification status is `requires_manual_review`.
+The code can represent a small extracted VCV record, but full archive extraction is not part of the active pilot. No archive manifest or comparison output currently exists. The archive inspection command reads metadata only.
 
 `pilot_review.json` stores a status, notes, and update time for each reviewed Variation ID. Allowed states are `Not reviewed`, `Confirmed match`, `Needs follow-up`, and `Rejected automatic match`.
+
+## Single Pilot Variant JSON
+
+`data/manual_review/pilot_variant_001.json` starts empty and stores one selected
+current record only after two confirmations.
+
+| Field | Meaning |
+| --- | --- |
+| `variant_id` | Numeric ClinVar Variation ID |
+| `vcv_accession` | Current VCV accession and version |
+| `gene` | Current gene symbol or symbols |
+| `selected_date` | Date the researcher accepted the pilot record |
+| `selection_reason` | Written method-based reason for choosing the variant |
+| `current_classification` | Current aggregate germline classification |
+| `current_review_status` | Current aggregate germline review status |
+| `conditions` | Current germline condition names returned by ESummary |
+| `historical_records_found` | Possible historical source identifiers; empty until found |
+| `verification_status` | Clear statement of completed and pending checks |
+| `notes` | Limitations and manual research notes |
+| `sources` | Exact current and future historical source URLs |
+
+## Browser Pilot Workspace JSON
+
+`data/manual_review/pilot_workspace.json` is the canonical browser pilot list. Its
+top-level fields are `version`, `updated_at_utc`, and `records`. It starts with zero
+records and is limited to ten.
+
+Each record contains:
+
+| Field group | Meaning |
+| --- | --- |
+| `variant_id`, `vcv_accession`, `gene`, `conditions` | Current official identifiers and context |
+| `selection_reason`, `selected_date`, `created_at_utc` | Why and when the record entered the pilot |
+| `current_classification`, `current_review_status` | Unchanged current ESummary wording |
+| `current_source_url`, `current_retrieved_at_utc`, `current_transfer_bytes` | Current source and retrieval metadata |
+| `intended_historical_date` | Optional date the researcher plans to investigate |
+| `older_release_date`, `older_classification` | Manually entered past point; both remain empty until sourced |
+| `newer_comparison_date`, `newer_classification` | Manually entered later comparison point |
+| `historical_source_url` | Official HTTPS NCBI source supporting the past classification |
+| `historical_classification_type` | Germline, somatic clinical impact, oncogenicity, other, or unable to determine |
+| `notes`, `verification_notes`, `ambiguity_reason` | General work, evidence checks, and unresolved problems |
+| `review_status` | `unreviewed`, `reviewing`, `verified`, `ambiguous`, or `excluded` |
+| `verification_checklist` | Seven required human confirmation flags |
+| `updated_at_utc` | Time of the latest saved change |
+
+Manual classification options are `uncertain significance`, `pathogenic`, `likely
+pathogenic`, `benign`, `likely benign`, `conflicting`, `protective`, `risk factor`,
+`drug response`, `oncogenic`, `likely oncogenic`, `other`, and `unable to determine`.
+These are never collapsed into a binary harmful/harmless field.
+
+The API adds a calculated `timeline` to responses. This value is not stored and never
+fills a missing classification. If the older point is absent, the change category is
+`Historical classification not yet verified.`

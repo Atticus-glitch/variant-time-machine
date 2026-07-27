@@ -37,17 +37,31 @@ async function runLookup(identifier) {
   result.hidden = true;
 
   try {
-    const response = await fetch(
-      `/api/clinvar/lookup?variant_id=${encodeURIComponent(identifier)}`,
-      { headers: { Accept: "application/json" } },
+    const planResponse = await fetch("/api/clinvar/plan", {
+      method: "POST",
+      headers: {Accept: "application/json", "Content-Type": "application/json"},
+      body: JSON.stringify({query: identifier}),
+    });
+    const planPayload = await planResponse.json();
+    if (!planResponse.ok) throw new Error(planPayload.error);
+    const plan = planPayload.plan;
+    const approved = window.confirm(
+      `${plan.purpose}\n\nSource: ${plan.source}\nMaximum transfer: ${(plan.estimated_max_bytes / 1e6).toFixed(1)} MB\n\nStart this small request?`,
     );
-    const payload = await response.json();
-    if (!response.ok) {
-      throw new Error(payload.error || `Lookup returned ${response.status}`);
+    if (!approved) {
+      status.textContent = "Lookup canceled. No network request started.";
+      return;
     }
-    showVariant(payload.variant);
+    const response = await fetch("/api/clinvar/lookup", {
+      method: "POST",
+      headers: {Accept: "application/json", "Content-Type": "application/json"},
+      body: JSON.stringify({query: identifier, approved: true}),
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || `Lookup returned ${response.status}`);
+    showVariant(payload.variants[0]);
     status.className = "connection-success";
-    status.textContent = "Connected. Current ClinVar record received.";
+    status.textContent = `Connected. Current record received. Actual transfer: ${payload.transfer.actual_bytes} bytes.`;
   } catch (error) {
     status.className = "error-message";
     status.textContent = `Lookup failed: ${error.message}`;

@@ -326,6 +326,37 @@ h2 {
   font-size: 1.5rem;
 }
 
+.transfer-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.transfer-grid dd {
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.transfer-grid .protection-on {
+  color: var(--green);
+  font-weight: 700;
+}
+
+.current-pilot-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.current-pilot-grid dd {
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.pilot-timeline {
+  margin: 22px 0 0;
+  padding: 18px 18px 18px 42px;
+  background: var(--cyan-light);
+  border-left: 4px solid var(--cyan);
+  line-height: 1.5;
+}
+
 .connection-grid > div {
   padding: 22px;
   background: var(--cyan-light);
@@ -607,6 +638,309 @@ footer p {
   margin: 0;
 }
 
+.workspace-nav {
+  display: flex;
+  gap: 8px;
+  width: min(1180px, calc(100% - 40px));
+  margin: 18px auto 0;
+  padding: 10px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.workspace-nav a {
+  padding: 9px 13px;
+  color: var(--navy);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.workspace-nav a:hover,
+.workspace-nav a:focus-visible {
+  color: white;
+  background: var(--cyan);
+}
+
+.guide-steps,
+.help-grid,
+.candidate-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.guide-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: guide;
+}
+
+.guide-steps li {
+  padding: 20px;
+  background: #f2f0e8;
+  border-top: 3px solid var(--cyan);
+  counter-increment: guide;
+}
+
+.guide-steps li::before {
+  content: "0" counter(guide);
+  display: block;
+  margin-bottom: 12px;
+  color: var(--cyan);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-weight: 700;
+}
+
+.guide-steps span {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.protection-pill {
+  padding: 8px 11px;
+  color: var(--green);
+  background: var(--green-light);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.transfer-details {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.transfer-details > div {
+  padding: 15px;
+  background: #f2f0e8;
+  border-left: 3px solid var(--cyan);
+}
+
+.transfer-details dt,
+.workspace-form label,
+.list-tools label,
+.checklist legend {
+  color: var(--muted);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.transfer-details dd {
+  margin: 8px 0 0;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
+}
+
+.workspace-form label:not(.check-line),
+.list-tools label {
+  display: grid;
+  gap: 7px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.workspace-form input,
+.workspace-form textarea,
+.workspace-form select,
+.list-tools input,
+.list-tools select {
+  width: 100%;
+  padding: 11px 12px;
+  color: var(--ink);
+  background: white;
+  border: 1px solid var(--line);
+  font: inherit;
+}
+
+.workspace-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.workspace-form button,
+.candidate-card button,
+.workspace-table button,
+.approval-box button,
+.warning-box button {
+  width: fit-content;
+  padding: 10px 14px;
+  color: white;
+  background: var(--navy);
+  border: 0;
+  cursor: pointer;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-weight: 700;
+}
+
+.button-secondary {
+  color: var(--navy) !important;
+  background: var(--gray-light) !important;
+}
+
+.button-danger {
+  background: var(--red) !important;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  gap: 8px;
+  align-items: center;
+}
+
+.check-line {
+  display: flex;
+  grid-column: 1 / -1;
+  gap: 9px;
+  align-items: flex-start;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.check-line input,
+.checklist input {
+  width: auto;
+}
+
+.approval-box,
+.warning-box,
+.current-only-notice {
+  margin-top: 18px;
+  padding: 16px;
+  background: var(--amber-light);
+  border-left: 4px solid var(--amber);
+  line-height: 1.45;
+}
+
+.current-only-notice {
+  color: var(--navy);
+  background: var(--cyan-light);
+  border-left-color: var(--cyan);
+}
+
+.candidate-grid {
+  margin-top: 18px;
+}
+
+.candidate-card {
+  display: grid;
+  gap: 14px;
+  padding: 19px;
+  background: #f2f0e8;
+  border-top: 4px solid var(--cyan);
+}
+
+.candidate-card h3,
+.candidate-card dl {
+  margin: 0;
+}
+
+.candidate-details > div {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.candidate-details dt {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.candidate-details dd {
+  margin: 4px 0 0;
+  line-height: 1.35;
+}
+
+.list-tools {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.workspace-table {
+  min-width: 1180px;
+}
+
+.review-columns {
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr;
+  gap: 25px;
+}
+
+.review-summary {
+  padding: 20px;
+  background: #f2f0e8;
+  border-top: 4px solid var(--cyan);
+}
+
+.review-summary h3 {
+  margin-top: 0;
+}
+
+.review-summary a {
+  overflow-wrap: anywhere;
+}
+
+.checklist {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--line);
+}
+
+.checklist label {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  text-transform: none;
+}
+
+.timeline-box {
+  margin-top: 24px;
+  padding: 20px;
+  background: var(--cyan-light);
+  border-left: 4px solid var(--cyan);
+}
+
+.timeline-box h3,
+.timeline-box p {
+  margin-top: 0;
+}
+
+.historical-missing {
+  color: var(--amber);
+  font-weight: 700;
+}
+
+.help-grid p {
+  margin: 0;
+  padding: 16px;
+  background: #f2f0e8;
+  line-height: 1.5;
+}
+
 .pilot-notice {
   color: var(--navy);
   background: var(--cyan-light);
@@ -650,6 +984,15 @@ footer p {
   line-height: 1.35;
 }
 
+.pilot-table td {
+  white-space: pre-line;
+}
+
+.empty-pilot-cell {
+  color: var(--muted);
+  font-style: italic;
+}
+
 .review-form {
   display: grid;
   gap: 8px;
@@ -686,7 +1029,22 @@ footer p {
     grid-template-columns: 1fr;
   }
 
+  .transfer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .current-pilot-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .release-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-steps,
+  .candidate-grid,
+  .help-grid,
+  .review-columns {
     grid-template-columns: 1fr;
   }
 
@@ -745,6 +1103,26 @@ footer p {
 
   .folder-grid,
   .next-tasks {
+    grid-template-columns: 1fr;
+  }
+
+  .transfer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .current-pilot-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-nav {
+    width: min(100% - 24px, 1180px);
+    overflow-x: auto;
+  }
+
+  .transfer-details,
+  .form-grid,
+  .list-tools,
+  .checklist {
     grid-template-columns: 1fr;
   }
 

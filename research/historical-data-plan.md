@@ -4,58 +4,56 @@ Date: 2026-07-26
 
 ## Immediate Goal
 
-Test the historical workflow on 16 real current ClinVar records. Extract only those
-records from two archived releases, compare exact Variation IDs, and manually review
-every result. This is a small pilot, not a representative dataset and not input for
+Validate the research method with five to ten manually selected variants. The pilot
+tests identifiers, source recording, current lookup, historical version review, and
+honest missing-data handling. It is not representative and will not be used for
 machine learning.
 
-## Selected XML Releases
+## Paused Archive Pair
 
-| Role | Release date | Official file | Compressed size | Official MD5 | Schema |
-| --- | --- | --- | ---: | --- | --- |
-| Older | 2024-02-01 | `xml/archive/2024/ClinVarVCVRelease_2024-02.xml.gz` | 3,334,050,859 bytes | `669267f97e208014ca04d629b6681cf6` | ClinVar VCV 2.0 |
-| Newer | 2025-02-06 | `xml/ClinVarVCVRelease_2025-02.xml.gz` | 4,556,267,423 bytes | `9ab805f0abb0b72099bc90eb9474fa22` | ClinVar VCV 2.2 |
+The previously considered VCV XML releases were February 2024 at 3,334,050,859
+compressed bytes and February 2025 at 4,556,267,423 bytes. A scan could transfer about
+7.89 GB. The files are valid fixed historical sources, but they are not appropriate
+for this small pilot. No archive body has been requested or retained.
 
-Both are official VCV XML releases from the same current format family. They use
-different documented schema revisions, so the parser selects named XML elements and
-tests missing fields. The earlier plan to begin with January 2022 and January 2024
-`variant_summary` files remains useful for later full-table work, but it is not the
-source pair for this record-history pilot.
+`scripts/extract_pilot_history.py` is now metadata-only. It can check headers and tiny
+official MD5 files, but it cannot start the archive scan.
 
-## Storage and Bandwidth Rule
+## Transfer Safety Rule
 
-The source files total about 7.89 GB compressed. A scan may stop early when every
-requested Variation ID is found, but early stopping is not guaranteed. Therefore:
+Before any project download, the software must show:
 
-1. `--dry-run` requests only headers and the small official MD5 text files.
-2. Archive bodies are requested only with `--confirm-large-transfer`.
-3. Compressed bytes are counted and can be stopped by `--max-transfer-gb`.
-4. Retained JSON is limited by `--max-output-mb`, with a 50 MiB default per file.
-5. Full gzip files and decompressed XML are never written to disk by this command.
-6. Failed writes remove their temporary files.
+1. The exact source.
+2. The estimated size.
+3. Why the transfer is needed.
+4. Whether it crosses the 500 MB large-download boundary.
 
-## Pilot Records
+The transfer waits for explicit confirmation. A ClinVar archive larger than 500 MB
+must never begin silently. Unknown sizes receive the same protected treatment.
 
-`data/manual_review/pilot_variants.csv` contains 16 current records retrieved through
-official NCBI ESummary on 2026-07-26. These current facts help identify records for the
-pilot. They do not prove any historical value. All historical columns remain blank
-until the archived XML is actually scanned.
+## Manual Pilot
 
-## XML Fields
+`data/manual_review/pilot_workspace.json` is the active browser pilot list. It begins
+with zero records and is limited to ten. A student chooses each variant for a written
+reason. The dashboard first displays the transfer plan and requires approval before a
+small official request. The five-row CSV and scripts remain optional developer tools.
 
-The stream reads one `VariationArchive` element at a time. It retains Variation ID,
-VCV accession and version, record type, record status, allele IDs, genes, conditions,
-and replacement metadata. Germline classification, somatic clinical impact, and
-oncogenicity are stored in separate fields and are never combined.
+Current data come from ESummary for one Variation ID. Historical information may come
+from EFetch only when an explicit VCV accession version has been identified. The
+historical response is capped at 10 MB. A VCV version must be dated and reviewed by a
+person; it is not assumed to equal any monthly release.
 
-## Matching and Review
+## Inclusion Rule
 
-An automatic match requires the same numeric Variation ID in both extracted files.
-Missing records, unfamiliar statuses, and replacement metadata remain visible. The
-software can label a germline classification as unchanged, changed, or unable to
-verify, but every result stays `requires_manual_review`.
+A populated row must preserve the Variation ID, VCV accession, gene, reason selected,
+current classification, exact sources, verification state, and notes. Historical
+classification stays blank until a source-backed version has been retrieved and its
+date and scope have been checked. Empty fields must never be replaced by guesses.
 
-The dashboard review choices are `Not reviewed`, `Confirmed match`, `Needs follow-up`,
-and `Rejected automatic match`. A reviewer must inspect both source records and their
-scope before selecting a final review state. Automatic output is never described as a
-scientifically verified result.
+## Pilot Success Criteria
+
+The pilot works when five to ten variants can be selected, retrieved in small requests,
+stored reproducibly, and reviewed without confusing current and historical facts. Only
+then should the project consider an indexed query, a summary file, or a larger archive.
+Any later download still requires a scientific reason, a size review, and explicit
+approval.

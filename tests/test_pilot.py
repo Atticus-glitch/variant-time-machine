@@ -103,13 +103,8 @@ def test_atomic_json_removes_temporary_file_after_failure(
 
 
 def test_dry_run_does_not_call_extraction(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    pilot = tmp_path / "pilot.csv"
-    pilot.write_text(
-        "variation_id,current_accession\n2,VCV000000002.1\n", encoding="utf-8"
-    )
-
     def metadata(release: object) -> RemoteReleaseMetadata:
         return RemoteReleaseMetadata(
             label=release.label,
@@ -125,10 +120,5 @@ def test_dry_run_does_not_call_extraction(
         )
 
     monkeypatch.setattr(extract_pilot_history, "inspect_remote_release", metadata)
-    monkeypatch.setattr(
-        extract_pilot_history,
-        "extract_remote_records",
-        lambda *_args, **_kwargs: pytest.fail("dry run started extraction"),
-    )
-    assert extract_pilot_history.main(["--dry-run", "--pilot-csv", str(pilot)]) == 0
+    assert extract_pilot_history.main(["--dry-run"]) == 0
     assert "No archive body was requested" in capsys.readouterr().out

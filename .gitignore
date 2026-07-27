@@ -39,6 +39,7 @@ data/processed/*
 data/manual_review/extracted/*
 !data/manual_review/extracted/.gitkeep
 data/manual_review/pilot_review.json
+data/manual_review/pilot_workspace.backup.json
 *.xml.gz
 
 # Generated outputs

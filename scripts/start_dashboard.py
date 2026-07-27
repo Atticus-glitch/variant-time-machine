@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Start the local Variant Time Machine research dashboard."""
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -11,4 +12,11 @@ if str(PROJECT_ROOT) not in sys.path:
 from website.dashboard.app import run_dashboard  # noqa: E402
 
 if __name__ == "__main__":
-    run_dashboard()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--no-browser",
+        action="store_true",
+        help="Start the server without opening the Pilot Workspace",
+    )
+    args = parser.parse_args()
+    run_dashboard(open_browser=not args.no_browser)

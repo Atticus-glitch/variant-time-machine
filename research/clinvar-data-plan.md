@@ -1,9 +1,8 @@
 # ClinVar Historical Data Plan
 
-> Pilot update, 2026-07-26: the first bounded real-record test now uses the
-> February 2024 and February 2025 VCV XML releases documented in
-> `historical-data-plan.md`. The TSV pair below is retained as a later
-> full-table plan and has not been downloaded.
+> Pilot update, 2026-07-26: the active test uses five empty manual slots and
+> one-record ESummary or versioned VCV EFetch requests. The bulk-file plan below
+> is retained only as background. None of these files has been downloaded.
 
 Date: 2026-07-26
 

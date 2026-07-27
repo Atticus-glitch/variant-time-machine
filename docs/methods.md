@@ -14,15 +14,25 @@ Future information leakage occurs when a predictor contains information that was
 
 ## Selected Releases and Format
 
-The 16-record pilot uses official VCV XML releases dated 2024-02-01 and 2025-02-06. Their compressed sizes are 3,334,050,859 and 4,556,267,423 bytes. Their official MD5 values and exact URLs are fixed in configuration. Both belong to the current VCV format family, with schema revisions 2.0 and 2.2.
+The original XML pilot considered official VCV releases dated 2024-02-01 and 2025-02-06. Their compressed sizes total about 7.89 GB. That strategy is paused because streaming can still consume the full transfer even when no archive is retained.
 
-The current ESummary API is used only to select and display current candidate records. It cannot supply historical classifications. Historical values must come from the fixed archived XML releases.
+The active browser workspace starts with zero records and is limited to ten. ESummary retrieves one current Variation ID, or ESearch finds at most five current candidates for a gene. If a reviewer identifies an explicit historical VCV accession version, the optional command-line EFetch tool can retrieve only that version with a 10 MB cap. The version must be linked to a date and reviewed; it is not automatically treated as a monthly snapshot.
 
-## Bounded Remote Extraction
+## Transfer Protection
 
-The pilot performs a metadata-only dry run before any body request. Confirmed extraction wraps the HTTP response in a compressed-byte counter, `gzip.GzipFile`, and incremental XML parsing. It keeps only requested `VariationArchive` records and stops when all are found. A missing record may require a full scan, so the command warns that as much as 7.89 GB could be transferred. It does not retain a gzip archive or decompressed XML file.
+Before any download, the software reports source, estimated size, purpose, and whether the plan crosses 500 MB. It waits for an explicit confirmation flag. The archive inspection command is metadata-only and has no body-scan option.
 
-Record count, compressed transfer, and retained output limits stop work with an error. Network requests use timeouts and limited retries. Small outputs are written atomically, and failed temporary outputs are removed.
+Pilot mode also waits for explicit confirmation even though its requests are small. Current ESummary planning reserves 1 MB. Versioned EFetch is streamed and stops at 10 MB. The CSV is written atomically, and failed temporary output is removed.
+
+The browser Pilot Workspace is now the normal interface. A local planning request does not contact NCBI. After approval, one Variation ID or VCV request has a 1 MB estimate; a gene search has a 6 MB estimate and returns at most five candidates. Actual JSON body bytes are recorded. The 500 MB protection remains active, and no archive action is exposed by the dashboard.
+
+## Manual Pilot Review
+
+The browser stores current ClinVar wording without converting it to harmful or harmless. A reviewer separately enters an older date and classification, newer comparison date and classification, classification type, official NCBI source URL, notes, ambiguity reason, and checklist answers. Allowed classification labels keep uncertain, pathogenic, likely pathogenic, benign, likely benign, conflicting, protective, risk factor, drug response, oncogenic, likely oncogenic, other, and unable-to-determine categories separate.
+
+Records begin `unreviewed` and can move to `reviewing`, `verified`, `ambiguous`, or `excluded`. Ambiguous and excluded records require an explanation. Verified records require both dates, both classifications, an official source, classification type, every checklist item, and an older date before the newer date. The calculated timeline never fills absent values.
+
+The workspace is a small versioned JSON file. Every mutation is validated, copied to one backup, written to a temporary file, and atomically replaced. Command-line tools remain available for reproducibility but are not required for normal pilot research.
 
 ## Parsing
 
@@ -55,4 +65,4 @@ For the XML pilot, germline, somatic clinical impact, and oncogenicity are separ
 
 The included CSV is synthetic test data and is not a ClinVar extract. It tests parsing, matching, missing data, output labels, and command-line formatting. Before full-release processing, a small real sample from every match category must be checked against the archived records and, when necessary, VCV or RCV history.
 
-Sixteen real current ClinVar summaries have been recorded as pilot candidates. No archived XML body has been processed, no historical classifications have been filled, no biological conclusions have been made, and no models have been trained.
+The browser workspace begins with zero records and is limited to ten. No archived XML body has been processed, no historical classification has been verified, no biological conclusion has been made, and no model has been trained.

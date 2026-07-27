@@ -21,20 +21,52 @@ REVIEW_STATUSES = (
     "Needs follow-up",
     "Rejected automatic match",
 )
+PILOT_COLUMNS = (
+    "variant_id",
+    "VCV_accession",
+    "gene",
+    "reason_selected",
+    "current_classification",
+    "historical_classification",
+    "source",
+    "verification_status",
+    "notes",
+)
 
 
 def read_pilot_rows(path: Path) -> list[dict[str, str]]:
-    """Read the small current-data pilot list."""
+    """Read five to ten manual pilot slots, including empty template rows."""
     with path.open(encoding="utf-8", newline="") as input_file:
-        rows = list(csv.DictReader(input_file))
-    if not rows or "variation_id" not in rows[0]:
-        raise ValueError("Pilot CSV must contain at least one variation_id row.")
-    identifiers = [row["variation_id"].strip() for row in rows]
+        reader = csv.DictReader(input_file)
+        if tuple(reader.fieldnames or ()) != PILOT_COLUMNS:
+            raise ValueError("Pilot CSV columns do not match the manual pilot schema.")
+        rows = list(reader)
+    if not 5 <= len(rows) <= 10:
+        raise ValueError("Pilot CSV must contain between 5 and 10 rows.")
+    identifiers = [
+        row["variant_id"].strip() for row in rows if row["variant_id"].strip()
+    ]
     if any(not identifier.isdigit() for identifier in identifiers):
-        raise ValueError("Every pilot variation_id must be numeric.")
+        raise ValueError("Every populated pilot variant_id must be numeric.")
     if len(identifiers) != len(set(identifiers)):
         raise ValueError("Pilot variation_id values must be unique.")
     return rows
+
+
+def write_pilot_rows(path: Path, rows: list[dict[str, str]]) -> None:
+    """Atomically save only the declared small pilot columns."""
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    try:
+        with temporary.open("w", encoding="utf-8", newline="") as output_file:
+            writer = csv.DictWriter(output_file, fieldnames=PILOT_COLUMNS)
+            writer.writeheader()
+            writer.writerows(
+                {column: row.get(column, "") for column in PILOT_COLUMNS}
+                for row in rows
+            )
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def _record_map(

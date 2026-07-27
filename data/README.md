@@ -14,4 +14,8 @@ Large data files are ignored by Git. Each future download must record its offici
 
 `manual_review/` is reserved for small real examples that have been checked against official historical sources. Its CSV begins with no data rows because no historical comparison has been manually verified yet.
 
-`manual_review/pilot_variants.csv` contains 16 official current ESummary records and blank historical columns. It is a candidate list, not a verified timeline. `manual_review/extracted/` may contain only small bounded outputs and manifests from the pilot streaming command. Full ClinVar XML archives are not retained.
+`manual_review/pilot_variants.csv` contains five empty rows ready for manually selected real variants. Empty cells contain no scientific data. Pilot mode may add one current API record and one optional versioned VCV source at a time. Full ClinVar XML archives are not downloaded or retained.
+
+`manual_review/pilot_workspace.json` is the active browser list. It begins with zero
+records and stores up to ten current lookups and manual reviews. The CSV remains an
+optional command-line template rather than the dashboard's main data store.

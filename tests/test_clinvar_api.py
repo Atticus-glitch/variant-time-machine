@@ -11,6 +11,7 @@ from variant_time_machine.clinvar_api import (
     InvalidVariantIdentifier,
     lookup_clinvar_variant,
     normalize_variant_identifier,
+    search_clinvar_gene,
 )
 
 
@@ -125,3 +126,23 @@ def test_missing_record_is_reported() -> None:
     session = FakeSession({"result": {"uids": []}})
     with pytest.raises(ClinVarRecordNotFound, match="14206"):
         lookup_clinvar_variant("14206", session=session)  # type: ignore[arg-type]
+
+
+def test_gene_search_is_small_and_returns_numeric_ids() -> None:
+    """Gene search should request at most five current candidate identifiers."""
+    session = FakeSession(
+        {"esearchresult": {"idlist": ["14206", "41472", "not-an-id"]}}
+    )
+    result = search_clinvar_gene("brca1", session=session)  # type: ignore[arg-type]
+    assert result == ("14206", "41472")
+    assert session.last_request is not None
+    assert session.last_request["params"]["retmax"] == 5
+    assert session.last_request["params"]["term"] == (
+        "BRCA1[gene] AND single_gene[prop]"
+    )
+
+
+def test_gene_search_rejects_invalid_symbol_before_network() -> None:
+    """Free text must not become an unrestricted API query."""
+    with pytest.raises(InvalidVariantIdentifier, match="gene symbol"):
+        search_clinvar_gene("BRCA1 OR anything")

@@ -12,7 +12,7 @@ Variant Time Machine is a computational genetics research project that asks whet
 
 ## Current Status
 
-The repository now contains a bounded historical XML pilot. Sixteen real current ClinVar records were selected through official NCBI ESummary, but their historical fields remain blank because no archived XML body has been processed. The project can inspect source metadata, stream only requested records after explicit confirmation, compare exact Variation IDs, and save human review decisions. No biological claims or models exist.
+The project intentionally begins with a small pilot dataset to validate methods before considering larger historical releases. The local dashboard is now the main pilot interface. It can plan and approve small current lookups, add up to ten variants, save manual historical review, enforce verification checks, and display an honest timeline. No historical result is assumed in advance, no biological claims have been made, and no models exist.
 
 ## Planned Workflow
 
@@ -90,19 +90,23 @@ python scripts/build_timeline_dataset.py \
   --output outputs/tables/clinvar_timeline.csv
 ```
 
-The command refuses to replace an existing output unless `--overwrite` is supplied. The configured downloader also requires `--confirm-large-download`; no download occurs during imports, tests, or setup validation.
+The command refuses to replace an existing output unless `--overwrite` is supplied. Every configured download requires explicit confirmation after showing its source, estimated size, and purpose. Downloads above 500 MB are protected by a hard large-download rule. No download occurs during imports, tests, or setup validation.
 
 ## Local Dashboard
 
-Start the development dashboard from the repository root:
+Start the dashboard once from the repository root:
 
 ```bash
 python scripts/start_dashboard.py
 ```
 
-Then open `http://127.0.0.1:5000` in a browser. The dashboard uses synthetic test data and must not be presented as scientific results.
+The server opens `http://127.0.0.1:5000/pilot_workspace.html` in the default browser. Use `python scripts/start_dashboard.py --no-browser` only when automatic browser opening is not wanted.
 
-The dashboard also provides a one-record connection to the official current ClinVar API at `http://127.0.0.1:5000/variant_lookup.html` and the manual Historical Pilot at `http://127.0.0.1:5000/historical_pilot.html`. See [`docs/clinvar-api.md`](docs/clinvar-api.md) for supported identifiers and limitations.
+Normal pilot research happens in the **Pilot Workspace**. From the browser you can review a transfer estimate, approve a small current ClinVar lookup, add a record with a selection reason, edit past and newer classifications, save notes and sources, change review status, complete the verification checklist, and view a timeline. The dashboard never exposes the paused full-archive scan.
+
+Current lookups and historical verification are different tasks. A current result can be saved immediately, but a past classification remains blank until a person records an official source, exact dates, category type, and review notes. `Verified` means all required fields and checklist items were completed; it does not mean ClinVar itself is infallible.
+
+The dashboard also contains clearly labeled synthetic display data. Synthetic examples are software demonstrations and must not be presented as research results.
 
 Start a manual historical review with:
 
@@ -112,33 +116,57 @@ python scripts/review_variant.py 14206
 
 The command displays current ClinVar information and an unchecked archive-verification checklist. It does not add a row or claim that the variant changed.
 
-## Historical XML Pilot
+## Optional Developer Commands
 
-First inspect the official release headers and MD5 text files. This does not request an archive body:
+Command-line tools remain available for reproducibility, testing, and debugging. They are not required for normal pilot work.
 
-```bash
-python scripts/extract_pilot_history.py --dry-run
-```
-
-The selected compressed files are 3.33 GB and 4.56 GB. A scan may stop early, but it can transfer about 7.89 GB if records are missing or late. Start extraction only after reviewing that cost:
+See the five legacy CSV slots without making a network request:
 
 ```bash
-python scripts/extract_pilot_history.py --confirm-large-transfer
+python scripts/pilot_mode.py
 ```
 
-To impose a smaller hard transfer limit on each release:
+Plan one current lookup. This prints the source, estimated size, and purpose, then stops:
 
 ```bash
-python scripts/extract_pilot_history.py \
-  --confirm-large-transfer \
-  --max-transfer-gb 1
+python scripts/pilot_mode.py 14206 --reason "Manually selected test record"
 ```
 
-Hitting a limit is reported as a failed extraction. It is not a partial result. Full archives are not saved.
+After reviewing the plan, make the small request explicitly:
+
+```bash
+python scripts/pilot_mode.py 14206 \
+  --reason "Manually selected test record" \
+  --confirm-api-requests
+```
+
+An optional `--historical-vcv VCV000014206.1` requests one explicit VCV version with a 10 MB limit. A versioned record still requires manual date, condition, and scope verification. It is not automatically equivalent to a monthly release.
+
+The earlier 7.89 GB two-archive scan is paused and cannot be started by the archive inspection script. `python scripts/extract_pilot_history.py --dry-run` reads only headers and tiny MD5 files. See [`research/data-size-options.md`](research/data-size-options.md) for the alternatives.
+
+## Optional Single-Variant Commands
+
+Preview a candidate without accepting it:
+
+```bash
+python scripts/select_pilot_variant.py --variation-id 14206
+```
+
+Add `--confirm-api-requests` only after reviewing the displayed source, size, and
+purpose. The selection tool can also use `--vcv VCV000014206` or `--gene BRCA1`. Gene
+search returns at most five current candidates. Previewing never saves a pilot record.
+
+Run the interactive workflow when one candidate has a clear selection reason:
+
+```bash
+python scripts/run_pilot_workflow.py
+```
+
+The command-line workflow confirms the small API request and asks again before selection. It saves `data/manual_review/pilot_variant_001.json` as a reproducible one-record artifact. The browser Pilot Workspace uses `data/manual_review/pilot_workspace.json` as its canonical multi-record store. Historical records remain empty until a person checks an official historical source.
 
 ## Current Milestone
 
-Produce a verified table connecting variants labeled uncertain in one archived ClinVar release with their classifications in a later release. No machine-learning claims will be made until the matching process has been checked carefully.
+Complete one source-backed historical review through the Pilot Workspace, then repeat the same checked method on a small set. The pilot dataset is not suitable for model training. No machine-learning work will begin until historical matching is reliable.
 
 ## Reproducibility
 

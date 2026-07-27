@@ -6,13 +6,16 @@ This file will record official documentation, release dates, retrieval dates, UR
 
 - Intended role: historical and newer variant classifications, submission evidence, review status, and stable identifiers.
 - Earlier full-table candidates: monthly `variant_summary` snapshots dated 2022-01-06 and 2024-01-04. These were not downloaded and are not the active pilot pair.
-- Active bounded pilot: VCV XML releases dated 2024-02-01 and 2025-02-06, with official sizes and MD5 values recorded in `historical-data-plan.md`.
+- Paused XML pair: VCV releases dated 2024-02-01 and 2025-02-06. Their combined 7.89 GB transfer is not appropriate for the active pilot.
+- Active small pilot: one-record current ESummary and optional explicit-version VCV EFetch requests.
 - [ClinVar release cycle](https://www.ncbi.nlm.nih.gov/clinvar/docs/release_cycle/): monthly archive timing; accessed 2026-07-26.
 - [ClinVar FTP guide](https://www.ncbi.nlm.nih.gov/clinvar/docs/ftp_primer/): format coverage and use; accessed 2026-07-26.
 - [ClinVar identifiers](https://www.ncbi.nlm.nih.gov/clinvar/docs/identifiers/): relationships among Allele ID, Variation ID, VCV, RCV, and SCV; accessed 2026-07-26.
+- [ClinVar programmatic access](https://www.ncbi.nlm.nih.gov/clinvar/docs/programmatic_access/): current ESummary and explicit-version VCV EFetch examples; accessed 2026-07-26.
 - [Tab-delimited README](https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/README): current field definitions and revision history; accessed 2026-07-26.
 - [2022 archive listing](https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/archive/2022/) and [2024 archive listing](https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/archive/2024/): file availability, dates, and sizes; accessed 2026-07-26.
 - Detailed notes: [`clinvar-archive-research.md`](clinvar-archive-research.md).
+- Data size comparison and pilot recommendation: [`data-size-options.md`](data-size-options.md).
 
 ## gnomAD
 

@@ -15,13 +15,20 @@
 - Exact outcome mapping is intentionally conservative. Explicit conflict text becomes `VUS_to_Conflicting`, while unfamiliar mixed terms become `Unable_to_Verify`.
 - The synthetic timeline verifies software behavior only. Its counts and outcomes say nothing about real ClinVar reclassification rates.
 - The current parser reads a release table into memory. Memory use and a possible chunked approach must be tested before processing the full archives.
-- The 16 pilot variants are a convenience sample of active low-numbered records. They are not representative of ClinVar and cannot estimate a reclassification rate.
+- The five to ten pilot variants will be manually selected. They will not be representative of ClinVar and cannot estimate a reclassification rate.
 - Streaming saves local disk, but a missing late record can still require transferring an entire 3.33 GB or 4.56 GB compressed archive.
 - The two pilot releases use VCV schema revisions 2.0 and 2.2. Named fields can still be absent or change meaning, so extraction tests do not replace source review.
 - Official MD5 values identify the complete source files. A stream that stops early cannot calculate and verify the complete archive MD5 from transferred bytes.
 - An exact Variation ID is a conservative automatic link, not proof that condition scope, aggregation, or scientific meaning stayed the same.
 - Replacement and non-current record metadata are flagged but never followed automatically.
 - Current ESummary values were retrieved on 2026-07-26 and may change later. They do not prove values in either archived release.
-- No archived pilot extraction has been run yet. Dashboard historical cells correctly remain unavailable.
+- No archived pilot extraction will be run in the current strategy. Dashboard historical cells remain empty until a small source-backed record is reviewed.
+- A versioned VCV EFetch record is not automatically the record active in an arbitrary monthly release. Version dates and classification scope require manual verification.
+- Browser validation and checklists reduce mistakes but cannot prove that a person interpreted a source correctly.
+- Gene search returns at most five current candidates and is not a complete gene-level analysis.
+- Actual transfer size is measured from returned API bodies when available; it is not a full network-traffic meter for protocol overhead.
+- The local JSON backup stores only the immediately previous workspace state. It is not a complete audit-history system.
+- A record marked `verified` means the project checklist was completed. It does not mean ClinVar is ground truth or that the classification is medically correct.
+- The Pilot Workspace is local and intended for one researcher. It does not implement user accounts or multi-user conflict resolution.
 
 All conclusions will be restricted to the chosen releases, matching rules, feature availability, and evaluation design. These limitations will be updated as empirical problems are discovered.

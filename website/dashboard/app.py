@@ -4,7 +4,9 @@ import csv
 import json
 import shutil
 import sys
-from datetime import UTC, date, datetime
+import threading
+import webbrowser
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -21,26 +23,38 @@ from variant_time_machine.clinvar_api import (  # noqa: E402
     ClinVarRecordNotFound,
     InvalidVariantIdentifier,
     lookup_clinvar_variant,
+    normalize_gene_symbol,
+    normalize_variant_identifier,
+    search_clinvar_gene_result,
 )
 from variant_time_machine.config import (  # noqa: E402
+    LARGE_DOWNLOAD_THRESHOLD_BYTES,
+    PILOT_CURRENT_API_ESTIMATE_BYTES,
     PILOT_EXTRACTED_DIR,
-    PILOT_REVIEW_PATH,
-    PILOT_VARIANTS_PATH,
-    PILOT_XML_RELEASES,
+    PILOT_HISTORICAL_API_LIMIT_BYTES,
+    PILOT_WORKSPACE_PATH,
     RAW_DATA_DIR,
     TABLES_DIR,
 )
-from variant_time_machine.pilot import (  # noqa: E402
+from variant_time_machine.pilot_workspace import (  # noqa: E402
+    CHECKLIST_FIELDS,
+    CLASSIFICATION_OPTIONS,
+    CLASSIFICATION_TYPES,
     REVIEW_STATUSES,
-    load_reviews,
-    read_pilot_rows,
-    save_review,
+    PilotVariantNotFound,
+    PilotWorkspaceError,
+    add_record,
+    find_record,
+    load_workspace,
+    new_pilot_record,
+    public_record,
+    refresh_current_record,
+    update_record,
 )
 
 SYNTHETIC_NOTICE = "Synthetic example data. Not real scientific results."
 EXAMPLE_DATA_PATH = PROJECT_ROOT / "data" / "example_variants.csv"
 NOTEBOOK_PATH = PROJECT_ROOT / "research" / "research-notebook.md"
-MANUAL_REVIEW_PATH = PROJECT_ROOT / "data" / "manual_review" / "test_variants.csv"
 
 PROJECT_EXPLANATION = (
     "Variant Time Machine asks whether information available about an uncertain "
@@ -77,16 +91,15 @@ PROGRESS_ITEMS: tuple[dict[str, str | int], ...] = (
     },
     {
         "step": 4,
-        "name": "Compare old and new ClinVar releases",
+        "name": "Compare historical records",
         "status": "Working",
         "explanation": (
-            "Conservative matching works on fake data and needs review on real "
-            "examples."
+            "The manual review workspace exists, but no historical match is complete."
         ),
     },
     {
         "step": 5,
-        "name": "Create timeline dataset",
+        "name": "Timeline dataset",
         "status": "Working",
         "explanation": (
             "The output format exists, but no verified research dataset exists yet."
@@ -94,7 +107,7 @@ PROGRESS_ITEMS: tuple[dict[str, str | int], ...] = (
     },
     {
         "step": 6,
-        "name": "Find useful biological clues",
+        "name": "Features",
         "status": "Not Started",
         "explanation": (
             "Biological features will wait until variant matching is reliable."
@@ -102,26 +115,10 @@ PROGRESS_ITEMS: tuple[dict[str, str | int], ...] = (
     },
     {
         "step": 7,
-        "name": "Train prediction models",
+        "name": "Models",
         "status": "Not Started",
         "explanation": (
             "No model training will begin before the timeline dataset is checked."
-        ),
-    },
-    {
-        "step": 8,
-        "name": "Evaluate results",
-        "status": "Not Started",
-        "explanation": (
-            "Evaluation comes after a valid dataset and honest baseline models exist."
-        ),
-    },
-    {
-        "step": 9,
-        "name": "Create final science fair presentation",
-        "status": "Not Started",
-        "explanation": (
-            "The presentation will report only methods and results that were verified."
         ),
     },
 )
@@ -147,9 +144,9 @@ FOLDER_GUIDE: tuple[dict[str, str], ...] = (
 )
 
 NEXT_TASKS: tuple[str, ...] = (
-    "Review the selected ClinVar release dates and archive format plan.",
-    "Test the parser and matcher on a small, manually checked real sample.",
-    "Write clear rules for resolving or excluding every ambiguous match type.",
+    "Preview several clear current ClinVar candidates without saving them.",
+    "Choose one variant for a written reason and run the confirmed pilot workflow.",
+    "Investigate one official historical record and verify it manually.",
 )
 
 
@@ -214,83 +211,80 @@ def _system_status() -> dict[str, Any]:
         "last_pipeline_run": _latest_pipeline_output(),
         "files_created": files_created,
         "raw_clinvar_files": len(raw_files),
-        "pilot_release_pair": "2024-02-01 to 2025-02-06 VCV XML",
-        "pilot_extraction": (
-            f"{len(extracted_files)} small JSON output files"
-            if extracted_files
-            else "Historical data unavailable; extraction has not been run"
-        ),
+        "pilot_strategy": "Five to ten one-record API lookups",
+        "archive_scan": "Paused; metadata inspection only",
+        "pilot_outputs": f"{len(extracted_files)} small JSON output files",
         "storage": (
             f"{disk.free / (1024**3):.1f} GiB free; full XML archives retained: no"
         ),
     }
 
 
-def _pilot_payload(pilot_path: Path, review_path: Path) -> dict[str, object]:
-    """Build pilot rows with an explicit missing-historical-data state."""
-    rows = read_pilot_rows(pilot_path)
-    reviews = load_reviews(review_path)
-    comparison_path = PILOT_EXTRACTED_DIR / "pilot_comparisons.json"
-    comparisons: dict[str, dict[str, object]] = {}
-    data_status = "Historical data unavailable; confirmed extraction has not been run."
-    if comparison_path.is_file():
-        try:
-            payload = json.loads(comparison_path.read_text(encoding="utf-8"))
-            comparison_rows = payload.get("comparisons", [])
-            comparisons = {
-                str(row["variation_id"]): row
-                for row in comparison_rows
-                if isinstance(row, dict) and row.get("variation_id") is not None
-            }
-            data_status = "Extracted comparisons available; manual review is required."
-        except (OSError, ValueError, TypeError):
-            data_status = "Historical comparison file is unreadable."
+def _directory_size(path: Path) -> int:
+    """Return bytes used by regular files below one local directory."""
+    return sum(item.stat().st_size for item in path.rglob("*") if item.is_file())
 
-    combined = []
-    for row in rows:
-        variation_id = row["variation_id"]
-        comparison = comparisons.get(variation_id, {})
-        combined.append(
-            {
-                **row,
-                "older_germline_classification": comparison.get(
-                    "older_germline_classification"
-                ),
-                "newer_germline_classification": comparison.get(
-                    "newer_germline_classification"
-                ),
-                "match_status": comparison.get("match_status", "not_extracted"),
-                "classification_change": comparison.get(
-                    "classification_change", "Unable_to_Verify"
-                ),
-                "automatic_verification_status": comparison.get(
-                    "automatic_verification_status", "requires_manual_review"
-                ),
-                "record_history_flags": comparison.get("record_history_flags", []),
-                "manual_review": reviews.get(
-                    variation_id, {"status": "Not reviewed", "notes": ""}
-                ),
-            }
-        )
-    releases = {
-        label: {
-            "release_date": release.release_date.isoformat(),
-            "schema_version": release.schema_version,
-            "compressed_size_bytes": release.compressed_size_bytes,
-            "source_url": release.source_url,
-            "expected_md5": release.md5,
-        }
-        for label, release in PILOT_XML_RELEASES.items()
-    }
+
+def _format_bytes(size: int) -> str:
+    """Format a byte count without hiding the exact value."""
+    if size < 1024:
+        return f"{size} bytes"
+    if size < 1024**2:
+        return f"{size / 1024:.1f} KiB ({size:,} bytes)"
+    return f"{size / (1024**2):.1f} MiB ({size:,} bytes)"
+
+
+def _transfer_safety_status(
+    transfer_state: dict[str, object] | None = None,
+) -> dict[str, object]:
+    """Report local transfer policy and recorded storage use."""
+    downloaded = sum(
+        path.stat().st_size
+        for path in RAW_DATA_DIR.iterdir()
+        if path.is_file() and path.name != ".gitkeep"
+    )
+    session_bytes = int((transfer_state or {}).get("total_api_bytes", 0))
     return {
-        "notice": (
-            "Current facts are real NCBI data. Historical fields are not available "
-            "until extraction runs."
+        "largest_planned_download": (
+            "One versioned VCV API record, capped at "
+            f"{PILOT_HISTORICAL_API_LIMIT_BYTES / 1_000_000:.0f} MB"
         ),
-        "historical_data_status": data_status,
-        "releases": releases,
-        "review_statuses": REVIEW_STATUSES,
-        "rows": combined,
+        "current_transfer": str(
+            (transfer_state or {}).get("current_transfer", "0 bytes; idle")
+        ),
+        "total_downloaded": _format_bytes(downloaded + session_bytes),
+        "storage_used": _format_bytes(_directory_size(PROJECT_ROOT / "data")),
+        "large_download_protection": "ON",
+        "large_download_threshold": (
+            f"{LARGE_DOWNLOAD_THRESHOLD_BYTES / 1_000_000:.0f} MB"
+        ),
+        "last_request": (transfer_state or {}).get("last_request"),
+    }
+
+
+def _current_pilot_status(path: Path) -> dict[str, object]:
+    """Return the first workspace record or an explicit empty state."""
+    workspace = load_workspace(path)
+    if not workspace["records"]:
+        return {
+            "selected": False,
+            "variant": "No pilot variant selected",
+            "gene": "No pilot variant selected",
+            "current_classification": "No pilot variant selected",
+            "historical_status": "No historical information investigated",
+            "verification_status": "No pilot variant selected",
+            "timeline": [],
+        }
+    record = workspace["records"][0]
+    timeline = public_record(record)["timeline"]
+    return {
+        "selected": True,
+        "variant": f"{record['vcv_accession']} (Variation ID {record['variant_id']})",
+        "gene": record["gene"] or "Not listed",
+        "current_classification": record["current_classification"] or "Not listed",
+        "historical_status": timeline["change_category"],
+        "verification_status": record["review_status"],
+        "timeline": timeline,
     }
 
 
@@ -327,64 +321,24 @@ def _example_dataset_preview() -> list[dict[str, str]]:
     ]
 
 
-def _classification_group(value: str) -> str:
-    """Normalize equivalent uncertain terms for dashboard change counts."""
-    normalized = value.strip().casefold()
-    if normalized in {
-        "vus",
-        "uncertain significance",
-        "vus-high",
-        "vus-mid",
-        "vus-low",
-    }:
-        return "uncertain"
-    return normalized
-
-
-def _historical_comparison_status() -> dict[str, object]:
-    """Count only complete rows from the manual verification table."""
-    if not MANUAL_REVIEW_PATH.is_file():
-        return {
-            "total_verified_variants": 0,
-            "variants_with_classification_changes": 0,
-            "last_verified_comparison": "None yet",
-        }
-
-    with MANUAL_REVIEW_PATH.open(encoding="utf-8", newline="") as input_file:
-        rows = list(csv.DictReader(input_file))
-
-    required_fields = (
-        "variant_id",
-        "gene",
-        "old_release_date",
-        "new_release_date",
-        "old_classification",
-        "new_classification",
-        "verification_source",
-    )
-
-    def is_complete_historical_row(row: dict[str, str | None]) -> bool:
-        if not all(str(row.get(field) or "").strip() for field in required_fields):
-            return False
-        try:
-            old_date = date.fromisoformat(str(row["old_release_date"]))
-            new_date = date.fromisoformat(str(row["new_release_date"]))
-        except ValueError:
-            return False
-        return old_date < new_date
-
-    verified = [row for row in rows if is_complete_historical_row(row)]
+def _historical_comparison_status(path: Path) -> dict[str, object]:
+    """Count only browser workspace records that passed verification rules."""
+    workspace = load_workspace(path)
+    verified = [
+        record
+        for record in workspace["records"]
+        if record["review_status"] == "verified"
+    ]
     changed = sum(
-        _classification_group(row["old_classification"])
-        != _classification_group(row["new_classification"])
-        for row in verified
+        public_record(record)["timeline"]["change_category"].startswith("Changed from")
+        for record in verified
     )
     last_comparison = "None yet"
     if verified:
-        last = verified[-1]
+        last = max(verified, key=lambda record: str(record["updated_at_utc"]))
         last_comparison = (
             f"Variation ID {last['variant_id']}, checked through "
-            f"{last['new_release_date']}"
+            f"{last['newer_comparison_date']}"
         )
     return {
         "total_verified_variants": len(verified),
@@ -393,12 +347,52 @@ def _historical_comparison_status() -> dict[str, object]:
     }
 
 
+def _lookup_plan(query: str) -> dict[str, object]:
+    """Validate one lookup query and return a no-network transfer plan."""
+    cleaned = query.strip()
+    if not cleaned or len(cleaned) > 40:
+        raise InvalidVariantIdentifier(
+            "Enter a Variation ID, VCV accession, or short gene symbol."
+        )
+    if cleaned.isdigit() or cleaned.upper().startswith("VCV"):
+        variation_id = normalize_variant_identifier(cleaned)
+        return {
+            "query": cleaned,
+            "query_type": "variant",
+            "normalized_query": variation_id,
+            "source": (
+                "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
+                f"?db=clinvar&id={variation_id}&retmode=json"
+            ),
+            "estimated_max_bytes": PILOT_CURRENT_API_ESTIMATE_BYTES,
+            "purpose": "Retrieve current ClinVar information for one variant",
+            "is_small": True,
+            "large_download_blocked": False,
+            "requires_approval": True,
+        }
+    gene = normalize_gene_symbol(cleaned)
+    return {
+        "query": cleaned,
+        "query_type": "gene",
+        "normalized_query": gene,
+        "source": (
+            "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi and "
+            "up to five https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+            "esummary.fcgi requests"
+        ),
+        "estimated_max_bytes": PILOT_CURRENT_API_ESTIMATE_BYTES * 6,
+        "purpose": f"Find up to five current ClinVar candidates for {gene}",
+        "is_small": True,
+        "large_download_blocked": False,
+        "requires_approval": True,
+    }
+
+
 def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     """Create and configure the local Flask dashboard."""
     app = Flask(__name__)
     app.config.from_mapping(
-        PILOT_VARIANTS_PATH=PILOT_VARIANTS_PATH,
-        PILOT_REVIEW_PATH=PILOT_REVIEW_PATH,
+        PILOT_WORKSPACE_PATH=PILOT_WORKSPACE_PATH,
     )
     if test_config:
         app.config.update(test_config)
@@ -407,6 +401,52 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         "message": "No live lookup has been run in this dashboard session.",
         "last_lookup": None,
     }
+    lookup_cache: dict[str, object] = {}
+    transfer_state: dict[str, object] = {
+        "current_transfer": "0 bytes; idle",
+        "total_api_bytes": 0,
+        "last_request": None,
+    }
+
+    def transfer_result(
+        plan: dict[str, object], actual_bytes: int
+    ) -> dict[str, object]:
+        result = {
+            "source": plan["source"],
+            "estimated_max_bytes": plan["estimated_max_bytes"],
+            "actual_bytes": actual_bytes,
+            "purpose": plan["purpose"],
+            "is_small": plan["is_small"],
+            "large_download_blocked": plan["large_download_blocked"],
+        }
+        transfer_state["total_api_bytes"] = (
+            int(transfer_state["total_api_bytes"]) + actual_bytes
+        )
+        transfer_state["current_transfer"] = "0 bytes; idle"
+        transfer_state["last_request"] = result
+        return result
+
+    def perform_lookup(plan: dict[str, object]) -> tuple[list[dict[str, object]], int]:
+        """Run only the approved small API calls declared by a lookup plan."""
+        transfer_state["current_transfer"] = "Small approved request in progress"
+        variants = []
+        actual_bytes = 0
+        if plan["query_type"] == "variant":
+            variant = lookup_clinvar_variant(str(plan["normalized_query"]))
+            variants.append(variant)
+            actual_bytes += variant.response_bytes or 0
+        else:
+            search = search_clinvar_gene_result(str(plan["normalized_query"]))
+            actual_bytes += search.response_bytes
+            for identifier in search.identifiers:
+                variant = lookup_clinvar_variant(identifier)
+                variants.append(variant)
+                actual_bytes += variant.response_bytes or 0
+        payloads = []
+        for variant in variants:
+            lookup_cache[variant.variation_id] = variant
+            payloads.append(variant.to_dict())
+        return payloads, actual_bytes
 
     @app.get("/")
     def index() -> str:
@@ -418,7 +458,11 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
 
     @app.get("/historical_pilot.html")
     def historical_pilot_page():
-        return send_from_directory(Path(__file__).parent, "historical_pilot.html")
+        return send_from_directory(Path(__file__).parent, "pilot_workspace.html")
+
+    @app.get("/pilot_workspace.html")
+    def pilot_workspace_page():
+        return send_from_directory(Path(__file__).parent, "pilot_workspace.html")
 
     @app.get("/api/status")
     def api_status():
@@ -426,13 +470,19 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             {
                 "project_name": "Variant Time Machine",
                 "project_explanation": PROJECT_EXPLANATION,
-                "current_milestone": "Historical ClinVar matching pipeline",
+                "current_milestone": "First single-variant research workflow",
                 "folders": FOLDER_GUIDE,
                 "next_tasks": NEXT_TASKS,
                 "system": _system_status(),
                 "research_notes": _latest_notebook_entry(),
                 "clinvar_connection": lookup_state,
-                "historical_comparison": _historical_comparison_status(),
+                "historical_comparison": _historical_comparison_status(
+                    Path(app.config["PILOT_WORKSPACE_PATH"])
+                ),
+                "transfer_safety": _transfer_safety_status(transfer_state),
+                "current_pilot_variant": _current_pilot_status(
+                    Path(app.config["PILOT_WORKSPACE_PATH"])
+                ),
             }
         )
 
@@ -453,89 +503,212 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     @app.get("/api/pilot")
     def api_pilot():
         try:
+            workspace = load_workspace(Path(app.config["PILOT_WORKSPACE_PATH"]))
+            records = [public_record(record) for record in workspace["records"]]
             return jsonify(
-                _pilot_payload(
-                    Path(app.config["PILOT_VARIANTS_PATH"]),
-                    Path(app.config["PILOT_REVIEW_PATH"]),
-                )
+                {
+                    "records": records,
+                    "count": len(records),
+                    "first_run": len(records) == 0,
+                    "review_statuses": REVIEW_STATUSES,
+                    "classification_options": CLASSIFICATION_OPTIONS,
+                    "classification_types": CLASSIFICATION_TYPES,
+                    "checklist_fields": CHECKLIST_FIELDS,
+                    "updated_at_utc": workspace["updated_at_utc"],
+                }
             )
         except (OSError, ValueError, json.JSONDecodeError) as exc:
             return jsonify({"error": f"Pilot data unavailable: {exc}"}), 503
 
-    @app.post("/api/pilot/review/<variation_id>")
-    def api_pilot_review(variation_id: str):
+    @app.post("/api/pilot")
+    def api_add_pilot():
+        body = request.get_json(silent=True)
+        if not isinstance(body, dict):
+            return jsonify({"error": "A JSON pilot record is required."}), 400
         try:
-            valid_ids = {
-                row["variation_id"]
-                for row in read_pilot_rows(Path(app.config["PILOT_VARIANTS_PATH"]))
-            }
-            if variation_id not in valid_ids:
-                return jsonify({"error": "Variation ID is not in the pilot."}), 404
-            body = request.get_json(silent=True)
-            if not isinstance(body, dict):
-                return jsonify({"error": "A JSON review body is required."}), 400
-            review = save_review(
-                Path(app.config["PILOT_REVIEW_PATH"]),
-                variation_id,
-                str(body.get("status", "")),
+            variation_id = normalize_variant_identifier(str(body.get("variant_id", "")))
+            if body.get("understood_current_only") is not True:
+                raise PilotWorkspaceError(
+                    "Confirm that current ClinVar information is not a historical "
+                    "result."
+                )
+            variant = lookup_cache.get(variation_id)
+            if variant is None:
+                raise PilotWorkspaceError(
+                    "Look up this variant in the workspace before adding it."
+                )
+            workspace_path = Path(app.config["PILOT_WORKSPACE_PATH"])
+            on_duplicate = str(body.get("on_duplicate", "cancel"))
+            workspace = load_workspace(workspace_path)
+            try:
+                existing = find_record(workspace, variation_id)
+            except PilotVariantNotFound:
+                existing = None
+            if existing is not None:
+                if on_duplicate == "update_current":
+                    updated = refresh_current_record(
+                        workspace_path, variation_id, variant
+                    )
+                    return jsonify({"record": public_record(updated), "updated": True})
+                return (
+                    jsonify(
+                        {
+                            "error": "This variant is already in the pilot.",
+                            "duplicate": True,
+                            "record": public_record(existing),
+                            "options": ["open_existing", "update_current", "cancel"],
+                        }
+                    ),
+                    409,
+                )
+            record = new_pilot_record(
+                variant,
+                str(body.get("selection_reason", "")),
                 str(body.get("notes", "")),
+                str(body.get("intended_historical_date", "")),
             )
-            return jsonify({"variation_id": variation_id, "manual_review": review})
-        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            added = add_record(workspace_path, record)
+            return jsonify({"record": public_record(added), "created": True}), 201
+        except (InvalidVariantIdentifier, PilotWorkspaceError) as exc:
             return jsonify({"error": str(exc)}), 400
+        except (OSError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Could not save the pilot: {exc}"}), 503
+
+    @app.get("/api/pilot/<variation_id>")
+    def api_get_pilot(variation_id: str):
+        try:
+            normalized = normalize_variant_identifier(variation_id)
+            workspace = load_workspace(Path(app.config["PILOT_WORKSPACE_PATH"]))
+            return jsonify(
+                {"record": public_record(find_record(workspace, normalized))}
+            )
+        except (InvalidVariantIdentifier, PilotWorkspaceError) as exc:
+            return jsonify({"error": str(exc)}), 404
+        except (OSError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Pilot data unavailable: {exc}"}), 503
+
+    @app.patch("/api/pilot/<variation_id>")
+    def api_update_pilot(variation_id: str):
+        body = request.get_json(silent=True)
+        if not isinstance(body, dict):
+            return jsonify({"error": "A JSON review update is required."}), 400
+        actions = {
+            "save_draft": None,
+            "mark_reviewing": "reviewing",
+            "mark_verified": "verified",
+            "mark_ambiguous": "ambiguous",
+            "exclude": "excluded",
+        }
+        action = str(body.get("action", "save_draft"))
+        if action not in actions:
+            return jsonify({"error": "Unknown review action."}), 400
+        changes = body.get("changes", {})
+        if not isinstance(changes, dict):
+            return jsonify({"error": "Review changes must be a JSON object."}), 400
+        try:
+            normalized = normalize_variant_identifier(variation_id)
+            updated = update_record(
+                Path(app.config["PILOT_WORKSPACE_PATH"]),
+                normalized,
+                changes,
+                status=actions[action],
+            )
+            return jsonify({"record": public_record(updated), "saved": True})
+        except (InvalidVariantIdentifier, PilotWorkspaceError) as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Could not save your work: {exc}"}), 503
+
+    @app.post("/api/pilot/<variation_id>/verify")
+    def api_verify_pilot(variation_id: str):
+        body = request.get_json(silent=True)
+        changes = body.get("changes", {}) if isinstance(body, dict) else {}
+        if not isinstance(changes, dict):
+            return jsonify({"error": "Verification changes must be an object."}), 400
+        try:
+            normalized = normalize_variant_identifier(variation_id)
+            updated = update_record(
+                Path(app.config["PILOT_WORKSPACE_PATH"]),
+                normalized,
+                changes,
+                status="verified",
+            )
+            return jsonify({"record": public_record(updated), "verified": True})
+        except (InvalidVariantIdentifier, PilotWorkspaceError) as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Could not verify the record: {exc}"}), 503
+
+    @app.post("/api/clinvar/plan")
+    def api_clinvar_plan():
+        body = request.get_json(silent=True)
+        if not isinstance(body, dict):
+            return jsonify({"error": "Enter a lookup query."}), 400
+        try:
+            return jsonify({"plan": _lookup_plan(str(body.get("query", "")))})
+        except InvalidVariantIdentifier as exc:
+            return jsonify({"error": str(exc)}), 400
+
+    @app.post("/api/clinvar/lookup")
+    def api_clinvar_lookup():
+        body = request.get_json(silent=True)
+        if not isinstance(body, dict):
+            return jsonify({"error": "A JSON lookup request is required."}), 400
+        if body.get("approved") is not True:
+            return (
+                jsonify(
+                    {
+                        "error": (
+                            "Review and approve the transfer estimate before lookup."
+                        )
+                    }
+                ),
+                428,
+            )
+        try:
+            plan = _lookup_plan(str(body.get("query", "")))
+            if int(plan["estimated_max_bytes"]) > LARGE_DOWNLOAD_THRESHOLD_BYTES:
+                plan["large_download_blocked"] = True
+                return jsonify(
+                    {"error": "Large-download protection blocked this request."}
+                ), 413
+            variants, actual_bytes = perform_lookup(plan)
+            if not variants:
+                return jsonify({"error": "No current ClinVar records were found."}), 404
+            transfer = transfer_result(plan, actual_bytes)
+            latest = variants[0]
+            lookup_state.update(
+                {
+                    "connection_status": "Connected",
+                    "message": "Current ClinVar information received.",
+                    "last_lookup": {
+                        "variant": latest["variant_identifier"],
+                        "gene": latest["gene_name"],
+                        "classification": latest["classification"],
+                    },
+                }
+            )
+            return jsonify({"variants": variants, "transfer": transfer})
+        except InvalidVariantIdentifier as exc:
+            transfer_state["current_transfer"] = "0 bytes; idle"
+            return jsonify({"error": str(exc)}), 400
+        except ClinVarRecordNotFound as exc:
+            transfer_state["current_transfer"] = "0 bytes; idle"
+            return jsonify({"error": str(exc)}), 404
+        except ClinVarConnectionError as exc:
+            transfer_state["current_transfer"] = "0 bytes; idle"
+            return jsonify({"error": str(exc)}), 502
+        except ClinVarAPIError as exc:
+            transfer_state["current_transfer"] = "0 bytes; idle"
+            return jsonify({"error": str(exc)}), 502
+
+    @app.get("/api/transfer-safety")
+    def api_transfer_safety():
+        return jsonify(_transfer_safety_status(transfer_state))
 
     @app.get("/api/clinvar/status")
     def api_clinvar_status():
         return jsonify(lookup_state)
-
-    @app.get("/api/clinvar/lookup")
-    def api_clinvar_lookup():
-        identifier = request.args.get("variant_id", "")
-        try:
-            variant = lookup_clinvar_variant(identifier)
-        except InvalidVariantIdentifier as exc:
-            return jsonify({"error": str(exc)}), 400
-        except ClinVarRecordNotFound as exc:
-            lookup_state.update(
-                {
-                    "connection_status": "Connected",
-                    "message": str(exc),
-                    "last_lookup": None,
-                }
-            )
-            return jsonify({"error": str(exc)}), 404
-        except ClinVarConnectionError as exc:
-            lookup_state.update(
-                {
-                    "connection_status": "Not connected",
-                    "message": str(exc),
-                    "last_lookup": None,
-                }
-            )
-            return jsonify({"error": str(exc)}), 502
-        except ClinVarAPIError as exc:
-            lookup_state.update(
-                {
-                    "connection_status": "Not connected",
-                    "message": str(exc),
-                    "last_lookup": None,
-                }
-            )
-            return jsonify({"error": str(exc)}), 502
-
-        result = variant.to_dict()
-        lookup_state.update(
-            {
-                "connection_status": "Connected",
-                "message": "The last lookup received a current NCBI ClinVar response.",
-                "last_lookup": {
-                    "variant": result["variant_identifier"],
-                    "gene": result["gene_name"],
-                    "classification": result["classification"],
-                },
-            }
-        )
-        return jsonify({"variant": result})
 
     return app
 
@@ -543,8 +716,12 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
 app = create_app()
 
 
-def run_dashboard() -> None:
+def run_dashboard(*, open_browser: bool = True) -> None:
     """Run the dashboard locally without Flask debug mode."""
+    if open_browser:
+        threading.Timer(
+            0.8, lambda: webbrowser.open("http://127.0.0.1:5000/pilot_workspace.html")
+        ).start()
     app.run(host="127.0.0.1", port=5000, debug=False)
 
 

@@ -1,5 +1,6 @@
 """Retrieve one current ClinVar variant summary through official NCBI E-utilities."""
 
+import json
 import re
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -7,6 +8,7 @@ from datetime import UTC, datetime
 import requests
 
 CLINVAR_ESUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
+CLINVAR_ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 CLINVAR_VARIATION_URL = "https://www.ncbi.nlm.nih.gov/clinvar/variation/{variation_id}/"
 DEFAULT_TIMEOUT_SECONDS = 15
 NCBI_TOOL_NAME = "variant_time_machine"
@@ -45,12 +47,29 @@ class ClinVarVariant:
     evidence_summary: str | None
     source_url: str
     retrieved_at_utc: str
+    response_bytes: int | None = None
 
     def to_dict(self) -> dict[str, object]:
         """Return a JSON-friendly dictionary."""
         result = asdict(self)
         result["associated_conditions"] = list(self.associated_conditions)
         return result
+
+
+@dataclass(frozen=True)
+class ClinVarGeneSearch:
+    """Small current gene search result with measured response size."""
+
+    identifiers: tuple[str, ...]
+    response_bytes: int
+
+
+def _response_size(response: requests.Response, payload: object) -> int:
+    """Measure a response body, with a deterministic fallback for test doubles."""
+    content = getattr(response, "content", None)
+    if isinstance(content, bytes):
+        return len(content)
+    return len(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
 
 
 def normalize_variant_identifier(identifier: str) -> str:
@@ -72,6 +91,76 @@ def normalize_variant_identifier(identifier: str) -> str:
             "ClinVar Variation ID must be greater than zero."
         )
     return variation_id
+
+
+def normalize_gene_symbol(gene: str) -> str:
+    """Validate a short gene symbol without turning free text into an API query."""
+    symbol = gene.strip().upper()
+    if not re.fullmatch(r"[A-Z0-9][A-Z0-9.-]{0,29}", symbol):
+        raise InvalidVariantIdentifier("Enter a valid gene symbol such as BRCA1.")
+    return symbol
+
+
+def search_clinvar_gene(
+    gene: str,
+    *,
+    max_results: int = 5,
+    timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
+    session: requests.Session | None = None,
+) -> tuple[str, ...]:
+    """Return up to five current ClinVar Variation IDs for one gene symbol."""
+    return search_clinvar_gene_result(
+        gene,
+        max_results=max_results,
+        timeout_seconds=timeout_seconds,
+        session=session,
+    ).identifiers
+
+
+def search_clinvar_gene_result(
+    gene: str,
+    *,
+    max_results: int = 5,
+    timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
+    session: requests.Session | None = None,
+) -> ClinVarGeneSearch:
+    """Return a bounded gene search result and its actual JSON body size."""
+    symbol = normalize_gene_symbol(gene)
+    if not 1 <= max_results <= 5:
+        raise ValueError("Gene search max_results must be between 1 and 5.")
+    request_get = session.get if session is not None else requests.get
+    try:
+        response = request_get(
+            CLINVAR_ESEARCH_URL,
+            params={
+                "db": "clinvar",
+                "term": f"{symbol}[gene] AND single_gene[prop]",
+                "retmax": max_results,
+                "retmode": "json",
+                "tool": NCBI_TOOL_NAME,
+            },
+            headers={"User-Agent": "VariantTimeMachine/0.1 research-education"},
+            timeout=timeout_seconds,
+        )
+        response.raise_for_status()
+    except requests.RequestException as exc:
+        raise ClinVarConnectionError(
+            f"Could not connect to the NCBI ClinVar API: {exc}"
+        ) from exc
+    try:
+        payload = response.json()
+    except ValueError as exc:
+        raise ClinVarResponseError(
+            "NCBI returned a gene search response that was not valid JSON."
+        ) from exc
+    result = payload.get("esearchresult") if isinstance(payload, dict) else None
+    identifiers = result.get("idlist") if isinstance(result, dict) else None
+    if not isinstance(identifiers, list):
+        raise ClinVarResponseError("NCBI gene search response had no ID list.")
+    return ClinVarGeneSearch(
+        identifiers=tuple(str(value) for value in identifiers if str(value).isdigit()),
+        response_bytes=_response_size(response, payload),
+    )
 
 
 def _clean_text(value: object) -> str | None:
@@ -214,4 +303,5 @@ def lookup_clinvar_variant(
         evidence_summary=_evidence_summary(record),
         source_url=CLINVAR_VARIATION_URL.format(variation_id=returned_id),
         retrieved_at_utc=datetime.now(UTC).isoformat(),
+        response_bytes=_response_size(response, payload),
     )
