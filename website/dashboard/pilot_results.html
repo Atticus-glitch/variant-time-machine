@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Live results from the bounded official ClinVar VCV history pilot">
+    <title>Pilot Results | Variant Time Machine</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/pilot_results.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header pilot-results-header">
+      <div class="header-grid">
+        <div>
+          <p class="eyebrow">Auditable official-record pilot</p>
+          <h1>Pilot Results</h1>
+          <p class="subtitle">Plan a bounded batch, inspect live aggregated findings, and keep automatic and manual conclusions separate.</p>
+        </div>
+        <div class="milestone-card">
+          <span>Interpretation limit</span>
+          <strong>Small technical pilot, not a prediction result</strong>
+          <small>Every detected change still requires manual verification</small>
+        </div>
+      </div>
+    </header>
+
+    <nav class="workspace-nav" aria-label="Main navigation">
+      <a href="/">Project Dashboard</a>
+      <a href="/pilot_workspace.html">Pilot Workspace</a>
+      <a href="/version_history.html">Version History Explorer</a>
+      <a href="/pilot_results.html" aria-current="page">Pilot Results</a>
+      <a href="/variant_lookup.html">Current Lookup</a>
+    </nav>
+
+    <main class="pilot-results-main">
+      <section class="panel pilot-caution" aria-labelledby="pilot-caution-title">
+        <p class="section-number">Read before interpreting</p>
+        <h2 id="pilot-caution-title">Technical Pilot Only</h2>
+        <p class="large-explanation">This is a small technical pilot. It tests whether official VCV histories can be collected and compared. It does not yet prove that future reclassification can be predicted.</p>
+        <p id="real-data-notice" class="real-data-notice">Real pilot data from official ClinVar records. Not yet suitable for model training or clinical use.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="batch-title">
+        <div class="section-heading">
+          <div><p class="section-number">Bounded retrieval</p><h2 id="batch-title">Plan Pilot Batch</h2></div>
+          <p>One canonical VCV accession per line, up to 10. Planning makes no network requests.</p>
+        </div>
+        <form id="batch-plan-form" class="workspace-form form-grid">
+          <label>Candidate accessions
+            <textarea id="batch-candidates" spellcheck="false" maxlength="139">VCV000000002
+VCV000000005
+VCV000014026</textarea>
+          </label>
+          <label>Candidate selection rule
+            <textarea id="selection-rule" maxlength="1000">Include the existing VCV000014026 case, then choose the two lowest Variation IDs among previously identified candidates with a canonical multi-version VCV, visible gene, aggregate germline classification, and no dominant non-germline category.</textarea>
+          </label>
+          <div class="button-row"><button type="submit">Plan Batch</button></div>
+        </form>
+        <p id="batch-status" aria-live="polite">No batch planned.</p>
+        <div id="batch-plan" class="approval-box" hidden>
+          <dl id="batch-plan-details" class="transfer-details"></dl>
+          <label class="check-line"><input id="batch-confirmation" type="checkbox"> I approve this exact bounded pilot batch plan.</label>
+          <button id="run-batch" type="button" disabled>Run Confirmed Batch</button>
+        </div>
+        <div id="batch-operation" class="operation-panel" hidden>
+          <div class="button-row"><strong id="operation-status">Batch pending</strong><button id="cancel-batch" type="button" class="button-danger">Cancel Batch</button></div>
+          <ol id="candidate-progress" class="event-log"></ol>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="summary-title">
+        <div class="section-heading">
+          <div><p class="section-number">Live local aggregation</p><h2 id="summary-title">Results Summary</h2></div>
+          <button id="refresh-results" type="button" class="button-secondary">Refresh Results</button>
+        </div>
+        <p id="results-status" aria-live="polite">Loading live pilot results...</p>
+        <dl id="results-summary" class="pilot-summary-grid"></dl>
+        <div id="category-summary" class="category-summary" aria-label="Detected change category counts"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="cases-title">
+        <div class="section-heading">
+          <div><p class="section-number">Automatic evidence and human review</p><h2 id="cases-title">Variant Timelines</h2></div>
+          <p>Expand a row to load exact saved version records and provenance.</p>
+        </div>
+        <div id="results-empty" class="plain-language-note" hidden>No pilot candidates have been attempted. Plan and explicitly confirm a bounded batch, or save local VCV histories, to produce real results.</div>
+        <div id="result-cases" class="pilot-case-list"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="downloads-title">
+        <div class="section-heading">
+          <div><p class="section-number">Fixed generated artifacts</p><h2 id="downloads-title">Downloads</h2></div>
+          <p id="downloads-status">Availability is checked from local output files.</p>
+        </div>
+        <div id="pilot-downloads" class="download-grid">
+          <a data-file="pilot_results.csv" href="/api/pilot-results/download/pilot_results.csv">Results table (CSV)</a>
+          <a data-file="pilot_summary.json" href="/api/pilot-results/download/pilot_summary.json">Summary metrics (JSON)</a>
+          <a data-file="pilot_report.md" href="/api/pilot-results/download/pilot_report.md">Pilot report (Markdown)</a>
+          <a data-file="transfer_manifest.json" href="/api/pilot-results/download/transfer_manifest.json">Transfer manifest (JSON)</a>
+          <a data-file="manual_review.csv" href="/api/pilot-results/download/manual_review.csv">Manual review worksheet (CSV)</a>
+        </div>
+      </section>
+    </main>
+
+    <footer><p>Local research dashboard. Not for clinical use.</p><p>Automatic results remain separate from manual review.</p></footer>
+  </body>
+</html>

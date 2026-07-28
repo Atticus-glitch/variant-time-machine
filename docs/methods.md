@@ -2,7 +2,7 @@
 
 ## Current Scientific Milestone
 
-The current goal is to build and manually verify a bounded pilot of approximately 10–25 genuine VCV histories. This stage tests whether exact VCV versions are sufficient for selecting and validating the first historical examples. It includes no machine learning, model training, or biological feature engineering.
+The first descriptive pilot now contains three genuine VCV histories and seven official versions. One automatic `Other_Germline_Change` and two unchanged histories were detected; all three remain unverified. The next goal is approximately 25–50 suitable, manually reviewed histories. This stage includes no machine learning, model training, or biological feature engineering.
 
 ## Historical Time Separation
 

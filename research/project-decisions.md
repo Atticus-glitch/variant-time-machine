@@ -54,3 +54,16 @@ requests. Automatic parsing/comparison artifacts remain separate from manual
 corrections, and manual verification requires ten explicit checks.
 
 **Next milestone:** Build and manually verify a pilot set of approximately 10–25 genuine VCV histories, then evaluate whether this version-history method is sufficient for selecting and validating the first historical examples.
+
+## Freeze The First Descriptive Sample Before Historical Retrieval
+
+The first result used three candidates fixed before history retrieval rather than
+changing candidates to find an exciting outcome. It included the existing
+`VCV000014026` case and the two lowest qualifying Variation IDs from the previously
+identified canonical multi-version germline candidates: `VCV000000002` and
+`VCV000000005`. Existing evidence was reused, and the two new histories sampled first
+and newest versions to keep the approved maximum below 100 MB.
+
+This three-record result is a technical demonstration, not a representative sample.
+The next decision point comes only after manual review and expansion to approximately
+25–50 suitable histories. Machine learning remains out of scope.

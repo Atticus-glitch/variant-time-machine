@@ -361,3 +361,40 @@ were run.
 ### Next Milestone
 
 Build and manually verify a pilot set of approximately 10–25 genuine VCV histories, then evaluate whether this version-history method is sufficient for selecting and validating the first historical examples.
+
+## 2026-07-27 First Real Pilot Result
+
+### Method
+
+The candidate rule was fixed before historical retrieval. The sample included the
+existing `VCV000014026` case and the two lowest qualifying Variation IDs from the
+previously identified canonical multi-version germline candidates: `VCV000000002`
+and `VCV000000005`. The dashboard plan reused one history and approved at most six
+new sequential EFetch requests with a 62,914,560-byte maximum.
+
+### Actual Result
+
+- Three candidates were attempted and all three were retrieved.
+- Seven official versions were included.
+- `VCV000000002` changed from `Pathogenic` at version 1 to
+  `Pathogenic/Likely pathogenic` at version 5. It was labeled
+  `Other_Germline_Change` with limited confidence because versions 2–4 were not
+  sampled.
+- `VCV000000005` remained `Pathogenic` between sampled versions 1 and 11.
+- `VCV000014026` remained `Pathogenic` across versions 1, 2, and 3.
+- One history had an automatic germline change, two were unchanged, and zero were
+  unable to compare.
+- All three histories require review and have zero completed verification checks.
+
+Candidate screening used 113,027 response bytes. The saved history evidence contains
+244,705 response bytes, including 148,735 bytes from the newly approved batch and
+95,970 bytes from the reused history. Total measured pilot response-body transfer was
+357,732 bytes. No full archive was downloaded.
+
+### Boundary And Next Step
+
+This is a real descriptive pilot result, not evidence that future reclassification can
+be predicted. It is too small, non-random, partly endpoint-sampled, and unverified for
+model training or clinical use. Manually verify all three histories, then expand to
+approximately 25–50 suitable histories before deciding whether model development is
+justified.

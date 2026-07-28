@@ -44,5 +44,7 @@
 - Each artifact file is replaced atomically and dashboard readers are locked during refresh, but a process interruption between file replacements can still leave files from different generations. The evidence digest and manual source review help detect this; they do not provide a transactional database.
 - Refreshing changed automatic evidence resets manual verification to `needs_review` and clears the checklist while preserving notes, sources, and corrections. Identical evidence preserves the review state.
 - The bounded VCV pilot is intentionally manually selected and cannot estimate ClinVar-wide rates. Eventual archived monthly summaries or releases may still be required for cohort construction and exact calendar cutoffs.
+- The first result includes only three non-randomly selected histories. Two use first/newest endpoint sampling, so unsampled intermediate versions may contain changes that the pilot did not observe.
+- The one automatic `Other_Germline_Change` is a wording change from `Pathogenic` to `Pathogenic/Likely pathogenic`, not a VUS reclassification, and remains manually unverified.
 
 All conclusions will be restricted to the requested VCV versions or chosen releases, matching and comparison rules, feature availability, and evaluation design. These limitations will be updated as empirical problems are discovered.

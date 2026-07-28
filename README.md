@@ -1,6 +1,6 @@
 # Variant Time Machine
 
-**Early research and development: results are not yet available.**
+**Early research and development: a small preliminary pilot result is available.**
 
 Variant Time Machine is a computational genetics research project that asks whether information available about a ClinVar variant at an earlier date can help predict its later classification. I plan to follow variants first labeled as variants of uncertain significance (VUS), build a carefully dated dataset, and compare explainable prediction methods. The goal is to help prioritize research questions, not to make clinical decisions.
 
@@ -12,7 +12,7 @@ Variant Time Machine is a computational genetics research project that asks whet
 
 ## Current Status
 
-The project now uses a bounded VCV version-history pilot to validate methods before considering larger historical releases. The local dashboard and its **Version History Explorer** are the normal workflow: find a current candidate, confirm its latest official VCV record, request a bounded set of exact versions, inspect the automatic comparison, and complete a separate manual review. No live VCV history has yet been recorded as a scientific result, no biological claims have been made, and no models exist.
+The project now has a real three-variant VCV history pilot based on official ClinVar EFetch responses. Seven versions were compared: one history had an automatic `Other_Germline_Change`, two had no germline change, and none are manually verified. The **Pilot Results** dashboard is the startup page and provides the real table, timelines, limitations, and five downloads. No predictive model or clinical claim exists.
 
 ## Research Workflow
 
@@ -21,7 +21,7 @@ The project now uses a bounded VCV version-history pilot to validate methods bef
 3. Request all, a custom inclusive range, or only endpoint versions within the safety limits.
 4. Inspect parsed fields and automatic consecutive-version comparisons without treating them as verified conclusions.
 5. Complete all ten manual checks and record sources, decisions, corrections, and ambiguities separately.
-6. Repeat for approximately 10–25 genuine VCV histories before deciding whether monthly summaries or releases are still needed.
+6. Expand to approximately 25–50 suitable, manually reviewed histories before deciding whether monthly summaries or releases are still needed.
 7. Consider features or models only after the historical method is scientifically reliable.
 
 ## Repository Structure
@@ -90,7 +90,7 @@ After installing into `.venv312`, start the dashboard from the repository root:
 .venv312/bin/python scripts/start_dashboard.py
 ```
 
-The server opens the **Version History Explorer** at `http://127.0.0.1:5000/version_history.html`. Use `.venv312/bin/python scripts/start_dashboard.py --no-browser` when automatic browser opening is not wanted. Until the Python 3.12 migration succeeds, `.venv/bin/python scripts/start_dashboard.py` is only a temporary current fallback; it uses Python 3.14.4 and must not be described as Python 3.12.
+The server opens **Pilot Results** at `http://127.0.0.1:5000/pilot_results.html`. Use `.venv312/bin/python scripts/start_dashboard.py --no-browser` when automatic browser opening is not wanted. Until the Python 3.12 migration succeeds, `.venv/bin/python scripts/start_dashboard.py` is only a temporary current fallback; it uses Python 3.14.4 and must not be described as Python 3.12.
 
 Normal pilot research happens in the **Version History Explorer**. Its optional gene search uses current ESearch plus individual ESummary lookups for at most five candidates. The history itself uses EFetch: it first requests the unversioned VCV to learn the latest official version, then offers all versions, a custom inclusive range, or endpoints (version 1 and latest). It accepts only canonical uppercase `VCV#########` or `VCV#########.version` input; in the dashboard, a supplied suffix is validated but the current lookup still resolves the unversioned accession before history planning. Exact versioned EFetch responses are checked against the requested `.version`.
 
@@ -162,7 +162,7 @@ The command-line workflow confirms the small API request and asks again before s
 
 ## Current Milestone
 
-Build and manually verify a pilot set of approximately 10–25 genuine VCV histories, then evaluate whether this version-history method is sufficient for selecting and validating the first historical examples.
+Manually verify the three current pilot histories, then expand to approximately 25–50 suitable histories before deciding whether this version-history method can support model development.
 
 This is a bounded VCV version-history pilot: no machine learning, no full archive, and no claim that VCV versions are equivalent to monthly snapshots. VCV history is useful for locating exact changes to one aggregate record, but eventual archived monthly summaries or releases may still be needed to reconstruct what ClinVar showed at a chosen calendar cutoff.
 

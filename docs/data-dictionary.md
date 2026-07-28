@@ -187,6 +187,24 @@ manual corrections remain separate and are preserved.
 The older `pilot_review.json` belongs to the paused archive pilot and stores a
 status, notes, and update time for reviewed Variation IDs.
 
+## Real Pilot Results
+
+`data/pilot_results/pilot_results.csv` contains one real row per attempted candidate
+and labels every row `Real pilot data from official ClinVar records. Not yet suitable
+for model training or clinical use.` Automatic and manual fields remain separate.
+
+| Field group | Meaning |
+| --- | --- |
+| Identity | VCV accession, Variation ID, gene, first/newest version, versions retrieved |
+| Automatic comparison | First/newest aggregate germline classification, detected category, change count, confidence, review/submission changes, warnings |
+| Manual review | Status, reviewer decision, confirmed result, notes, and checklist count; blank until actually reviewed |
+| Provenance | Measured response bytes, official request URLs, and local raw-record filenames |
+
+`pilot_summary.json` stores actual sample counts, category counts, candidate-screening
+bytes, unique history bytes, new-batch bytes, total represented response bytes, and
+local history storage. `transfer_manifest.json` preserves per-candidate transfer and
+source details. `manual_review.csv` is the separate review worksheet.
+
 ## Single Pilot Variant JSON
 
 `data/manual_review/pilot_variant_001.json` starts empty and stores one selected

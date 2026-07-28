@@ -111,6 +111,7 @@ def dashboard_app(tmp_path: Path) -> Flask:
             "TESTING": True,
             "PILOT_WORKSPACE_PATH": workspace,
             "VCV_HISTORY_ROOT": tmp_path / "histories",
+            "PILOT_RESULTS_ROOT": tmp_path / "pilot_results",
         }
     )
 

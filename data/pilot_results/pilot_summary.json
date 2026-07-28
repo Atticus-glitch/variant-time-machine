@@ -1,0 +1,23 @@
+{
+  "actual_new_batch_bytes": 148735,
+  "candidate_selection_bytes": 113027,
+  "candidate_selection_request_count": 4,
+  "candidates_attempted": 3,
+  "candidates_successfully_retrieved": 3,
+  "change_category_counts": {
+    "No_Germline_Change": 2,
+    "Other_Germline_Change": 1
+  },
+  "generated_at_utc": "2026-07-28T00:09:46.111420+00:00",
+  "histories_needing_review": 3,
+  "history_response_bytes": 244705,
+  "manually_verified": 0,
+  "needs_review": 3,
+  "notice": "Real pilot data from official ClinVar records. Not yet suitable for model training or clinical use.",
+  "total_bytes_transferred": 357732,
+  "total_local_storage_bytes": 281259,
+  "total_official_versions_retrieved": 7,
+  "variants_unable_to_compare": 0,
+  "variants_with_germline_change": 1,
+  "variants_with_no_germline_change": 2
+}

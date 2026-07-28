@@ -1,17 +1,28 @@
 """Simple local development dashboard for Variant Time Machine."""
 
 import csv
+import hashlib
 import json
+import os
 import shutil
 import sys
+import tempfile
 import threading
 import uuid
 import webbrowser
 from datetime import UTC, datetime
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
-from flask import Flask, jsonify, render_template, request, send_from_directory
+from flask import (
+    Flask,
+    jsonify,
+    render_template,
+    request,
+    send_file,
+    send_from_directory,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SRC_DIR = PROJECT_ROOT / "src"
@@ -32,10 +43,18 @@ from variant_time_machine.config import (  # noqa: E402
     LARGE_DOWNLOAD_THRESHOLD_BYTES,
     PILOT_CURRENT_API_ESTIMATE_BYTES,
     PILOT_EXTRACTED_DIR,
+    PILOT_RESULTS_DIR,
     PILOT_WORKSPACE_PATH,
     RAW_DATA_DIR,
     TABLES_DIR,
     VCV_HISTORY_DIR,
+)
+from variant_time_machine.pilot_results import (  # noqa: E402
+    OUTPUT_FILENAMES,
+    PilotResultsError,
+    aggregate_pilot_results,
+    download_content,
+    export_pilot_results,
 )
 from variant_time_machine.pilot_workspace import (  # noqa: E402
     CHECKLIST_FIELDS,
@@ -81,6 +100,9 @@ from variant_time_machine.vcv_history_store import (  # noqa: E402
 SYNTHETIC_NOTICE = "Synthetic example data. Not real scientific results."
 EXAMPLE_DATA_PATH = PROJECT_ROOT / "data" / "example_variants.csv"
 NOTEBOOK_PATH = PROJECT_ROOT / "research" / "research-notebook.md"
+PILOT_BATCH_MAX_BYTES = 100_000_000
+PILOT_BATCH_MAX_CANDIDATES = 10
+PILOT_BATCH_MANIFEST_MAX_BYTES = 1024 * 1024
 
 PROJECT_EXPLANATION = (
     "Variant Time Machine asks whether information available about an uncertain "
@@ -251,6 +273,10 @@ def _latest_notebook_entry() -> dict[str, str]:
 
 def _latest_pipeline_output() -> str:
     """Describe the newest saved timeline file without claiming it is validated."""
+    pilot_output = PILOT_RESULTS_DIR / "pilot_results.csv"
+    if pilot_output.is_file():
+        modified = datetime.fromtimestamp(pilot_output.stat().st_mtime, UTC).isoformat()
+        return f"{pilot_output.relative_to(PROJECT_ROOT)} modified {modified}"
     outputs = sorted(
         TABLES_DIR.glob("*.csv"), key=lambda path: path.stat().st_mtime, reverse=True
     )
@@ -261,7 +287,7 @@ def _latest_pipeline_output() -> str:
     return f"{newest.relative_to(PROJECT_ROOT)} modified {modified}"
 
 
-def _system_status() -> dict[str, Any]:
+def _system_status(pilot_results_root: Path = PILOT_RESULTS_DIR) -> dict[str, Any]:
     """Build a small status summary from the current local checkout."""
     in_virtual_environment = sys.prefix != sys.base_prefix
     test_files = sorted((PROJECT_ROOT / "tests").glob("test_*.py"))
@@ -271,6 +297,12 @@ def _system_status() -> dict[str, Any]:
     extracted_files = sorted(PILOT_EXTRACTED_DIR.glob("*.json"))
     history_count = len(list_histories(VCV_HISTORY_DIR))
     files_created = [str(path.relative_to(PROJECT_ROOT)) for path in timeline_files]
+    pilot_output = pilot_results_root / "pilot_results.csv"
+    if pilot_output.is_file():
+        try:
+            files_created.append(str(pilot_output.relative_to(PROJECT_ROOT)))
+        except ValueError:
+            files_created.append(str(pilot_output))
     if EXAMPLE_DATA_PATH.is_file():
         files_created.insert(0, str(EXAMPLE_DATA_PATH.relative_to(PROJECT_ROOT)))
 
@@ -289,7 +321,7 @@ def _system_status() -> dict[str, Any]:
         "last_pipeline_run": _latest_pipeline_output(),
         "files_created": files_created,
         "raw_clinvar_files": len(raw_files),
-        "pilot_strategy": "Ten to twenty-five manually reviewed VCV histories",
+        "pilot_strategy": "Expand from three cases to 25-50 reviewed VCV histories",
         "archive_scan": "Paused; metadata inspection only",
         "pilot_outputs": (
             f"{history_count} VCV history case(s); "
@@ -475,6 +507,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     app = Flask(__name__)
     app.config.from_mapping(
         PILOT_WORKSPACE_PATH=PILOT_WORKSPACE_PATH,
+        PILOT_RESULTS_ROOT=PILOT_RESULTS_DIR,
         VCV_HISTORY_ROOT=VCV_HISTORY_DIR,
         VCV_CURRENT_FETCHER=fetch_current_vcv,
         VCV_HISTORY_FETCHER=fetch_vcv_history,
@@ -496,6 +529,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     ncbi_request_lock = threading.Lock()
     current_vcv_cache: dict[str, VersionResult] = {}
     operations: dict[str, dict[str, object]] = {}
+    issued_batch_plans: dict[str, str] = {}
 
     def transfer_result(
         plan: dict[str, object], actual_bytes: int
@@ -645,16 +679,58 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         metrics = history_metrics()
         with state_lock:
             current_count = len(current_vcv_cache)
+        output_root = Path(app.config["PILOT_RESULTS_ROOT"])
+        results_file = output_root / "pilot_results.csv"
+        output_bandwidth = 0
+        result_candidates = 0
+        summary_path = output_root / "pilot_summary.json"
+        if summary_path.is_file() and not summary_path.is_symlink():
+            try:
+                result_summary = json.loads(summary_path.read_text(encoding="utf-8"))
+                if isinstance(result_summary, dict):
+                    output_bandwidth = int(
+                        result_summary.get("total_bytes_transferred", 0)
+                    )
+                    result_candidates = int(
+                        result_summary.get("candidates_attempted", 0)
+                    )
+            except (OSError, ValueError, json.JSONDecodeError):
+                output_bandwidth = 0
+                result_candidates = 0
+        batch_manifest = output_root / "batch_manifest.json"
+        if (
+            output_bandwidth == 0
+            and batch_manifest.is_file()
+            and not batch_manifest.is_symlink()
+        ):
+            try:
+                manifest = json.loads(batch_manifest.read_text(encoding="utf-8"))
+                if isinstance(manifest, dict):
+                    output_bandwidth = int(
+                        manifest.get(
+                            "actual_new_batch_bytes", manifest.get("batch_bytes", 0)
+                        )
+                    )
+            except (OSError, ValueError, json.JSONDecodeError):
+                output_bandwidth = 0
         return {
-            "candidates_selected": len(workspace["records"]),
+            "candidates_selected": max(len(workspace["records"]), result_candidates),
             "current_records_retrieved": max(
                 int(metrics["histories_explored"]), current_count
             ),
             "current_records_retrieved_this_session": current_count,
             **metrics,
+            "pilot_results_file_created": results_file.is_file(),
+            "pilot_output_bandwidth_bytes": output_bandwidth,
         }
 
     def dynamic_next_tasks(progress: dict[str, object]) -> tuple[str, ...]:
+        if progress.get("pilot_results_file_created"):
+            return (
+                "Manually verify every detected classification change",
+                "Review ambiguous or missing histories",
+                "Expand the verified pilot to 25 variants",
+            )
         if progress["candidates_selected"] == 0:
             first = "Select a current ClinVar candidate for the pilot workspace."
         else:
@@ -668,6 +744,396 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         else:
             third = "Choose the next candidate using the recorded research criteria."
         return (first, second, third)
+
+    def pilot_batch_plan(body: dict[str, object]) -> dict[str, object]:
+        """Build a deterministic, no-network plan for a small pilot batch."""
+        candidates = body.get("candidates")
+        if not isinstance(candidates, list):
+            raise ValueError("candidates must be a JSON list.")
+        if not candidates:
+            raise ValueError("Select at least one pilot candidate.")
+        if len(candidates) > PILOT_BATCH_MAX_CANDIDATES:
+            raise ValueError("A pilot batch is limited to 10 candidates.")
+        accessions = [_vcv_base(candidate) for candidate in candidates]
+        if len(set(accessions)) != len(accessions):
+            raise ValueError("Pilot candidate VCV accessions must be unique.")
+        reuse_existing = body.get("reuse_existing", True)
+        if not isinstance(reuse_existing, bool):
+            raise ValueError("reuse_existing must be true or false.")
+        selection_rule = body.get("candidate_selection_rule", "")
+        if not isinstance(selection_rule, str):
+            raise ValueError("candidate_selection_rule must be text.")
+        if len(selection_rule) > 1000:
+            raise ValueError("candidate_selection_rule is limited to 1000 characters.")
+        selection_bytes = body.get("candidate_selection_bytes", 0)
+        selection_requests = body.get("candidate_selection_requests", [])
+        if (
+            not isinstance(selection_bytes, int)
+            or isinstance(selection_bytes, bool)
+            or selection_bytes < 0
+        ):
+            raise ValueError("candidate_selection_bytes must be a nonnegative integer.")
+        if not isinstance(selection_requests, list) or len(selection_requests) > 10:
+            raise ValueError(
+                "candidate_selection_requests must contain at most 10 items."
+            )
+        cleaned_selection_requests: list[dict[str, object]] = []
+        for item in selection_requests:
+            if not isinstance(item, dict):
+                raise ValueError("Each candidate selection request must be an object.")
+            accession = _vcv_base(item.get("accession"))
+            source = item.get("source_request")
+            response_bytes = item.get("response_bytes")
+            retrieved = item.get("retrieved_at_utc")
+            if (
+                not isinstance(source, str)
+                or not source.startswith(f"{CLINVAR_EFETCH_URL}?")
+                or len(source) > 2000
+            ):
+                raise ValueError(
+                    "Candidate selection sources must be official EFetch requests."
+                )
+            if (
+                not isinstance(response_bytes, int)
+                or isinstance(response_bytes, bool)
+                or response_bytes < 0
+                or response_bytes > MAX_RESPONSE_BYTES
+            ):
+                raise ValueError("Candidate selection response bytes are invalid.")
+            if not isinstance(retrieved, str) or not retrieved or len(retrieved) > 100:
+                raise ValueError("Candidate selection retrieval time is required.")
+            cleaned_selection_requests.append(
+                {
+                    "accession": accession,
+                    "source_request": source,
+                    "response_bytes": response_bytes,
+                    "retrieved_at_utc": retrieved,
+                }
+            )
+        if (
+            sum(int(item["response_bytes"]) for item in cleaned_selection_requests)
+            != selection_bytes
+        ):
+            raise ValueError(
+                "candidate_selection_bytes must equal the recorded selection responses."
+            )
+
+        saved = set(list_histories(history_root())) if reuse_existing else set()
+        planned_candidates = [
+            {
+                "accession": accession,
+                "reused": accession in saved,
+                "estimated_max_requests": 0 if accession in saved else 3,
+            }
+            for accession in accessions
+        ]
+        request_count = sum(
+            int(candidate["estimated_max_requests"]) for candidate in planned_candidates
+        )
+        estimated_transfer = request_count * MAX_RESPONSE_BYTES
+        reused_source_bytes = sum(
+            int(load_history(history_root(), accession)["manifest"]["total_bytes"])
+            for accession in accessions
+            if accession in saved
+        )
+        estimated_total_pilot_transfer = (
+            selection_bytes + reused_source_bytes + estimated_transfer
+        )
+        if estimated_total_pilot_transfer >= PILOT_BATCH_MAX_BYTES:
+            raise TransferLimitError(
+                "Pilot batch plans must remain below the 100,000,000-byte limit."
+            )
+        reused_count = sum(
+            bool(candidate["reused"]) for candidate in planned_candidates
+        )
+        return {
+            "schema_version": 1,
+            "candidates": planned_candidates,
+            "candidate_count": len(planned_candidates),
+            "reused_count": reused_count,
+            "reuse_existing": reuse_existing,
+            "estimated_max_requests": request_count,
+            "estimated_max_transfer": estimated_transfer,
+            "estimated_total_pilot_transfer": estimated_total_pilot_transfer,
+            "candidate_selection_bytes": selection_bytes,
+            "candidate_selection_requests": cleaned_selection_requests,
+            "reused_source_bytes": reused_source_bytes,
+            "source": CLINVAR_EFETCH_URL,
+            "purpose": (
+                "Retrieve each selected candidate's current, first, and newest "
+                "official ClinVar VCV records"
+            ),
+            "candidate_selection_rule": selection_rule,
+            "confirmation": (
+                "I approve this bounded, sequential official ClinVar EFetch pilot "
+                "batch."
+            ),
+            "requires_approval": True,
+        }
+
+    def pilot_batch_plan_digest(plan: dict[str, object]) -> str:
+        """Identify the exact server-issued plan approved by the researcher."""
+        content = json.dumps(plan, sort_keys=True, separators=(",", ":")).encode()
+        return hashlib.sha256(content).hexdigest()
+
+    def write_batch_manifest(payload: dict[str, object]) -> None:
+        """Atomically write one bounded manifest in the configured output root."""
+        root = Path(app.config["PILOT_RESULTS_ROOT"])
+        if root.is_symlink():
+            raise OSError("The pilot results root cannot be a symbolic link.")
+        root.mkdir(parents=True, exist_ok=True)
+        path = root / "batch_manifest.json"
+        if path.exists() and (path.is_symlink() or not path.is_file()):
+            raise OSError("Refusing to replace an unsafe batch manifest.")
+        content = (json.dumps(payload, indent=2, sort_keys=True) + "\n").encode()
+        if len(content) > PILOT_BATCH_MANIFEST_MAX_BYTES:
+            raise ValueError("The pilot batch manifest exceeds its 1 MB limit.")
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=".batch_manifest.", suffix=".tmp", dir=root
+        )
+        temporary = Path(temporary_name)
+        try:
+            with os.fdopen(descriptor, "wb") as output:
+                output.write(content)
+                output.flush()
+                os.fsync(output.fileno())
+            os.replace(temporary, path)
+        finally:
+            temporary.unlink(missing_ok=True)
+
+    def run_pilot_batch_operation(
+        operation_id: str,
+        plan: dict[str, object],
+        cancel_event: threading.Event,
+    ) -> None:
+        """Retrieve one approved pilot batch serially and export its outputs."""
+        attempts: list[dict[str, object]] = []
+        batch_bytes = 0
+        stopped_error: str | None = None
+        cancelled = False
+
+        def report(accession: str, index: int, event: dict[str, object]) -> None:
+            with state_lock:
+                operation = operations[operation_id]
+                events = operation["progress_events"]
+                assert isinstance(events, list)
+                scoped = {
+                    **event,
+                    "candidate": accession,
+                    "candidate_index": index,
+                    "candidate_count": plan["candidate_count"],
+                    "sequence": len(events) + 1,
+                }
+                events.append(scoped)
+                operation["progress"] = dict(scoped)
+
+        try:
+            with state_lock:
+                transfer_state["current_transfer"] = (
+                    f"Pilot batch operation {operation_id} in progress"
+                )
+            candidates = plan["candidates"]
+            assert isinstance(candidates, list)
+            for index, candidate in enumerate(candidates, start=1):
+                assert isinstance(candidate, dict)
+                accession = str(candidate["accession"])
+                attempt: dict[str, object] = {
+                    "accession": accession,
+                    "vcv_accession": accession,
+                    "attempted": True,
+                    "reused": bool(candidate["reused"]),
+                    "status": "pending",
+                    "failure": "",
+                    "batch_bytes": 0,
+                    "bytes_transferred": 0,
+                    "source_urls": [CLINVAR_EFETCH_URL],
+                    "source_requests": [{"request": CLINVAR_EFETCH_URL}],
+                }
+                attempts.append(attempt)
+                if cancel_event.is_set():
+                    attempt["status"] = "cancelled"
+                    attempt["failure"] = "Batch cancelled before this candidate."
+                    cancelled = True
+                    break
+                if candidate["reused"]:
+                    attempt["status"] = "reused"
+                    report(accession, index, {"event": "reused"})
+                    continue
+
+                report(accession, index, {"event": "candidate_started"})
+                before_candidate = batch_bytes
+                try:
+                    current_fetcher = app.config["VCV_CURRENT_FETCHER"]
+                    with ncbi_request_lock:
+                        current = current_fetcher(accession)
+                    if not isinstance(current, VersionResult):
+                        raise VCVHistoryError(
+                            "Current VCV fetcher returned an invalid result."
+                        )
+                    if (
+                        current.record is not None
+                        and current.record.accession != accession
+                    ):
+                        raise VCVHistoryError(
+                            "Current VCV response accession did not match."
+                        )
+                    batch_bytes += current.response_bytes
+                    attempt["batch_bytes"] = current.response_bytes
+                    attempt["bytes_transferred"] = current.response_bytes
+                    attempt["source_urls"] = [current.source_request]
+                    attempt["source_requests"] = [{"request": current.source_request}]
+                    if batch_bytes >= PILOT_BATCH_MAX_BYTES:
+                        raise TransferLimitError(
+                            "Pilot batch reached the 100,000,000-byte limit."
+                        )
+                    if current.status != "available" or current.record is None:
+                        attempt["status"] = "failed"
+                        attempt["failure"] = current.message or (
+                            f"Current VCV record was {current.status}."
+                        )
+                        report(accession, index, {"event": "candidate_failed"})
+                        continue
+
+                    max_candidate_total = min(
+                        MAX_TOTAL_BYTES, PILOT_BATCH_MAX_BYTES - before_candidate - 1
+                    )
+                    history_fetcher = app.config["VCV_HISTORY_FETCHER"]
+
+                    def candidate_progress(
+                        event: dict[str, object],
+                        candidate_accession: str = accession,
+                        candidate_index: int = index,
+                    ) -> None:
+                        report(candidate_accession, candidate_index, event)
+
+                    with ncbi_request_lock:
+                        result = history_fetcher(
+                            accession,
+                            mode="endpoints",
+                            max_requests=2,
+                            max_total_bytes=max_candidate_total,
+                            cancel=cancel_event,
+                            progress=candidate_progress,
+                            current_result=current,
+                        )
+                    if not isinstance(result, VCVHistoryResult):
+                        raise VCVHistoryError(
+                            "History fetcher returned an invalid result."
+                        )
+                    candidate_bytes = result.total_response_bytes
+                    if before_candidate + candidate_bytes >= PILOT_BATCH_MAX_BYTES:
+                        raise TransferLimitError(
+                            "Pilot batch reached the 100,000,000-byte limit."
+                        )
+                    batch_bytes = before_candidate + candidate_bytes
+                    attempt["batch_bytes"] = candidate_bytes
+                    attempt["bytes_transferred"] = candidate_bytes
+                    attempt["source_urls"] = list(
+                        dict.fromkeys(
+                            item.source_request
+                            for item in (result.current_result, *result.results)
+                        )
+                    )
+                    attempt["source_requests"] = [
+                        {"request": source}
+                        for source in attempt["source_urls"]
+                        if isinstance(source, str)
+                    ]
+                    save_history(
+                        history_root(),
+                        result,
+                        app_version="0.1.0",
+                        git_commit=_git_commit(),
+                    )
+                    attempt["status"] = "partial" if result.cancelled else "completed"
+                    report(
+                        accession,
+                        index,
+                        {"event": "candidate_saved", "status": attempt["status"]},
+                    )
+                    if result.cancelled:
+                        cancelled = True
+                        break
+                except RetrievalCancelled as exc:
+                    attempt["status"] = "cancelled"
+                    attempt["failure"] = str(exc)
+                    cancelled = True
+                    break
+                except TransferLimitError as exc:
+                    attempt["status"] = "failed"
+                    attempt["failure"] = str(exc)
+                    stopped_error = str(exc)
+                    report(accession, index, {"event": "budget_failed"})
+                    break
+                except Exception as exc:  # candidate failures must not stop the batch
+                    attempt["status"] = "failed"
+                    attempt["failure"] = str(exc)
+                    report(accession, index, {"event": "candidate_failed"})
+
+            completed_at = datetime.now(UTC).isoformat()
+            manifest = {
+                "schema_version": 1,
+                "candidate_selection_rule": plan["candidate_selection_rule"],
+                "candidate_selection_bytes": plan["candidate_selection_bytes"],
+                "candidate_selection_requests": plan["candidate_selection_requests"],
+                "candidates": attempts,
+                "candidate_count": plan["candidate_count"],
+                "reused_count": plan["reused_count"],
+                "plan_estimate": {
+                    "estimated_max_requests": plan["estimated_max_requests"],
+                    "estimated_max_transfer": plan["estimated_max_transfer"],
+                },
+                "approved_plan_digest": plan["plan_digest"],
+                "plan_issued_at_utc": plan["plan_issued_at_utc"],
+                "approved_at_utc": plan["approved_at_utc"],
+                "batch_bytes": batch_bytes,
+                "actual_new_batch_bytes": batch_bytes,
+                "source_urls": [CLINVAR_EFETCH_URL],
+                "retrieval_completed_at_utc": completed_at,
+            }
+            write_batch_manifest(manifest)
+            output = export_pilot_results(
+                history_root(),
+                Path(app.config["PILOT_RESULTS_ROOT"]),
+                generated_at_utc=completed_at,
+            )
+            summary = output.get("summary", {})
+            with state_lock:
+                transfer_state["total_api_bytes"] = (
+                    int(transfer_state["total_api_bytes"]) + batch_bytes
+                )
+                transfer_state["current_transfer"] = "0 bytes; idle"
+                transfer_state["last_request"] = {
+                    "source": CLINVAR_EFETCH_URL,
+                    "purpose": plan["purpose"],
+                    "actual_bytes": batch_bytes,
+                    "estimated_max_bytes": plan["estimated_max_transfer"],
+                }
+                operations[operation_id].update(
+                    state=(
+                        "cancelled"
+                        if cancelled
+                        else "failed"
+                        if stopped_error
+                        else "completed"
+                    ),
+                    result={
+                        "batch_bytes": batch_bytes,
+                        "actual_new_batch_bytes": batch_bytes,
+                        "manifest": manifest,
+                        "output_summary": summary,
+                    },
+                    error=stopped_error,
+                    finished_at_utc=completed_at,
+                )
+        except Exception as exc:  # background failures must remain observable
+            with state_lock:
+                transfer_state["current_transfer"] = "0 bytes; idle"
+                operations[operation_id].update(
+                    state="failed",
+                    error=str(exc),
+                    finished_at_utc=datetime.now(UTC).isoformat(),
+                )
 
     @app.get("/")
     def index() -> str:
@@ -689,6 +1155,45 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     def version_history_page():
         return send_from_directory(Path(__file__).parent, "version_history.html")
 
+    @app.get("/pilot_results.html")
+    def pilot_results_page():
+        return send_from_directory(Path(__file__).parent, "pilot_results.html")
+
+    @app.get("/api/pilot-results")
+    def api_pilot_results():
+        try:
+            output_root = Path(app.config["PILOT_RESULTS_ROOT"])
+            aggregation = aggregate_pilot_results(history_root(), output_root)
+            output_files = {
+                filename: (output_root / filename).is_file()
+                and not (output_root / filename).is_symlink()
+                for filename in OUTPUT_FILENAMES
+            }
+            return jsonify(
+                {
+                    **aggregation,
+                    "output_files": output_files,
+                    "all_outputs_exist": all(output_files.values()),
+                }
+            )
+        except (OSError, PilotResultsError, VCVHistoryStoreError) as exc:
+            return jsonify({"error": f"Pilot results unavailable: {exc}"}), 503
+
+    @app.get("/api/pilot-results/download/<path:filename>")
+    def api_pilot_results_download(filename: str):
+        try:
+            content, mimetype, safe_name = download_content(
+                Path(app.config["PILOT_RESULTS_ROOT"]), filename
+            )
+            return send_file(
+                BytesIO(content),
+                mimetype=mimetype,
+                as_attachment=True,
+                download_name=safe_name,
+            )
+        except PilotResultsError as exc:
+            return jsonify({"error": str(exc)}), 404
+
     @app.get("/api/status")
     def api_status():
         try:
@@ -705,6 +1210,8 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 "total_recorded_history_transfer_bytes": 0,
                 "storage_bytes": 0,
                 "storage": "0 B",
+                "pilot_results_file_created": False,
+                "pilot_output_bandwidth_bytes": 0,
             }
         with state_lock:
             transfer_snapshot = dict(transfer_state)
@@ -712,11 +1219,11 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             {
                 "project_name": "Variant Time Machine",
                 "project_explanation": PROJECT_EXPLANATION,
-                "current_milestone": "First multi-version VCV pilot review",
+                "current_milestone": "First real VCV pilot result",
                 "folders": FOLDER_GUIDE,
                 "next_tasks": dynamic_next_tasks(progress),
                 "research_progress": progress,
-                "system": _system_status(),
+                "system": _system_status(Path(app.config["PILOT_RESULTS_ROOT"])),
                 "research_notes": _latest_notebook_entry(),
                 "clinvar_connection": lookup_state,
                 "historical_comparison": _historical_comparison_status(
@@ -732,6 +1239,112 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 ),
             }
         )
+
+    @app.post("/api/pilot-batch/plan")
+    def api_pilot_batch_plan():
+        try:
+            plan = pilot_batch_plan(_json_body())
+            digest = pilot_batch_plan_digest(plan)
+            issued_at = datetime.now(UTC).isoformat()
+            with state_lock:
+                issued_batch_plans[digest] = issued_at
+            return jsonify(
+                {"plan": plan, "plan_digest": digest, "issued_at_utc": issued_at}
+            )
+        except TransferLimitError as exc:
+            return jsonify({"error": str(exc)}), 413
+        except (InvalidVCVAccession, ValueError) as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, VCVHistoryStoreError) as exc:
+            return jsonify({"error": f"VCV histories unavailable: {exc}"}), 503
+
+    @app.post("/api/pilot-batch/run")
+    def api_run_pilot_batch():
+        try:
+            body = _json_body()
+            if body.get("approved") is not True:
+                return jsonify(
+                    {"error": "Review and approve the exact pilot batch plan first."}
+                ), 428
+            supplied_plan = body.get("plan")
+            if not isinstance(supplied_plan, dict):
+                raise ValueError("Plan the pilot batch before approving it.")
+            supplied_candidates = supplied_plan.get("candidates")
+            if not isinstance(supplied_candidates, list) or not all(
+                isinstance(candidate, dict)
+                and isinstance(candidate.get("accession"), str)
+                for candidate in supplied_candidates
+            ):
+                raise ValueError("The supplied plan has invalid candidates.")
+            plan = pilot_batch_plan(
+                {
+                    "candidates": [
+                        candidate["accession"] for candidate in supplied_candidates
+                    ],
+                    "reuse_existing": supplied_plan.get("reuse_existing", True),
+                    "candidate_selection_rule": supplied_plan.get(
+                        "candidate_selection_rule", ""
+                    ),
+                    "candidate_selection_bytes": supplied_plan.get(
+                        "candidate_selection_bytes", 0
+                    ),
+                    "candidate_selection_requests": supplied_plan.get(
+                        "candidate_selection_requests", []
+                    ),
+                }
+            )
+            if supplied_plan != plan:
+                raise ValueError(
+                    "The supplied pilot batch plan does not match the current plan."
+                )
+            plan_digest = pilot_batch_plan_digest(plan)
+            with state_lock:
+                plan_issued_at = issued_batch_plans.pop(plan_digest, None)
+            if plan_issued_at is None:
+                raise ValueError(
+                    "This exact plan was not issued for review. Plan the batch first."
+                )
+            plan = {
+                **plan,
+                "plan_digest": plan_digest,
+                "plan_issued_at_utc": plan_issued_at,
+                "approved_at_utc": datetime.now(UTC).isoformat(),
+            }
+
+            with state_lock:
+                if any(item["state"] == "running" for item in operations.values()):
+                    return jsonify(
+                        {"error": "Another VCV operation is already running."}
+                    ), 409
+                operation_id = uuid.uuid4().hex
+                cancel_event = threading.Event()
+                operations[operation_id] = {
+                    "operation_id": operation_id,
+                    "state": "running",
+                    "operation_type": "pilot_batch",
+                    "plan": plan,
+                    "progress": None,
+                    "progress_events": [],
+                    "result": None,
+                    "error": None,
+                    "created_at_utc": datetime.now(UTC).isoformat(),
+                    "finished_at_utc": None,
+                    "cancel_event": cancel_event,
+                }
+            thread = threading.Thread(
+                target=run_pilot_batch_operation,
+                args=(operation_id, plan, cancel_event),
+                daemon=True,
+                name=f"pilot-batch-{operation_id[:8]}",
+            )
+            thread.start()
+            return jsonify({"operation_id": operation_id, "state": "running"}), 202
+        except TransferLimitError as exc:
+            return jsonify({"error": str(exc)}), 413
+        except (InvalidVCVAccession, ValueError) as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, VCVHistoryStoreError) as exc:
+            return jsonify({"error": f"VCV histories unavailable: {exc}"}), 503
 
     @app.post("/api/vcv-history/current-plan")
     def api_vcv_current_plan():
@@ -1077,6 +1690,9 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 status=actions[action],  # type: ignore[arg-type]
                 **values,
             )
+            results_root = Path(app.config["PILOT_RESULTS_ROOT"])
+            if (results_root / "batch_manifest.json").is_file():
+                export_pilot_results(history_root(), results_root)
             return jsonify({"accession": canonical, "review": review, "saved": True})
         except (InvalidVCVAccession, ValueError, VCVHistoryStoreError) as exc:
             return jsonify({"error": str(exc)}), 400
@@ -1329,7 +1945,7 @@ def run_dashboard(*, open_browser: bool = True) -> None:
     """Run the dashboard locally without Flask debug mode."""
     if open_browser:
         threading.Timer(
-            0.8, lambda: webbrowser.open("http://127.0.0.1:5000/version_history.html")
+            0.8, lambda: webbrowser.open("http://127.0.0.1:5000/pilot_results.html")
         ).start()
     app.run(host="127.0.0.1", port=5000, debug=False)
 

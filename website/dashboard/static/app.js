@@ -157,6 +157,8 @@ function renderResearchProgress(progress) {
     ["Histories manually verified", progress.manually_verified],
     ["Recorded history transfer", `${progress.total_recorded_history_transfer_bytes.toLocaleString()} bytes`],
     ["Local VCV pilot storage", progress.storage],
+    ["Pilot results file created", progress.pilot_results_file_created ? "Yes" : "No"],
+    ["Total pilot bandwidth", `${progress.pilot_output_bandwidth_bytes.toLocaleString()} bytes`],
   ];
   for (const [label, value] of fields) {
     const wrapper = document.createElement("div");

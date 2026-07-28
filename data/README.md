@@ -1,5 +1,10 @@
 # Data Directory
 
+`pilot_results/` contains the small derived real-pilot CSV, JSON, Markdown, transfer,
+and manual-review outputs. These are official-record research outputs, not synthetic
+examples, model-training data, or clinical results. Small raw VCV XML responses remain
+Git-ignored under `manual_review/vcv_history/`.
+
 No scientific data are included during project setup.
 
 - `raw/`: immutable downloaded source releases. Never edit raw files in place.

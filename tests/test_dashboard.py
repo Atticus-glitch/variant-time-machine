@@ -57,6 +57,7 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert client.get("/static/lookup.js").status_code == 200
     assert client.get("/static/workspace.js").status_code == 200
     assert client.get("/static/version_history.js").status_code == 200
+    assert client.get("/static/pilot_results.js").status_code == 200
     lookup_page = client.get("/variant_lookup.html")
     assert lookup_page.status_code == 200
     assert "ClinVar Variant Lookup" in lookup_page.get_data(as_text=True)
@@ -64,6 +65,7 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert pilot_page.status_code == 200
     assert "Pilot Workspace" in pilot_page.get_data(as_text=True)
     assert client.get("/pilot_workspace.html").status_code == 200
+    assert client.get("/pilot_results.html").status_code == 200
 
 
 def test_version_history_explorer_page_has_safety_copy_and_navigation(
@@ -154,7 +156,7 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     assert response.status_code == 200
     payload = response.get_json()
     assert payload["project_name"] == "Variant Time Machine"
-    assert payload["current_milestone"] == "First multi-version VCV pilot review"
+    assert payload["current_milestone"] == "First real VCV pilot result"
     assert "uncertain genetic variant" in payload["project_explanation"]
     assert len(payload["folders"]) == 8
     assert len(payload["next_tasks"]) == 3
@@ -174,11 +176,9 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
         "storage",
     }.issubset(payload["system"])
     assert "data/example_variants.csv" in payload["system"]["files_created"]
-    assert payload["research_notes"]["title"] == (
-        "2026-07-27 Bounded VCV Version History Implementation"
-    )
+    assert payload["research_notes"]["title"] == ("2026-07-27 First Real Pilot Result")
     assert (
-        "first live dashboard demonstration used `VCV000014026`"
+        "Three candidates were attempted and all three were retrieved"
         in payload["research_notes"]["content"]
     )
     assert payload["clinvar_connection"]["connection_status"] == "Not connected"

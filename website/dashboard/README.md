@@ -1,6 +1,6 @@
 # Local Development Dashboard
 
-This local Flask dashboard is the normal bounded VCV history workflow. Its startup target is the **Version History Explorer**, not a report of scientific results or a medical tool.
+This local Flask dashboard is the normal bounded VCV history workflow. Its startup target is **Pilot Results**, a preliminary descriptive result rather than a final study or medical tool.
 
 ## Start the Dashboard
 
@@ -14,10 +14,10 @@ After the documented Python 3.12 installation succeeds, that command is recommen
 The current `.venv` is Python 3.14.4, not Python 3.12; use
 `.venv/bin/python scripts/start_dashboard.py` only as a temporary fallback.
 
-The Version History Explorer normally opens automatically at:
+Pilot Results normally opens automatically at:
 
 ```text
-http://127.0.0.1:5000/version_history.html
+http://127.0.0.1:5000/pilot_results.html
 ```
 
 To start without opening a browser:
@@ -51,7 +51,8 @@ The initial latest-version lookup is separate from the maximum 25 historical req
 - Historical Variant Comparison counts only browser workspace records that passed every verification rule. It starts at zero by design.
 - Data Transfer Safety shows the largest planned request, current transfer, total raw download size, data storage use, and that large-download protection is on.
 - Version History Explorer is the main control center for current VCV confirmation, exact version plans, progress, cancellation, saved histories, automatic timelines, and ten-item manual verification.
-- Pilot Workspace remains available for the older current-record/manual-date workflow, but it is not the startup target.
+- Pilot Results shows the real aggregate summary, batch transfer plan, timelines, review controls, and five downloadable outputs.
+- Pilot Workspace remains available for the older current-record/manual-date workflow.
 
 ## How This Helps Development
 

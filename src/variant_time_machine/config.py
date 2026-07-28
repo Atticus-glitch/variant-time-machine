@@ -116,6 +116,7 @@ PILOT_RECORD_PATH = DATA_DIR / "manual_review" / "pilot_variant_001.json"
 PILOT_REVIEW_PATH = DATA_DIR / "manual_review" / "pilot_review.json"
 PILOT_WORKSPACE_PATH = DATA_DIR / "manual_review" / "pilot_workspace.json"
 VCV_HISTORY_DIR = DATA_DIR / "manual_review" / "vcv_history"
+PILOT_RESULTS_DIR = DATA_DIR / "pilot_results"
 
 REQUIRED_DIRECTORIES: tuple[Path, ...] = (
     PROJECT_ROOT / "research",
@@ -124,6 +125,7 @@ REQUIRED_DIRECTORIES: tuple[Path, ...] = (
     INTERIM_DATA_DIR,
     PROCESSED_DATA_DIR,
     DATA_DIR / "manual_review",
+    PILOT_RESULTS_DIR,
     PILOT_EXTRACTED_DIR,
     PROJECT_ROOT / "src",
     PROJECT_ROOT / "src" / "variant_time_machine",
@@ -153,6 +155,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "research" / "data-size-options.md",
     PROJECT_ROOT / "research" / "how-to-select-first-variant.md",
     PROJECT_ROOT / "research" / "research-notebook.md",
+    PROJECT_ROOT / "research" / "pilot-results.md",
     PROJECT_ROOT / "research" / "project-decisions.md",
     PROJECT_ROOT / "research" / "sources.md",
     PROJECT_ROOT / "research" / "competition-notes.md",
@@ -163,6 +166,12 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PILOT_VARIANTS_PATH,
     PILOT_RECORD_PATH,
     PILOT_WORKSPACE_PATH,
+    PILOT_RESULTS_DIR / "batch_manifest.json",
+    PILOT_RESULTS_DIR / "pilot_results.csv",
+    PILOT_RESULTS_DIR / "pilot_summary.json",
+    PILOT_RESULTS_DIR / "pilot_report.md",
+    PILOT_RESULTS_DIR / "transfer_manifest.json",
+    PILOT_RESULTS_DIR / "manual_review.csv",
     VCV_HISTORY_DIR / ".gitkeep",
     PILOT_EXTRACTED_DIR / ".gitkeep",
     INTERIM_DATA_DIR / "example_clinvar_timeline.csv",
@@ -178,6 +187,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "src" / "variant_time_machine" / "pilot.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "pilot_record.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "pilot_workspace.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "pilot_results.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "remote_archive.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "vcv_history.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "vcv_history_store.py",
@@ -209,11 +219,13 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "website" / "dashboard" / "variant_lookup.html",
     PROJECT_ROOT / "website" / "dashboard" / "pilot_workspace.html",
     PROJECT_ROOT / "website" / "dashboard" / "version_history.html",
+    PROJECT_ROOT / "website" / "dashboard" / "pilot_results.html",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "styles.css",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "app.js",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "lookup.js",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "workspace.js",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "version_history.js",
+    PROJECT_ROOT / "website" / "dashboard" / "static" / "pilot_results.js",
     PROJECT_ROOT / "docs" / "data-dictionary.md",
     PROJECT_ROOT / "docs" / "methods.md",
     PROJECT_ROOT / "docs" / "limitations.md",

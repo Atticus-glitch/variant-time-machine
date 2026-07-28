@@ -1,0 +1,115 @@
+{
+  "actual_new_batch_bytes": 148735,
+  "batch_bytes": 148735,
+  "candidate_count": 3,
+  "candidate_selection_bytes": 113027,
+  "candidate_selection_requests": [
+    {
+      "accession": "VCV000000002",
+      "response_bytes": 25537,
+      "retrieved_at_utc": "2026-07-27T22:55:20.696957+00:00",
+      "source_request": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000002&rettype=vcv&retmode=xml&tool=variant_time_machine"
+    },
+    {
+      "accession": "VCV000000005",
+      "response_bytes": 35279,
+      "retrieved_at_utc": "2026-07-27T22:55:21.631987+00:00",
+      "source_request": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000005&rettype=vcv&retmode=xml&tool=variant_time_machine"
+    },
+    {
+      "accession": "VCV000000012",
+      "response_bytes": 28490,
+      "retrieved_at_utc": "2026-07-27T22:55:23.183725+00:00",
+      "source_request": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000012&rettype=vcv&retmode=xml&tool=variant_time_machine"
+    },
+    {
+      "accession": "VCV000000014",
+      "response_bytes": 23721,
+      "retrieved_at_utc": "2026-07-27T22:55:24.177008+00:00",
+      "source_request": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000014&rettype=vcv&retmode=xml&tool=variant_time_machine"
+    }
+  ],
+  "candidate_selection_rule": "Include the existing VCV000014026 case, then choose the two lowest Variation IDs among previously identified candidates with a canonical multi-version VCV, visible gene, aggregate germline classification, and no dominant non-germline category.",
+  "candidates": [
+    {
+      "accession": "VCV000000002",
+      "attempted": true,
+      "batch_bytes": 63427,
+      "bytes_transferred": 63427,
+      "failure": "",
+      "reused": false,
+      "source_requests": [
+        {
+          "request": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000002&rettype=vcv&retmode=xml&tool=variant_time_machine"
+        },
+        {
+          "request": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000002.1&rettype=vcv&retmode=xml&tool=variant_time_machine"
+        },
+        {
+          "request": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000002.5&rettype=vcv&retmode=xml&tool=variant_time_machine"
+        }
+      ],
+      "source_urls": [
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000002&rettype=vcv&retmode=xml&tool=variant_time_machine",
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000002.1&rettype=vcv&retmode=xml&tool=variant_time_machine",
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000002.5&rettype=vcv&retmode=xml&tool=variant_time_machine"
+      ],
+      "status": "completed",
+      "vcv_accession": "VCV000000002"
+    },
+    {
+      "accession": "VCV000000005",
+      "attempted": true,
+      "batch_bytes": 85308,
+      "bytes_transferred": 85308,
+      "failure": "",
+      "reused": false,
+      "source_requests": [
+        {
+          "request": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000005&rettype=vcv&retmode=xml&tool=variant_time_machine"
+        },
+        {
+          "request": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000005.1&rettype=vcv&retmode=xml&tool=variant_time_machine"
+        },
+        {
+          "request": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000005.11&rettype=vcv&retmode=xml&tool=variant_time_machine"
+        }
+      ],
+      "source_urls": [
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000005&rettype=vcv&retmode=xml&tool=variant_time_machine",
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000005.1&rettype=vcv&retmode=xml&tool=variant_time_machine",
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&id=VCV000000005.11&rettype=vcv&retmode=xml&tool=variant_time_machine"
+      ],
+      "status": "completed",
+      "vcv_accession": "VCV000000005"
+    },
+    {
+      "accession": "VCV000014026",
+      "attempted": true,
+      "batch_bytes": 0,
+      "bytes_transferred": 0,
+      "failure": "",
+      "reused": true,
+      "source_requests": [
+        {
+          "request": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+        }
+      ],
+      "source_urls": [
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+      ],
+      "status": "reused",
+      "vcv_accession": "VCV000014026"
+    }
+  ],
+  "plan_estimate": {
+    "estimated_max_requests": 6,
+    "estimated_max_transfer": 62914560
+  },
+  "retrieval_completed_at_utc": "2026-07-27T23:51:03.465925+00:00",
+  "reused_count": 1,
+  "schema_version": 1,
+  "source_urls": [
+    "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+  ]
+}

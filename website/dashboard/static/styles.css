@@ -676,6 +676,210 @@ footer p {
   background: var(--cyan);
 }
 
+.workspace-nav a[aria-current="page"] {
+  color: white;
+  background: var(--navy);
+}
+
+.pilot-caution {
+  border-top: 6px solid var(--amber);
+}
+
+.real-data-notice {
+  margin: 22px 0 0;
+  padding: 14px 18px;
+  color: var(--navy);
+  background: var(--amber-light);
+  border-left: 4px solid var(--amber);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-weight: 700;
+}
+
+.pilot-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.pilot-summary-grid > div {
+  min-height: 108px;
+  padding: 17px;
+  background: #f2f0e8;
+  border-top: 3px solid var(--cyan);
+}
+
+.pilot-summary-grid dt,
+.pilot-case-fields dt {
+  color: var(--muted);
+  font: 700 0.68rem "Trebuchet MS", Arial, sans-serif;
+  text-transform: uppercase;
+}
+
+.pilot-summary-grid dd {
+  margin: 12px 0 0;
+  color: var(--navy);
+  font-size: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.category-summary {
+  display: grid;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.category-summary > div {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.7fr) minmax(140px, 2fr) 40px;
+  gap: 12px;
+  align-items: center;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 0.8rem;
+}
+
+.category-track {
+  height: 12px;
+  background: var(--gray-light);
+}
+
+.category-bar {
+  display: block;
+  height: 100%;
+  background: var(--cyan);
+}
+
+.pilot-case-list {
+  display: grid;
+  gap: 12px;
+}
+
+.pilot-case {
+  background: #f2f0e8;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--cyan);
+}
+
+.pilot-case > summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+  cursor: pointer;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.result-category {
+  color: var(--navy);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.pilot-case-body {
+  padding: 0 18px 20px;
+}
+
+.pilot-case-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.pilot-case-fields > div {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.pilot-case-fields dd {
+  margin: 7px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.manual-review-box {
+  margin: 18px 0;
+  padding: 16px;
+  background: var(--cyan-light);
+  border-left: 4px solid var(--cyan);
+}
+
+.manual-review-box label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font: 700 0.72rem "Trebuchet MS", Arial, sans-serif;
+  text-transform: uppercase;
+}
+
+.manual-review-box textarea {
+  min-height: 70px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  font: 1rem Georgia, "Times New Roman", serif;
+  resize: vertical;
+}
+
+.manual-review-box button,
+#refresh-results {
+  padding: 10px 14px;
+  color: white;
+  background: var(--navy);
+  border: 0;
+  cursor: pointer;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-weight: 700;
+}
+
+.exact-history h4 {
+  color: var(--navy);
+}
+
+.exact-history li,
+.json-record {
+  overflow-wrap: anywhere;
+}
+
+.json-record {
+  max-height: 360px;
+  padding: 14px;
+  overflow: auto;
+  background: var(--navy);
+  color: white;
+  white-space: pre-wrap;
+}
+
+.compact-version-timeline {
+  margin-top: 16px;
+}
+
+.download-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.download-grid a {
+  padding: 16px;
+  color: white;
+  background: var(--navy);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.download-grid a:hover,
+.download-grid a:focus-visible {
+  background: var(--cyan);
+}
+
+.download-grid .download-unavailable {
+  color: var(--muted);
+  background: var(--gray-light);
+  cursor: not-allowed;
+}
+
 .guide-steps,
 .help-grid,
 .candidate-grid {
@@ -1402,6 +1606,11 @@ footer p {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .pilot-summary-grid,
+  .download-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .release-grid {
     grid-template-columns: 1fr;
   }
@@ -1494,6 +1703,13 @@ footer p {
   }
 
   .research-progress-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pilot-summary-grid,
+  .pilot-case-fields,
+  .download-grid,
+  .category-summary > div {
     grid-template-columns: 1fr;
   }
 
