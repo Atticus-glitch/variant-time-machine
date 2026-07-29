@@ -10,7 +10,17 @@ DATA_DIR = PROJECT_ROOT / "data"
 RAW_DATA_DIR = DATA_DIR / "raw"
 INTERIM_DATA_DIR = DATA_DIR / "interim"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
+TEMP_DATA_DIR = DATA_DIR / "tmp"
+HISTORICAL_RAW_DATA_DIR = RAW_DATA_DIR / "clinvar"
+HISTORICAL_VARIANT_DB_PATH = PROCESSED_DATA_DIR / "clinvar_history.sqlite3"
 OUTPUTS_DIR = PROJECT_ROOT / "outputs"
+CLUE_SCORE_CONFIG_PATH = PROJECT_ROOT / "config" / "clue_score_v1.yaml"
+CLUE_SCORE_RESULTS_DIR = OUTPUTS_DIR / "clue_score_v1"
+CLUE_SCORE_RESULTS_DB_PATH = PROCESSED_DATA_DIR / "clue_score_v1.sqlite3"
+CLUE_SCORE_DEVELOPMENT_DB_PATH = (
+    PROCESSED_DATA_DIR / "clue_score_v1_development.sqlite3"
+)
+CLUE_SCORE_REVIEW_PATH = DATA_DIR / "manual_review" / "clue_score_v1_reviews.json"
 FIGURES_DIR = OUTPUTS_DIR / "figures"
 TABLES_DIR = OUTPUTS_DIR / "tables"
 MODELS_DIR = OUTPUTS_DIR / "models"
@@ -20,6 +30,9 @@ DEFAULT_LOG_FORMAT = "%(levelname)s: %(message)s"
 DOWNLOAD_CHUNK_SIZE = 1024 * 1024
 DOWNLOAD_TIMEOUT_SECONDS = 120
 LARGE_DOWNLOAD_THRESHOLD_BYTES = 500_000_000
+HISTORICAL_DOWNLOAD_LIMIT_BYTES = 5_000_000_000
+HISTORICAL_FREE_SPACE_FRACTION = 0.10
+HISTORICAL_MINIMUM_FREE_BYTES = 20_000_000_000
 PILOT_CURRENT_API_ESTIMATE_BYTES = 1_000_000
 PILOT_HISTORICAL_API_LIMIT_BYTES = 10_000_000
 
@@ -120,10 +133,13 @@ PILOT_RESULTS_DIR = DATA_DIR / "pilot_results"
 
 REQUIRED_DIRECTORIES: tuple[Path, ...] = (
     PROJECT_ROOT / "research",
+    PROJECT_ROOT / "config",
     DATA_DIR,
     RAW_DATA_DIR,
     INTERIM_DATA_DIR,
     PROCESSED_DATA_DIR,
+    TEMP_DATA_DIR,
+    HISTORICAL_RAW_DATA_DIR,
     DATA_DIR / "manual_review",
     PILOT_RESULTS_DIR,
     PILOT_EXTRACTED_DIR,
@@ -152,6 +168,10 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "research" / "one-page-research-plan.md",
     PROJECT_ROOT / "research" / "clinvar-data-plan.md",
     PROJECT_ROOT / "research" / "historical-data-plan.md",
+    PROJECT_ROOT / "research" / "download-strategy.md",
+    PROJECT_ROOT / "research" / "clue-score-v1-development-validation.md",
+    PROJECT_ROOT / "research" / "clue-score-v1-results.md",
+    CLUE_SCORE_CONFIG_PATH,
     PROJECT_ROOT / "research" / "data-size-options.md",
     PROJECT_ROOT / "research" / "how-to-select-first-variant.md",
     PROJECT_ROOT / "research" / "research-notebook.md",
@@ -182,6 +202,10 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "src" / "variant_time_machine" / "config.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "clinvar_api.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "download.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "historical_dataset.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "historical_variants.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "clue_score.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "clue_score_experiment.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "parse.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "match.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "pilot.py",
@@ -197,6 +221,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "src" / "variant_time_machine" / "utils.py",
     PROJECT_ROOT / "scripts" / "download_data.py",
     PROJECT_ROOT / "scripts" / "build_timeline_dataset.py",
+    PROJECT_ROOT / "scripts" / "build_historical_spreadsheet.py",
     PROJECT_ROOT / "scripts" / "train_baseline.py",
     PROJECT_ROOT / "scripts" / "validate_setup.py",
     PROJECT_ROOT / "scripts" / "start_dashboard.py",
@@ -209,6 +234,10 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "notebooks" / "README.md",
     PROJECT_ROOT / "tests" / "__init__.py",
     PROJECT_ROOT / "tests" / "test_setup.py",
+    PROJECT_ROOT / "tests" / "test_historical_dataset.py",
+    PROJECT_ROOT / "tests" / "test_historical_variants.py",
+    PROJECT_ROOT / "tests" / "test_clue_score.py",
+    PROJECT_ROOT / "tests" / "test_clue_score_experiment.py",
     FIGURES_DIR / ".gitkeep",
     TABLES_DIR / ".gitkeep",
     MODELS_DIR / ".gitkeep",
@@ -220,12 +249,20 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "website" / "dashboard" / "pilot_workspace.html",
     PROJECT_ROOT / "website" / "dashboard" / "version_history.html",
     PROJECT_ROOT / "website" / "dashboard" / "pilot_results.html",
+    PROJECT_ROOT / "website" / "dashboard" / "historical_dataset.html",
+    PROJECT_ROOT / "website" / "dashboard" / "historical_variants.html",
+    PROJECT_ROOT / "website" / "dashboard" / "overview.html",
+    PROJECT_ROOT / "website" / "dashboard" / "prediction_results.html",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "styles.css",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "app.js",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "lookup.js",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "workspace.js",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "version_history.js",
     PROJECT_ROOT / "website" / "dashboard" / "static" / "pilot_results.js",
+    PROJECT_ROOT / "website" / "dashboard" / "static" / "historical_dataset.js",
+    PROJECT_ROOT / "website" / "dashboard" / "static" / "historical_variants.js",
+    PROJECT_ROOT / "website" / "dashboard" / "static" / "overview.js",
+    PROJECT_ROOT / "website" / "dashboard" / "static" / "prediction_results.js",
     PROJECT_ROOT / "docs" / "data-dictionary.md",
     PROJECT_ROOT / "docs" / "methods.md",
     PROJECT_ROOT / "docs" / "limitations.md",

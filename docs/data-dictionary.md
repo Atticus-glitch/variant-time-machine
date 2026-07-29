@@ -2,6 +2,35 @@
 
 The repository contains three older release-pipeline artifacts plus the active bounded VCV history artifacts. The parser creates a standardized release table, the matcher creates a historical timeline table, and the downloader creates a JSON provenance record. The Version History Explorer separately stores one artifact tree per VCV. Exact ClinVar meanings must still be checked against the documentation for each source and version.
 
+## Searchable Historical Spreadsheet
+
+`data/processed/clinvar_history.sqlite3` is a local, Git-ignored search index built from the configured January 2022 and January 2024 `variant_summary` archives. It contains one `variant_index` row per distinct Variation ID and one `variant_release` row per Variation ID per available snapshot. Assembly-specific source rows are collapsed only after all distinct source values are preserved in joined fields.
+
+The spreadsheet shows both snapshot dates and both `LastEvaluated` values. These are different concepts: the snapshot date identifies the monthly archive, while `LastEvaluated` is ClinVar's source field for the classification evaluation. Two snapshots do not describe every change between those dates.
+
+Search accepts an exact numeric Variation ID, padded VCV-style accession, `allele: ID`, `rsID`, exact gene symbol, or a name/HGVS fragment. The primary visible fields are classifications, review statuses, evaluation dates, genes, names, conditions, identifiers, coordinates, and submitter-count values. The detail view exposes all collapsed summary fields and links to the official current ClinVar variation page.
+
+`change_status` is a literal snapshot comparison, not a medically interpreted reclassification:
+
+- `Classification_changed`
+- `No_classification_change`
+- `New_in_later_snapshot`
+- `Missing_from_later_snapshot`
+
+The browser's `VUS_updated` queue is a derived filter, not a stored outcome. It requires `change_status = Classification_changed` and an older collapsed classification exactly equal to `Uncertain significance`. It deliberately excludes mixed older classification strings and still requires manual identity, condition-scope, and source review.
+
+## Clue Score V1 Results
+
+`data/processed/clue_score_v1.sqlite3` is the Git-ignored automatic result database. `predictions` contains one row per exact older VUS. Older identity and clue fields, score, direction, confidence, clue JSON, arithmetic, formula version, config hash, and prediction-save time are written before newer fields. Newer snapshot fields, match assessment, normalized outcome, correctness result, reason code, and comparison time are filled only in the second stage.
+
+Prediction directions are `pathogenic_direction`, `benign_direction`, `remain_uncertain`, and `no_prediction`. Exclusive comparison labels are `Correct`, `Wrong`, `No Prediction`, and `Not Scorable`. Formula no-prediction counts can overlap with unscorable answer-key records in summary metrics because one describes the prediction and the other describes comparison safety.
+
+Every clue JSON object stores clue name, exact older value, assigned points, explanation, source field, availability, and whether the clue applied. `arithmetic` stores the displayed sum. The exact frozen formula content is identified by `config_sha256`.
+
+Strict normalized outcomes are `moved_toward_pathogenic`, `moved_toward_benign`, `remained_uncertain`, and `conflicting_or_unusable`. Original newer classification text is always retained. `outcome_reason_code` and `outcome_rule` explain why it was or was not scorable.
+
+Sparse manual decisions are stored separately in `data/manual_review/clue_score_v1_reviews.json`. They do not alter the automatic result database. Review statuses are `reviewed`, `correctly_matched`, `ambiguous`, and `excluded`; ambiguous and excluded records require notes.
+
 ## Standardized Release Table
 
 | Field | Meaning | Quality note |

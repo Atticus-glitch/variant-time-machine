@@ -160,8 +160,8 @@ def test_main_progress_detects_result_and_batch_output_bandwidth(
     assert progress["pilot_results_file_created"] is True
     assert progress["pilot_output_bandwidth_bytes"] == 9876
     assert payload["next_tasks"] == [
-        "Manually verify every detected classification change",
-        "Review ambiguous or missing histories",
-        "Expand the verified pilot to 25 variants",
+        "Review high-confidence wrong Clue Score V1 predictions.",
+        "Review matching and scope for unscorable baseline records.",
+        "Design Version 2 separately without changing Version 1.",
     ]
     assert str(root / "pilot_results.csv") in payload["system"]["files_created"]

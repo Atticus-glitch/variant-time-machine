@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "scoring_version": "Clue Score V1",
+  "status": "frozen",
+  "frozen_at_utc": "2026-07-28T21:30:00+00:00",
+  "label": "Version 1 provisional weights chosen before evaluating the full outcome data.",
+  "prediction_date": "2022-01-06",
+  "answer_key_date": "2024-01-04",
+  "eligible_older_classification": "Uncertain significance",
+  "thresholds": {
+    "pathogenic_minimum": 3,
+    "benign_maximum": -2,
+    "uncertain_minimum": -1,
+    "uncertain_maximum": 2
+  },
+  "consequence_precedence": [
+    "loss_of_function",
+    "canonical_splice",
+    "synonymous",
+    "inframe_indel",
+    "missense",
+    "noncoding",
+    "unrecognized"
+  ],
+  "clues": [
+    {
+      "name": "loss_of_function_consequence",
+      "description": "HGVS text suggests a frameshift or premature stop.",
+      "source_field": "names",
+      "rule": "Conservative HGVS text contains a protein frameshift marker (fs) or a protein stop marker (Ter or *).",
+      "points": 4,
+      "direction": "pathogenic",
+      "reason": "Frameshift and stop-gained changes often disrupt protein production.",
+      "availability_rule": "Available when older-snapshot variant name/HGVS text is present."
+    },
+    {
+      "name": "canonical_splice_consequence",
+      "description": "HGVS text suggests a canonical splice donor or acceptor position.",
+      "source_field": "names",
+      "rule": "Coding HGVS contains +1, +2, -1, or -2 adjacent to an intron boundary, or explicitly says splice donor/acceptor.",
+      "points": 3,
+      "direction": "pathogenic",
+      "reason": "Canonical splice-site changes can disrupt RNA splicing.",
+      "availability_rule": "Available when older-snapshot variant name/HGVS text is present."
+    },
+    {
+      "name": "missense_consequence",
+      "description": "HGVS protein text suggests one amino-acid substitution.",
+      "source_field": "names",
+      "rule": "Protein HGVS has a three-letter amino-acid substitution and is not a stop, frameshift, synonymous, or indel rule.",
+      "points": 1,
+      "direction": "pathogenic",
+      "reason": "Missense changes can alter a protein, but this clue alone is weak.",
+      "availability_rule": "Available when consequence can be recognized from older HGVS text."
+    },
+    {
+      "name": "synonymous_consequence",
+      "description": "HGVS protein text reports no amino-acid change.",
+      "source_field": "names",
+      "rule": "Protein HGVS contains an equals sign or text explicitly says synonymous.",
+      "points": -3,
+      "direction": "benign",
+      "reason": "Synonymous changes often leave the encoded amino acid unchanged, while splice warnings are handled first.",
+      "availability_rule": "Available when consequence can be recognized from older HGVS text."
+    },
+    {
+      "name": "noncoding_consequence",
+      "description": "HGVS text indicates a noncoding, UTR, upstream, downstream, or noncanonical intronic position without a canonical splice signal.",
+      "source_field": "names",
+      "rule": "Name uses NR_/n. notation, c.- or c.* notation, or noncanonical intronic notation after splice rules are excluded.",
+      "points": -1,
+      "direction": "benign",
+      "reason": "This is a weak benign-direction clue because noncoding changes can still be functional.",
+      "availability_rule": "Available when consequence can be recognized from older HGVS text."
+    },
+    {
+      "name": "expert_panel_review",
+      "description": "The older aggregate record was reviewed by an expert panel.",
+      "source_field": "review_statuses",
+      "rule": "Older ReviewStatus equals reviewed by expert panel.",
+      "points": 2,
+      "direction": "pathogenic",
+      "reason": "Expert-panel review means more structured evidence existed, but does not itself prove direction.",
+      "availability_rule": "Available when older review status is present."
+    },
+    {
+      "name": "multiple_agreeing_submitters",
+      "description": "Multiple submitters provided criteria without an aggregate conflict.",
+      "source_field": "review_statuses, submitter_counts",
+      "rule": "ReviewStatus equals criteria provided, multiple submitters, no conflicts and maximum reported submitter count is at least 2.",
+      "points": 1,
+      "direction": "pathogenic",
+      "reason": "Independent agreeing evidence may make later resolution more likely; Version 1 uses a weak positive point without claiming biological direction.",
+      "availability_rule": "Available when older review status and submitter count are present."
+    },
+    {
+      "name": "criteria_without_conflict",
+      "description": "Assertion criteria were provided and no conflict was reported.",
+      "source_field": "review_statuses",
+      "rule": "Older ReviewStatus starts with criteria provided and does not contain conflict.",
+      "points": 1,
+      "direction": "pathogenic",
+      "reason": "Documented criteria provide more evidence than an assertion without criteria; the point is intentionally weak.",
+      "availability_rule": "Available when older review status is present."
+    },
+    {
+      "name": "conflict_warning",
+      "description": "The older review text reports conflicting interpretations.",
+      "source_field": "review_statuses",
+      "rule": "Older ReviewStatus contains conflict.",
+      "points": 0,
+      "direction": "warning",
+      "reason": "Conflict lowers confidence but is not forced into either direction.",
+      "availability_rule": "Available when older review status is present."
+    },
+    {
+      "name": "classification_age",
+      "description": "Age of the older LastEvaluated field relative to the 2022 snapshot.",
+      "source_field": "last_evaluated_dates",
+      "rule": "Parse an exact older LastEvaluated date when one unambiguous date is present.",
+      "points": 0,
+      "direction": "neutral",
+      "reason": "Recorded for explanation only because Version 1 has no predeclared evidence that age implies a direction.",
+      "availability_rule": "Available only when the older LastEvaluated value is a parseable date and not '-'."
+    },
+    {
+      "name": "record_completeness",
+      "description": "Gene, coordinate, condition, review, submitter, and consequence availability.",
+      "source_field": "gene_symbols, coordinates, phenotypes, review_statuses, submitter_counts, names",
+      "rule": "Count missing or placeholder values in older-snapshot fields.",
+      "points": 0,
+      "direction": "neutral",
+      "reason": "Missing data affects confidence and warnings, not directional score.",
+      "availability_rule": "Calculated for every eligible older record."
+    }
+  ]
+}

@@ -398,3 +398,39 @@ be predicted. It is too small, non-random, partly endpoint-sampled, and unverifi
 model training or clinical use. Manually verify all three histories, then expand to
 approximately 25–50 suitable histories before deciding whether model development is
 justified.
+
+## 2026-07-28 Clue Score V1 Full Baseline
+
+### Frozen Method
+
+Version 1 was frozen before complete outcome evaluation. The prediction stage used
+only January 6, 2022 fields and committed every score before the runner queried the
+January 4, 2024 answer key. A deterministic 500-record development sample was checked
+first. Ten correct, ten wrong, ten no-prediction/unsafe, and ten unscorable examples
+had arithmetic and labels consistent with the rules. No weights were changed after
+that inspection.
+
+### Actual Full Result
+
+- Eligible exact older VUS records: 439,409
+- Predictions made: 421,578
+- Formula no-predictions: 17,831
+- Correct directional comparisons: 298,090
+- Wrong directional comparisons: 70,053
+- Not scorable: 65,175
+- Accuracy among correct/wrong records: 81.0%
+- Balanced accuracy: 47.5%
+- Pathogenic-direction precision: 1.3%
+- Benign-direction precision: 16.1%
+- Uncertain-outcome recall: 80.8%
+- Full runtime: 336.54 seconds
+- Final indexed result database: 1,891,164,160 bytes
+- Output bundle: 3,448,775,132 bytes
+
+### Interpretation
+
+The 81.0% raw accuracy is dominated by variants that remained uncertain. Balanced
+accuracy and directional precision show that this provisional formula is weak at the
+more useful pathogenic and benign directions. This is an honest baseline result, not
+a medical model. Version 1 remains unchanged; future work must use a separately named
+Version 2 and an independent validation design.

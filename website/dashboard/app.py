@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 import shutil
+import sqlite3
 import sys
 import tempfile
 import threading
@@ -39,7 +40,26 @@ from variant_time_machine.clinvar_api import (  # noqa: E402
     normalize_variant_identifier,
     search_clinvar_gene_result,
 )
+from variant_time_machine.clue_score import load_clue_score_config  # noqa: E402
+from variant_time_machine.clue_score_experiment import (  # noqa: E402
+    OUTPUT_FILENAMES as CLUE_SCORE_OUTPUT_FILENAMES,
+)
+from variant_time_machine.clue_score_experiment import (  # noqa: E402
+    ClueScoreExperimentError,
+    list_predictions,
+    load_prediction_reviews,
+    prediction_detail,
+    prediction_summary,
+    run_clue_score_experiment,
+    update_prediction_review,
+)
 from variant_time_machine.config import (  # noqa: E402
+    CLINVAR_RELEASES,
+    CLUE_SCORE_RESULTS_DB_PATH,
+    CLUE_SCORE_RESULTS_DIR,
+    CLUE_SCORE_REVIEW_PATH,
+    HISTORICAL_RAW_DATA_DIR,
+    HISTORICAL_VARIANT_DB_PATH,
     LARGE_DOWNLOAD_THRESHOLD_BYTES,
     PILOT_CURRENT_API_ESTIMATE_BYTES,
     PILOT_EXTRACTED_DIR,
@@ -48,6 +68,17 @@ from variant_time_machine.config import (  # noqa: E402
     RAW_DATA_DIR,
     TABLES_DIR,
     VCV_HISTORY_DIR,
+)
+from variant_time_machine.download import download_clinvar_release  # noqa: E402
+from variant_time_machine.historical_dataset import (  # noqa: E402
+    historical_download_plan,
+    validate_download_preflight,
+)
+from variant_time_machine.historical_variants import (  # noqa: E402
+    HistoricalVariantDatabaseError,
+    historical_database_metadata,
+    historical_variant_detail,
+    search_historical_variants,
 )
 from variant_time_machine.pilot_results import (  # noqa: E402
     OUTPUT_FILENAMES,
@@ -160,17 +191,18 @@ PROGRESS_ITEMS: tuple[dict[str, str | int], ...] = (
     {
         "step": 6,
         "name": "Features",
-        "status": "Not Started",
+        "status": "Complete",
         "explanation": (
-            "Biological features will wait until variant matching is reliable."
+            "Clue Score V1 uses frozen, explainable 2022-only summary-record clues."
         ),
     },
     {
         "step": 7,
         "name": "Models",
-        "status": "Not Started",
+        "status": "Working",
         "explanation": (
-            "No model training will begin before the timeline dataset is checked."
+            "The rule-based baseline is complete. No machine-learning model is "
+            "complete."
         ),
     },
 )
@@ -273,6 +305,12 @@ def _latest_notebook_entry() -> dict[str, str]:
 
 def _latest_pipeline_output() -> str:
     """Describe the newest saved timeline file without claiming it is validated."""
+    clue_score_output = CLUE_SCORE_RESULTS_DIR / "metric_summary.json"
+    if clue_score_output.is_file():
+        modified = datetime.fromtimestamp(
+            clue_score_output.stat().st_mtime, UTC
+        ).isoformat()
+        return f"{clue_score_output.relative_to(PROJECT_ROOT)} modified {modified}"
     pilot_output = PILOT_RESULTS_DIR / "pilot_results.csv"
     if pilot_output.is_file():
         modified = datetime.fromtimestamp(pilot_output.stat().st_mtime, UTC).isoformat()
@@ -291,7 +329,11 @@ def _system_status(pilot_results_root: Path = PILOT_RESULTS_DIR) -> dict[str, An
     """Build a small status summary from the current local checkout."""
     in_virtual_environment = sys.prefix != sys.base_prefix
     test_files = sorted((PROJECT_ROOT / "tests").glob("test_*.py"))
-    raw_files = [path for path in RAW_DATA_DIR.iterdir() if path.name != ".gitkeep"]
+    raw_files = [
+        path
+        for path in RAW_DATA_DIR.rglob("*")
+        if path.is_file() and path.name != ".gitkeep"
+    ]
     timeline_files = sorted(TABLES_DIR.glob("*.csv"))
     disk = shutil.disk_usage(PROJECT_ROOT)
     extracted_files = sorted(PILOT_EXTRACTED_DIR.glob("*.json"))
@@ -316,13 +358,13 @@ def _system_status(pilot_results_root: Path = PILOT_RESULTS_DIR) -> dict[str, An
         "python_migration": (
             "Confirmed" if sys.version_info[:2] == (3, 12) else "Not confirmed"
         ),
-        "database": "CSV and TSV files; no database is needed yet",
+        "database": "Indexed SQLite snapshots and Clue Score V1 results",
         "tests": f"{len(test_files)} test files available",
         "last_pipeline_run": _latest_pipeline_output(),
         "files_created": files_created,
         "raw_clinvar_files": len(raw_files),
-        "pilot_strategy": "Expand from three cases to 25-50 reviewed VCV histories",
-        "archive_scan": "Paused; metadata inspection only",
+        "pilot_strategy": "Review baseline errors; keep Version 1 frozen",
+        "archive_scan": "Two archived summary snapshots indexed and evaluated",
         "pilot_outputs": (
             f"{history_count} VCV history case(s); "
             f"{len(extracted_files)} legacy extracted JSON file(s)"
@@ -511,6 +553,14 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         VCV_HISTORY_ROOT=VCV_HISTORY_DIR,
         VCV_CURRENT_FETCHER=fetch_current_vcv,
         VCV_HISTORY_FETCHER=fetch_vcv_history,
+        HISTORICAL_RAW_ROOT=HISTORICAL_RAW_DATA_DIR,
+        HISTORICAL_DOWNLOADER=download_clinvar_release,
+        HISTORICAL_DISK_USAGE=shutil.disk_usage,
+        HISTORICAL_VARIANT_DB_PATH=HISTORICAL_VARIANT_DB_PATH,
+        CLUE_SCORE_RESULTS_DB_PATH=CLUE_SCORE_RESULTS_DB_PATH,
+        CLUE_SCORE_RESULTS_DIR=CLUE_SCORE_RESULTS_DIR,
+        CLUE_SCORE_REVIEW_PATH=CLUE_SCORE_REVIEW_PATH,
+        CLUE_SCORE_RUNNER=run_clue_score_experiment,
     )
     if test_config:
         app.config.update(test_config)
@@ -530,6 +580,118 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     current_vcv_cache: dict[str, VersionResult] = {}
     operations: dict[str, dict[str, object]] = {}
     issued_batch_plans: dict[str, str] = {}
+    issued_historical_plans: dict[str, dict[str, object]] = {}
+    historical_operations: dict[str, dict[str, object]] = {}
+    prediction_operations: dict[str, dict[str, object]] = {}
+
+    def historical_plan() -> dict[str, object]:
+        """Return the current no-network plan for the fixed release pair."""
+        return historical_download_plan(
+            Path(app.config["HISTORICAL_RAW_ROOT"]),
+            disk_usage=app.config["HISTORICAL_DISK_USAGE"],
+        )
+
+    def run_historical_download(operation_id: str, plan: dict[str, object]) -> None:
+        """Download an approved fixed pair sequentially in a background thread."""
+        try:
+            fresh_plan = historical_plan()
+            validate_download_preflight(fresh_plan)
+            downloaded: list[dict[str, object]] = []
+            release_rows = plan["releases"]
+            assert isinstance(release_rows, list)
+            with state_lock:
+                transfer_state["current_transfer"] = (
+                    f"Historical dataset operation {operation_id} in progress"
+                )
+            for index, row in enumerate(release_rows, start=1):
+                assert isinstance(row, dict)
+                if not row.get("download_required"):
+                    continue
+                role = str(row["role"])
+                release = CLINVAR_RELEASES[role]
+                with state_lock:
+                    historical_operations[operation_id]["progress"] = {
+                        "index": index,
+                        "count": len(release_rows),
+                        "role": role,
+                        "filename": release.filename,
+                        "state": "downloading",
+                    }
+                downloader = app.config["HISTORICAL_DOWNLOADER"]
+                data_path, metadata_path = downloader(
+                    release,
+                    Path(app.config["HISTORICAL_RAW_ROOT"]),
+                    confirm=True,
+                    reason=str(plan["purpose"]),
+                )
+                downloaded.append(
+                    {
+                        "role": role,
+                        "data_path": str(data_path),
+                        "metadata_path": str(metadata_path),
+                        "size_bytes": data_path.stat().st_size,
+                    }
+                )
+            actual_bytes = sum(int(item["size_bytes"]) for item in downloaded)
+            with state_lock:
+                transfer_state["current_transfer"] = "0 bytes; idle"
+                transfer_state["total_api_bytes"] = (
+                    int(transfer_state["total_api_bytes"]) + actual_bytes
+                )
+                transfer_state["last_request"] = {
+                    "source": "Official NCBI ClinVar tab-delimited archive",
+                    "purpose": plan["purpose"],
+                    "estimated_max_bytes": plan["estimated_transfer_bytes"],
+                    "actual_bytes": actual_bytes,
+                }
+                historical_operations[operation_id].update(
+                    state="completed",
+                    result={"downloaded": downloaded, "actual_bytes": actual_bytes},
+                    finished_at_utc=datetime.now(UTC).isoformat(),
+                )
+        except Exception as exc:  # background failures must remain observable
+            with state_lock:
+                transfer_state["current_transfer"] = "0 bytes; idle"
+                historical_operations[operation_id].update(
+                    state="failed",
+                    error=str(exc),
+                    finished_at_utc=datetime.now(UTC).isoformat(),
+                )
+
+    def run_prediction_operation(operation_id: str) -> None:
+        """Run the frozen full baseline while exposing measured stage progress."""
+
+        def report(event: dict[str, object]) -> None:
+            with state_lock:
+                operation = prediction_operations[operation_id]
+                events = operation["progress_events"]
+                assert isinstance(events, list)
+                public = {**event, "sequence": len(events) + 1}
+                events.append(public)
+                operation["progress"] = public
+
+        try:
+            runner = app.config["CLUE_SCORE_RUNNER"]
+            summary = runner(
+                Path(app.config["HISTORICAL_VARIANT_DB_PATH"]),
+                Path(app.config["CLUE_SCORE_RESULTS_DB_PATH"]),
+                Path(app.config["CLUE_SCORE_RESULTS_DIR"]),
+                overwrite=True,
+                progress=report,
+            )
+            with state_lock:
+                prediction_operations[operation_id].update(
+                    state="completed",
+                    result=summary,
+                    finished_at_utc=datetime.now(UTC).isoformat(),
+                )
+        except Exception as exc:  # background failures must remain observable
+            with state_lock:
+                prediction_operations[operation_id].update(
+                    state="failed",
+                    error=str(exc),
+                    finished_at_utc=datetime.now(UTC).isoformat(),
+                )
 
     def transfer_result(
         plan: dict[str, object], actual_bytes: int
@@ -724,7 +886,56 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             "pilot_output_bandwidth_bytes": output_bandwidth,
         }
 
+    def clue_score_progress() -> dict[str, object]:
+        """Return real cross-reference and frozen-baseline status."""
+        cross_reference_records = 0
+        try:
+            historical = historical_database_metadata(
+                Path(app.config["HISTORICAL_VARIANT_DB_PATH"])
+            )
+            cross_reference_records = int(historical.get("variant_count", 0))
+        except (OSError, sqlite3.Error, ValueError, json.JSONDecodeError):
+            pass
+        empty = {
+            "cross_reference_records": cross_reference_records,
+            "older_vus_records": 0,
+            "eligible_scoring_records": 0,
+            "predictions_completed": 0,
+            "correct": 0,
+            "wrong": 0,
+            "no_prediction": 0,
+            "not_scorable": 0,
+            "latest_baseline_accuracy": None,
+            "formula_version": "Clue Score V1",
+            "last_run_date": None,
+            "available": False,
+        }
+        try:
+            summary = prediction_summary(Path(app.config["CLUE_SCORE_RESULTS_DB_PATH"]))
+        except (OSError, sqlite3.Error, ValueError, json.JSONDecodeError):
+            return empty
+        return {
+            **empty,
+            "older_vus_records": summary["eligible_older_vus_records"],
+            "eligible_scoring_records": summary["eligible_older_vus_records"],
+            "predictions_completed": summary["predictions_made"],
+            "correct": summary["correct"],
+            "wrong": summary["wrong"],
+            "no_prediction": summary["no_prediction"],
+            "not_scorable": summary["not_scorable"],
+            "latest_baseline_accuracy": summary["overall_accuracy"],
+            "formula_version": summary["scoring_version"],
+            "last_run_date": summary["completed_at_utc"],
+            "available": True,
+        }
+
     def dynamic_next_tasks(progress: dict[str, object]) -> tuple[str, ...]:
+        if Path(app.config["CLUE_SCORE_RESULTS_DB_PATH"]).is_file():
+            return (
+                "Review high-confidence wrong Clue Score V1 predictions.",
+                "Review matching and scope for unscorable baseline records.",
+                "Design Version 2 separately without changing Version 1.",
+            )
         if progress.get("pilot_results_file_created"):
             return (
                 "Manually verify every detected classification change",
@@ -1139,6 +1350,10 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     def index() -> str:
         return render_template("index.html")
 
+    @app.get("/overview.html")
+    def overview_page():
+        return send_from_directory(Path(__file__).parent, "overview.html")
+
     @app.get("/variant_lookup.html")
     def variant_lookup_page():
         return send_from_directory(Path(__file__).parent, "variant_lookup.html")
@@ -1158,6 +1373,278 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     @app.get("/pilot_results.html")
     def pilot_results_page():
         return send_from_directory(Path(__file__).parent, "pilot_results.html")
+
+    @app.get("/historical_dataset.html")
+    def historical_dataset_page():
+        return send_from_directory(Path(__file__).parent, "historical_dataset.html")
+
+    @app.get("/historical_variants.html")
+    def historical_variants_page():
+        return send_from_directory(Path(__file__).parent, "historical_variants.html")
+
+    @app.get("/prediction_results.html")
+    def prediction_results_page():
+        return send_from_directory(Path(__file__).parent, "prediction_results.html")
+
+    @app.get("/api/predictions/formula")
+    def api_prediction_formula():
+        try:
+            return jsonify({"formula": load_clue_score_config()})
+        except (OSError, ValueError) as exc:
+            return jsonify({"error": str(exc)}), 503
+
+    @app.get("/api/predictions/summary")
+    def api_prediction_summary():
+        try:
+            path = Path(app.config["CLUE_SCORE_RESULTS_DB_PATH"])
+            if not path.is_file():
+                return jsonify(
+                    {
+                        "available": False,
+                        "formula": load_clue_score_config(),
+                        "message": "Clue Score V1 has not been run yet.",
+                    }
+                )
+            return jsonify(
+                {
+                    "available": True,
+                    "summary": prediction_summary(path),
+                    "formula": load_clue_score_config(),
+                }
+            )
+        except (OSError, sqlite3.Error, ValueError) as exc:
+            return jsonify({"error": f"Prediction summary unavailable: {exc}"}), 503
+
+    @app.get("/api/predictions")
+    def api_predictions():
+        try:
+            review_document = load_prediction_reviews(
+                Path(app.config["CLUE_SCORE_REVIEW_PATH"])
+            )
+            reviews = review_document["reviews"]
+            result_filter = request.args.get("filter", "all")
+            query_filter = "all" if result_filter == "needs_review" else result_filter
+            result = list_predictions(
+                Path(app.config["CLUE_SCORE_RESULTS_DB_PATH"]),
+                query=request.args.get("query", ""),
+                result_filter=query_filter,
+                sort=request.args.get("sort", "default"),
+                page=request.args.get("page", 1, type=int) or 1,
+                page_size=request.args.get("page_size", 50, type=int) or 50,
+                reviews=reviews if isinstance(reviews, dict) else {},
+            )
+            if result_filter == "needs_review":
+                result["rows"] = [
+                    row
+                    for row in result["rows"]
+                    if row["manual_review_status"] in {"unreviewed", "ambiguous"}
+                ]
+            return jsonify(result)
+        except (ClueScoreExperimentError, ValueError) as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, sqlite3.Error, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Prediction results unavailable: {exc}"}), 503
+
+    @app.get("/api/predictions/<variation_id>")
+    def api_prediction_detail(variation_id: str):
+        try:
+            reviews = load_prediction_reviews(
+                Path(app.config["CLUE_SCORE_REVIEW_PATH"])
+            )["reviews"]
+            review = reviews.get(variation_id, {}) if isinstance(reviews, dict) else {}
+            return jsonify(
+                prediction_detail(
+                    Path(app.config["CLUE_SCORE_RESULTS_DB_PATH"]),
+                    variation_id,
+                    review,
+                )
+            )
+        except ClueScoreExperimentError as exc:
+            return jsonify({"error": str(exc)}), 404
+        except (OSError, sqlite3.Error, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Prediction detail unavailable: {exc}"}), 503
+
+    @app.patch("/api/predictions/<variation_id>/review")
+    def api_prediction_review(variation_id: str):
+        try:
+            review = update_prediction_review(
+                variation_id,
+                _json_body(),
+                Path(app.config["CLUE_SCORE_REVIEW_PATH"]),
+            )
+            return jsonify({"variation_id": variation_id, "review": review})
+        except (ClueScoreExperimentError, ValueError) as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Could not save prediction review: {exc}"}), 503
+
+    @app.post("/api/predictions/run")
+    def api_run_predictions():
+        try:
+            body = _json_body()
+            if body.get("approved") is not True:
+                return jsonify(
+                    {"error": "Review and approve the frozen Version 1 formula first."}
+                ), 428
+            if body.get("scoring_version") != "Clue Score V1":
+                raise ValueError("Only the frozen Clue Score V1 may be run here.")
+            with state_lock:
+                if any(
+                    item["state"] == "running"
+                    for item in prediction_operations.values()
+                ):
+                    return jsonify(
+                        {"error": "A Clue Score experiment is already running."}
+                    ), 409
+                operation_id = uuid.uuid4().hex
+                prediction_operations[operation_id] = {
+                    "operation_id": operation_id,
+                    "state": "running",
+                    "progress": None,
+                    "progress_events": [],
+                    "result": None,
+                    "error": None,
+                    "created_at_utc": datetime.now(UTC).isoformat(),
+                    "finished_at_utc": None,
+                }
+            thread = threading.Thread(
+                target=run_prediction_operation,
+                args=(operation_id,),
+                daemon=True,
+                name=f"clue-score-{operation_id[:8]}",
+            )
+            thread.start()
+            return jsonify({"operation_id": operation_id, "state": "running"}), 202
+        except ValueError as exc:
+            return jsonify({"error": str(exc)}), 400
+
+    @app.get("/api/predictions/operations/<operation_id>")
+    def api_prediction_operation(operation_id: str):
+        with state_lock:
+            operation = prediction_operations.get(operation_id)
+            if operation is None:
+                return jsonify({"error": "Prediction operation not found."}), 404
+            return jsonify(operation)
+
+    @app.get("/api/predictions/download/<filename>")
+    def api_prediction_download(filename: str):
+        if filename not in CLUE_SCORE_OUTPUT_FILENAMES:
+            return jsonify({"error": "Unknown prediction output."}), 404
+        root = Path(app.config["CLUE_SCORE_RESULTS_DIR"])
+        path = root / filename
+        if not path.is_file() or path.is_symlink():
+            return jsonify({"error": "Prediction output is unavailable."}), 404
+        return send_from_directory(root, filename, as_attachment=True)
+
+    @app.get("/api/historical-variants")
+    def api_historical_variants():
+        try:
+            database = Path(app.config["HISTORICAL_VARIANT_DB_PATH"])
+            result = search_historical_variants(
+                database,
+                query=request.args.get("query", ""),
+                change_status=request.args.get("change_status", ""),
+                page=request.args.get("page", 1, type=int) or 1,
+                page_size=request.args.get("page_size", 50, type=int) or 50,
+            )
+            return jsonify(
+                {**result, "metadata": historical_database_metadata(database)}
+            )
+        except HistoricalVariantDatabaseError as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, sqlite3.Error, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Historical index unavailable: {exc}"}), 503
+
+    @app.get("/api/historical-variants/<variation_id>")
+    def api_historical_variant_detail(variation_id: str):
+        try:
+            return jsonify(
+                historical_variant_detail(
+                    Path(app.config["HISTORICAL_VARIANT_DB_PATH"]), variation_id
+                )
+            )
+        except HistoricalVariantDatabaseError as exc:
+            return jsonify({"error": str(exc)}), 404
+        except (OSError, sqlite3.Error) as exc:
+            return jsonify({"error": f"Historical index unavailable: {exc}"}), 503
+
+    @app.post("/api/historical-dataset/plan")
+    def api_historical_dataset_plan():
+        try:
+            plan = historical_plan()
+            digest = hashlib.sha256(
+                json.dumps(plan, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()
+            with state_lock:
+                issued_historical_plans[digest] = plan
+            return jsonify({"plan": plan, "plan_digest": digest})
+        except (OSError, ValueError) as exc:
+            return jsonify({"error": f"Could not plan historical dataset: {exc}"}), 503
+
+    @app.post("/api/historical-dataset/run")
+    def api_run_historical_dataset():
+        try:
+            body = _json_body()
+            if body.get("approved") is not True:
+                return jsonify(
+                    {"error": "Review and approve the exact release-pair plan first."}
+                ), 428
+            plan = body.get("plan")
+            digest = body.get("plan_digest")
+            if not isinstance(plan, dict) or not isinstance(digest, str):
+                raise ValueError("A server-issued plan and digest are required.")
+            calculated = hashlib.sha256(
+                json.dumps(plan, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()
+            with state_lock:
+                issued = issued_historical_plans.pop(digest, None)
+            if calculated != digest or issued != plan:
+                raise ValueError("The approved plan was changed or was not issued.")
+            validate_download_preflight(plan)
+            if int(plan["estimated_transfer_bytes"]) == 0:
+                return jsonify(
+                    {"state": "ready", "message": "Both release files already exist."}
+                )
+            with state_lock:
+                if any(
+                    item["state"] == "running"
+                    for item in historical_operations.values()
+                ):
+                    return jsonify(
+                        {"error": "A historical dataset download is already running."}
+                    ), 409
+                operation_id = uuid.uuid4().hex
+                historical_operations[operation_id] = {
+                    "operation_id": operation_id,
+                    "state": "running",
+                    "plan": plan,
+                    "progress": None,
+                    "result": None,
+                    "error": None,
+                    "created_at_utc": datetime.now(UTC).isoformat(),
+                    "finished_at_utc": None,
+                }
+            thread = threading.Thread(
+                target=run_historical_download,
+                args=(operation_id, plan),
+                daemon=True,
+                name=f"historical-dataset-{operation_id[:8]}",
+            )
+            thread.start()
+            return jsonify({"operation_id": operation_id, "state": "running"}), 202
+        except (KeyError, TypeError, ValueError) as exc:
+            return jsonify({"error": str(exc)}), 400
+
+    @app.get("/api/historical-dataset/operations/<operation_id>")
+    def api_historical_dataset_operation(operation_id: str):
+        with state_lock:
+            operation = historical_operations.get(operation_id)
+            if operation is None:
+                return (
+                    jsonify({"error": "Historical dataset operation not found."}),
+                    404,
+                )
+            return jsonify(operation)
 
     @app.get("/api/pilot-results")
     def api_pilot_results():
@@ -1219,10 +1706,11 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             {
                 "project_name": "Variant Time Machine",
                 "project_explanation": PROJECT_EXPLANATION,
-                "current_milestone": "First real VCV pilot result",
+                "current_milestone": "Clue Score Baseline Experiment",
                 "folders": FOLDER_GUIDE,
                 "next_tasks": dynamic_next_tasks(progress),
                 "research_progress": progress,
+                "clue_score_baseline": clue_score_progress(),
                 "system": _system_status(Path(app.config["PILOT_RESULTS_ROOT"])),
                 "research_notes": _latest_notebook_entry(),
                 "clinvar_connection": lookup_state,
@@ -1945,7 +2433,7 @@ def run_dashboard(*, open_browser: bool = True) -> None:
     """Run the dashboard locally without Flask debug mode."""
     if open_browser:
         threading.Timer(
-            0.8, lambda: webbrowser.open("http://127.0.0.1:5000/pilot_results.html")
+            0.8, lambda: webbrowser.open("http://127.0.0.1:5000/overview.html")
         ).start()
     app.run(host="127.0.0.1", port=5000, debug=False)
 

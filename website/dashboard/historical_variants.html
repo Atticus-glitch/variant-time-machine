@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Search and compare variants across two historical ClinVar snapshots">
+    <title>Variant Spreadsheet | Variant Time Machine</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/historical_variants.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header spreadsheet-header">
+      <div class="header-grid">
+        <div>
+          <p class="eyebrow">Searchable historical snapshots</p>
+          <h1>Variant Spreadsheet</h1>
+          <p class="subtitle">Find a Variation ID, Allele ID, rs ID, gene, or variant name and compare what ClinVar reported in 2022 and 2024.</p>
+        </div>
+        <div class="milestone-card">
+          <span>Time coverage</span>
+          <strong>Two complete monthly snapshots</strong>
+          <small>Release date and LastEvaluated are shown separately</small>
+        </div>
+      </div>
+    </header>
+
+    <nav class="workspace-nav" aria-label="Main navigation">
+      <a href="/overview.html">Start Here</a>
+      <a href="/">Project Dashboard</a>
+      <a href="/pilot_workspace.html">Pilot Workspace</a>
+      <a href="/version_history.html">Version History Explorer</a>
+      <a href="/pilot_results.html">Pilot Results</a>
+      <a href="/historical_variants.html" aria-current="page">Variant Spreadsheet</a>
+      <a href="/prediction_results.html">Prediction Results</a>
+      <a href="/variant_lookup.html">Current Lookup</a>
+    </nav>
+
+    <main class="spreadsheet-main">
+      <section class="panel spreadsheet-toolbar" aria-labelledby="spreadsheet-title">
+        <div class="section-heading">
+          <div><p class="section-number">Full release index</p><h2 id="spreadsheet-title">Search Historical Variants</h2></div>
+          <a class="text-link" href="/historical_dataset.html">Open Download Builder</a>
+        </div>
+        <form id="variant-search-form" class="spreadsheet-search">
+          <label for="variant-query">Search</label>
+          <input id="variant-query" type="search" maxlength="200" placeholder="Example: 14026, allele: 15000, BRCA1, rs80357713, or an HGVS name">
+          <label for="change-filter">Classification status</label>
+          <select id="change-filter">
+            <option value="VUS_updated" selected>Older VUS, classification later changed</option>
+            <option value="">All variants</option>
+            <option value="Classification_changed">Classification changed</option>
+            <option value="No_classification_change">No classification change</option>
+            <option value="New_in_later_snapshot">New in 2024 snapshot</option>
+            <option value="Missing_from_later_snapshot">Missing from 2024 snapshot</option>
+          </select>
+          <button type="submit">Search</button>
+          <button id="clear-search" type="button" class="button-secondary">Clear Search</button>
+        </form>
+        <div class="spreadsheet-summary">
+          <p id="spreadsheet-status" aria-live="polite">Loading the historical index...</p>
+          <p id="spreadsheet-scope">Default: exact “Uncertain significance” in January 2022 with a different classification in January 2024.</p>
+        </div>
+      </section>
+
+      <section class="spreadsheet-shell" aria-label="Historical variant results">
+        <div class="spreadsheet-scroll">
+          <table class="historical-spreadsheet">
+            <thead>
+              <tr>
+                <th>Variation ID</th>
+                <th>Gene</th>
+                <th>Variant name</th>
+                <th>2022 classification</th>
+                <th>2022 last evaluated</th>
+                <th>2022 review status</th>
+                <th>2024 classification</th>
+                <th>2024 last evaluated</th>
+                <th>2024 review status</th>
+                <th>Snapshot comparison</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="variant-rows"><tr><td colspan="11">Loading...</td></tr></tbody>
+          </table>
+        </div>
+        <div class="spreadsheet-pagination">
+          <button id="previous-page" type="button" class="button-secondary">Previous</button>
+          <span id="page-status">Page 1</span>
+          <button id="next-page" type="button" class="button-secondary">Next</button>
+          <label>Rows per page
+            <select id="page-size"><option>25</option><option selected>50</option><option>100</option><option>200</option></select>
+          </label>
+        </div>
+      </section>
+
+      <section id="variant-detail" class="panel variant-detail" aria-labelledby="detail-title" hidden>
+        <div class="section-heading">
+          <div><p class="section-number">Selected row</p><h2 id="detail-title">Variant Timeline</h2></div>
+          <button id="close-detail" type="button" class="button-secondary">Close</button>
+        </div>
+        <p id="detail-note" class="plain-language-note"></p>
+        <div id="snapshot-timeline" class="snapshot-timeline"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="time-limit-title">
+        <div class="section-heading"><div><p class="section-number">Interpretation</p><h2 id="time-limit-title">What The Dates Mean</h2></div></div>
+        <p><strong>Snapshot date</strong> is when the archived ClinVar file was released. <strong>Last evaluated</strong> is ClinVar’s field describing when the underlying classification was last evaluated; it is not the file download date.</p>
+        <p>This spreadsheet has two time points, January 2022 and January 2024. It does not reconstruct every update between them. For exact available VCV versions, use the <a href="/version_history.html">Version History Explorer</a>.</p>
+      </section>
+    </main>
+    <footer><p>Local research dashboard. Not for clinical use.</p><p>Automatic snapshot differences still require review.</p></footer>
+  </body>
+</html>

@@ -10,11 +10,11 @@
 - A model trained on included ClinVar records may not generalize to unsubmitted variants, other databases, clinical populations, or future scientific practices.
 - Explainable associations are not proof of biological causation.
 - Public, non-identifiable records reduce privacy risk but do not make predictions suitable for individual medical use.
-- The current parser is designed for archived `variant_summary` headers but has not yet been run against the selected full files.
+- The selected full archived `variant_summary` files have been indexed and scored, but successful software processing does not establish biological validity.
 - The current matcher does not resolve coordinate-only matches, record replacements, or deletions through XML.
 - Exact outcome mapping is intentionally conservative. Explicit conflict text becomes `VUS_to_Conflicting`, while unfamiliar mixed terms become `Unable_to_Verify`.
 - The synthetic timeline verifies software behavior only. Its counts and outcomes say nothing about real ClinVar reclassification rates.
-- The current parser reads a release table into memory. Memory use and a possible chunked approach must be tested before processing the full archives.
+- The broad archive index is built by streaming source rows into SQLite; the older in-memory parser remains only for smaller command-line workflows and tests.
 - The approximately 10–25 VCV pilot histories will be manually selected. They will not be representative of ClinVar and cannot estimate a reclassification rate; the separate older Pilot Workspace remains capped at ten records.
 - Streaming saves local disk, but a missing late record can still require transferring an entire 3.33 GB or 4.56 GB compressed archive.
 - The two pilot releases use VCV schema revisions 2.0 and 2.2. Named fields can still be absent or change meaning, so extraction tests do not replace source review.
@@ -46,5 +46,11 @@
 - The bounded VCV pilot is intentionally manually selected and cannot estimate ClinVar-wide rates. Eventual archived monthly summaries or releases may still be required for cohort construction and exact calendar cutoffs.
 - The first result includes only three non-randomly selected histories. Two use first/newest endpoint sampling, so unsampled intermediate versions may contain changes that the pilot did not observe.
 - The one automatic `Other_Germline_Change` is a wording change from `Pathogenic` to `Pathogenic/Likely pathogenic`, not a VUS reclassification, and remains manually unverified.
+- Clue Score V1 infers consequence from older name/HGVS text rather than a dedicated consequence annotation. Complex, nonstandard, and structural descriptions can be unrecognized or oversimplified.
+- Review status and submitter count describe evidence process, not biological direction. Their provisional positive points performed poorly for some directional predictions and must not be interpreted causally.
+- Full-run raw accuracy is dominated by records that remained uncertain. Balanced accuracy and pathogenic/benign precision are much lower and are more honest warnings about limited directional value.
+- The full baseline is evaluated on one historical interval and is not an independent future validation cohort. Version 2 must not tune and report performance on the same answer key without a separate design.
+- Exact equal Allele ID sets and exclusively germline origin scope are required for a safe comparison. This excludes many potentially resolvable records and can introduce selection bias.
+- A `Correct` label means only that a normalized aggregate direction matched. It does not prove the clue was causal, the classification was medically correct, or the variant is clinically actionable.
 
 All conclusions will be restricted to the requested VCV versions or chosen releases, matching and comparison rules, feature availability, and evaluation design. These limitations will be updated as empirical problems are discovered.

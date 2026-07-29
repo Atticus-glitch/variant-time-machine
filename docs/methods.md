@@ -2,7 +2,21 @@
 
 ## Current Scientific Milestone
 
-The first descriptive pilot now contains three genuine VCV histories and seven official versions. One automatic `Other_Germline_Change` and two unchanged histories were detected; all three remain unverified. The next goal is approximately 25–50 suitable, manually reviewed histories. This stage includes no machine learning, model training, or biological feature engineering.
+The current milestone is the Clue Score Baseline Experiment. It is an explainable rule-based baseline, not machine learning. The frozen Version 1 formula has been evaluated across the complete eligible two-snapshot cohort after a deterministic 500-record development check. The earlier three-case VCV pilot remains available and manually unverified.
+
+## Clue Score V1
+
+Eligibility requires an aggregate classification exactly equal to `Uncertain significance` in the January 6, 2022 `variant_summary` snapshot. The prediction function receives an explicit whitelist of older fields only: Variation and Allele IDs, variant type, name/HGVS, gene, older classification and `LastEvaluated`, review status, submitter-count text, conditions, coordinates, guideline label, origin scope, and older release date. Automated tests reject declared scoring fields containing newer, outcome, answer-key, actual, or 2024 names. Changing newer classification, review, submitter, or date values cannot change a stored prediction.
+
+`config/clue_score_v1.yaml` is JSON-compatible YAML and is read without an additional parser dependency. The file is frozen and content-addressed by SHA-256. Provisional points were selected before the complete outcome evaluation: frameshift/stop +4, canonical splice +3, missense +1, synonymous -3, weak noncoding -1, expert panel +2, multiple agreeing submitters +1, and criteria without conflict +1. Conflict, classification age, and completeness are warnings or explanatory zero-point clues. Consequence rules use conservative older HGVS text because archived `variant_summary` has no modern consequence annotation field.
+
+Scores of +3 or higher predict pathogenic direction, -2 or lower benign direction, and -1 through +2 remaining uncertain. A record with no nonzero clue receives no prediction. Confidence uses older evidence amount and quality, not score magnitude alone.
+
+The runner has two committed stages. First it queries only older rows, calculates every score, and commits all predictions. Only afterward does it query newer rows, verify exact Variation ID and equal nonempty Allele ID sets plus exclusively germline scope, normalize the newer answer, and compare directions. This ordering prevents the answer key from entering scoring.
+
+Newer classifications map only through strict categories. Exact pathogenic/likely-pathogenic combinations, benign/likely-benign combinations, and exact uncertain significance are scorable. Conflict, protective, risk factor, drug response, association, somatic, oncogenic, mixed, missing, and unrecognized values remain unscorable. No-prediction and unscorable records are not counted automatically as wrong.
+
+Accuracy is `correct / (correct + wrong)`. Balanced accuracy is mean recall across pathogenic, benign, and uncertain normalized outcomes. Directional precision is the correct fraction among scorable predictions in that direction. The uncertain metric is recall among actual still-uncertain records. All metrics come from stored real results.
 
 ## Historical Time Separation
 

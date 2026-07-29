@@ -36,7 +36,7 @@ Press `Ctrl+C` in the server terminal when you want to stop it.
 4. Approve the exact list. Up to 25 historical versions are requested individually and sequentially from official NCBI EFetch. An exact `.version` response is rejected as missing if NCBI returns a different version.
 5. Inspect the parsed timeline, warnings, source requests, and comparisons, then complete the separate manual review. A cancellation request takes effect between requests, after any active request finishes.
 
-The initial latest-version lookup is separate from the maximum 25 historical requests. Requests use 0.34-second sequential pacing, 10-second connect and 30-second read timeouts, and two limited retries for connection/read errors and selected transient statuses. Each response has a 10 MiB hard cap (approximately 10 MB); one exploration has a 50 MiB hard cap. Only official NCBI ESearch, ESummary, and EFetch endpoints are used, and no archive control is exposed.
+The initial latest-version lookup is separate from the maximum 25 historical requests. Requests use 0.34-second sequential pacing, 10-second connect and 30-second read timeouts, and two limited retries for connection/read errors and selected transient statuses. Each response has a 10 MiB hard cap (approximately 10 MB); one exploration has a 50 MiB hard cap. Only official NCBI ESearch, ESummary, and EFetch endpoints are used in this workflow. The separate Historical Dataset Builder controls the fixed archived summary pair.
 
 ## What Each Section Means
 
@@ -52,6 +52,10 @@ The initial latest-version lookup is separate from the maximum 25 historical req
 - Data Transfer Safety shows the largest planned request, current transfer, total raw download size, data storage use, and that large-download protection is on.
 - Version History Explorer is the main control center for current VCV confirmation, exact version plans, progress, cancellation, saved histories, automatic timelines, and ten-item manual verification.
 - Pilot Results shows the real aggregate summary, batch transfer plan, timelines, review controls, and five downloadable outputs.
+- Historical Dataset Builder shows the exact fixed release pair, live disk calculation, automatic safety limit, and one-use download confirmation.
+- Variant Spreadsheet pages through the full local two-release index and opens a two-card timeline with all collapsed fields for one Variation ID.
+- Start Here is the recommended landing page. It reports the live older-VUS update queue and presents the review workflow and site map on one page.
+- Prediction Results displays the frozen Clue Score V1 formula, real metrics, review-priority list, complete point calculations, sparse manual review controls, rerun progress, and generated downloads.
 - Pilot Workspace remains available for the older current-record/manual-date workflow.
 
 ## How This Helps Development
@@ -74,10 +78,15 @@ The browser loads information from these Flask API endpoints:
 - `GET /api/vcv-history/operations/<operation_id>` and its cancellation route
 - `GET /api/vcv-histories` and `GET /api/vcv-histories/<VCV>`
 - `PATCH /api/vcv-histories/<VCV>/review`
+- `POST /api/historical-dataset/plan` and `/api/historical-dataset/run`
+- `GET /api/historical-dataset/operations/<operation_id>`
+- `GET /api/historical-variants` and `/api/historical-variants/<VariationID>`
+- `GET /api/predictions/summary`, `/api/predictions`, and `/api/predictions/<VariationID>`
+- `POST /api/predictions/run`, operation progress, manual review, formula, and download routes
 
 The separate browser lookup and Pilot Workspace remain available, but normal pilot work should use the Version History Explorer. Current ESummary candidate results are not historical results, and VCV versions are not monthly snapshots.
 
-Pilot Workspace records are stored in `data/manual_review/pilot_workspace.json`. Each change uses validation, a backup, and an atomic file replacement. The workspace stores no secrets and runs no shell commands. It has no route or button for the paused multi-gigabyte archive scan.
+Pilot Workspace records are stored in `data/manual_review/pilot_workspace.json`. Each change uses validation, a backup, and an atomic file replacement. The workspace stores no secrets and runs no shell commands. The Historical Dataset Builder is separate and permits only the configured 319,441,148-byte compressed TSV pair; the multi-gigabyte XML strategy remains paused.
 
 Version-history artifacts are stored under the Git-ignored `data/manual_review/vcv_history/<VCV>/` layout documented in `data/manual_review/README.md`. Automatic parsed data and XML are never overwritten by manual corrections; review annotations and status remain in `review.json`.
 

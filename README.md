@@ -1,6 +1,6 @@
 # Variant Time Machine
 
-**Early research and development: a small preliminary pilot result is available.**
+**Early research and development: the first explainable rule-based baseline is available.**
 
 Variant Time Machine is a computational genetics research project that asks whether information available about a ClinVar variant at an earlier date can help predict its later classification. I plan to follow variants first labeled as variants of uncertain significance (VUS), build a carefully dated dataset, and compare explainable prediction methods. The goal is to help prioritize research questions, not to make clinical decisions.
 
@@ -12,17 +12,17 @@ Variant Time Machine is a computational genetics research project that asks whet
 
 ## Current Status
 
-The project now has a real three-variant VCV history pilot based on official ClinVar EFetch responses. Seven versions were compared: one history had an automatic `Other_Germline_Change`, two had no germline change, and none are manually verified. The **Pilot Results** dashboard is the startup page and provides the real table, timelines, limitations, and five downloads. No predictive model or clinical claim exists.
+The project now has indexed January 2022 and January 2024 ClinVar summary snapshots and a frozen **Clue Score V1** baseline. It evaluated 439,409 exact older VUS records using only older fields, then loaded the newer snapshot as an answer key. Raw accuracy was 81.0%, but balanced accuracy was 47.5%, pathogenic-direction precision was 1.3%, and benign-direction precision was 16.1%. These weaker directional metrics show that Version 1 is only an exploratory baseline. The dashboard starts at **Start Here** and links to complete **Prediction Results**. No machine-learning or clinical claim exists.
 
 ## Research Workflow
 
-1. Select a genuine current VCV candidate for a written reason.
-2. Use official unversioned VCV EFetch to establish the latest accession version.
-3. Request all, a custom inclusive range, or only endpoint versions within the safety limits.
-4. Inspect parsed fields and automatic consecutive-version comparisons without treating them as verified conclusions.
-5. Complete all ten manual checks and record sources, decisions, corrections, and ambiguities separately.
-6. Expand to approximately 25–50 suitable, manually reviewed histories before deciding whether monthly summaries or releases are still needed.
-7. Consider features or models only after the historical method is scientifically reliable.
+1. Open **Prediction Results** and read the frozen Version 1 formula.
+2. Review wrong high-confidence predictions before easy correct examples.
+3. Open a result and inspect every older clue, point, warning, threshold, normalized answer, and date label.
+4. Confirm Variation and Allele IDs, germline scope, conditions, and official ClinVar context.
+5. Record reviewed, correctly matched, ambiguous, or excluded decisions separately from automatic results.
+6. Use Version History Explorer only when exact available VCV versions can narrow the timeline.
+7. Design any Version 2 separately; never rewrite Version 1 after seeing its failures.
 
 ## Repository Structure
 
@@ -162,9 +162,9 @@ The command-line workflow confirms the small API request and asks again before s
 
 ## Current Milestone
 
-Manually verify the three current pilot histories, then expand to approximately 25–50 suitable histories before deciding whether this version-history method can support model development.
+Review stratified Clue Score V1 failures and matching ambiguities, then design a separately named Version 2 with an independent validation plan.
 
-This is a bounded VCV version-history pilot: no machine learning, no full archive, and no claim that VCV versions are equivalent to monthly snapshots. VCV history is useful for locating exact changes to one aggregate record, but eventual archived monthly summaries or releases may still be needed to reconstruct what ClinVar showed at a chosen calendar cutoff.
+This is an explainable rule-based baseline, not machine learning. Two complete monthly summary snapshots are indexed, while VCV history remains a separate tool for exact available versions. Neither source makes the formula a medical prediction system.
 
 ## Reproducibility
 

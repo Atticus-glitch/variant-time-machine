@@ -129,6 +129,7 @@ function renderStatus(data) {
   renderTransferSafety(data.transfer_safety);
   renderCurrentPilot(data.current_pilot_variant);
   renderResearchProgress(data.research_progress);
+  renderClueScoreProgress(data.clue_score_baseline);
 
   const list = document.querySelector("#system-status");
   list.replaceChildren();
@@ -143,6 +144,34 @@ function renderStatus(data) {
     data.research_notes.title;
   document.querySelector("#notes-entry-content").textContent =
     data.research_notes.content;
+}
+
+function renderClueScoreProgress(progress) {
+  const list = document.querySelector("#clue-score-progress");
+  list.replaceChildren();
+  const accuracy = progress.latest_baseline_accuracy === null ? "Not run" : `${(progress.latest_baseline_accuracy * 100).toFixed(1)}%`;
+  const fields = [
+    ["Cross-reference records", progress.cross_reference_records.toLocaleString()],
+    ["Older VUS records", progress.older_vus_records.toLocaleString()],
+    ["Eligible scoring records", progress.eligible_scoring_records.toLocaleString()],
+    ["Predictions completed", progress.predictions_completed.toLocaleString()],
+    ["Correct", progress.correct.toLocaleString()],
+    ["Wrong", progress.wrong.toLocaleString()],
+    ["No prediction", progress.no_prediction.toLocaleString()],
+    ["Unscorable", progress.not_scorable.toLocaleString()],
+    ["Latest baseline accuracy", accuracy],
+    ["Formula version", progress.formula_version],
+    ["Last run", text(progress.last_run_date, "Not run")],
+  ];
+  for (const [label, value] of fields) {
+    const wrapper = document.createElement("div");
+    const term = document.createElement("dt");
+    const detail = document.createElement("dd");
+    term.textContent = label;
+    detail.textContent = value;
+    wrapper.append(term, detail);
+    list.append(wrapper);
+  }
 }
 
 function renderResearchProgress(progress) {

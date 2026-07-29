@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Storage-aware builder for the fixed historical ClinVar release pair">
+    <title>Historical Dataset Builder | Variant Time Machine</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/historical_dataset.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-grid">
+        <div>
+          <p class="eyebrow">Fixed official release snapshots</p>
+          <h1>Historical Dataset Builder</h1>
+          <p class="subtitle">Review exact sources, storage costs, and safety limits before retrieving either archive.</p>
+        </div>
+        <div class="milestone-card">
+          <span>Current gate</span>
+          <strong>Plan and confirm downloads</strong>
+          <small>Planning does not contact NCBI or download file bodies</small>
+        </div>
+      </div>
+    </header>
+
+    <nav class="workspace-nav" aria-label="Main navigation">
+      <a href="/overview.html">Start Here</a>
+      <a href="/">Project Dashboard</a>
+      <a href="/pilot_workspace.html">Pilot Workspace</a>
+      <a href="/version_history.html">Version History Explorer</a>
+      <a href="/pilot_results.html">Pilot Results</a>
+      <a href="/historical_variants.html">Variant Spreadsheet</a>
+      <a href="/prediction_results.html">Prediction Results</a>
+      <a href="/historical_dataset.html" aria-current="page">Download Builder</a>
+      <a href="/variant_lookup.html">Current Lookup</a>
+    </nav>
+
+    <main>
+      <section class="panel pilot-caution" aria-labelledby="scope-title">
+        <p class="section-number">Scientific scope</p>
+        <h2 id="scope-title">Archived Summary Pair, Not Full XML</h2>
+        <p class="large-explanation">The builder uses two official compressed <code>variant_summary</code> tables. They are sufficient for the first broad identifier and aggregate-classification comparison, but not for resolving every merge, condition-specific assertion, or submission history.</p>
+        <p class="plain-language-note">No scoring begins here. Matches must be built separately and at least 25 must be reviewed manually before the baseline is treated as validated.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="plan-title">
+        <div class="section-heading">
+          <div><p class="section-number">No-network preflight</p><h2 id="plan-title">Release And Storage Plan</h2></div>
+          <button id="plan-download" type="button">Calculate Current Plan</button>
+        </div>
+        <p id="plan-status" aria-live="polite">No plan calculated in this browser session.</p>
+        <div id="plan-content" hidden>
+          <dl id="storage-plan" class="history-grid transfer-grid"></dl>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Role</th><th>Release</th><th>Official source</th><th>Compressed size</th><th>Local status</th></tr></thead>
+              <tbody id="release-plan"></tbody>
+            </table>
+          </div>
+          <div id="approval-box" class="approval-box">
+            <p><strong>Starting this action downloads the listed missing files sequentially.</strong> Partial files are removed if a transfer fails; completed raw files and provenance sidecars are retained.</p>
+            <label class="check-line"><input id="download-confirmation" type="checkbox"> I approve these exact sequential official ClinVar archive downloads.</label>
+            <button id="run-download" type="button" disabled>Run Confirmed Downloads</button>
+          </div>
+        </div>
+        <div id="operation-panel" class="operation-panel" hidden>
+          <strong id="operation-status">Download pending</strong>
+          <p id="operation-progress">Waiting for progress.</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="limits-title">
+        <div class="section-heading"><div><p class="section-number">Automatic protections</p><h2 id="limits-title">Safety Rules</h2></div></div>
+        <ul>
+          <li>The safe limit is the smallest of 5 GB, 10% of currently free space, and the amount that leaves at least 20 GB free.</li>
+          <li>A wrong-size file, symbolic link, directory, or other unsafe existing target blocks the pair.</li>
+          <li>The approval token is valid only for the exact server-issued plan and can be used once.</li>
+          <li>The builder never deletes an existing release automatically and never extracts a full archive to disk.</li>
+        </ul>
+      </section>
+    </main>
+    <footer><p>Local research dashboard. Not for clinical use.</p><p>Official source files remain unmodified.</p></footer>
+  </body>
+</html>
