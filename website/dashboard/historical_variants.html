@@ -46,7 +46,8 @@
           <input id="variant-query" type="search" maxlength="200" placeholder="Example: 14026, allele: 15000, BRCA1, rs80357713, or an HGVS name">
           <label for="change-filter">Classification status</label>
           <select id="change-filter">
-            <option value="VUS_updated" selected>Older VUS, classification later changed</option>
+            <option value="Resolved_direction" selected>Older VUS, later pathogenic or benign</option>
+            <option value="VUS_updated">Any changed classification text</option>
             <option value="">All variants</option>
             <option value="Classification_changed">Classification changed</option>
             <option value="No_classification_change">No classification change</option>
@@ -58,7 +59,7 @@
         </form>
         <div class="spreadsheet-summary">
           <p id="spreadsheet-status" aria-live="polite">Loading the historical index...</p>
-          <p id="spreadsheet-scope">Default: exact “Uncertain significance” in January 2022 with a different classification in January 2024.</p>
+          <p id="spreadsheet-scope">Default: exact “Uncertain significance” in January 2022 and a clear pathogenic or benign aggregate classification in January 2024.</p>
         </div>
       </section>
 

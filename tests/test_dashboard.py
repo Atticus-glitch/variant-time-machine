@@ -162,7 +162,7 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     assert response.status_code == 200
     payload = response.get_json()
     assert payload["project_name"] == "Variant Time Machine"
-    assert payload["current_milestone"] == "Clue Score Baseline Experiment"
+    assert payload["current_milestone"] == "Resolved Direction Experiment"
     assert "uncertain genetic variant" in payload["project_explanation"]
     assert len(payload["folders"]) == 8
     assert len(payload["next_tasks"]) == 3
@@ -182,13 +182,8 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
         "storage",
     }.issubset(payload["system"])
     assert "data/example_variants.csv" in payload["system"]["files_created"]
-    assert payload["research_notes"]["title"] == (
-        "2026-07-28 Clue Score V1 Full Baseline"
-    )
-    assert (
-        "Eligible exact older VUS records: 439,409"
-        in payload["research_notes"]["content"]
-    )
+    assert payload["research_notes"]["title"] == "2026-07-29 Resolved Direction V2"
+    assert "Resolved directional records: 8,818" in payload["research_notes"]["content"]
     assert payload["clinvar_connection"]["connection_status"] == "Not connected"
     assert payload["historical_comparison"] == {
         "total_verified_variants": 0,
@@ -208,7 +203,9 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
         "timeline": [],
     }
     assert payload["clue_score_baseline"]["available"] is False
-    assert payload["clue_score_baseline"]["formula_version"] == "Clue Score V1"
+    assert payload["clue_score_baseline"]["formula_version"] == (
+        "Resolved Direction V2"
+    )
 
 
 def test_pilot_endpoint_shows_empty_first_run(

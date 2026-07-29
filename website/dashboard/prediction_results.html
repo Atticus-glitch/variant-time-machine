@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Explainable Clue Score V1 prediction results">
-    <title>Prediction Results | Variant Time Machine</title>
+    <title>Resolved Direction Results | Variant Time Machine</title>
     <link rel="stylesheet" href="/static/styles.css">
     <script src="/static/prediction_results.js" defer></script>
   </head>
@@ -12,14 +12,14 @@
     <header class="site-header prediction-header">
       <div class="header-grid">
         <div>
-          <p class="eyebrow">Explainable rule-based baseline</p>
-          <h1>Prediction Results</h1>
-          <p class="subtitle">A frozen point formula uses only January 2022 information. January 2024 is loaded afterward as the answer key.</p>
+          <p class="eyebrow">Changed outcomes only</p>
+          <h1>Resolved Direction Results</h1>
+          <p class="subtitle">Among variants that changed from uncertain to clearly pathogenic or benign, predict which certain direction they reached.</p>
         </div>
         <div class="milestone-card">
           <span>Experiment</span>
-          <strong>Clue Score Baseline Experiment</strong>
-          <small>Exploratory research, not medical prediction</small>
+          <strong>Pathogenic vs Benign</strong>
+          <small>No remain-uncertain prediction is allowed</small>
         </div>
       </div>
     </header>
@@ -35,14 +35,14 @@
     <main class="prediction-main">
       <section class="panel prediction-caution" aria-labelledby="prediction-limit-title">
         <p class="section-number">Read before interpreting</p>
-        <h2 id="prediction-limit-title">Exploratory Baseline Only</h2>
-        <p class="large-explanation">This formula tests whether simple clues already present in an older ClinVar summary record point in the same direction as a later aggregate classification. It is not a diagnosis, clinical recommendation, or validated model.</p>
+        <h2 id="prediction-limit-title">Conditional Binary Experiment</h2>
+        <p class="large-explanation">This page includes only safely matched records that were uncertain in 2022 and had become clearly pathogenic or benign by 2024. It predicts the direction of resolution, not whether a VUS will resolve.</p>
         <p class="plain-language-note">Snapshot dates show what was present by those releases. They do not prove the exact day a classification changed.</p>
       </section>
 
       <section class="panel" aria-labelledby="formula-title">
         <div class="section-heading">
-          <div><p class="section-number">Frozen before full evaluation</p><h2 id="formula-title">Clue Score V1 Formula</h2></div>
+          <div><p class="section-number">Frozen changed-outcome task</p><h2 id="formula-title">Resolved Direction V2 Formula</h2></div>
           <button id="toggle-formula" type="button" class="button-secondary">Show Formula</button>
         </div>
         <p id="formula-label">Loading frozen formula...</p>
@@ -51,8 +51,8 @@
           <div class="table-scroll"><table><thead><tr><th>Clue</th><th>Rule</th><th>Points</th><th>Why</th></tr></thead><tbody id="formula-rows"></tbody></table></div>
         </div>
         <div id="run-controls" class="approval-box">
-          <label class="check-line"><input id="formula-approval" type="checkbox"> I understand that Version 1 is frozen, uses only 2022 clues, and is not a medical tool.</label>
-          <button id="run-predictions" type="button" disabled>Run Clue Score V1</button>
+          <label class="check-line"><input id="formula-approval" type="checkbox"> I understand that Version 2 is conditional on later resolution, uses only 2022 fields for its score, and is not a medical tool.</label>
+          <button id="run-predictions" type="button" disabled>Run Resolved Direction V2</button>
           <p id="run-status" aria-live="polite">Checking for saved results...</p>
           <ol id="run-progress" class="event-log"></ol>
         </div>
@@ -61,9 +61,9 @@
       <section class="panel" aria-labelledby="summary-title">
         <div class="section-heading"><div><p class="section-number">Actual stored results</p><h2 id="summary-title">Experiment Summary</h2></div><button id="refresh-predictions" type="button" class="button-secondary">Refresh</button></div>
         <dl id="prediction-summary" class="prediction-summary-grid">
-          <div title="Records exactly Uncertain significance in the older snapshot."><dt>Eligible older VUS records</dt><dd>Loading...</dd></div>
+          <div title="Safely matched older VUS records with a clear pathogenic or benign newer outcome."><dt>Resolved changed records</dt><dd>Loading...</dd></div>
         </dl>
-        <p id="metrics-note" class="plain-language-note">Accuracy counts only scorable records where the formula made a directional prediction.</p>
+        <p id="metrics-note" class="plain-language-note">The cohort excludes records that remained uncertain, conflicted, were unrecognized, or could not be matched safely.</p>
       </section>
 
       <section class="panel prediction-list-panel" aria-labelledby="results-title">
@@ -76,7 +76,7 @@
           <button type="submit">Search</button>
         </form>
         <div id="prediction-filters" class="prediction-filters" aria-label="Prediction filters">
-          <button data-filter="all" class="active">All</button><button data-filter="correct">Correct</button><button data-filter="wrong">Wrong</button><button data-filter="no_prediction">No Prediction</button><button data-filter="not_scorable">Not Scorable</button><button data-filter="predicted_pathogenic">Predicted Pathogenic</button><button data-filter="predicted_benign">Predicted Benign</button><button data-filter="predicted_uncertain">Predicted Uncertain</button><button data-filter="needs_review">Needs Review</button>
+          <button data-filter="all" class="active">All</button><button data-filter="correct">Correct</button><button data-filter="wrong">Wrong</button><button data-filter="no_prediction">No Prediction</button><button data-filter="predicted_pathogenic">Predicted Pathogenic</button><button data-filter="predicted_benign">Predicted Benign</button><button data-filter="needs_review">Needs Review</button>
         </div>
         <p id="list-status" aria-live="polite">Loading predictions...</p>
         <div id="prediction-list" class="prediction-list"></div>
@@ -105,7 +105,7 @@
       <section class="panel" aria-labelledby="downloads-title">
         <div class="section-heading"><div><p class="section-number">Reproducible outputs</p><h2 id="downloads-title">Downloads</h2></div></div>
         <div id="prediction-downloads" class="download-grid">
-          <a href="/api/predictions/download/prediction_results.csv">All results CSV</a><a href="/api/predictions/download/correct_predictions.csv">Correct CSV</a><a href="/api/predictions/download/wrong_predictions.csv">Wrong CSV</a><a href="/api/predictions/download/no_prediction.csv">No prediction CSV</a><a href="/api/predictions/download/unscorable.csv">Unscorable CSV</a><a href="/api/predictions/download/clue_score_v1.yaml">Frozen formula</a><a href="/api/predictions/download/metric_summary.json">Metrics JSON</a><a href="/api/predictions/download/confusion_matrix.csv">Confusion matrix</a><a href="/api/predictions/download/outcome_by_score.csv">Outcome by score</a><a href="/api/predictions/download/score_distribution.png">Score chart</a><a href="/api/predictions/download/outcome_by_score.png">Outcome chart</a><a href="/api/predictions/download/manual_review.csv">Manual review table</a><a href="/api/predictions/download/experiment_report.md">Experiment report</a>
+          <a href="/api/predictions/download/resolved_direction_results.csv">All resolved results CSV</a><a href="/api/predictions/download/correct_predictions.csv">Correct CSV</a><a href="/api/predictions/download/wrong_predictions.csv">Wrong CSV</a><a href="/api/predictions/download/no_prediction.csv">No prediction CSV</a><a href="/api/predictions/download/resolved_direction_v2.yaml">Frozen V2 formula</a><a href="/api/predictions/download/metric_summary.json">Metrics JSON</a><a href="/api/predictions/download/confusion_matrix.csv">Confusion matrix</a><a href="/api/predictions/download/outcome_by_score.csv">Outcome by score</a><a href="/api/predictions/download/score_distribution.png">Score chart</a><a href="/api/predictions/download/experiment_report.md">Experiment report</a>
         </div>
       </section>
     </main>

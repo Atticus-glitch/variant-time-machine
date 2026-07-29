@@ -57,6 +57,7 @@ outputs/tables/*
 outputs/models/*
 !outputs/models/.gitkeep
 outputs/clue_score_v1/
+outputs/resolved_direction_v2/
 *.joblib
 *.pkl
 

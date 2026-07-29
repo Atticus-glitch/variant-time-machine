@@ -14,15 +14,15 @@ function display(value, fallback = "Not available") { return value === null || v
 function percent(value) { return value === null || value === undefined ? "Not available" : `${(Number(value) * 100).toFixed(1)}%`; }
 function direction(value) { return display(value).replaceAll("_", " "); }
 
-function renderFormula(formula) {
+function renderFormula(formula, parentFormula) {
   state.formula = formula;
   byId("formula-label").textContent = formula.label;
-  const thresholds = formula.thresholds;
-  byId("formula-thresholds").textContent = `Thresholds: +${thresholds.pathogenic_minimum} or higher = pathogenic direction; ${thresholds.benign_maximum} or lower = benign direction; ${thresholds.uncertain_minimum} through +${thresholds.uncertain_maximum} = remain uncertain; no directional clue = no prediction.`;
+  byId("formula-thresholds").textContent = "Changed-outcome cohort only. Score +1 or higher = pathogenic direction; -1 or lower = benign direction; score 0 = no prediction. Remain uncertain is not allowed.";
   const rows = byId("formula-rows"); rows.replaceChildren();
-  formula.clues.forEach((clue) => {
+  parentFormula.clues.forEach((clue) => {
     const row = document.createElement("tr");
-    [clue.name.replaceAll("_", " "), clue.rule, Number(clue.points) > 0 ? `+${clue.points}` : clue.points, clue.reason].forEach((value) => { const cell = document.createElement("td"); cell.textContent = value; row.append(cell); });
+    const points = formula.weights[clue.name];
+    [clue.name.replaceAll("_", " "), clue.rule, Number(points) > 0 ? `+${points}` : points, clue.reason].forEach((value) => { const cell = document.createElement("td"); cell.textContent = value; row.append(cell); });
     rows.append(row);
   });
 }
@@ -37,24 +37,26 @@ function addMetric(list, label, value, help) {
 function renderSummary(summary) {
   const list = byId("prediction-summary"); list.replaceChildren();
   [
-    ["Eligible older VUS records", summary.eligible_older_vus_records.toLocaleString(), "Records exactly Uncertain significance in the 2022 snapshot."],
+    ["Resolved changed records", summary.resolved_direction_records.toLocaleString(), "Safely matched older VUS records with a clear pathogenic or benign newer outcome."],
+    ["Actual pathogenic", summary.actual_pathogenic.toLocaleString(), "Cohort records that became pathogenic or likely pathogenic."],
+    ["Actual benign", summary.actual_benign.toLocaleString(), "Cohort records that became benign or likely benign."],
     ["Predictions made", summary.predictions_made.toLocaleString(), "Records with at least one directional clue."],
     ["No prediction", summary.no_prediction.toLocaleString(), "Records without enough directional clue information."],
     ["Correct", summary.correct.toLocaleString(), "Directional prediction matched a scorable 2024 outcome."],
     ["Wrong", summary.wrong.toLocaleString(), "Directional prediction did not match a scorable 2024 outcome."],
-    ["Not scorable", summary.not_scorable.toLocaleString(), "Outcome or cross-snapshot scope could not be compared safely."],
     ["Overall accuracy", percent(summary.overall_accuracy), "Correct divided by correct plus wrong."],
-    ["Balanced accuracy", percent(summary.balanced_accuracy), "Average recall across pathogenic, benign, and uncertain outcomes."],
+    ["Balanced accuracy", percent(summary.balanced_accuracy), "Average recall across pathogenic and benign outcomes."],
     ["Pathogenic precision", percent(summary.pathogenic_direction_precision), "Among scorable pathogenic-direction predictions, the fraction actually pathogenic direction."],
     ["Benign precision", percent(summary.benign_direction_precision), "Among scorable benign-direction predictions, the fraction actually benign direction."],
-    ["Uncertain accuracy", percent(summary.uncertain_direction_accuracy), "Among actual still-uncertain records, the fraction predicted uncertain."],
+    ["Pathogenic recall", percent(summary.pathogenic_direction_recall), "Fraction of actual pathogenic outcomes predicted pathogenic."],
+    ["Benign recall", percent(summary.benign_direction_recall), "Fraction of actual benign outcomes predicted benign."],
     ["Formula version", summary.scoring_version, "Frozen scoring rule version."],
   ].forEach((item) => addMetric(list, ...item));
 }
 
 async function loadSummary() {
   try {
-    const payload = await api("/api/predictions/summary"); renderFormula(payload.formula);
+    const payload = await api("/api/predictions/summary"); renderFormula(payload.formula, payload.parent_formula);
     if (!payload.available) { byId("run-status").textContent = payload.message; byId("list-status").textContent = payload.message; return false; }
     renderSummary(payload.summary); byId("run-status").textContent = `Saved ${payload.summary.mode} run completed ${payload.summary.completed_at_utc}.`;
     return true;
@@ -94,7 +96,7 @@ async function loadDetail(id) {
     const timeline = byId("prediction-timeline"); timeline.replaceChildren();
     [[row.old_release_date, "Older snapshot", row.old_classification, `ClinVar LastEvaluated field - not the snapshot date: ${display(row.old_last_evaluated)}`], ["Prediction", direction(row.predicted_direction), `Score ${row.total_score > 0 ? "+" : ""}${row.total_score}`, row.scoring_version], [row.new_release_date, "Newer snapshot", row.new_classification, `ClinVar LastEvaluated field - not the snapshot date: ${display(row.new_last_evaluated)}`], ["Result", `${resultSymbol(row.result)} ${row.result}`, row.result_reason_code, "Directional comparison"]].forEach((values) => { const card = document.createElement("article"); values.forEach((value, index) => { const item = document.createElement(index === 0 ? "small" : index === 1 ? "h3" : "p"); item.textContent = display(value); card.append(item); }); timeline.append(card); });
     const clues = byId("clue-calculation"); clues.replaceChildren(); row.clues.forEach((clue) => { const tr = document.createElement("tr"); [clue.clue.replaceAll("_", " "), clue.older_value, clue.points > 0 ? `+${clue.points}` : clue.points, clue.explanation, clue.source_field, clue.available ? clue.applied ? "Available and used" : "Available, not applied" : "Missing"].forEach((value) => { const td = document.createElement("td"); td.textContent = display(value); tr.append(td); }); clues.append(tr); });
-    byId("prediction-arithmetic").textContent = `${row.arithmetic}. Threshold applied: +3 or higher pathogenic; -2 or lower benign; -1 to +2 uncertain. Therefore prediction = ${direction(row.predicted_direction)}.`;
+    byId("prediction-arithmetic").textContent = `${row.arithmetic}. Binary threshold applied: +1 or higher pathogenic; -1 or lower benign; 0 no prediction. Therefore prediction = ${direction(row.predicted_direction)}.`;
     const comparison = byId("actual-comparison"); comparison.replaceChildren(); [["Original 2024 text", row.new_classification], ["Normalized outcome", row.outcome_group], ["Normalization rule", row.outcome_rule], ["Directional result", row.result]].forEach((item) => definition(comparison, ...item));
     const warnings = [...row.warnings, ...row.match_warnings]; byId("prediction-warnings").replaceChildren(...(warnings.length ? warnings : ["No automatic warnings recorded."]).map((text) => { const p = document.createElement("p"); p.textContent = text; return p; }));
     byId("prediction-review-status").textContent = `Manual status: ${display(row.manual_review.status, "unreviewed")}`;
@@ -109,8 +111,8 @@ async function saveReview(status) {
 }
 
 function renderProgress(operation) { const list = byId("run-progress"); list.replaceChildren(...(operation.progress_events || []).map((event) => { const li = document.createElement("li"); li.textContent = `${event.stage.replaceAll("_", " ")}${event.count ? `: ${Number(event.count).toLocaleString()}` : ""}`; return li; })); }
-async function pollRun() { const operation = await api(`/api/predictions/operations/${state.operationId}`); renderProgress(operation); if (operation.state === "running") { window.setTimeout(pollRun, 750); return; } byId("run-status").textContent = operation.error ? `Run failed: ${operation.error}` : "Clue Score V1 run completed."; byId("run-predictions").disabled = false; await loadSummary(); await loadList(); }
-async function runPredictions() { try { byId("run-predictions").disabled = true; const payload = await api("/api/predictions/run", {method: "POST", body: JSON.stringify({approved: true, scoring_version: "Clue Score V1"})}); state.operationId = payload.operation_id; byId("run-status").textContent = "Frozen Version 1 run started."; pollRun(); } catch (error) { byId("run-status").textContent = `Could not start: ${error.message}`; byId("run-predictions").disabled = false; } }
+async function pollRun() { const operation = await api(`/api/predictions/operations/${state.operationId}`); renderProgress(operation); if (operation.state === "running") { window.setTimeout(pollRun, 750); return; } byId("run-status").textContent = operation.error ? `Run failed: ${operation.error}` : "Resolved Direction V2 run completed."; byId("run-predictions").disabled = false; await loadSummary(); await loadList(); }
+async function runPredictions() { try { byId("run-predictions").disabled = true; const payload = await api("/api/predictions/run", {method: "POST", body: JSON.stringify({approved: true, scoring_version: "Resolved Direction V2"})}); state.operationId = payload.operation_id; byId("run-status").textContent = "Frozen changed-outcome Version 2 run started."; pollRun(); } catch (error) { byId("run-status").textContent = `Could not start: ${error.message}`; byId("run-predictions").disabled = false; } }
 
 byId("toggle-formula").addEventListener("click", () => { byId("formula-content").hidden = !byId("formula-content").hidden; });
 byId("formula-approval").addEventListener("change", (event) => { byId("run-predictions").disabled = !event.target.checked; });

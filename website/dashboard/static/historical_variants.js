@@ -169,7 +169,7 @@ byId("variant-search-form").addEventListener("submit", (event) => {
 });
 byId("clear-search").addEventListener("click", () => {
   byId("variant-query").value = "";
-  byId("change-filter").value = "VUS_updated";
+  byId("change-filter").value = "Resolved_direction";
   state.page = 1;
   loadRows();
 });

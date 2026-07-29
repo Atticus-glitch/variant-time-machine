@@ -2,7 +2,15 @@
 
 ## Current Scientific Milestone
 
-The current milestone is the Clue Score Baseline Experiment. It is an explainable rule-based baseline, not machine learning. The frozen Version 1 formula has been evaluated across the complete eligible two-snapshot cohort after a deterministic 500-record development check. The earlier three-case VCV pilot remains available and manually unverified.
+The current milestone is the Resolved Direction Experiment. It is an explainable rule-based conditional task, not machine learning. Frozen Clue Score V1 remains unchanged as the broad experiment. Resolved Direction V2 limits evaluation to safely matched older VUS records with clear pathogenic or benign newer outcomes and never predicts remaining uncertain.
+
+## Resolved Direction V2
+
+Version 2 reuses the permanently frozen Version 1 points, so newer fields still cannot alter the score. The later snapshot is used to select a conditional cohort: exact older VUS, exact Variation ID, equal nonempty Allele ID sets, exclusively germline scope, and a newer normalized outcome of pathogenic direction or benign direction. Records that remained uncertain, conflicted, had unusable classifications, or failed safe matching are excluded.
+
+The binary conversion was frozen before calculating Version 2 metrics: scores of +1 or higher predict pathogenic direction, scores of -1 or lower predict benign direction, and score zero receives no prediction. `remain_uncertain` is forbidden. This answers “which direction among variants known to have resolved?” It does not answer “will this VUS resolve?”
+
+Version 2 was designed after inspecting Version 1 aggregate results and uses the same 2024 answer snapshot. Its reported performance is exploratory and not independent validation.
 
 ## Clue Score V1
 

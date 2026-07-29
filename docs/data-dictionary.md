@@ -31,6 +31,12 @@ Strict normalized outcomes are `moved_toward_pathogenic`, `moved_toward_benign`,
 
 Sparse manual decisions are stored separately in `data/manual_review/clue_score_v1_reviews.json`. They do not alter the automatic result database. Review statuses are `reviewed`, `correctly_matched`, `ambiguous`, and `excluded`; ambiguous and excluded records require notes.
 
+## Resolved Direction V2 Results
+
+`data/processed/resolved_direction_v2.sqlite3` contains only safely matched records whose newer normalized outcome is `moved_toward_pathogenic` or `moved_toward_benign`. It copies the frozen older-only score and clue calculation from Version 1, preserves the Version 1 prediction/result in separate columns, and applies the binary Version 2 direction.
+
+Allowed predictions are `pathogenic_direction`, `benign_direction`, and `no_prediction`. `remain_uncertain` is forbidden. Scores of +1 or higher predict pathogenic, -1 or lower predict benign, and zero gives no prediction. Every included record has a clear resolved answer, so there is no unscorable category in this conditional result table.
+
 ## Standardized Release Table
 
 | Field | Meaning | Quality note |

@@ -12,17 +12,17 @@ Variant Time Machine is a computational genetics research project that asks whet
 
 ## Current Status
 
-The project now has indexed January 2022 and January 2024 ClinVar summary snapshots and a frozen **Clue Score V1** baseline. It evaluated 439,409 exact older VUS records using only older fields, then loaded the newer snapshot as an answer key. Raw accuracy was 81.0%, but balanced accuracy was 47.5%, pathogenic-direction precision was 1.3%, and benign-direction precision was 16.1%. These weaker directional metrics show that Version 1 is only an exploratory baseline. The dashboard starts at **Start Here** and links to complete **Prediction Results**. No machine-learning or clinical claim exists.
+The project now has indexed January 2022 and January 2024 ClinVar summary snapshots. Frozen **Clue Score V1** is preserved as the broad baseline. The main dashboard now uses **Resolved Direction V2**, which includes only 8,818 safely matched records that were VUS in 2022 and clearly pathogenic or benign by 2024. It predicts pathogenic or benign direction, with score zero producing no prediction; it never predicts remaining uncertain. Version 2 accuracy was 58.5% and balanced accuracy was 65.1%. This is a conditional exploratory task, not independent validation, machine learning, or a clinical claim.
 
 ## Research Workflow
 
-1. Open **Prediction Results** and read the frozen Version 1 formula.
+1. Open **Prediction Results** and read the frozen changed-outcome Version 2 formula.
 2. Review wrong high-confidence predictions before easy correct examples.
 3. Open a result and inspect every older clue, point, warning, threshold, normalized answer, and date label.
 4. Confirm Variation and Allele IDs, germline scope, conditions, and official ClinVar context.
 5. Record reviewed, correctly matched, ambiguous, or excluded decisions separately from automatic results.
 6. Use Version History Explorer only when exact available VCV versions can narrow the timeline.
-7. Design any Version 2 separately; never rewrite Version 1 after seeing its failures.
+7. Preserve Versions 1 and 2, and use a separate future cohort for independent validation.
 
 ## Repository Structure
 
@@ -162,9 +162,9 @@ The command-line workflow confirms the small API request and asks again before s
 
 ## Current Milestone
 
-Review stratified Clue Score V1 failures and matching ambiguities, then design a separately named Version 2 with an independent validation plan.
+Review pathogenic-versus-benign Version 2 failures and score-zero records, then design independent validation without rewriting either frozen experiment.
 
-This is an explainable rule-based baseline, not machine learning. Two complete monthly summary snapshots are indexed, while VCV history remains a separate tool for exact available versions. Neither source makes the formula a medical prediction system.
+This is an explainable rule-based conditional experiment, not machine learning. Cohort membership uses the later snapshot to keep only resolved records, so Version 2 predicts direction among known resolutions rather than whether resolution will happen.
 
 ## Reproducibility
 

@@ -55,7 +55,7 @@ The initial latest-version lookup is separate from the maximum 25 historical req
 - Historical Dataset Builder shows the exact fixed release pair, live disk calculation, automatic safety limit, and one-use download confirmation.
 - Variant Spreadsheet pages through the full local two-release index and opens a two-card timeline with all collapsed fields for one Variation ID.
 - Start Here is the recommended landing page. It reports the live older-VUS update queue and presents the review workflow and site map on one page.
-- Prediction Results displays the frozen Clue Score V1 formula, real metrics, review-priority list, complete point calculations, sparse manual review controls, rerun progress, and generated downloads.
+- Prediction Results defaults to Resolved Direction V2: only safely matched older VUS records with a clear pathogenic or benign newer outcome, binary predictions, complete inherited clue calculations, reviews, rerun control, and downloads. Version 1 remains preserved as the broad baseline.
 - Pilot Workspace remains available for the older current-record/manual-date workflow.
 
 ## How This Helps Development

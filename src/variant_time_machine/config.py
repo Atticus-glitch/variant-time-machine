@@ -21,6 +21,14 @@ CLUE_SCORE_DEVELOPMENT_DB_PATH = (
     PROCESSED_DATA_DIR / "clue_score_v1_development.sqlite3"
 )
 CLUE_SCORE_REVIEW_PATH = DATA_DIR / "manual_review" / "clue_score_v1_reviews.json"
+RESOLVED_DIRECTION_CONFIG_PATH = PROJECT_ROOT / "config" / "resolved_direction_v2.yaml"
+RESOLVED_DIRECTION_RESULTS_DIR = OUTPUTS_DIR / "resolved_direction_v2"
+RESOLVED_DIRECTION_RESULTS_DB_PATH = (
+    PROCESSED_DATA_DIR / "resolved_direction_v2.sqlite3"
+)
+RESOLVED_DIRECTION_REVIEW_PATH = (
+    DATA_DIR / "manual_review" / "resolved_direction_v2_reviews.json"
+)
 FIGURES_DIR = OUTPUTS_DIR / "figures"
 TABLES_DIR = OUTPUTS_DIR / "tables"
 MODELS_DIR = OUTPUTS_DIR / "models"
@@ -171,7 +179,9 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "research" / "download-strategy.md",
     PROJECT_ROOT / "research" / "clue-score-v1-development-validation.md",
     PROJECT_ROOT / "research" / "clue-score-v1-results.md",
+    PROJECT_ROOT / "research" / "resolved-direction-v2-results.md",
     CLUE_SCORE_CONFIG_PATH,
+    RESOLVED_DIRECTION_CONFIG_PATH,
     PROJECT_ROOT / "research" / "data-size-options.md",
     PROJECT_ROOT / "research" / "how-to-select-first-variant.md",
     PROJECT_ROOT / "research" / "research-notebook.md",
@@ -206,6 +216,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "src" / "variant_time_machine" / "historical_variants.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "clue_score.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "clue_score_experiment.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "resolved_direction.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "parse.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "match.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "pilot.py",
@@ -238,6 +249,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "tests" / "test_historical_variants.py",
     PROJECT_ROOT / "tests" / "test_clue_score.py",
     PROJECT_ROOT / "tests" / "test_clue_score_experiment.py",
+    PROJECT_ROOT / "tests" / "test_resolved_direction.py",
     FIGURES_DIR / ".gitkeep",
     TABLES_DIR / ".gitkeep",
     MODELS_DIR / ".gitkeep",

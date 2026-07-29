@@ -5,7 +5,7 @@ const byId = (id) => document.getElementById(id);
 async function loadOverview() {
   try {
     const [response, predictionResponse] = await Promise.all([
-      fetch("/api/historical-variants?change_status=VUS_updated&page_size=1", {headers: {Accept: "application/json"}}),
+      fetch("/api/historical-variants?change_status=Resolved_direction&page_size=1", {headers: {Accept: "application/json"}}),
       fetch("/api/predictions/summary", {headers: {Accept: "application/json"}}),
     ]);
     const [payload, predictions] = await Promise.all([response.json(), predictionResponse.json()]);
@@ -18,11 +18,13 @@ async function loadOverview() {
     const baseline = byId("overview-baseline"); baseline.replaceChildren();
     if (predictionResponse.ok && predictions.available) {
       const summary = predictions.summary;
-      [["Eligible", summary.eligible_older_vus_records.toLocaleString()], ["Predictions", summary.predictions_made.toLocaleString()], ["Correct", summary.correct.toLocaleString()], ["Wrong", summary.wrong.toLocaleString()], ["No prediction", summary.no_prediction.toLocaleString()], ["Not scorable", summary.not_scorable.toLocaleString()], ["Accuracy", `${(summary.overall_accuracy * 100).toFixed(1)}%`], ["Balanced accuracy", `${(summary.balanced_accuracy * 100).toFixed(1)}%`]].forEach(([label, value]) => {
+      byId("overview-vus-updated").textContent = summary.resolved_direction_records.toLocaleString();
+      byId("overview-status").textContent = `Resolved Direction V2 is ready: ${summary.resolved_direction_records.toLocaleString()} clear pathogenic-or-benign outcomes.`;
+      [["Resolved cohort", summary.resolved_direction_records.toLocaleString()], ["Actual pathogenic", summary.actual_pathogenic.toLocaleString()], ["Actual benign", summary.actual_benign.toLocaleString()], ["Predictions", summary.predictions_made.toLocaleString()], ["Correct", summary.correct.toLocaleString()], ["Wrong", summary.wrong.toLocaleString()], ["No prediction", summary.no_prediction.toLocaleString()], ["Accuracy", `${(summary.overall_accuracy * 100).toFixed(1)}%`], ["Balanced accuracy", `${(summary.balanced_accuracy * 100).toFixed(1)}%`]].forEach(([label, value]) => {
         const box = document.createElement("div"); const term = document.createElement("dt"); const detail = document.createElement("dd"); term.textContent = label; detail.textContent = value; box.append(term, detail); baseline.append(box);
       });
     } else {
-      baseline.textContent = "Clue Score V1 has not been run yet.";
+      baseline.textContent = "Resolved Direction V2 has not been run yet.";
     }
   } catch (error) {
     byId("overview-database").textContent = "Unavailable";

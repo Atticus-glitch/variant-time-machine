@@ -95,6 +95,8 @@ def test_build_search_and_detail_preserve_two_release_states(tmp_path: Path) -> 
     vus_updates = search_historical_variants(database, change_status="VUS_updated")
     assert vus_updates["total"] == 1
     assert vus_updates["rows"][0]["new_classifications"] == "Pathogenic"
+    resolved = search_historical_variants(database, change_status="Resolved_direction")
+    assert resolved["total"] == 1
     detail = historical_variant_detail(database, "100")
     assert len(detail["snapshots"]) == 2
     assert detail["snapshots"][0]["last_evaluated_dates"] == "Dec 1, 2021"

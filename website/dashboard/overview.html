@@ -14,12 +14,12 @@
         <div>
           <p class="eyebrow">One-page research guide</p>
           <h1>Start Here</h1>
-          <p class="subtitle">Find variants that were uncertain in 2022 and had a different ClinVar classification in 2024, inspect both records, and decide what needs manual verification.</p>
+          <p class="subtitle">Study only safely matched variants that were uncertain in 2022 and had become clearly pathogenic or benign by 2024.</p>
         </div>
         <div class="milestone-card">
           <span>Recommended first action</span>
-          <strong>Open the filtered spreadsheet</strong>
-          <small>Older VUS, later classification changed</small>
+          <strong>Open Resolved Direction Results</strong>
+          <small>Pathogenic versus benign only</small>
         </div>
       </div>
     </header>
@@ -38,22 +38,22 @@
         <div>
           <p class="section-number">Purpose</p>
           <h2 id="purpose-title">What This Site Does</h2>
-          <p class="large-explanation">Variant Time Machine compares official historical ClinVar records. The current broad dataset asks: which variants were exactly <strong>Uncertain significance</strong> in January 2022 and had different aggregate classification text in January 2024?</p>
+          <p class="large-explanation">The main experiment asks: among safely matched variants that were exactly <strong>Uncertain significance</strong> in January 2022 and clearly resolved by January 2024, can older-only clues predict pathogenic versus benign direction?</p>
         </div>
-        <a class="overview-primary-action" href="/historical_variants.html">Open Older-VUS Update Spreadsheet</a>
+        <a class="overview-primary-action" href="/prediction_results.html">Open Resolved Direction Results</a>
       </section>
 
       <section class="overview-metrics" aria-label="Current historical dataset metrics">
         <article><span>All indexed variants</span><strong id="overview-total">Loading...</strong><small>Distinct Variation IDs across either snapshot</small></article>
-        <article><span>Older VUS, later changed</span><strong id="overview-vus-updated">Loading...</strong><small>Exact automatic filter; review still required</small></article>
+        <article><span>Resolved VUS cohort</span><strong id="overview-vus-updated">Loading...</strong><small>Clear pathogenic or benign outcomes only</small></article>
         <article><span>Snapshot dates</span><strong>2022 → 2024</strong><small>January 6, 2022 and January 4, 2024</small></article>
         <article><span>Database status</span><strong id="overview-database">Loading...</strong><small id="overview-built">Checking local index</small></article>
       </section>
 
       <section class="panel" aria-labelledby="baseline-overview-title">
-        <div class="section-heading"><div><p class="section-number">Latest experiment</p><h2 id="baseline-overview-title">Clue Score V1 Results</h2></div><a class="text-link" href="/prediction_results.html">Open complete results</a></div>
+        <div class="section-heading"><div><p class="section-number">Latest experiment</p><h2 id="baseline-overview-title">Resolved Direction V2 Results</h2></div><a class="text-link" href="/prediction_results.html">Open complete results</a></div>
         <dl id="overview-baseline" class="prediction-summary-grid"><div><dt>Status</dt><dd>Loading...</dd></div></dl>
-        <p class="plain-language-note">Raw accuracy can look high when most records stay uncertain. Balanced accuracy and directional precision show that Version 1 remains a weak exploratory baseline.</p>
+        <p class="plain-language-note">This page now excludes records that stayed uncertain. It asks only which direction a safely matched resolved record took: pathogenic or benign.</p>
       </section>
 
       <section class="panel" aria-labelledby="workflow-title">

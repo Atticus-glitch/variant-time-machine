@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "experiment_version": "Resolved Direction V2",
+  "status": "frozen",
+  "frozen_at_utc": "2026-07-29T15:40:00+00:00",
+  "label": "Changed-outcome-only pathogenic-versus-benign experiment.",
+  "design_warning": "This cohort and binary task were defined after reviewing Version 1 aggregate results. It is exploratory and is not an independent validation.",
+  "prediction_snapshot_date": "2022-01-06",
+  "answer_snapshot_date": "2024-01-04",
+  "parent_scoring_formula": "Clue Score V1",
+  "parent_config_sha256": "2ee751040aa9c86ebe8645c0e02b1cca51d9d9b7d3a4cbdc4675819f10c50d3c",
+  "score_rule": "Reuse the permanently frozen Clue Score V1 points calculated from 2022 fields only.",
+  "cohort": {
+    "older_classification": "Uncertain significance",
+    "match_requirement": "Exact Variation ID, equal nonempty Allele ID sets, and exclusively germline older and newer scope.",
+    "included_newer_outcomes": [
+      "moved_toward_pathogenic",
+      "moved_toward_benign"
+    ],
+    "excluded_newer_outcomes": [
+      "remained_uncertain",
+      "conflicting_or_unusable",
+      "missing or unsafe match"
+    ],
+    "interpretation": "Conditional question: among variants known from the answer snapshot to have resolved clearly, predict which direction they resolved. This does not predict whether a VUS will resolve."
+  },
+  "binary_thresholds": {
+    "pathogenic_direction": "score >= 1",
+    "benign_direction": "score <= -1",
+    "no_prediction": "score == 0"
+  },
+  "allowed_predictions": [
+    "pathogenic_direction",
+    "benign_direction",
+    "no_prediction"
+  ],
+  "forbidden_prediction": "remain_uncertain",
+  "weights": {
+    "loss_of_function_consequence": 4,
+    "canonical_splice_consequence": 3,
+    "missense_consequence": 1,
+    "synonymous_consequence": -3,
+    "noncoding_consequence": -1,
+    "expert_panel_review": 2,
+    "multiple_agreeing_submitters": 1,
+    "criteria_without_conflict": 1,
+    "conflict_warning": 0,
+    "classification_age": 0,
+    "record_completeness": 0
+  }
+}

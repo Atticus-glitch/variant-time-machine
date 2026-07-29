@@ -299,6 +299,10 @@ def _build_variant_index(connection: sqlite3.Connection) -> None:
           ON variant_index(
             change_status, old_classifications, variation_sort, variation_id
           );
+        CREATE INDEX variant_index_resolved
+          ON variant_index(
+            old_classifications, new_classifications, variation_sort, variation_id
+          );
         """
     )
 
@@ -433,6 +437,7 @@ def search_historical_variants(
         "New_in_later_snapshot",
         "Missing_from_later_snapshot",
         "VUS_updated",
+        "Resolved_direction",
     }
     if change_status not in allowed_statuses:
         raise HistoricalVariantDatabaseError("Unknown change-status filter.")
@@ -465,6 +470,14 @@ def search_historical_variants(
         clauses.append(
             "change_status = 'Classification_changed' "
             "AND old_classifications = 'Uncertain significance'"
+        )
+    elif change_status == "Resolved_direction":
+        clauses.append(
+            "old_classifications = 'Uncertain significance' AND "
+            "new_classifications IN ('Pathogenic','Likely pathogenic',"
+            "'Pathogenic/Likely pathogenic','Likely pathogenic/Pathogenic',"
+            "'Benign','Likely benign','Benign/Likely benign',"
+            "'Likely benign/Benign')"
         )
     elif change_status:
         clauses.append("change_status = ?")

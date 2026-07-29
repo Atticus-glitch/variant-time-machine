@@ -52,5 +52,7 @@
 - The full baseline is evaluated on one historical interval and is not an independent future validation cohort. Version 2 must not tune and report performance on the same answer key without a separate design.
 - Exact equal Allele ID sets and exclusively germline origin scope are required for a safe comparison. This excludes many potentially resolvable records and can introduce selection bias.
 - A `Correct` label means only that a normalized aggregate direction matched. It does not prove the clue was causal, the classification was medically correct, or the variant is clinically actionable.
+- Resolved Direction V2 selects its cohort using the later outcome. It can compare pathogenic versus benign direction among known resolutions, but it cannot estimate whether an unresolved VUS will ever become certain.
+- Version 2 was designed after Version 1 aggregate results were visible and uses the same answer snapshot. Its 58.5% accuracy and 65.1% balanced accuracy are descriptive, not independent validation.
 
 All conclusions will be restricted to the requested VCV versions or chosen releases, matching and comparison rules, feature availability, and evaluation design. These limitations will be updated as empirical problems are discovered.

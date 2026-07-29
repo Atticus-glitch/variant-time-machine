@@ -50,14 +50,12 @@ from variant_time_machine.clue_score_experiment import (  # noqa: E402
     load_prediction_reviews,
     prediction_detail,
     prediction_summary,
-    run_clue_score_experiment,
     update_prediction_review,
 )
 from variant_time_machine.config import (  # noqa: E402
     CLINVAR_RELEASES,
     CLUE_SCORE_RESULTS_DB_PATH,
     CLUE_SCORE_RESULTS_DIR,
-    CLUE_SCORE_REVIEW_PATH,
     HISTORICAL_RAW_DATA_DIR,
     HISTORICAL_VARIANT_DB_PATH,
     LARGE_DOWNLOAD_THRESHOLD_BYTES,
@@ -66,6 +64,9 @@ from variant_time_machine.config import (  # noqa: E402
     PILOT_RESULTS_DIR,
     PILOT_WORKSPACE_PATH,
     RAW_DATA_DIR,
+    RESOLVED_DIRECTION_RESULTS_DB_PATH,
+    RESOLVED_DIRECTION_RESULTS_DIR,
+    RESOLVED_DIRECTION_REVIEW_PATH,
     TABLES_DIR,
     VCV_HISTORY_DIR,
 )
@@ -101,6 +102,13 @@ from variant_time_machine.pilot_workspace import (  # noqa: E402
     public_record,
     refresh_current_record,
     update_record,
+)
+from variant_time_machine.resolved_direction import (  # noqa: E402
+    OUTPUT_FILENAMES as RESOLVED_OUTPUT_FILENAMES,
+)
+from variant_time_machine.resolved_direction import (  # noqa: E402
+    load_resolved_direction_config,
+    run_resolved_direction_experiment,
 )
 from variant_time_machine.vcv_history import (  # noqa: E402
     CLINVAR_EFETCH_URL,
@@ -193,7 +201,7 @@ PROGRESS_ITEMS: tuple[dict[str, str | int], ...] = (
         "name": "Features",
         "status": "Complete",
         "explanation": (
-            "Clue Score V1 uses frozen, explainable 2022-only summary-record clues."
+            "Resolved Direction V2 reuses frozen 2022-only summary-record clues."
         ),
     },
     {
@@ -305,6 +313,12 @@ def _latest_notebook_entry() -> dict[str, str]:
 
 def _latest_pipeline_output() -> str:
     """Describe the newest saved timeline file without claiming it is validated."""
+    resolved_output = RESOLVED_DIRECTION_RESULTS_DIR / "metric_summary.json"
+    if resolved_output.is_file():
+        modified = datetime.fromtimestamp(
+            resolved_output.stat().st_mtime, UTC
+        ).isoformat()
+        return f"{resolved_output.relative_to(PROJECT_ROOT)} modified {modified}"
     clue_score_output = CLUE_SCORE_RESULTS_DIR / "metric_summary.json"
     if clue_score_output.is_file():
         modified = datetime.fromtimestamp(
@@ -358,7 +372,7 @@ def _system_status(pilot_results_root: Path = PILOT_RESULTS_DIR) -> dict[str, An
         "python_migration": (
             "Confirmed" if sys.version_info[:2] == (3, 12) else "Not confirmed"
         ),
-        "database": "Indexed SQLite snapshots and Clue Score V1 results",
+        "database": "Indexed snapshots, Version 1, and resolved-direction results",
         "tests": f"{len(test_files)} test files available",
         "last_pipeline_run": _latest_pipeline_output(),
         "files_created": files_created,
@@ -557,10 +571,11 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         HISTORICAL_DOWNLOADER=download_clinvar_release,
         HISTORICAL_DISK_USAGE=shutil.disk_usage,
         HISTORICAL_VARIANT_DB_PATH=HISTORICAL_VARIANT_DB_PATH,
-        CLUE_SCORE_RESULTS_DB_PATH=CLUE_SCORE_RESULTS_DB_PATH,
-        CLUE_SCORE_RESULTS_DIR=CLUE_SCORE_RESULTS_DIR,
-        CLUE_SCORE_REVIEW_PATH=CLUE_SCORE_REVIEW_PATH,
-        CLUE_SCORE_RUNNER=run_clue_score_experiment,
+        CLUE_SCORE_RESULTS_DB_PATH=RESOLVED_DIRECTION_RESULTS_DB_PATH,
+        CLUE_SCORE_RESULTS_DIR=RESOLVED_DIRECTION_RESULTS_DIR,
+        CLUE_SCORE_REVIEW_PATH=RESOLVED_DIRECTION_REVIEW_PATH,
+        CLUE_SCORE_PARENT_DB_PATH=CLUE_SCORE_RESULTS_DB_PATH,
+        CLUE_SCORE_RUNNER=run_resolved_direction_experiment,
     )
     if test_config:
         app.config.update(test_config)
@@ -672,12 +687,18 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
 
         try:
             runner = app.config["CLUE_SCORE_RUNNER"]
+            report({"stage": "selecting_resolved_direction_cohort"})
             summary = runner(
-                Path(app.config["HISTORICAL_VARIANT_DB_PATH"]),
+                Path(app.config["CLUE_SCORE_PARENT_DB_PATH"]),
                 Path(app.config["CLUE_SCORE_RESULTS_DB_PATH"]),
                 Path(app.config["CLUE_SCORE_RESULTS_DIR"]),
                 overwrite=True,
-                progress=report,
+            )
+            report(
+                {
+                    "stage": "resolved_results_saved",
+                    "count": summary["resolved_direction_records"],
+                }
             )
             with state_lock:
                 prediction_operations[operation_id].update(
@@ -906,7 +927,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             "no_prediction": 0,
             "not_scorable": 0,
             "latest_baseline_accuracy": None,
-            "formula_version": "Clue Score V1",
+            "formula_version": "Resolved Direction V2",
             "last_run_date": None,
             "available": False,
         }
@@ -932,9 +953,9 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     def dynamic_next_tasks(progress: dict[str, object]) -> tuple[str, ...]:
         if Path(app.config["CLUE_SCORE_RESULTS_DB_PATH"]).is_file():
             return (
-                "Review high-confidence wrong Clue Score V1 predictions.",
-                "Review matching and scope for unscorable baseline records.",
-                "Design Version 2 separately without changing Version 1.",
+                "Review wrong Resolved Direction V2 predictions.",
+                "Review score-zero records that received no binary prediction.",
+                "Plan independent validation without rewriting either version.",
             )
         if progress.get("pilot_results_file_created"):
             return (
@@ -1389,7 +1410,12 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     @app.get("/api/predictions/formula")
     def api_prediction_formula():
         try:
-            return jsonify({"formula": load_clue_score_config()})
+            return jsonify(
+                {
+                    "formula": load_resolved_direction_config(),
+                    "parent_formula": load_clue_score_config(),
+                }
+            )
         except (OSError, ValueError) as exc:
             return jsonify({"error": str(exc)}), 503
 
@@ -1401,15 +1427,17 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 return jsonify(
                     {
                         "available": False,
-                        "formula": load_clue_score_config(),
-                        "message": "Clue Score V1 has not been run yet.",
+                        "formula": load_resolved_direction_config(),
+                        "parent_formula": load_clue_score_config(),
+                        "message": "Resolved Direction V2 has not been run yet.",
                     }
                 )
             return jsonify(
                 {
                     "available": True,
                     "summary": prediction_summary(path),
-                    "formula": load_clue_score_config(),
+                    "formula": load_resolved_direction_config(),
+                    "parent_formula": load_clue_score_config(),
                 }
             )
         except (OSError, sqlite3.Error, ValueError) as exc:
@@ -1484,10 +1512,10 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             body = _json_body()
             if body.get("approved") is not True:
                 return jsonify(
-                    {"error": "Review and approve the frozen Version 1 formula first."}
+                    {"error": "Review and approve frozen Resolved Direction V2 first."}
                 ), 428
-            if body.get("scoring_version") != "Clue Score V1":
-                raise ValueError("Only the frozen Clue Score V1 may be run here.")
+            if body.get("scoring_version") != "Resolved Direction V2":
+                raise ValueError("Only frozen Resolved Direction V2 may be run here.")
             with state_lock:
                 if any(
                     item["state"] == "running"
@@ -1528,7 +1556,10 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
 
     @app.get("/api/predictions/download/<filename>")
     def api_prediction_download(filename: str):
-        if filename not in CLUE_SCORE_OUTPUT_FILENAMES:
+        allowed_outputs = set(CLUE_SCORE_OUTPUT_FILENAMES) | set(
+            RESOLVED_OUTPUT_FILENAMES
+        )
+        if filename not in allowed_outputs:
             return jsonify({"error": "Unknown prediction output."}), 404
         root = Path(app.config["CLUE_SCORE_RESULTS_DIR"])
         path = root / filename
@@ -1706,7 +1737,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             {
                 "project_name": "Variant Time Machine",
                 "project_explanation": PROJECT_EXPLANATION,
-                "current_milestone": "Clue Score Baseline Experiment",
+                "current_milestone": "Resolved Direction Experiment",
                 "folders": FOLDER_GUIDE,
                 "next_tasks": dynamic_next_tasks(progress),
                 "research_progress": progress,

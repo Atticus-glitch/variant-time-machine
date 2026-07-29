@@ -434,3 +434,42 @@ accuracy and directional precision show that this provisional formula is weak at
 more useful pathogenic and benign directions. This is an honest baseline result, not
 a medical model. Version 1 remains unchanged; future work must use a separately named
 Version 2 and an independent validation design.
+
+## 2026-07-29 Resolved Direction V2
+
+### Revised Question
+
+The main view now excludes records that remained uncertain. Resolved Direction V2
+keeps only safely matched variants that were exactly VUS in the 2022 snapshot and had
+a clear pathogenic or benign normalized outcome in the 2024 snapshot. It asks which
+direction a known resolution took, not whether resolution occurred.
+
+### Frozen Binary Rule
+
+Version 2 reuses the unchanged Version 1 score calculated from 2022 fields. Scores of
++1 or higher predict pathogenic direction, -1 or lower predict benign direction, and
+zero receives no prediction. Remaining uncertain is not an allowed prediction.
+
+### Actual Result
+
+- Resolved directional records: 8,818
+- Actual pathogenic outcomes: 2,531
+- Actual benign outcomes: 6,287
+- Predictions made: 7,859
+- Correct: 4,595
+- Wrong: 3,264
+- No prediction: 959
+- Accuracy: 58.5%
+- Balanced accuracy: 65.1%
+- Pathogenic precision: 42.7%
+- Benign precision: 99.1%
+- Pathogenic recall: 95.5%
+- Benign recall: 34.6%
+- Final rerun runtime: 133.71 seconds
+
+### Boundary
+
+The later snapshot is used to select this resolved cohort, although it never changes
+the older-only score. Version 2 was designed after Version 1 aggregate results were
+known and uses the same answer snapshot. These metrics are exploratory and are not an
+independent validation or a medical prediction result.
