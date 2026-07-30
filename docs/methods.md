@@ -10,7 +10,7 @@ Version 3 uses logistic regression with fixed regularization, balanced class wei
 
 Partition assignment does not inspect outcome labels. Older gene symbols are normalized into tokens; records sharing any token form a connected component. A frozen salt and SHA-256 assign each complete component to approximately 80% training or 20% test. Records without a usable gene symbol group by Variation ID. Training and test IDs, group keys, source/config hashes, model coefficients, and package version are saved for audit.
 
-The model, feature handling, regularization, class weighting, and threshold are fixed before held-out evaluation. Existing output is not overwritten by default. Because aggregate Version 2 outcomes were already inspected before Version 3 was designed, this split is a disciplined internal holdout rather than independent temporal validation.
+The model, feature handling, regularization, class weighting, and threshold were fixed before held-out evaluation. Existing output is not overwritten by default. The frozen model trained on 6,933 records and was evaluated on 1,885 records with no shared Variation IDs or connected gene groups. It achieved 58.2% accuracy, 70.6% balanced accuracy, and 0.788 ROC AUC. Because aggregate Version 2 outcomes were already inspected before Version 3 was designed, this split is a disciplined internal holdout rather than independent temporal validation.
 
 ## Resolved Direction V2
 

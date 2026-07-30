@@ -67,6 +67,7 @@ from variant_time_machine.config import (  # noqa: E402
     RESOLVED_DIRECTION_RESULTS_DB_PATH,
     RESOLVED_DIRECTION_RESULTS_DIR,
     RESOLVED_DIRECTION_REVIEW_PATH,
+    STATISTICAL_MODEL_V3_RESULTS_DIR,
     TABLES_DIR,
     VCV_HISTORY_DIR,
 )
@@ -146,8 +147,8 @@ PILOT_BATCH_MANIFEST_MAX_BYTES = 1024 * 1024
 PROJECT_EXPLANATION = (
     "Variant Time Machine asks whether information available about an uncertain "
     "genetic variant at an earlier date can help predict its later ClinVar "
-    "classification. The project is currently focused on careful historical data "
-    "matching, not machine learning or medical decisions."
+    "classification. The project combines careful historical matching with an "
+    "interpretable statistical experiment; it does not make medical decisions."
 )
 
 PROGRESS_ITEMS: tuple[dict[str, str | int], ...] = (
@@ -313,6 +314,12 @@ def _latest_notebook_entry() -> dict[str, str]:
 
 def _latest_pipeline_output() -> str:
     """Describe the newest saved timeline file without claiming it is validated."""
+    statistical_output = STATISTICAL_MODEL_V3_RESULTS_DIR / "metric_summary.json"
+    if statistical_output.is_file():
+        modified = datetime.fromtimestamp(
+            statistical_output.stat().st_mtime, UTC
+        ).isoformat()
+        return f"{statistical_output.relative_to(PROJECT_ROOT)} modified {modified}"
     resolved_output = RESOLVED_DIRECTION_RESULTS_DIR / "metric_summary.json"
     if resolved_output.is_file():
         modified = datetime.fromtimestamp(
@@ -372,7 +379,7 @@ def _system_status(pilot_results_root: Path = PILOT_RESULTS_DIR) -> dict[str, An
         "python_migration": (
             "Confirmed" if sys.version_info[:2] == (3, 12) else "Not confirmed"
         ),
-        "database": "Indexed snapshots, Version 1, and resolved-direction results",
+        "database": "Indexed snapshots and Version 1, Version 2, and Version 3 results",
         "tests": f"{len(test_files)} test files available",
         "last_pipeline_run": _latest_pipeline_output(),
         "files_created": files_created,
@@ -953,7 +960,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     def dynamic_next_tasks(progress: dict[str, object]) -> tuple[str, ...]:
         if Path(app.config["CLUE_SCORE_RESULTS_DB_PATH"]).is_file():
             return (
-                "Run the frozen Statistical Model V3 grouped holdout once.",
+                "Review frozen Statistical Model V3 held-out errors without retuning.",
                 "Review learned coefficients against the preserved Version 2 rule.",
                 "Reserve a later snapshot for independent temporal validation.",
             )

@@ -160,7 +160,7 @@ def test_main_progress_detects_result_and_batch_output_bandwidth(
     assert progress["pilot_results_file_created"] is True
     assert progress["pilot_output_bandwidth_bytes"] == 9876
     assert payload["next_tasks"] == [
-        "Run the frozen Statistical Model V3 grouped holdout once.",
+        "Review frozen Statistical Model V3 held-out errors without retuning.",
         "Review learned coefficients against the preserved Version 2 rule.",
         "Reserve a later snapshot for independent temporal validation.",
     ]

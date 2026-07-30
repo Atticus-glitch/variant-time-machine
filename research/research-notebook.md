@@ -489,3 +489,23 @@ The test partition is an internal holdout, not independent validation. Version 2
 aggregate outcomes were already visible and both partitions use the same 2022-to-2024
 conditional resolved cohort. A genuinely later untouched answer snapshot is still
 needed for independent temporal validation.
+
+## 2026-07-30 Statistical Model V3 Held-Out Result
+
+The frozen design trained on 6,933 records and evaluated once on 1,885 held-out
+records. The partitions shared zero Variation IDs and zero connected gene groups. The
+source database hash remained unchanged after evaluation.
+
+- Accuracy: 58.2%
+- Balanced accuracy: 70.6%
+- Pathogenic precision: 35.8%
+- Benign precision: 96.3%
+- Pathogenic recall: 94.2%
+- Benign recall: 47.0%
+- ROC AUC: 0.788
+- Pathogenic average precision: 0.546
+- Brier score: 0.171
+
+The held-out result will not be used to retune Version 3. High pathogenic recall came
+with low pathogenic precision, and benign recall remained below 50%. A later untouched
+snapshot is still required before making any independent validation claim.
