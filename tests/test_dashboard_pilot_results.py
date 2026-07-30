@@ -160,8 +160,8 @@ def test_main_progress_detects_result_and_batch_output_bandwidth(
     assert progress["pilot_results_file_created"] is True
     assert progress["pilot_output_bandwidth_bytes"] == 9876
     assert payload["next_tasks"] == [
-        "Review wrong Resolved Direction V2 predictions.",
-        "Review score-zero records that received no binary prediction.",
-        "Plan independent validation without rewriting either version.",
+        "Run the frozen Statistical Model V3 grouped holdout once.",
+        "Review learned coefficients against the preserved Version 2 rule.",
+        "Reserve a later snapshot for independent temporal validation.",
     ]
     assert str(root / "pilot_results.csv") in payload["system"]["files_created"]

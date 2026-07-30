@@ -1,6 +1,6 @@
 # Variant Time Machine
 
-**Early research and development: the first explainable rule-based baseline is available.**
+**Early research and development: rule-based baselines are preserved and a learned-weight experiment is being added.**
 
 Variant Time Machine is a computational genetics research project that asks whether information available about a ClinVar variant at an earlier date can help predict its later classification. I plan to follow variants first labeled as variants of uncertain significance (VUS), build a carefully dated dataset, and compare explainable prediction methods. The goal is to help prioritize research questions, not to make clinical decisions.
 
@@ -12,7 +12,7 @@ Variant Time Machine is a computational genetics research project that asks whet
 
 ## Current Status
 
-The project now has indexed January 2022 and January 2024 ClinVar summary snapshots. Frozen **Clue Score V1** is preserved as the broad baseline. The main dashboard now uses **Resolved Direction V2**, which includes only 8,818 safely matched records that were VUS in 2022 and clearly pathogenic or benign by 2024. It predicts pathogenic or benign direction, with score zero producing no prediction; it never predicts remaining uncertain. Version 2 accuracy was 58.5% and balanced accuracy was 65.1%. This is a conditional exploratory task, not independent validation, machine learning, or a clinical claim.
+The project now has indexed January 2022 and January 2024 ClinVar summary snapshots. Frozen **Clue Score V1** is preserved as the broad baseline. The main dashboard uses **Resolved Direction V2**, which includes only 8,818 safely matched records that were VUS in 2022 and clearly pathogenic or benign by 2024. Version 2 accuracy was 58.5% and balanced accuracy was 65.1%. **Statistical Model V3** replaces hand-selected points with logistic-regression coefficients learned only from a deterministic training partition, then evaluates once on connected gene groups held out from training. All versions remain conditional exploratory research, not clinical claims.
 
 ## Research Workflow
 
@@ -22,7 +22,7 @@ The project now has indexed January 2022 and January 2024 ClinVar summary snapsh
 4. Confirm Variation and Allele IDs, germline scope, conditions, and official ClinVar context.
 5. Record reviewed, correctly matched, ambiguous, or excluded decisions separately from automatic results.
 6. Use Version History Explorer only when exact available VCV versions can narrow the timeline.
-7. Preserve Versions 1 and 2, and use a separate future cohort for independent validation.
+7. Preserve Versions 1 and 2; train Version 3 only on its training partition and reserve a future cohort for truly independent validation.
 
 ## Repository Structure
 
@@ -162,9 +162,9 @@ The command-line workflow confirms the small API request and asks again before s
 
 ## Current Milestone
 
-Review pathogenic-versus-benign Version 2 failures and score-zero records, then design independent validation without rewriting either frozen experiment.
+Run the frozen Statistical Model V3 design once, report its grouped held-out result, and then reserve a genuinely later cohort for independent temporal validation.
 
-This is an explainable rule-based conditional experiment, not machine learning. Cohort membership uses the later snapshot to keep only resolved records, so Version 2 predicts direction among known resolutions rather than whether resolution will happen.
+Version 3 is an interpretable logistic-regression experiment over older-only clue indicators. Its held-out partition is internal to the already inspected Version 2 cohort, so it is not pristine independent validation and still cannot predict whether resolution will happen.
 
 ## Reproducibility
 

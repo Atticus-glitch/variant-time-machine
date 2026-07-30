@@ -54,5 +54,7 @@
 - A `Correct` label means only that a normalized aggregate direction matched. It does not prove the clue was causal, the classification was medically correct, or the variant is clinically actionable.
 - Resolved Direction V2 selects its cohort using the later outcome. It can compare pathogenic versus benign direction among known resolutions, but it cannot estimate whether an unresolved VUS will ever become certain.
 - Version 2 was designed after Version 1 aggregate results were visible and uses the same answer snapshot. Its 58.5% accuracy and 65.1% balanced accuracy are descriptive, not independent validation.
+- Statistical Model V3 prevents direct row and connected-gene overlap between training and test groups, but both partitions come from the already inspected Version 2 cohort and the same 2022-to-2024 interval. Its held-out metrics are internal evaluation, not pristine or independent temporal validation.
+- Version 3 coefficients are associations among nine coarse binary indicators. They do not establish causality, and heuristic HGVS consequence inference or source-record bias can be learned by the model.
 
 All conclusions will be restricted to the requested VCV versions or chosen releases, matching and comparison rules, feature availability, and evaluation design. These limitations will be updated as empirical problems are discovered.

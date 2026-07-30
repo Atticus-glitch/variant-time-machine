@@ -473,3 +473,19 @@ The later snapshot is used to select this resolved cohort, although it never cha
 the older-only score. Version 2 was designed after Version 1 aggregate results were
 known and uses the same answer snapshot. These metrics are exploratory and are not an
 independent validation or a medical prediction result.
+
+## 2026-07-29 Statistical Model V3 Frozen Design
+
+Version 3 stops assigning clue points by hand. It fits a logistic regression using
+only nine binary older-snapshot clue indicators. Points, scores, prior predictions,
+newer fields, and outcome fields are forbidden model inputs.
+
+Before held-out evaluation, the feature list, estimator, 0.5 threshold, balanced class
+weights, source database hash, split salt, and 80/20 rule were frozen in
+`config/statistical_model_v3.yaml`. Records linked through any older gene token remain
+in one connected group, and SHA-256 assigns complete groups without inspecting labels.
+
+The test partition is an internal holdout, not independent validation. Version 2
+aggregate outcomes were already visible and both partitions use the same 2022-to-2024
+conditional resolved cohort. A genuinely later untouched answer snapshot is still
+needed for independent temporal validation.

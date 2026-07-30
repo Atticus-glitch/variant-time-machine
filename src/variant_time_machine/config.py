@@ -29,6 +29,8 @@ RESOLVED_DIRECTION_RESULTS_DB_PATH = (
 RESOLVED_DIRECTION_REVIEW_PATH = (
     DATA_DIR / "manual_review" / "resolved_direction_v2_reviews.json"
 )
+STATISTICAL_MODEL_V3_CONFIG_PATH = PROJECT_ROOT / "config" / "statistical_model_v3.yaml"
+STATISTICAL_MODEL_V3_RESULTS_DIR = OUTPUTS_DIR / "statistical_model_v3"
 FIGURES_DIR = OUTPUTS_DIR / "figures"
 TABLES_DIR = OUTPUTS_DIR / "tables"
 MODELS_DIR = OUTPUTS_DIR / "models"
@@ -182,6 +184,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "research" / "resolved-direction-v2-results.md",
     CLUE_SCORE_CONFIG_PATH,
     RESOLVED_DIRECTION_CONFIG_PATH,
+    STATISTICAL_MODEL_V3_CONFIG_PATH,
     PROJECT_ROOT / "research" / "data-size-options.md",
     PROJECT_ROOT / "research" / "how-to-select-first-variant.md",
     PROJECT_ROOT / "research" / "research-notebook.md",
@@ -217,6 +220,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "src" / "variant_time_machine" / "clue_score.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "clue_score_experiment.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "resolved_direction.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "statistical_model_v3.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "parse.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "match.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "pilot.py",
@@ -234,6 +238,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "scripts" / "build_timeline_dataset.py",
     PROJECT_ROOT / "scripts" / "build_historical_spreadsheet.py",
     PROJECT_ROOT / "scripts" / "train_baseline.py",
+    PROJECT_ROOT / "scripts" / "run_statistical_model_v3.py",
     PROJECT_ROOT / "scripts" / "validate_setup.py",
     PROJECT_ROOT / "scripts" / "start_dashboard.py",
     PROJECT_ROOT / "scripts" / "test_clinvar_connection.py",
@@ -250,6 +255,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "tests" / "test_clue_score.py",
     PROJECT_ROOT / "tests" / "test_clue_score_experiment.py",
     PROJECT_ROOT / "tests" / "test_resolved_direction.py",
+    PROJECT_ROOT / "tests" / "test_statistical_model_v3.py",
     FIGURES_DIR / ".gitkeep",
     TABLES_DIR / ".gitkeep",
     MODELS_DIR / ".gitkeep",

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "experiment_version": "Statistical Model V3",
+  "status": "frozen",
+  "frozen_at_utc": "2026-07-29T20:15:00+00:00",
+  "label": "Training-only learned weights with a grouped held-out test partition.",
+  "design_warning": "This is an internal held-out evaluation within the already inspected Resolved Direction V2 cohort, not independent temporal validation.",
+  "conditional_task": true,
+  "prediction_snapshot_date": "2022-01-06",
+  "answer_snapshot_date": "2024-01-04",
+  "source_experiment": "Resolved Direction V2",
+  "source_config_sha256": "c3b0b5ce0f19ac2c841808cbd630ff64d02746a606c51e73dbb31f418bebc871",
+  "source_database_sha256": "bb66cc4e2e682300251180f3eda89e27828b5b80dd91abd02a2758653913c97b",
+  "features": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning"
+  ],
+  "feature_rule": "Binary applied indicators reconstructed from older-only clues_json. Assigned points, total score, predictions, newer fields, and outcomes are forbidden as model inputs.",
+  "target": {
+    "moved_toward_benign": 0,
+    "moved_toward_pathogenic": 1
+  },
+  "partition": {
+    "algorithm": "sha256_connected_gene_group",
+    "group_rule": "Keep every record sharing any normalized older gene token in one connected component; records without a usable gene group by Variation ID.",
+    "salt": "variant-time-machine-statistical-model-v3-2026-07-29",
+    "test_fraction": 0.2
+  },
+  "estimator": {
+    "name": "LogisticRegression",
+    "C": 1.0,
+    "class_weight": "balanced",
+    "solver": "liblinear",
+    "max_iter": 1000,
+    "decision_threshold": 0.5,
+    "random_state": 314159
+  },
+  "primary_metric": "balanced_accuracy"
+}

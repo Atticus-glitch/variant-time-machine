@@ -953,9 +953,9 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     def dynamic_next_tasks(progress: dict[str, object]) -> tuple[str, ...]:
         if Path(app.config["CLUE_SCORE_RESULTS_DB_PATH"]).is_file():
             return (
-                "Review wrong Resolved Direction V2 predictions.",
-                "Review score-zero records that received no binary prediction.",
-                "Plan independent validation without rewriting either version.",
+                "Run the frozen Statistical Model V3 grouped holdout once.",
+                "Review learned coefficients against the preserved Version 2 rule.",
+                "Reserve a later snapshot for independent temporal validation.",
             )
         if progress.get("pilot_results_file_created"):
             return (
@@ -1737,7 +1737,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             {
                 "project_name": "Variant Time Machine",
                 "project_explanation": PROJECT_EXPLANATION,
-                "current_milestone": "Resolved Direction Experiment",
+                "current_milestone": "Statistical Model V3",
                 "folders": FOLDER_GUIDE,
                 "next_tasks": dynamic_next_tasks(progress),
                 "research_progress": progress,

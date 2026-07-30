@@ -162,7 +162,7 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     assert response.status_code == 200
     payload = response.get_json()
     assert payload["project_name"] == "Variant Time Machine"
-    assert payload["current_milestone"] == "Resolved Direction Experiment"
+    assert payload["current_milestone"] == "Statistical Model V3"
     assert "uncertain genetic variant" in payload["project_explanation"]
     assert len(payload["folders"]) == 8
     assert len(payload["next_tasks"]) == 3
@@ -182,8 +182,13 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
         "storage",
     }.issubset(payload["system"])
     assert "data/example_variants.csv" in payload["system"]["files_created"]
-    assert payload["research_notes"]["title"] == "2026-07-29 Resolved Direction V2"
-    assert "Resolved directional records: 8,818" in payload["research_notes"]["content"]
+    assert payload["research_notes"]["title"] == (
+        "2026-07-29 Statistical Model V3 Frozen Design"
+    )
+    assert (
+        "nine binary older-snapshot clue indicators"
+        in payload["research_notes"]["content"]
+    )
     assert payload["clinvar_connection"]["connection_status"] == "Not connected"
     assert payload["historical_comparison"] == {
         "total_verified_variants": 0,

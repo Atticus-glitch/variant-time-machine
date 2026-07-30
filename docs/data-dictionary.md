@@ -37,6 +37,12 @@ Sparse manual decisions are stored separately in `data/manual_review/clue_score_
 
 Allowed predictions are `pathogenic_direction`, `benign_direction`, and `no_prediction`. `remain_uncertain` is forbidden. Scores of +1 or higher predict pathogenic, -1 or lower predict benign, and zero gives no prediction. Every included record has a clear resolved answer, so there is no unscorable category in this conditional result table.
 
+## Statistical Model V3 Artifacts
+
+`outputs/statistical_model_v3/` is Git-ignored and contains the learned model and internal held-out evaluation. `partition_manifest.json` records every Variation ID, connected older-gene group, train/test assignment, and source/config/manifest hash. `model.json` stores the ordered older-only feature names, learned coefficients, intercept, fixed estimator settings, scikit-learn version, and provenance hashes.
+
+`held_out_predictions.csv` contains only test-partition Variation IDs, actual normalized outcome, predicted pathogenic probability, and binary predicted outcome. `metric_summary.json` reports accuracy, balanced accuracy, class precision and recall, ROC AUC, pathogenic average precision, Brier score, and the binary confusion matrix. `coefficients.csv` reports each coefficient and odds ratio. These artifacts remain conditional on membership in the resolved Version 2 cohort.
+
 ## Standardized Release Table
 
 | Field | Meaning | Quality note |
