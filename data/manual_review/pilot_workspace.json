@@ -1,5 +1,45 @@
 {
-  "records": [],
-  "updated_at_utc": "",
+  "records": [
+    {
+      "ambiguity_reason": "",
+      "conditions": [
+        "Hypogonadotropic hypogonadism",
+        "Absence of pubertal development",
+        "not provided"
+      ],
+      "created_at_utc": "2026-07-27T18:53:09.496985+00:00",
+      "current_classification": "Pathogenic",
+      "current_retrieved_at_utc": "2026-07-27T18:52:10.631385+00:00",
+      "current_review_status": "criteria provided, multiple submitters, no conflicts",
+      "current_source_url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/14026/",
+      "current_transfer_bytes": 3325,
+      "gene": "TACR3, TACR3-AS1",
+      "historical_classification_type": "",
+      "historical_source_url": "",
+      "intended_historical_date": "2000-01-01",
+      "newer_classification": "",
+      "newer_comparison_date": "",
+      "notes": "",
+      "older_classification": "",
+      "older_release_date": "",
+      "review_status": "unreviewed",
+      "selected_date": "2026-07-27",
+      "selection_reason": "idk",
+      "updated_at_utc": "2026-07-27T18:53:09.496985+00:00",
+      "variant_id": "14026",
+      "vcv_accession": "VCV000014026.3",
+      "verification_checklist": {
+        "ambiguities_documented": false,
+        "classification_type_checked": false,
+        "current_classification_confirmed": false,
+        "gene_confirmed": false,
+        "historical_source_recorded": false,
+        "identifier_confirmed": false,
+        "release_dates_recorded": false
+      },
+      "verification_notes": ""
+    }
+  ],
+  "updated_at_utc": "2026-07-27T18:53:09.498745+00:00",
   "version": 1
 }
