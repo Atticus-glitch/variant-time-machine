@@ -160,8 +160,8 @@ def test_main_progress_detects_result_and_batch_output_bandwidth(
     assert progress["pilot_results_file_created"] is True
     assert progress["pilot_output_bandwidth_bytes"] == 9876
     assert payload["next_tasks"] == [
-        "Review frozen Statistical Model V3 held-out errors without retuning.",
-        "Review learned coefficients against the preserved Version 2 rule.",
-        "Reserve a later snapshot for independent temporal validation.",
+        "Train AI Holdout V4 without opening its hidden 100 records.",
+        "Review the unchanged basic predictor as a comparison baseline.",
+        "Test the trained AI once from the Prediction Results page.",
     ]
     assert str(root / "pilot_results.csv") in payload["system"]["files_created"]

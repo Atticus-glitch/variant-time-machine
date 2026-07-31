@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "experiment_version": "AI Holdout V4",
+  "status": "frozen",
+  "frozen_at_utc": "2026-07-31T17:10:00+00:00",
+  "label": "Neural-network training with exactly 100 unseen test records.",
+  "design_warning": "This is an internal holdout from the already inspected Resolved Direction V2 cohort, not independent temporal or clinical validation.",
+  "conditional_task": true,
+  "source_experiment": "Resolved Direction V2",
+  "source_database_sha256": "b923497cb638cb8252a41744009980eb7210e786e1de0f9a9bdb19d19a4524bd",
+  "features": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning",
+    "classification_age",
+    "record_completeness"
+  ],
+  "feature_rule": "Use only the binary applied state of every older-only clue. Points, total score, prior predictions, newer fields, and outcomes are forbidden model inputs.",
+  "target": {
+    "moved_toward_benign": 0,
+    "moved_toward_pathogenic": 1
+  },
+  "partition": {
+    "algorithm": "sha256_100_connected_gene_groups",
+    "holdout_records": 100,
+    "salt": "variant-time-machine-ai-holdout-v4-2026-07-31",
+    "group_rule": "Select 100 connected older-gene groups without labels, choose one deterministic test record from each, quarantine every companion record in those groups, and train on all other groups."
+  },
+  "estimator": {
+    "name": "MLPClassifier",
+    "hidden_layer_sizes": [8],
+    "activation": "relu",
+    "solver": "adam",
+    "alpha": 0.001,
+    "batch_size": 64,
+    "learning_rate_init": 0.001,
+    "max_iter": 500,
+    "early_stopping": true,
+    "validation_fraction": 0.1,
+    "n_iter_no_change": 20,
+    "decision_threshold": 0.5,
+    "random_state": 271828
+  }
+}

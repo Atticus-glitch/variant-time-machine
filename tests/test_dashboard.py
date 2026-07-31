@@ -26,6 +26,8 @@ def dashboard_app(tmp_path: Path) -> Flask:
             "VCV_HISTORY_ROOT": tmp_path / "vcv_history",
             "CLUE_SCORE_RESULTS_DB_PATH": tmp_path / "missing_clue_score.sqlite3",
             "HISTORICAL_VARIANT_DB_PATH": tmp_path / "missing_history.sqlite3",
+            "AI_HOLDOUT_V4_RESULTS_DIR": tmp_path / "missing_ai_v4",
+            "AI_HOLDOUT_V4_SOURCE_DB_PATH": tmp_path / "missing_v2.sqlite3",
         }
     )
 
@@ -72,6 +74,19 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert client.get("/pilot_results.html").status_code == 200
     assert client.get("/prediction_results.html").status_code == 200
     assert client.get("/overview.html").status_code == 200
+
+
+def test_ai_v4_endpoint_stays_separate_and_requires_test_approval(
+    client: FlaskClient,
+) -> None:
+    page = client.get("/prediction_results.html").get_data(as_text=True)
+    assert "AI Holdout V4" in page
+    assert "Test AI On 100 Unseen Records" in page
+    summary = client.get("/api/ai-v4/summary")
+    assert summary.status_code == 200
+    assert summary.get_json() == {"available": False, "state": "not_trained"}
+    unapproved = client.post("/api/ai-v4/test", json={})
+    assert unapproved.status_code == 428
 
 
 def test_version_history_explorer_page_has_safety_copy_and_navigation(
@@ -162,7 +177,7 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     assert response.status_code == 200
     payload = response.get_json()
     assert payload["project_name"] == "Variant Time Machine"
-    assert payload["current_milestone"] == "Statistical Model V3"
+    assert payload["current_milestone"] == "AI Holdout V4"
     assert "uncertain genetic variant" in payload["project_explanation"]
     assert len(payload["folders"]) == 8
     assert len(payload["next_tasks"]) == 3
@@ -183,9 +198,9 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     }.issubset(payload["system"])
     assert "data/example_variants.csv" in payload["system"]["files_created"]
     assert payload["research_notes"]["title"] == (
-        "2026-07-30 Statistical Model V3 Held-Out Result"
+        "2026-07-31 AI Holdout V4 Frozen Design"
     )
-    assert "Balanced accuracy: 70.6%" in payload["research_notes"]["content"]
+    assert "all eleven" in payload["research_notes"]["content"]
     assert payload["clinvar_connection"]["connection_status"] == "Not connected"
     assert payload["historical_comparison"] == {
         "total_verified_variants": 0,

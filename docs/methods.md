@@ -2,7 +2,15 @@
 
 ## Current Scientific Milestone
 
-The current milestone is Statistical Model V3. Frozen Clue Score V1 and Resolved Direction V2 remain unchanged. Version 3 learns coefficients from a training partition of the same safely matched, resolved pathogenic-versus-benign cohort and evaluates the frozen model on held-out connected gene groups.
+The current milestone is AI Holdout V4. Frozen Clue Score V1, Resolved Direction V2, and completed Statistical Model V3 remain unchanged. V4 trains a small neural-network classifier while reserving exactly 100 variant records for a separate website-triggered test.
+
+## AI Holdout V4
+
+V4 supplies all eleven older-only clue `applied` indicators to an `MLPClassifier` with one eight-unit hidden layer. During supervised training, cross-entropy loss penalizes incorrect probability estimates and backpropagation adjusts learned weights. Hand-selected clue points, V1/V2 scores, previous predictions, newer fields, and outcomes are never model inputs.
+
+The partition is label-independent. A frozen SHA-256 salt ranks connected older-gene groups, selects 100 groups, and chooses one deterministic test record from each. Every other record in a selected group is quarantined, so no connected gene group can appear in both training and test data. All remaining groups train the model. Training uses an internal training-only validation fraction for early stopping.
+
+Training writes the model and partition manifest but does not calculate hidden-test metrics. The Prediction Results page exposes a separately approved action that evaluates exactly those 100 records once, saves accuracy and balanced accuracy, and refuses a second evaluation. This protects the “unseen by the model” boundary but cannot make the already inspected 2022-to-2024 cohort independent temporal validation.
 
 ## Statistical Model V3
 

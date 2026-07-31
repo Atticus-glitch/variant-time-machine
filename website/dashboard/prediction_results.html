@@ -66,6 +66,17 @@
         <p id="metrics-note" class="plain-language-note">The cohort excludes records that remained uncertain, conflicted, were unrecognized, or could not be matched safely.</p>
       </section>
 
+      <section class="panel" aria-labelledby="ai-v4-title">
+        <div class="section-heading"><div><p class="section-number">Machine-learning test</p><h2 id="ai-v4-title">AI Holdout V4</h2></div></div>
+        <p class="large-explanation">A small neural network learns from all eleven older-only hint indicators. Exactly 100 variant records and every related-gene companion were excluded from training.</p>
+        <dl id="ai-v4-summary" class="prediction-summary-grid"><div><dt>Status</dt><dd>Loading...</dd></div></dl>
+        <div class="approval-box">
+          <label class="check-line"><input id="ai-v4-approval" type="checkbox"> I understand this opens the frozen 100-record test once and does not provide medical advice.</label>
+          <button id="ai-v4-test" type="button" disabled>Test AI On 100 Unseen Records</button>
+          <p id="ai-v4-status" aria-live="polite">Checking training status...</p>
+        </div>
+      </section>
+
       <section class="panel prediction-list-panel" aria-labelledby="results-title">
         <div class="section-heading"><div><p class="section-number">Searchable explanations</p><h2 id="results-title">Prediction List</h2></div><p>Default order: wrong high-confidence results first.</p></div>
         <form id="prediction-search" class="prediction-search">

@@ -43,6 +43,12 @@ Allowed predictions are `pathogenic_direction`, `benign_direction`, and `no_pred
 
 `held_out_predictions.csv` contains only test-partition Variation IDs, actual normalized outcome, predicted pathogenic probability, and binary predicted outcome. `metric_summary.json` reports accuracy, balanced accuracy, class precision and recall, ROC AUC, pathogenic average precision, Brier score, and the binary confusion matrix. `coefficients.csv` reports each coefficient and odds ratio. These artifacts remain conditional on membership in the resolved Version 2 cohort.
 
+## AI Holdout V4 Artifacts
+
+`outputs/ai_holdout_v4/` is Git-ignored. Before testing, it contains the fitted `model.joblib`, frozen configuration, `partition_manifest.json`, and `training_summary.json`. Manifest assignments are `train`, `test`, or `quarantine`; exactly 100 rows are `test`, while quarantine rows share a connected older-gene group with a test row and are deliberately excluded from model fitting.
+
+After the separately approved website test, `test_metrics.json` stores correctness counts, accuracy, balanced accuracy, class counts, and the confusion matrix. `hidden_test_predictions.csv` stores the 100 Variation IDs, normalized outcomes, model probabilities, and predictions. These outputs must not be used to retrain or tune the frozen V4 model.
+
 ## Standardized Release Table
 
 | Field | Meaning | Quality note |

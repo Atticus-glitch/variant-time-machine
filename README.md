@@ -12,7 +12,7 @@ Variant Time Machine is a computational genetics research project that asks whet
 
 ## Current Status
 
-The project now has indexed January 2022 and January 2024 ClinVar summary snapshots. Frozen **Clue Score V1** is preserved as the broad baseline. The main dashboard uses **Resolved Direction V2**, which includes only 8,818 safely matched records that were VUS in 2022 and clearly pathogenic or benign by 2024. Version 2 accuracy was 58.5% and balanced accuracy was 65.1%. **Statistical Model V3** replaced hand-selected points with logistic-regression coefficients learned from 6,933 training records and evaluated once on 1,885 held-out records with no connected-gene overlap. Held-out accuracy was 58.2%, balanced accuracy was 70.6%, and ROC AUC was 0.788. All versions remain conditional exploratory research, not clinical claims.
+The project now has indexed January 2022 and January 2024 ClinVar summary snapshots. Frozen **Clue Score V1** and **Resolved Direction V2** remain available as hand-scored baselines. **Statistical Model V3** learned logistic-regression coefficients and completed its grouped holdout. **AI Holdout V4** is a separate small neural network that receives all eleven older-only hint indicators. Exactly 100 variant records are reserved for a website-triggered test, and related-gene companions are quarantined from training. All versions remain conditional exploratory research, not clinical claims.
 
 ## Research Workflow
 
@@ -162,9 +162,9 @@ The command-line workflow confirms the small API request and asks again before s
 
 ## Current Milestone
 
-Review the frozen Statistical Model V3 coefficients and errors without retuning against its held-out results, then reserve a genuinely later cohort for independent temporal validation.
+Train AI Holdout V4 without opening its frozen 100-record test, then use the website once to reveal its accuracy on those unseen records.
 
-Version 3 is an interpretable logistic-regression experiment over older-only clue indicators. Its held-out partition is internal to the already inspected Version 2 cohort, so it is not pristine independent validation and still cannot predict whether resolution will happen.
+The neural network adjusts internal weights by minimizing supervised classification loss on training examples. The 100-record test remains internal to the already inspected Version 2 cohort, so it is not pristine independent validation and still cannot predict whether resolution will happen.
 
 ## Reproducibility
 

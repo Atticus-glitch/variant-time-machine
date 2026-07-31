@@ -30,6 +30,11 @@ SRC_DIR = PROJECT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
+from variant_time_machine.ai_holdout_v4 import (  # noqa: E402
+    AIHoldoutV4Error,
+    ai_holdout_v4_summary,
+    test_ai_holdout_v4_once,
+)
 from variant_time_machine.clinvar_api import (  # noqa: E402
     ClinVarAPIError,
     ClinVarConnectionError,
@@ -53,6 +58,7 @@ from variant_time_machine.clue_score_experiment import (  # noqa: E402
     update_prediction_review,
 )
 from variant_time_machine.config import (  # noqa: E402
+    AI_HOLDOUT_V4_RESULTS_DIR,
     CLINVAR_RELEASES,
     CLUE_SCORE_RESULTS_DB_PATH,
     CLUE_SCORE_RESULTS_DIR,
@@ -314,6 +320,10 @@ def _latest_notebook_entry() -> dict[str, str]:
 
 def _latest_pipeline_output() -> str:
     """Describe the newest saved timeline file without claiming it is validated."""
+    ai_output = AI_HOLDOUT_V4_RESULTS_DIR / "training_summary.json"
+    if ai_output.is_file():
+        modified = datetime.fromtimestamp(ai_output.stat().st_mtime, UTC).isoformat()
+        return f"{ai_output.relative_to(PROJECT_ROOT)} modified {modified}"
     statistical_output = STATISTICAL_MODEL_V3_RESULTS_DIR / "metric_summary.json"
     if statistical_output.is_file():
         modified = datetime.fromtimestamp(
@@ -583,6 +593,8 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         CLUE_SCORE_REVIEW_PATH=RESOLVED_DIRECTION_REVIEW_PATH,
         CLUE_SCORE_PARENT_DB_PATH=CLUE_SCORE_RESULTS_DB_PATH,
         CLUE_SCORE_RUNNER=run_resolved_direction_experiment,
+        AI_HOLDOUT_V4_RESULTS_DIR=AI_HOLDOUT_V4_RESULTS_DIR,
+        AI_HOLDOUT_V4_SOURCE_DB_PATH=RESOLVED_DIRECTION_RESULTS_DB_PATH,
     )
     if test_config:
         app.config.update(test_config)
@@ -958,11 +970,26 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         }
 
     def dynamic_next_tasks(progress: dict[str, object]) -> tuple[str, ...]:
+        ai_summary = ai_holdout_v4_summary(
+            Path(app.config["AI_HOLDOUT_V4_RESULTS_DIR"])
+        )
+        if ai_summary.get("state") == "tested":
+            return (
+                "Review AI Holdout V4 errors without retraining on the hidden 100.",
+                "Compare the AI result with the preserved basic predictor.",
+                "Reserve a later snapshot for independent temporal validation.",
+            )
+        if ai_summary.get("available"):
+            return (
+                "Open Prediction Results and approve the 100-record AI test once.",
+                "Keep the hidden records excluded from all model training.",
+                "Preserve the basic predictor as a comparison baseline.",
+            )
         if Path(app.config["CLUE_SCORE_RESULTS_DB_PATH"]).is_file():
             return (
-                "Review frozen Statistical Model V3 held-out errors without retuning.",
-                "Review learned coefficients against the preserved Version 2 rule.",
-                "Reserve a later snapshot for independent temporal validation.",
+                "Train AI Holdout V4 without opening its hidden 100 records.",
+                "Review the unchanged basic predictor as a comparison baseline.",
+                "Test the trained AI once from the Prediction Results page.",
             )
         if progress.get("pilot_results_file_created"):
             return (
@@ -1426,6 +1453,32 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         except (OSError, ValueError) as exc:
             return jsonify({"error": str(exc)}), 503
 
+    @app.get("/api/ai-v4/summary")
+    def api_ai_v4_summary():
+        try:
+            return jsonify(
+                ai_holdout_v4_summary(Path(app.config["AI_HOLDOUT_V4_RESULTS_DIR"]))
+            )
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"AI Holdout V4 is unavailable: {exc}"}), 503
+
+    @app.post("/api/ai-v4/test")
+    def api_ai_v4_test():
+        try:
+            if _json_body().get("approved") is not True:
+                return jsonify(
+                    {"error": "Approve opening the frozen 100-record test first."}
+                ), 428
+            metrics = test_ai_holdout_v4_once(
+                Path(app.config["AI_HOLDOUT_V4_SOURCE_DB_PATH"]),
+                Path(app.config["AI_HOLDOUT_V4_RESULTS_DIR"]),
+            )
+            return jsonify(metrics)
+        except FileExistsError as exc:
+            return jsonify({"error": str(exc)}), 409
+        except (AIHoldoutV4Error, OSError, ValueError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Could not test AI Holdout V4: {exc}"}), 503
+
     @app.get("/api/predictions/summary")
     def api_prediction_summary():
         try:
@@ -1744,7 +1797,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             {
                 "project_name": "Variant Time Machine",
                 "project_explanation": PROJECT_EXPLANATION,
-                "current_milestone": "Statistical Model V3",
+                "current_milestone": "AI Holdout V4",
                 "folders": FOLDER_GUIDE,
                 "next_tasks": dynamic_next_tasks(progress),
                 "research_progress": progress,

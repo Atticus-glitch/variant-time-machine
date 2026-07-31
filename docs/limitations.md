@@ -56,5 +56,7 @@
 - Version 2 was designed after Version 1 aggregate results were visible and uses the same answer snapshot. Its 58.5% accuracy and 65.1% balanced accuracy are descriptive, not independent validation.
 - Statistical Model V3 prevents direct row and connected-gene overlap between training and test groups, but both partitions come from the already inspected Version 2 cohort and the same 2022-to-2024 interval. Its held-out metrics are internal evaluation, not pristine or independent temporal validation.
 - Version 3 coefficients are associations among nine coarse binary indicators. They do not establish causality, and heuristic HGVS consequence inference or source-record bias can be learned by the model.
+- AI Holdout V4 uses only eleven coarse binary hint states and a small neural network. “Reward and punishment” means optimization of training loss, not human-like reasoning or reinforcement learning.
+- Exactly 100 V4 records are unseen by the fitted model, and related-gene companions are quarantined. However, the broader V2 cohort and aggregate outcomes were already inspected, so the website test remains internal rather than independent validation.
 
 All conclusions will be restricted to the requested VCV versions or chosen releases, matching and comparison rules, feature availability, and evaluation design. These limitations will be updated as empirical problems are discovered.

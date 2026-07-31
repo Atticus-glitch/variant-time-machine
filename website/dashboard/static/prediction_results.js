@@ -114,12 +114,28 @@ function renderProgress(operation) { const list = byId("run-progress"); list.rep
 async function pollRun() { const operation = await api(`/api/predictions/operations/${state.operationId}`); renderProgress(operation); if (operation.state === "running") { window.setTimeout(pollRun, 750); return; } byId("run-status").textContent = operation.error ? `Run failed: ${operation.error}` : "Resolved Direction V2 run completed."; byId("run-predictions").disabled = false; await loadSummary(); await loadList(); }
 async function runPredictions() { try { byId("run-predictions").disabled = true; const payload = await api("/api/predictions/run", {method: "POST", body: JSON.stringify({approved: true, scoring_version: "Resolved Direction V2"})}); state.operationId = payload.operation_id; byId("run-status").textContent = "Frozen changed-outcome Version 2 run started."; pollRun(); } catch (error) { byId("run-status").textContent = `Could not start: ${error.message}`; byId("run-predictions").disabled = false; } }
 
+function renderAI(summary) {
+  const list = byId("ai-v4-summary"); list.replaceChildren();
+  [["Training records", summary.training_records], ["Hidden test records", summary.hidden_test_records], ["Quarantined related records", summary.quarantined_records], ["Older-only hints", summary.feature_count]].forEach(([label, value]) => addMetric(list, label, Number(value).toLocaleString(), "Frozen AI Holdout V4 design."));
+  if (summary.state === "tested") {
+    [["Correct", summary.correct], ["Wrong", summary.wrong], ["Accuracy", percent(summary.accuracy)], ["Balanced accuracy", percent(summary.balanced_accuracy)]].forEach(([label, value]) => addMetric(list, label, value, "Result on exactly 100 previously unseen records."));
+    byId("ai-v4-status").textContent = `Hidden test completed: ${summary.correct} of 100 correct (${percent(summary.accuracy)} accuracy).`;
+    byId("ai-v4-test").disabled = true;
+    byId("ai-v4-approval").disabled = true;
+  } else {
+    byId("ai-v4-status").textContent = "Model trained. The 100-record hidden test has not been opened.";
+  }
+}
+async function loadAI() { try { const summary = await api("/api/ai-v4/summary"); if (!summary.available) { byId("ai-v4-status").textContent = "AI Holdout V4 has not been trained yet."; return; } renderAI(summary); } catch (error) { byId("ai-v4-status").textContent = `AI status unavailable: ${error.message}`; } }
+async function testAI() { try { byId("ai-v4-test").disabled = true; byId("ai-v4-status").textContent = "Testing the trained model on 100 unseen records..."; await api("/api/ai-v4/test", {method: "POST", body: JSON.stringify({approved: true})}); await loadAI(); } catch (error) { byId("ai-v4-status").textContent = `AI test failed: ${error.message}`; } }
+
 byId("toggle-formula").addEventListener("click", () => { byId("formula-content").hidden = !byId("formula-content").hidden; });
 byId("formula-approval").addEventListener("change", (event) => { byId("run-predictions").disabled = !event.target.checked; });
 byId("run-predictions").addEventListener("click", runPredictions); byId("refresh-predictions").addEventListener("click", async () => { await loadSummary(); await loadList(); });
+byId("ai-v4-approval").addEventListener("change", (event) => { byId("ai-v4-test").disabled = !event.target.checked; }); byId("ai-v4-test").addEventListener("click", testAI);
 byId("prediction-search").addEventListener("submit", (event) => { event.preventDefault(); state.page = 1; loadList(); }); byId("prediction-sort").addEventListener("change", () => { state.page = 1; loadList(); });
 byId("prediction-filters").addEventListener("click", (event) => { if (!event.target.dataset.filter) return; state.filter = event.target.dataset.filter; state.page = 1; document.querySelectorAll("#prediction-filters button").forEach((button) => button.classList.toggle("active", button === event.target)); loadList(); });
 byId("prediction-previous").addEventListener("click", () => { if (state.page > 1) { state.page -= 1; loadList(); } }); byId("prediction-next").addEventListener("click", () => { if (state.page < state.pageCount) { state.page += 1; loadList(); } });
 byId("close-prediction-detail").addEventListener("click", () => { byId("prediction-detail").hidden = true; }); document.querySelectorAll("[data-review]").forEach((button) => button.addEventListener("click", () => saveReview(button.dataset.review)));
 
-Promise.all([loadSummary()]).then(([available]) => { if (available) loadList(); });
+Promise.all([loadSummary(), loadAI()]).then(([available]) => { if (available) loadList(); });

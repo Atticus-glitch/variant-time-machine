@@ -509,3 +509,21 @@ source database hash remained unchanged after evaluation.
 The held-out result will not be used to retune Version 3. High pathogenic recall came
 with low pathogenic precision, and benign recall remained below 50%. A later untouched
 snapshot is still required before making any independent validation claim.
+
+## 2026-07-31 AI Holdout V4 Frozen Design
+
+The hand-scored V2 predictor and completed V3 experiment remain unchanged. V4 is a
+small supervised neural network using the binary applied state of all eleven
+older-only hints. Training loss penalizes wrong probability estimates and
+backpropagation adjusts model weights; this is supervised learning, not reinforcement
+learning or human-like reward.
+
+A frozen label-independent SHA-256 rule selects 100 connected older-gene groups and
+one hidden test record from each. Companion records from selected groups are
+quarantined, and all other groups are available for training. Training saves the model
+without calculating test accuracy. The dashboard requires separate approval to open
+the hidden 100 once and then displays the saved accuracy.
+
+The source cohort is still conditional on clear resolution by 2024 and its aggregate
+outcomes were already inspected. The 100 records are unseen by the fitted model but do
+not constitute independent temporal or clinical validation.
