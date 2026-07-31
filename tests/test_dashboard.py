@@ -198,9 +198,9 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     }.issubset(payload["system"])
     assert "data/example_variants.csv" in payload["system"]["files_created"]
     assert payload["research_notes"]["title"] == (
-        "2026-07-31 AI Holdout V4 Frozen Design"
+        "2026-07-31 AI Holdout V4 Trained, Test Unopened"
     )
-    assert "all eleven" in payload["research_notes"]["content"]
+    assert "8,325 records" in payload["research_notes"]["content"]
     assert payload["clinvar_connection"]["connection_status"] == "Not connected"
     assert payload["historical_comparison"] == {
         "total_verified_variants": 0,

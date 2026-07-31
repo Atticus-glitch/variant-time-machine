@@ -112,6 +112,7 @@ def dashboard_app(tmp_path: Path) -> Flask:
             "PILOT_WORKSPACE_PATH": workspace,
             "VCV_HISTORY_ROOT": tmp_path / "histories",
             "PILOT_RESULTS_ROOT": tmp_path / "pilot_results",
+            "AI_HOLDOUT_V4_RESULTS_DIR": tmp_path / "ai_v4",
         }
     )
 

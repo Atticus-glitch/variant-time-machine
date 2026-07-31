@@ -527,3 +527,14 @@ the hidden 100 once and then displays the saved accuracy.
 The source cohort is still conditional on clear resolution by 2024 and its aggregate
 outcomes were already inspected. The 100 records are unseen by the fitted model but do
 not constitute independent temporal or clinical validation.
+
+## 2026-07-31 AI Holdout V4 Trained, Test Unopened
+
+The frozen neural network trained on 8,325 records for 23 iterations. Exactly 100
+records remain in the hidden test, 393 related-gene companions are quarantined, and
+train and test share zero connected gene groups. The model uses all eleven older-only
+hint indicators.
+
+Training completed with a final loss of 0.4197. No hidden-test metrics or predictions
+exist yet. The dashboard now provides the separate approved action that will evaluate
+the fixed model once on the 100 unseen records and save its accuracy.

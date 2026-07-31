@@ -12,7 +12,7 @@ Variant Time Machine is a computational genetics research project that asks whet
 
 ## Current Status
 
-The project now has indexed January 2022 and January 2024 ClinVar summary snapshots. Frozen **Clue Score V1** and **Resolved Direction V2** remain available as hand-scored baselines. **Statistical Model V3** learned logistic-regression coefficients and completed its grouped holdout. **AI Holdout V4** is a separate small neural network that receives all eleven older-only hint indicators. Exactly 100 variant records are reserved for a website-triggered test, and related-gene companions are quarantined from training. All versions remain conditional exploratory research, not clinical claims.
+The project now has indexed January 2022 and January 2024 ClinVar summary snapshots. Frozen **Clue Score V1** and **Resolved Direction V2** remain available as hand-scored baselines. **Statistical Model V3** completed its grouped holdout. **AI Holdout V4** is now trained on 8,325 records using all eleven older-only hint indicators. Exactly 100 records remain unopened for a website-triggered test, while 393 related-gene companions were quarantined from training. No V4 test accuracy has been calculated yet. All versions remain conditional exploratory research, not clinical claims.
 
 ## Research Workflow
 
@@ -162,7 +162,7 @@ The command-line workflow confirms the small API request and asks again before s
 
 ## Current Milestone
 
-Train AI Holdout V4 without opening its frozen 100-record test, then use the website once to reveal its accuracy on those unseen records.
+Use the Prediction Results page once to reveal AI Holdout V4 accuracy on its frozen 100 unseen records without retraining the model.
 
 The neural network adjusts internal weights by minimizing supervised classification loss on training examples. The 100-record test remains internal to the already inspected Version 2 cohort, so it is not pristine independent validation and still cannot predict whether resolution will happen.
 
