@@ -12,7 +12,7 @@ Variant Time Machine is a computational genetics research project that asks whet
 
 ## Current Status
 
-The project now has indexed January 2022 and January 2024 ClinVar summary snapshots. Frozen **Clue Score V1** and **Resolved Direction V2** remain available as hand-scored baselines. **AI Holdout V4** scored 76.0% accuracy but only 62.5% balanced accuracy because it found just 8 of 32 pathogenic outcomes. That result is preserved. **AI Holdout V5** adds richer numeric hints, class-balanced training, a 32-by-16 neural network, more unique training records, and a fresh 100-record holdout disjoint from V4's test groups. All versions remain conditional exploratory research, not clinical claims.
+The project now has indexed January 2022 and January 2024 ClinVar summary snapshots. Frozen **Clue Score V1** and **Resolved Direction V2** remain available as hand-scored baselines. **AI Holdout V4** scored 76.0% accuracy but only 62.5% balanced accuracy because it found just 8 of 32 pathogenic outcomes. That result is preserved. **AI Holdout V5** is now trained on 8,683 unique records and 12,396 class-balanced rows using 14 older-only inputs and a 32-by-16 neural network. Its fresh 100-record test is disjoint from V4 and remains unopened. All versions remain conditional exploratory research, not clinical claims.
 
 ## Research Workflow
 
@@ -162,7 +162,7 @@ The command-line workflow confirms the small API request and asks again before s
 
 ## Current Milestone
 
-Train AI Holdout V5 without opening its fresh 100-record test, then evaluate it once from Prediction Results without retuning from the answer.
+Use Prediction Results once to evaluate trained V5 on its fresh 100-record test, then report both accuracy and balanced accuracy without retuning.
 
 The neural network adjusts internal weights by minimizing supervised classification loss on training examples. The 100-record test remains internal to the already inspected Version 2 cohort, so it is not pristine independent validation and still cannot predict whether resolution will happen.
 

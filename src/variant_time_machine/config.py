@@ -189,6 +189,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "research" / "statistical-model-v3-results.md",
     PROJECT_ROOT / "research" / "ai-holdout-v4-training.md",
     PROJECT_ROOT / "research" / "ai-holdout-v4-results.md",
+    PROJECT_ROOT / "research" / "ai-holdout-v5-training.md",
     CLUE_SCORE_CONFIG_PATH,
     RESOLVED_DIRECTION_CONFIG_PATH,
     STATISTICAL_MODEL_V3_CONFIG_PATH,

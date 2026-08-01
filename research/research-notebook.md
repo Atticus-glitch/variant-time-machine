@@ -558,3 +558,14 @@ All V5 choices are frozen before training and testing. The new hidden answers ca
 be used to change the network, features, balancing, threshold, or partition. V5 remains
 an internal conditional experiment, and its result must be reported even if it is
 worse than V4.
+
+## 2026-08-01 AI Holdout V5 Trained, Test Unopened
+
+V5 trained on 8,683 unique records. Deterministic training-only oversampling produced
+12,396 class-balanced rows. The larger network ran for 172 iterations with final loss
+0.4311. It uses 14 older-only inputs.
+
+Exactly 100 fresh records remain hidden and only 35 companion records were
+quarantined. Train and test share zero connected groups, and V4 and V5 share zero test
+groups. No V5 test metrics or hidden predictions exist yet. The website now provides
+the separately approved one-time V5 evaluation.
