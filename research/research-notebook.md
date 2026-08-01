@@ -538,3 +538,23 @@ hint indicators.
 Training completed with a final loss of 0.4197. No hidden-test metrics or predictions
 exist yet. The dashboard now provides the separate approved action that will evaluate
 the fixed model once on the 100 unseen records and save its accuracy.
+
+## 2026-08-01 AI Holdout V4 Result
+
+V4 correctly classified 76 of 100 records, but the class-specific result was weak. It
+classified all 68 benign outcomes correctly and only 8 of 32 pathogenic outcomes.
+Ordinary accuracy was 76.0%; balanced accuracy was 62.5%. The result is preserved and
+V4 will not be retrained from its hidden answers.
+
+## 2026-08-01 AI Holdout V5 Frozen Design
+
+V5 was specified after the V4 aggregate result. It adds numeric age, submitter-count,
+and missing-field inputs; training-only class balancing; feature scaling; and hidden
+layers of 32 and 16 units. A fresh 100-record holdout excludes every V4 test group and
+uses only connected groups containing at most two records, reducing quarantine and
+making more unique records available for training.
+
+All V5 choices are frozen before training and testing. The new hidden answers cannot
+be used to change the network, features, balancing, threshold, or partition. V5 remains
+an internal conditional experiment, and its result must be reported even if it is
+worse than V4.

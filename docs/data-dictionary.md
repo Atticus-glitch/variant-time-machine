@@ -49,6 +49,12 @@ Allowed predictions are `pathogenic_direction`, `benign_direction`, and `no_pred
 
 After the separately approved website test, `test_metrics.json` stores correctness counts, accuracy, balanced accuracy, class counts, and the confusion matrix. `hidden_test_predictions.csv` stores the 100 Variation IDs, normalized outcomes, model probabilities, and predictions. These outputs must not be used to retrain or tune the frozen V4 model.
 
+## AI Holdout V5 Artifacts
+
+`outputs/ai_holdout_v5/` has the same train-then-test artifact separation as V4. Its feature array has 14 columns: nine directional clue states, age/completeness availability, age in days, maximum submitter count, and missing-core-field count. `training_summary.json` distinguishes unique training records from effective class-balanced rows created by training-only oversampling.
+
+The V5 partition manifest records the V4 manifest hash, verifies zero V4/V5 test-group overlap, limits V5 holdout groups to at most two records, and preserves train/test/quarantine assignments. Test metrics are absent until the separately approved website action runs.
+
 ## Standardized Release Table
 
 | Field | Meaning | Quality note |

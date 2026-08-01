@@ -77,6 +77,17 @@
         </div>
       </section>
 
+      <section class="panel" aria-labelledby="ai-v5-title">
+        <div class="section-heading"><div><p class="section-number">Fresh machine-learning test</p><h2 id="ai-v5-title">AI Holdout V5</h2></div></div>
+        <p class="large-explanation">V5 uses 14 older-only inputs, class-balanced training, and a larger 32-by-16 neural network. Its 100 test records are fresh and share no test group with V4.</p>
+        <dl id="ai-v5-summary" class="prediction-summary-grid"><div><dt>Status</dt><dd>Loading...</dd></div></dl>
+        <div class="approval-box">
+          <label class="check-line"><input id="ai-v5-approval" type="checkbox"> I understand the V5 hidden result must be reported honestly and cannot be used to retune V5.</label>
+          <button id="ai-v5-test" type="button" disabled>Test V5 On 100 Fresh Records</button>
+          <p id="ai-v5-status" aria-live="polite">Checking V5 training status...</p>
+        </div>
+      </section>
+
       <section class="panel prediction-list-panel" aria-labelledby="results-title">
         <div class="section-heading"><div><p class="section-number">Searchable explanations</p><h2 id="results-title">Prediction List</h2></div><p>Default order: wrong high-confidence results first.</p></div>
         <form id="prediction-search" class="prediction-search">

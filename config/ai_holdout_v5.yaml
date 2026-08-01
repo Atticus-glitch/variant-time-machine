@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "experiment_version": "AI Holdout V5",
+  "status": "frozen",
+  "frozen_at_utc": "2026-08-01T21:05:00+00:00",
+  "label": "Richer class-balanced neural network with a fresh 100-record holdout.",
+  "design_warning": "V5 was designed after V4 aggregate results were known. Its fresh holdout is unseen by V5 and disjoint from V4 test groups, but it is still internal to the already inspected V2 cohort.",
+  "source_database_sha256": "b923497cb638cb8252a41744009980eb7210e786e1de0f9a9bdb19d19a4524bd",
+  "previous_holdout_manifest_sha256": "bd4401dcec03202832bef7e524db9a449786bcdefd485bab2e6f5585ac357322",
+  "features": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning",
+    "classification_age_available",
+    "record_completeness_available",
+    "classification_age_days",
+    "maximum_submitter_count",
+    "missing_core_field_count"
+  ],
+  "target": {
+    "moved_toward_benign": 0,
+    "moved_toward_pathogenic": 1
+  },
+  "partition": {
+    "algorithm": "sha256_fresh_100_low_dependency_groups",
+    "holdout_records": 100,
+    "maximum_holdout_group_size": 2,
+    "salt": "variant-time-machine-ai-holdout-v5-2026-08-01",
+    "group_rule": "Exclude every V4 test group, rank connected older-gene groups containing at most two records without labels, select 100 groups, choose one deterministic test record per group, quarantine companions, and train on all other records."
+  },
+  "training": {
+    "class_balance": "deterministic_random_oversampling_within_training_only",
+    "feature_scaling": "StandardScaler fit on training data only"
+  },
+  "estimator": {
+    "name": "MLPClassifier",
+    "hidden_layer_sizes": [32, 16],
+    "activation": "relu",
+    "solver": "adam",
+    "alpha": 0.002,
+    "batch_size": 64,
+    "learning_rate_init": 0.001,
+    "max_iter": 500,
+    "early_stopping": false,
+    "decision_threshold": 0.5,
+    "random_state": 161803
+  }
+}

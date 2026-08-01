@@ -60,6 +60,7 @@ outputs/clue_score_v1/
 outputs/resolved_direction_v2/
 outputs/statistical_model_v3/
 outputs/ai_holdout_v4/
+outputs/ai_holdout_v5/
 *.joblib
 *.pkl
 

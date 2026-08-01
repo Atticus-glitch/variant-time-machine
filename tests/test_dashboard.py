@@ -28,6 +28,8 @@ def dashboard_app(tmp_path: Path) -> Flask:
             "HISTORICAL_VARIANT_DB_PATH": tmp_path / "missing_history.sqlite3",
             "AI_HOLDOUT_V4_RESULTS_DIR": tmp_path / "missing_ai_v4",
             "AI_HOLDOUT_V4_SOURCE_DB_PATH": tmp_path / "missing_v2.sqlite3",
+            "AI_HOLDOUT_V5_RESULTS_DIR": tmp_path / "missing_ai_v5",
+            "AI_HOLDOUT_V5_SOURCE_DB_PATH": tmp_path / "missing_v2.sqlite3",
         }
     )
 
@@ -82,11 +84,17 @@ def test_ai_v4_endpoint_stays_separate_and_requires_test_approval(
     page = client.get("/prediction_results.html").get_data(as_text=True)
     assert "AI Holdout V4" in page
     assert "Test AI On 100 Unseen Records" in page
+    assert "Test V5 On 100 Fresh Records" in page
     summary = client.get("/api/ai-v4/summary")
     assert summary.status_code == 200
     assert summary.get_json() == {"available": False, "state": "not_trained"}
     unapproved = client.post("/api/ai-v4/test", json={})
     assert unapproved.status_code == 428
+    assert client.get("/api/ai-v5/summary").get_json() == {
+        "available": False,
+        "state": "not_trained",
+    }
+    assert client.post("/api/ai-v5/test", json={}).status_code == 428
 
 
 def test_version_history_explorer_page_has_safety_copy_and_navigation(
@@ -177,7 +185,7 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     assert response.status_code == 200
     payload = response.get_json()
     assert payload["project_name"] == "Variant Time Machine"
-    assert payload["current_milestone"] == "AI Holdout V4"
+    assert payload["current_milestone"] == "AI Holdout V5"
     assert "uncertain genetic variant" in payload["project_explanation"]
     assert len(payload["folders"]) == 8
     assert len(payload["next_tasks"]) == 3
@@ -198,9 +206,9 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     }.issubset(payload["system"])
     assert "data/example_variants.csv" in payload["system"]["files_created"]
     assert payload["research_notes"]["title"] == (
-        "2026-07-31 AI Holdout V4 Trained, Test Unopened"
+        "2026-08-01 AI Holdout V5 Frozen Design"
     )
-    assert "8,325 records" in payload["research_notes"]["content"]
+    assert "32 and 16 units" in payload["research_notes"]["content"]
     assert payload["clinvar_connection"]["connection_status"] == "Not connected"
     assert payload["historical_comparison"] == {
         "total_verified_variants": 0,

@@ -2,7 +2,15 @@
 
 ## Current Scientific Milestone
 
-The current milestone is AI Holdout V4. Frozen Clue Score V1, Resolved Direction V2, and completed Statistical Model V3 remain unchanged. V4 trains a small neural-network classifier while reserving exactly 100 variant records for a separate website-triggered test.
+The current milestone is AI Holdout V5. Frozen Clue Score V1, Resolved Direction V2, Statistical Model V3, and the completed V4 test remain unchanged. V5 uses richer older-only inputs, class-balanced training, and a larger network with a fresh 100-record holdout.
+
+## AI Holdout V5
+
+V5 retains the eleven older clue states and adds numeric classification age in days, maximum older submitter count, and missing-core-field count. A `StandardScaler` is fit only on training records. Training-only deterministic oversampling balances pathogenic and benign outcomes before fitting a neural network with hidden layers of 32 and 16 units.
+
+The fresh holdout excludes every V4 test group. To reduce quarantine while preserving gene isolation, candidate test groups contain at most two records. A frozen label-independent SHA-256 rule selects 100 groups and one test record from each; any companion record is quarantined. All other records are available for V5 training.
+
+V5 was designed after seeing V4 aggregate performance, so its architecture addresses the documented class-recall weakness. The new test answers remain unopened during design and training. No architecture, feature, balancing, threshold, or partition decision may be changed after V5 test results are known.
 
 ## AI Holdout V4
 

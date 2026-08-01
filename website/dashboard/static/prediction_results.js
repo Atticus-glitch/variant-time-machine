@@ -129,13 +129,26 @@ function renderAI(summary) {
 async function loadAI() { try { const summary = await api("/api/ai-v4/summary"); if (!summary.available) { byId("ai-v4-status").textContent = "AI Holdout V4 has not been trained yet."; return; } renderAI(summary); } catch (error) { byId("ai-v4-status").textContent = `AI status unavailable: ${error.message}`; } }
 async function testAI() { try { byId("ai-v4-test").disabled = true; byId("ai-v4-status").textContent = "Testing the trained model on 100 unseen records..."; await api("/api/ai-v4/test", {method: "POST", body: JSON.stringify({approved: true})}); await loadAI(); } catch (error) { byId("ai-v4-status").textContent = `AI test failed: ${error.message}`; } }
 
+function renderV5(summary) {
+  const list = byId("ai-v5-summary"); list.replaceChildren();
+  [["Unique training records", summary.training_records], ["Balanced training rows", summary.effective_balanced_training_rows], ["Fresh test records", summary.hidden_test_records], ["Quarantined records", summary.quarantined_records], ["Older-only inputs", summary.feature_count]].forEach(([label, value]) => addMetric(list, label, Number(value).toLocaleString(), "Frozen AI Holdout V5 design."));
+  if (summary.state === "tested") {
+    [["Correct", summary.correct], ["Wrong", summary.wrong], ["Accuracy", percent(summary.accuracy)], ["Balanced accuracy", percent(summary.balanced_accuracy)]].forEach(([label, value]) => addMetric(list, label, value, "Fresh V5 100-record result."));
+    byId("ai-v5-status").textContent = `Fresh test completed: ${summary.correct} of 100 correct (${percent(summary.accuracy)} accuracy; ${percent(summary.balanced_accuracy)} balanced accuracy).`;
+    byId("ai-v5-test").disabled = true; byId("ai-v5-approval").disabled = true;
+  } else { byId("ai-v5-status").textContent = "V5 trained. Its fresh 100-record test has not been opened."; }
+}
+async function loadV5() { try { const summary = await api("/api/ai-v5/summary"); if (!summary.available) { byId("ai-v5-status").textContent = "AI Holdout V5 has not been trained yet."; return; } renderV5(summary); } catch (error) { byId("ai-v5-status").textContent = `V5 status unavailable: ${error.message}`; } }
+async function testV5() { try { byId("ai-v5-test").disabled = true; byId("ai-v5-status").textContent = "Testing V5 on 100 fresh records..."; await api("/api/ai-v5/test", {method: "POST", body: JSON.stringify({approved: true})}); await loadV5(); } catch (error) { byId("ai-v5-status").textContent = `V5 test failed: ${error.message}`; } }
+
 byId("toggle-formula").addEventListener("click", () => { byId("formula-content").hidden = !byId("formula-content").hidden; });
 byId("formula-approval").addEventListener("change", (event) => { byId("run-predictions").disabled = !event.target.checked; });
 byId("run-predictions").addEventListener("click", runPredictions); byId("refresh-predictions").addEventListener("click", async () => { await loadSummary(); await loadList(); });
 byId("ai-v4-approval").addEventListener("change", (event) => { byId("ai-v4-test").disabled = !event.target.checked; }); byId("ai-v4-test").addEventListener("click", testAI);
+byId("ai-v5-approval").addEventListener("change", (event) => { byId("ai-v5-test").disabled = !event.target.checked; }); byId("ai-v5-test").addEventListener("click", testV5);
 byId("prediction-search").addEventListener("submit", (event) => { event.preventDefault(); state.page = 1; loadList(); }); byId("prediction-sort").addEventListener("change", () => { state.page = 1; loadList(); });
 byId("prediction-filters").addEventListener("click", (event) => { if (!event.target.dataset.filter) return; state.filter = event.target.dataset.filter; state.page = 1; document.querySelectorAll("#prediction-filters button").forEach((button) => button.classList.toggle("active", button === event.target)); loadList(); });
 byId("prediction-previous").addEventListener("click", () => { if (state.page > 1) { state.page -= 1; loadList(); } }); byId("prediction-next").addEventListener("click", () => { if (state.page < state.pageCount) { state.page += 1; loadList(); } });
 byId("close-prediction-detail").addEventListener("click", () => { byId("prediction-detail").hidden = true; }); document.querySelectorAll("[data-review]").forEach((button) => button.addEventListener("click", () => saveReview(button.dataset.review)));
 
-Promise.all([loadSummary(), loadAI()]).then(([available]) => { if (available) loadList(); });
+Promise.all([loadSummary(), loadAI(), loadV5()]).then(([available]) => { if (available) loadList(); });
