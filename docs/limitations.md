@@ -61,5 +61,12 @@
 - V4's 76.0% accuracy concealed 25.0% pathogenic recall; balanced accuracy was only 62.5%. This demonstrates why selecting a model by headline accuracy would be misleading.
 - V5 was designed after V4 aggregate results were visible. Its test groups are fresh and disjoint from V4, but post-V4 design choices and the shared V2 cohort prevent a claim of fully independent validation.
 - V5 oversamples the minority class only within training. This can improve pathogenic recall but may reduce ordinary accuracy or probability calibration; the hidden result must be reported whether it improves or not.
+- V5 scored 82.0% accuracy and 82.2% balanced accuracy on its 100-record internal test. The interval is too small for a strong winner claim, and V4/V5 used different test records rather than a paired test.
+- The current leakage audit verifies declared feature names and documented lineage. It cannot prove that every upstream source value was historically available without source-date review.
+- V3 references a source database hash that is no longer present locally. Its recorded artifacts remain intact, but byte-for-byte reproduction from the current V2 database is unavailable.
+- V4 and V5 configuration `frozen_at_utc` timestamps occur after their recorded training timestamps. The inconsistency is preserved in registry warnings and weakens the freeze chronology claim.
+- V6's 1,000-record test was excluded from V6 fitting by Variation ID and connected group, and prior V4/V5 test groups were excluded from V6 entirely. It is nevertheless another internal split of the previously inspected, outcome-selected V2 cohort.
+- Reserving 1,000 connected groups left only 2,518 V6 training records and quarantined 4,672 companions. V6 therefore differs from V5 in both test cohort and training membership; score differences are not a controlled architecture comparison.
+- The current V2 database contains the same 8,818 cohort IDs but has a different byte hash from the source recorded by V4/V5. V6 freezes the current hash; this does not repair or rewrite prior provenance.
 
 All conclusions will be restricted to the requested VCV versions or chosen releases, matching and comparison rules, feature availability, and evaluation design. These limitations will be updated as empirical problems are discovered.

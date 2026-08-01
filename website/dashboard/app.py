@@ -71,10 +71,13 @@ from variant_time_machine.config import (  # noqa: E402
     HISTORICAL_RAW_DATA_DIR,
     HISTORICAL_VARIANT_DB_PATH,
     LARGE_DOWNLOAD_THRESHOLD_BYTES,
+    MODEL_ERROR_REVIEW_PATH,
+    MODEL_REGISTRY_DIR,
     PILOT_CURRENT_API_ESTIMATE_BYTES,
     PILOT_EXTRACTED_DIR,
     PILOT_RESULTS_DIR,
     PILOT_WORKSPACE_PATH,
+    PROJECT_TIMELINE_PATH,
     RAW_DATA_DIR,
     RESOLVED_DIRECTION_RESULTS_DB_PATH,
     RESOLVED_DIRECTION_RESULTS_DIR,
@@ -93,6 +96,15 @@ from variant_time_machine.historical_variants import (  # noqa: E402
     historical_database_metadata,
     historical_variant_detail,
     search_historical_variants,
+)
+from variant_time_machine.model_registry import (  # noqa: E402
+    RegistryError,
+    load_model_dashboard,
+    load_prediction_explorer,
+    load_project_timeline,
+    prediction_explorer_detail,
+    update_error_review,
+    update_timeline_status,
 )
 from variant_time_machine.pilot_results import (  # noqa: E402
     OUTPUT_FILENAMES,
@@ -607,6 +619,9 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         AI_HOLDOUT_V4_SOURCE_DB_PATH=RESOLVED_DIRECTION_RESULTS_DB_PATH,
         AI_HOLDOUT_V5_RESULTS_DIR=AI_HOLDOUT_V5_RESULTS_DIR,
         AI_HOLDOUT_V5_SOURCE_DB_PATH=RESOLVED_DIRECTION_RESULTS_DB_PATH,
+        MODEL_REGISTRY_DIR=MODEL_REGISTRY_DIR,
+        MODEL_ERROR_REVIEW_PATH=MODEL_ERROR_REVIEW_PATH,
+        PROJECT_TIMELINE_PATH=PROJECT_TIMELINE_PATH,
     )
     if test_config:
         app.config.update(test_config)
@@ -1468,6 +1483,121 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     def prediction_results_page():
         return send_from_directory(Path(__file__).parent, "prediction_results.html")
 
+    @app.get("/model_versions.html")
+    def model_versions_page():
+        return send_from_directory(Path(__file__).parent, "model_versions.html")
+
+    @app.get("/prediction_explorer.html")
+    def prediction_explorer_page():
+        return send_from_directory(Path(__file__).parent, "prediction_explorer.html")
+
+    @app.get("/research_timeline.html")
+    def research_timeline_page():
+        return send_from_directory(Path(__file__).parent, "research_timeline.html")
+
+    @app.get("/api/model-versions")
+    def api_model_versions():
+        try:
+            return jsonify(load_model_dashboard(PROJECT_ROOT))
+        except (OSError, RegistryError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Model registry unavailable: {exc}"}), 503
+
+    @app.get("/api/model-versions/<model_id>")
+    def api_model_version(model_id: str):
+        try:
+            payload = load_model_dashboard(PROJECT_ROOT)
+            model = next(
+                (
+                    item
+                    for item in payload["model_records"]
+                    if item["model_id"].casefold() == model_id.casefold()
+                ),
+                None,
+            )
+            if model is None:
+                return jsonify({"error": "Model version not found."}), 404
+            return jsonify(model)
+        except (OSError, RegistryError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Model registry unavailable: {exc}"}), 503
+
+    @app.get("/api/prediction-explorer")
+    def api_prediction_explorer():
+        try:
+            return jsonify(
+                load_prediction_explorer(
+                    PROJECT_ROOT, Path(app.config["MODEL_ERROR_REVIEW_PATH"])
+                )
+            )
+        except (OSError, RegistryError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Prediction Explorer unavailable: {exc}"}), 503
+
+    @app.get("/api/prediction-explorer/<variation_id>")
+    def api_prediction_explorer_detail(variation_id: str):
+        try:
+            return jsonify(
+                prediction_explorer_detail(
+                    PROJECT_ROOT,
+                    variation_id,
+                    Path(app.config["MODEL_ERROR_REVIEW_PATH"]),
+                )
+            )
+        except RegistryError as exc:
+            return jsonify({"error": str(exc)}), 404
+        except (OSError, sqlite3.Error, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Prediction detail unavailable: {exc}"}), 503
+
+    @app.patch("/api/prediction-explorer/<model_id>/<variation_id>/review")
+    def api_prediction_explorer_review(model_id: str, variation_id: str):
+        try:
+            body = _json_body()
+            detail = prediction_explorer_detail(
+                PROJECT_ROOT,
+                variation_id,
+                Path(app.config["MODEL_ERROR_REVIEW_PATH"]),
+            )
+            normalized_model = model_id.upper()
+            if normalized_model not in detail["model_results"]:
+                raise RegistryError(
+                    "This Variation ID was not evaluated by the selected model."
+                )
+            review = update_error_review(
+                Path(app.config["MODEL_ERROR_REVIEW_PATH"]),
+                normalized_model,
+                variation_id,
+                status=str(body.get("status", "unreviewed")),
+                category=str(body.get("category", "unknown")),
+                notes=str(body.get("notes", "")),
+            )
+            return jsonify({"review": review})
+        except RegistryError as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Could not save review: {exc}"}), 503
+
+    @app.get("/api/research-timeline")
+    def api_research_timeline():
+        try:
+            return jsonify(
+                load_project_timeline(Path(app.config["PROJECT_TIMELINE_PATH"]))
+            )
+        except (OSError, RegistryError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Research timeline unavailable: {exc}"}), 503
+
+    @app.patch("/api/research-timeline/status")
+    def api_research_timeline_status():
+        try:
+            body = _json_body()
+            task = update_timeline_status(
+                Path(app.config["PROJECT_TIMELINE_PATH"]),
+                str(body.get("title", "")),
+                str(body.get("status", "")),
+            )
+            return jsonify({"task": task})
+        except RegistryError as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Could not update timeline: {exc}"}), 503
+
     @app.get("/api/predictions/formula")
     def api_prediction_formula():
         try:
@@ -1846,11 +1976,55 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             }
         with state_lock:
             transfer_snapshot = dict(transfer_state)
+        try:
+            model_dashboard = load_model_dashboard(PROJECT_ROOT)
+            model_index = {item["model_id"]: item for item in model_dashboard["models"]}
+            timeline = load_project_timeline(Path(app.config["PROJECT_TIMELINE_PATH"]))
+            next_milestone = next(
+                (
+                    task
+                    for task in timeline["tasks"]
+                    if task["status"] not in {"completed", "cancelled"}
+                ),
+                None,
+            )
+            model_validation = {
+                "project_stage": "Model Validation and Error Analysis",
+                "latest_model_version": model_dashboard["latest_model_version"],
+                "best_validated_model": model_dashboard["best_validated_model"],
+                "v4": model_index.get("V4"),
+                "v5": model_index.get("V5"),
+                "v6": model_index.get("V6"),
+                "leakage_audit_status": {
+                    item["model_id"]: item["leakage_status"]
+                    for item in model_dashboard["models"]
+                },
+                "held_out_test_size": {"V4": 100, "V5": 100, "V6": 1000},
+                "next_required_validation_step": (
+                    "Review V6 errors and seek a genuinely later untouched cohort "
+                    "for independent temporal evidence."
+                ),
+                "upcoming_deadline": next_milestone,
+                "github_status": (
+                    "Remote configured; live sync is not checked by dashboard."
+                ),
+                "warnings": [
+                    "V4/V5 used n=100 tests; V6 used a different n=1,000 test.",
+                    "Scores across different cohorts are not paired improvements.",
+                    "Preliminary research result; not medical advice or clinical use.",
+                ],
+            }
+        except (OSError, RegistryError, json.JSONDecodeError):
+            model_validation = {
+                "project_stage": "Model Validation and Error Analysis",
+                "available": False,
+                "warnings": ["Model registry is unavailable."],
+            }
         return jsonify(
             {
                 "project_name": "Variant Time Machine",
                 "project_explanation": PROJECT_EXPLANATION,
-                "current_milestone": "AI Holdout V5",
+                "current_milestone": "Model Validation and Error Analysis",
                 "folders": FOLDER_GUIDE,
                 "next_tasks": dynamic_next_tasks(progress),
                 "research_progress": progress,
@@ -1869,6 +2043,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 "current_pilot_variant": _current_pilot_status(
                     Path(app.config["PILOT_WORKSPACE_PATH"])
                 ),
+                "model_validation": model_validation,
             }
         )
 

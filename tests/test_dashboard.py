@@ -66,6 +66,9 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert client.get("/static/pilot_results.js").status_code == 200
     assert client.get("/static/prediction_results.js").status_code == 200
     assert client.get("/static/overview.js").status_code == 200
+    assert client.get("/static/model_versions.js").status_code == 200
+    assert client.get("/static/prediction_explorer.js").status_code == 200
+    assert client.get("/static/research_timeline.js").status_code == 200
     lookup_page = client.get("/variant_lookup.html")
     assert lookup_page.status_code == 200
     assert "ClinVar Variant Lookup" in lookup_page.get_data(as_text=True)
@@ -76,6 +79,9 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert client.get("/pilot_results.html").status_code == 200
     assert client.get("/prediction_results.html").status_code == 200
     assert client.get("/overview.html").status_code == 200
+    assert client.get("/model_versions.html").status_code == 200
+    assert client.get("/prediction_explorer.html").status_code == 200
+    assert client.get("/research_timeline.html").status_code == 200
 
 
 def test_ai_v4_endpoint_stays_separate_and_requires_test_approval(
@@ -185,7 +191,7 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     assert response.status_code == 200
     payload = response.get_json()
     assert payload["project_name"] == "Variant Time Machine"
-    assert payload["current_milestone"] == "AI Holdout V5"
+    assert payload["current_milestone"] == "Model Validation and Error Analysis"
     assert "uncertain genetic variant" in payload["project_explanation"]
     assert len(payload["folders"]) == 8
     assert len(payload["next_tasks"]) == 3
@@ -205,10 +211,8 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
         "storage",
     }.issubset(payload["system"])
     assert "data/example_variants.csv" in payload["system"]["files_created"]
-    assert payload["research_notes"]["title"] == (
-        "2026-08-01 AI Holdout V5 Trained, Test Unopened"
-    )
-    assert "8,683 unique records" in payload["research_notes"]["content"]
+    assert payload["research_notes"]["title"] == "2026-08-01 V6 1,000-Record Test"
+    assert "75.6%" in payload["research_notes"]["content"]
     assert payload["clinvar_connection"]["connection_status"] == "Not connected"
     assert payload["historical_comparison"] == {
         "total_verified_variants": 0,
@@ -231,6 +235,60 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     assert payload["clue_score_baseline"]["formula_version"] == (
         "Resolved Direction V2"
     )
+    assert payload["model_validation"]["latest_model_version"] == "V6"
+    assert payload["model_validation"]["best_validated_model"] == (
+        "No stable winner yet."
+    )
+
+
+def test_model_registry_explorer_and_timeline_apis(
+    tmp_path: Path,
+) -> None:
+    timeline = tmp_path / "timeline.json"
+    source_timeline = Path(__file__).parents[1] / "outputs" / "project_timeline.json"
+    timeline.write_text(source_timeline.read_text(encoding="utf-8"), encoding="utf-8")
+    reviews = tmp_path / "model_error_reviews.json"
+    app = create_app(
+        {
+            "TESTING": True,
+            "MODEL_ERROR_REVIEW_PATH": reviews,
+            "PROJECT_TIMELINE_PATH": timeline,
+        }
+    )
+    local_client = app.test_client()
+
+    models = local_client.get("/api/model-versions")
+    assert models.status_code == 200
+    assert models.get_json()["latest_model_version"] == "V6"
+    assert local_client.get("/api/model-versions/V4").status_code == 200
+
+    explorer = local_client.get("/api/prediction-explorer").get_json()
+    assert explorer["total"] == 1200
+    explorer_row = explorer["rows"][0]
+    identifier = explorer_row["variation_id"]
+    model_id = next(
+        model
+        for model in ("V4", "V5", "V6")
+        if explorer_row[f"{model.lower()}_prediction"]
+    )
+    detail = local_client.get(f"/api/prediction-explorer/{identifier}")
+    assert detail.status_code == 200
+    assert "older_features" in detail.get_json()
+    review = local_client.patch(
+        f"/api/prediction-explorer/{model_id}/{identifier}/review",
+        json={"status": "reviewed", "category": "unknown", "notes": "Checked."},
+    )
+    assert review.status_code == 200
+    assert reviews.is_file()
+
+    timeline_payload = local_client.get("/api/research-timeline").get_json()
+    assert len(timeline_payload["tasks"]) == 14
+    task = timeline_payload["tasks"][2]
+    updated = local_client.patch(
+        "/api/research-timeline/status",
+        json={"title": task["title"], "status": "in_progress"},
+    )
+    assert updated.status_code == 200
 
 
 def test_pilot_endpoint_shows_empty_first_run(

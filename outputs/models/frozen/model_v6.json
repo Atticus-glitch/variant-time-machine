@@ -1,0 +1,20 @@
+{
+  "model_id": "V6",
+  "output_files": [
+    "outputs/ai_holdout_v6/ai_holdout_v6.yaml",
+    "outputs/ai_holdout_v6/hidden_test_predictions.csv",
+    "outputs/ai_holdout_v6/model.joblib",
+    "outputs/ai_holdout_v6/partition_manifest.json",
+    "outputs/ai_holdout_v6/test_metrics.json",
+    "outputs/ai_holdout_v6/training_summary.json"
+  ],
+  "schema_version": 1,
+  "source_artifact": {
+    "exists": true,
+    "path": "outputs/ai_holdout_v6/model.joblib",
+    "sha256": "a0eb6e82bb0142373286ef2a1af70bbf0ba3d965fbe14f7950b67879b695d801",
+    "size_bytes": 44609
+  },
+  "status": "frozen_reference",
+  "warning": "Model binary/config remains at its original immutable path."
+}

@@ -1,28 +1,38 @@
 # Variant Time Machine
 
-**Early research and development: rule-based baselines are preserved and a learned-weight experiment is being added.**
+**Early research and development: frozen rule-based and learned-model results are preserved while validation and error analysis continue.**
 
-Variant Time Machine is a computational genetics research project that asks whether information available about a ClinVar variant at an earlier date can help predict its later classification. I plan to follow variants first labeled as variants of uncertain significance (VUS), build a carefully dated dataset, and compare explainable prediction methods. The goal is to help prioritize research questions, not to make clinical decisions.
+Variant Time Machine is a computational genetics research project that asks whether information available about a ClinVar variant at an earlier date can help predict its later classification. I started with a simple clue score, then kept rebuilding the experiment whenever a result exposed a better question. The goal is to learn how to design a careful historical study and prioritize research questions, not to make clinical decisions.
 
 > This project is for research and education only. It is not a medical device, does not provide diagnoses, and must not be used to make healthcare decisions.
 
 ## Research Question
 
-**Using only information that was available at an earlier point in time, can an explainable computational model predict whether a ClinVar variant of uncertain significance will later be reclassified as harmful, harmless, or remain uncertain?**
+**Among variants that were uncertain in the January 2022 snapshot and known to have a clear benign or pathogenic aggregate outcome by January 2024, can older-only information predict the direction of that change?**
+
+The broader long-term question also includes variants that remain uncertain, but the current V2-V6 experiment does not answer that question.
 
 ## Current Status
 
-The project now has indexed January 2022 and January 2024 ClinVar summary snapshots. Frozen **Clue Score V1** and **Resolved Direction V2** remain available as hand-scored baselines. **AI Holdout V4** scored 76.0% accuracy but only 62.5% balanced accuracy because it found just 8 of 32 pathogenic outcomes. That result is preserved. **AI Holdout V5** is now trained on 8,683 unique records and 12,396 class-balanced rows using 14 older-only inputs and a 32-by-16 neural network. Its fresh 100-record test is disjoint from V4 and remains unopened. All versions remain conditional exploratory research, not clinical claims.
+The project now has indexed January 2022 and January 2024 ClinVar summary snapshots. Frozen **Clue Score V1** and **Resolved Direction V2** remain available as hand-scored baselines. The neural experiments were deliberately preserved rather than overwritten:
+
+| Model | Test design | n | Accuracy | Balanced accuracy | Benign recall | Pathogenic recall |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| V4 | Internal connected-group holdout | 100 | 76.0% | 62.5% | 100.0% | 25.0% |
+| V5 | Different internal connected-group holdout | 100 | 82.0% | 82.2% | 81.5% | 82.9% |
+| V6 | New groups excluded before V6 fitting | 1,000 | 75.6% | 74.4% | 77.6% | 71.1% |
+
+V6 was trained from scratch on 2,518 records after reserving 1,000 test representatives, quarantining 4,672 connected companions, and excluding 628 records in prior V4/V5 test groups. Its train/test Variation ID overlap and connected-group overlap are both zero. V5 still has the highest point score on its own small test, while V6 supplies much stronger sample-size evidence and a more modest estimate. Since the cohorts and training memberships differ, there is **no stable winner** and the scores should not be subtracted as a head-to-head improvement. See the [full comparison](research/model-v4-v5-comparison.md).
 
 ## Research Workflow
 
-1. Open **Prediction Results** and read the frozen changed-outcome Version 2 formula.
-2. Review wrong high-confidence predictions before easy correct examples.
-3. Open a result and inspect every older clue, point, warning, threshold, normalized answer, and date label.
+1. Open **Model Versions** and review the frozen V1-V6 records, leakage audits, baselines, and provenance warnings.
+2. Use **Prediction Explorer** to review wrong high-confidence V4-V6 predictions before easy correct examples.
+3. Inspect every older-snapshot feature, warning, prediction, probability, and newer answer label.
 4. Confirm Variation and Allele IDs, germline scope, conditions, and official ClinVar context.
 5. Record reviewed, correctly matched, ambiguous, or excluded decisions separately from automatic results.
 6. Use Version History Explorer only when exact available VCV versions can narrow the timeline.
-7. Preserve Versions 1 and 2; train Version 3 only on its training partition and reserve a future cohort for truly independent validation.
+7. Preserve all frozen versions and reserve new group-isolated cohorts for future validation; do not tune against the existing tests.
 
 ## Repository Structure
 
@@ -81,6 +91,19 @@ python scripts/build_timeline_dataset.py \
 ```
 
 The command refuses to replace an existing output unless `--overwrite` is supplied. Every configured download requires explicit confirmation after showing its source, estimated size, and purpose. Downloads above 500 MB are protected by a hard large-download rule. No download occurs during imports, tests, or setup validation.
+
+## Model Registry Reports
+
+Rebuild the lightweight V1-V6 registry, standardized evaluations, leakage audits,
+logs, comparison tables, error-analysis CSVs, and project timeline from existing
+frozen artifacts without training or opening a new test set:
+
+```bash
+.venv312/bin/python scripts/build_model_registry.py
+```
+
+The temporary Python 3.14 fallback is `.venv/bin/python scripts/build_model_registry.py`.
+The command does not copy large model binaries or source databases into Git.
 
 ## Local Dashboard
 
@@ -162,9 +185,9 @@ The command-line workflow confirms the small API request and asks again before s
 
 ## Current Milestone
 
-Use Prediction Results once to evaluate trained V5 on its fresh 100-record test, then report both accuracy and balanced accuracy without retuning.
+Review V6's 244 errors, check probability calibration, and design a genuinely later untouched cohort before changing the model again.
 
-The neural network adjusts internal weights by minimizing supervised classification loss on training examples. The 100-record test remains internal to the already inspected Version 2 cohort, so it is not pristine independent validation and still cannot predict whether resolution will happen.
+The neural network adjusts internal weights by minimizing supervised classification loss on training examples. V6's 1,000 test records were excluded from V6 training by both Variation ID and connected group, but the test still comes from the already inspected Version 2 cohort. It is not independent temporal validation and still cannot predict whether resolution will happen.
 
 ## Reproducibility
 

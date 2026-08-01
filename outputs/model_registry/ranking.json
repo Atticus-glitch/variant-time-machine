@@ -1,0 +1,18 @@
+{
+  "comparison_status": "not_rankable_across_current_evaluations",
+  "conclusion": "No stable winner. V6 supplies the largest internal test; V5 has the highest point balanced accuracy on its own much smaller test.",
+  "criteria": [
+    "test design",
+    "sample size",
+    "class recall",
+    "uncertainty"
+  ],
+  "evidence_summary": {
+    "highest_own_test_balanced_accuracy": "V5 (82.2%, n=100)",
+    "largest_internal_test": "V6 (n=1,000)",
+    "most_interpretable_models": "V1-V3"
+  },
+  "ranking": [],
+  "stable_winner": null,
+  "warning": "V4, V5, and V6 used different group-isolated internal tests and different training memberships. Their point estimates are descriptive, not paired head-to-head effects."
+}

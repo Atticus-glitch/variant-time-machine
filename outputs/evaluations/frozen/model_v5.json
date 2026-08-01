@@ -1,0 +1,52 @@
+{
+  "evaluation_source": "outputs/ai_holdout_v5/hidden_test_predictions.csv",
+  "metrics": {
+    "accuracy": 0.82,
+    "average_precision_pathogenic": "unknown/not recorded",
+    "balanced_accuracy": 0.8219780219780219,
+    "benign_f1": 0.8548387096774194,
+    "benign_precision": 0.8983050847457628,
+    "benign_recall": 0.8153846153846154,
+    "brier_score": "unknown/not recorded",
+    "class_distribution": {
+      "moved_toward_benign": 65,
+      "moved_toward_pathogenic": 35
+    },
+    "macro_f1": 0.8089983022071308,
+    "macro_precision": 0.8028110789582472,
+    "macro_recall": 0.8219780219780219,
+    "number_correct": 82,
+    "number_no_prediction": 0,
+    "number_not_scorable": 0,
+    "number_of_predictions": 100,
+    "number_wrong": 18,
+    "pathogenic_f1": 0.7631578947368421,
+    "pathogenic_precision": 0.7073170731707317,
+    "pathogenic_recall": 0.8285714285714286,
+    "per_class": {
+      "benign": {
+        "f1": 0.8548387096774194,
+        "precision": 0.8983050847457628,
+        "recall": 0.8153846153846154,
+        "support": 65
+      },
+      "pathogenic": {
+        "f1": 0.7631578947368421,
+        "precision": 0.7073170731707317,
+        "recall": 0.8285714285714286,
+        "support": 35
+      }
+    },
+    "roc_auc": "unknown/not recorded",
+    "weighted_f1": 0.8227504244482173
+  },
+  "model_id": "V5",
+  "schema_version": 1,
+  "status": "frozen",
+  "synthetic_evaluation": false,
+  "warnings": [
+    "V5 was designed after V4 aggregate results were known. Its fresh holdout is unseen by V5 and disjoint from V4 test groups, but it is still internal to the already inspected V2 cohort.",
+    "Recorded configuration frozen_at_utc occurs after the recorded training timestamp; chronology is inconsistent and was not rewritten.",
+    "Training summary retains trained_hidden_test_unopened, but a saved test_metrics.json establishes that the effective state is tested."
+  ]
+}

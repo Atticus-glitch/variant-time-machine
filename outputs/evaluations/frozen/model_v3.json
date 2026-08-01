@@ -1,0 +1,35 @@
+{
+  "evaluation_source": "outputs/statistical_model_v3/held_out_predictions.csv",
+  "metrics": {
+    "accuracy": 0.5824933687002652,
+    "average_precision_pathogenic": 0.5459423133126523,
+    "balanced_accuracy": 0.705954316686024,
+    "benign_f1": "unknown/not recorded",
+    "benign_precision": 0.9628571428571429,
+    "benign_recall": 0.4696864111498258,
+    "brier_score": 0.171442729047524,
+    "class_distribution": "unknown/not recorded",
+    "macro_f1": "unknown/not recorded",
+    "macro_precision": "unknown/not recorded",
+    "macro_recall": "unknown/not recorded",
+    "number_correct": "unknown/not recorded",
+    "number_no_prediction": "unknown/not recorded",
+    "number_not_scorable": "unknown/not recorded",
+    "number_of_predictions": "unknown/not recorded",
+    "number_wrong": "unknown/not recorded",
+    "pathogenic_f1": "unknown/not recorded",
+    "pathogenic_precision": 0.35780590717299576,
+    "pathogenic_recall": 0.9422222222222222,
+    "per_class": "unknown/not recorded",
+    "roc_auc": 0.7883677893921796,
+    "weighted_f1": "unknown/not recorded"
+  },
+  "model_id": "V3",
+  "schema_version": 1,
+  "status": "frozen",
+  "synthetic_evaluation": false,
+  "warnings": [
+    "This is an internal held-out evaluation within the already inspected Resolved Direction V2 cohort, not independent temporal validation.",
+    "The original V3 source database hash is not available in the current workspace; recorded results are preserved but cannot be reproduced from the current V2 database byte-for-byte."
+  ]
+}

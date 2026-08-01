@@ -118,7 +118,7 @@ function renderAI(summary) {
   const list = byId("ai-v4-summary"); list.replaceChildren();
   [["Training records", summary.training_records], ["Hidden test records", summary.hidden_test_records], ["Quarantined related records", summary.quarantined_records], ["Older-only hints", summary.feature_count]].forEach(([label, value]) => addMetric(list, label, Number(value).toLocaleString(), "Frozen AI Holdout V4 design."));
   if (summary.state === "tested") {
-    [["Correct", summary.correct], ["Wrong", summary.wrong], ["Accuracy", percent(summary.accuracy)], ["Balanced accuracy", percent(summary.balanced_accuracy)]].forEach(([label, value]) => addMetric(list, label, value, "Result on exactly 100 previously unseen records."));
+    [["Correct", summary.correct], ["Wrong", summary.wrong], ["Accuracy", percent(summary.accuracy)], ["Balanced accuracy", percent(summary.balanced_accuracy)]].forEach(([label, value]) => addMetric(list, label, value, "Result on exactly 100 records held out from V4 fitting."));
     byId("ai-v4-status").textContent = `Hidden test completed: ${summary.correct} of 100 correct (${percent(summary.accuracy)} accuracy).`;
     byId("ai-v4-test").disabled = true;
     byId("ai-v4-approval").disabled = true;
@@ -131,10 +131,10 @@ async function testAI() { try { byId("ai-v4-test").disabled = true; byId("ai-v4-
 
 function renderV5(summary) {
   const list = byId("ai-v5-summary"); list.replaceChildren();
-  [["Unique training records", summary.training_records], ["Balanced training rows", summary.effective_balanced_training_rows], ["Fresh test records", summary.hidden_test_records], ["Quarantined records", summary.quarantined_records], ["Older-only inputs", summary.feature_count]].forEach(([label, value]) => addMetric(list, label, Number(value).toLocaleString(), "Frozen AI Holdout V5 design."));
+  [["Unique training records", summary.training_records], ["Balanced training rows", summary.effective_balanced_training_rows], ["Held-out test records", summary.hidden_test_records], ["Quarantined records", summary.quarantined_records], ["Older-only inputs", summary.feature_count]].forEach(([label, value]) => addMetric(list, label, Number(value).toLocaleString(), "Frozen AI Holdout V5 design."));
   if (summary.state === "tested") {
-    [["Correct", summary.correct], ["Wrong", summary.wrong], ["Accuracy", percent(summary.accuracy)], ["Balanced accuracy", percent(summary.balanced_accuracy)]].forEach(([label, value]) => addMetric(list, label, value, "Fresh V5 100-record result."));
-    byId("ai-v5-status").textContent = `Fresh test completed: ${summary.correct} of 100 correct (${percent(summary.accuracy)} accuracy; ${percent(summary.balanced_accuracy)} balanced accuracy).`;
+    [["Correct", summary.correct], ["Wrong", summary.wrong], ["Accuracy", percent(summary.accuracy)], ["Balanced accuracy", percent(summary.balanced_accuracy)]].forEach(([label, value]) => addMetric(list, label, value, "V5 result on its own 100-record held-out cohort."));
+    byId("ai-v5-status").textContent = `Held-out test completed: ${summary.correct} of 100 correct (${percent(summary.accuracy)} accuracy; ${percent(summary.balanced_accuracy)} balanced accuracy).`;
     byId("ai-v5-test").disabled = true; byId("ai-v5-approval").disabled = true;
   } else { byId("ai-v5-status").textContent = "V5 trained. Its fresh 100-record test has not been opened."; }
 }

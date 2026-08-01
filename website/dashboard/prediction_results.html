@@ -28,6 +28,9 @@
       <a href="/overview.html">Start Here</a>
       <a href="/historical_variants.html">Variant Spreadsheet</a>
       <a href="/prediction_results.html" aria-current="page">Prediction Results</a>
+      <a href="/model_versions.html">Model Versions</a>
+      <a href="/prediction_explorer.html">Prediction Explorer</a>
+      <a href="/research_timeline.html">Research Timeline</a>
       <a href="/version_history.html">Version History Explorer</a>
       <a href="/">Project Dashboard</a>
     </nav>
@@ -66,6 +69,12 @@
         <p id="metrics-note" class="plain-language-note">The cohort excludes records that remained uncertain, conflicted, were unrecognized, or could not be matched safely.</p>
       </section>
 
+      <section class="panel prediction-caution" aria-labelledby="comparison-boundary-title">
+        <p class="section-number">Comparison boundary</p>
+        <h2 id="comparison-boundary-title">Different Tests, Not a Race</h2>
+        <p>V4 and V5 each used a different 100-record test. V6 later reserved 1,000 new records and their connected groups before retraining. Scores across these cohorts are not paired improvements. <a class="text-link" href="/model_versions.html">Open the cohort-by-cohort comparison</a>.</p>
+      </section>
+
       <section class="panel" aria-labelledby="ai-v4-title">
         <div class="section-heading"><div><p class="section-number">Machine-learning test</p><h2 id="ai-v4-title">AI Holdout V4</h2></div></div>
         <p class="large-explanation">A small neural network learns from all eleven older-only hint indicators. Exactly 100 variant records and every related-gene companion were excluded from training.</p>
@@ -79,13 +88,22 @@
 
       <section class="panel" aria-labelledby="ai-v5-title">
         <div class="section-heading"><div><p class="section-number">Fresh machine-learning test</p><h2 id="ai-v5-title">AI Holdout V5</h2></div></div>
-        <p class="large-explanation">V5 uses 14 older-only inputs, class-balanced training, and a larger 32-by-16 neural network. Its 100 test records are fresh and share no test group with V4.</p>
+        <p class="large-explanation">V5 uses 14 older-only inputs, class-balanced training, and a larger 32-by-16 neural network. Its 100 test records were held out from V5 fitting and share no test group with V4, but remain internal to the same V2 cohort.</p>
         <dl id="ai-v5-summary" class="prediction-summary-grid"><div><dt>Status</dt><dd>Loading...</dd></div></dl>
         <div class="approval-box">
           <label class="check-line"><input id="ai-v5-approval" type="checkbox"> I understand the V5 hidden result must be reported honestly and cannot be used to retune V5.</label>
           <button id="ai-v5-test" type="button" disabled>Test V5 On 100 Fresh Records</button>
           <p id="ai-v5-status" aria-live="polite">Checking V5 training status...</p>
         </div>
+      </section>
+
+      <section class="panel" aria-labelledby="ai-v6-title">
+        <div class="section-heading"><div><p class="section-number">Larger frozen evaluation</p><h2 id="ai-v6-title">AI Holdout V6</h2></div><a class="text-link" href="/prediction_explorer.html">Review V6 predictions</a></div>
+        <p class="large-explanation">V6 was retrained only after 1,000 new connected-group representatives were reserved. Those records, 4,672 connected companions, and all 628 records in prior V4/V5 test groups were absent from V6 training.</p>
+        <dl class="prediction-summary-grid">
+          <div><dt>Test records</dt><dd>1,000</dd></div><div><dt>Accuracy</dt><dd>75.6%</dd></div><div><dt>Balanced accuracy</dt><dd>74.4%</dd></div><div><dt>Benign recall</dt><dd>77.6%</dd></div><div><dt>Pathogenic recall</dt><dd>71.1%</dd></div><div><dt>Confusion matrix</dt><dd>TN 535, FP 154, FN 90, TP 221</dd></div>
+        </dl>
+        <p class="plain-language-note">The larger result is more modest than V5's small-test point estimate. That is evidence to investigate, not a result to tune away.</p>
       </section>
 
       <section class="panel prediction-list-panel" aria-labelledby="results-title">

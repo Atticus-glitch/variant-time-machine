@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "experiment_version": "AI Holdout V6",
+  "status": "frozen",
+  "frozen_at_utc": "2026-08-01T22:42:43+00:00",
+  "prediction_snapshot_date": "2022-01-06",
+  "answer_snapshot_date": "2024-01-04",
+  "label": "V5-style class-balanced neural network retrained around a precommitted 1,000-record group-isolated holdout.",
+  "design_warning": "V6 is an internal conditional test from the previously inspected V2 cohort, not independent temporal or clinical validation. Its 1,000 records and their connected groups are excluded from V6 training, and all prior V4/V5 test groups are excluded from both V6 training and V6 testing.",
+  "source_database_sha256": "d9d66ba2384f2d9e0b8cb55be43432f8e02fdd8fcd70ecd2266d65e52af73a04",
+  "source_note": "This rebuilt local V2 database has the same 8,818-record cohort and IDs used by the manifests, but its byte hash differs from the source hash recorded by V4/V5. V6 freezes and reports the current hash rather than rewriting prior provenance.",
+  "previous_holdout_manifest_sha256": {
+    "V4": "bd4401dcec03202832bef7e524db9a449786bcdefd485bab2e6f5585ac357322",
+    "V5": "b1cdd679239c1fab53dadd71f81e8c6cca78f41c3970d922df5a3e32ad622ca2"
+  },
+  "features": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning",
+    "classification_age_available",
+    "record_completeness_available",
+    "classification_age_days",
+    "maximum_submitter_count",
+    "missing_core_field_count"
+  ],
+  "target": {
+    "moved_toward_benign": 0,
+    "moved_toward_pathogenic": 1
+  },
+  "partition": {
+    "algorithm": "sha256_fresh_1000_connected_groups",
+    "holdout_records": 1000,
+    "salt": "variant-time-machine-ai-holdout-v6-1000-2026-08-01",
+    "group_rule": "Recompute connected older-gene groups; exclude complete V4/V5 test groups from all V6 use; rank every remaining group without labels; select 1,000 groups; choose one deterministic test representative per selected group; quarantine companions; train only on unselected fresh groups."
+  },
+  "training": {
+    "class_balance": "deterministic_random_oversampling_within_training_only",
+    "feature_scaling": "StandardScaler fit on training data only"
+  },
+  "estimator": {
+    "name": "MLPClassifier",
+    "hidden_layer_sizes": [32, 16],
+    "activation": "relu",
+    "solver": "adam",
+    "alpha": 0.002,
+    "batch_size": 64,
+    "learning_rate_init": 0.001,
+    "max_iter": 500,
+    "early_stopping": false,
+    "decision_threshold": 0.5,
+    "random_state": 141421
+  }
+}

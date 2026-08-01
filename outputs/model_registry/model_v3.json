@@ -1,0 +1,212 @@
+{
+  "answer_snapshot_date": "2024-01-04",
+  "artifact": {
+    "exists": true,
+    "path": "outputs/statistical_model_v3/model.json",
+    "sha256": "ea5b122e267aab3537210ac08f518dfc2bb86a9efab26c7e784f3deff43743db",
+    "size_bytes": 1450
+  },
+  "author_notes": "Evidence-backed reconstruction from existing frozen artifacts; not an original runtime record.",
+  "class_distribution": "unknown/not recorded",
+  "code_commit_hash": "9a22613",
+  "conditional_task": true,
+  "confusion_matrix": {
+    "actual_benign": {
+      "predicted_benign": 674,
+      "predicted_pathogenic": 761
+    },
+    "actual_pathogenic": {
+      "predicted_benign": 26,
+      "predicted_pathogenic": 424
+    }
+  },
+  "dataset_version": {
+    "answer_snapshot": "2024-01-04",
+    "dates_inherited_from": "Resolved Direction V2 source cohort",
+    "prediction_snapshot": "2022-01-06",
+    "source_database_sha256": "bb66cc4e2e682300251180f3eda89e27828b5b80dd91abd02a2758653913c97b"
+  },
+  "date_created": "2026-07-29T20:15:00+00:00",
+  "effective_status": "frozen_evaluated",
+  "estimator": {
+    "C": 1.0,
+    "class_weight": "balanced",
+    "decision_threshold": 0.5,
+    "max_iter": 1000,
+    "name": "LogisticRegression",
+    "random_state": 314159,
+    "solver": "liblinear"
+  },
+  "evaluation_reliability": "internal holdout",
+  "evaluation_runtime_seconds": "unknown/not recorded",
+  "evaluation_source": "outputs/statistical_model_v3/held_out_predictions.csv",
+  "excluded_feature_list": [
+    "actual_outcome",
+    "answer",
+    "answer_key",
+    "correct",
+    "current_classification",
+    "latest_classification",
+    "new_classification",
+    "new_release_date",
+    "new_review_status",
+    "newer_classification",
+    "newer_release_date",
+    "newer_review_status",
+    "outcome",
+    "outcome_group",
+    "result",
+    "target",
+    "test_label",
+    "2024_classification"
+  ],
+  "feature_count": 9,
+  "features": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning"
+  ],
+  "frozen_at_utc": "2026-07-29T20:15:00+00:00",
+  "hyperparameters": {
+    "C": 1.0,
+    "class_weight": "balanced",
+    "decision_threshold": 0.5,
+    "max_iter": 1000,
+    "name": "LogisticRegression",
+    "random_state": 314159,
+    "solver": "liblinear"
+  },
+  "input_feature_list": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning"
+  ],
+  "interpretability": "high: linear coefficients are recorded",
+  "leakage_audit": {
+    "banned_fields": [
+      "2024_classification",
+      "actual_outcome",
+      "answer",
+      "answer_key",
+      "correct",
+      "current_classification",
+      "latest_classification",
+      "new_classification",
+      "new_release_date",
+      "new_review_status",
+      "newer_classification",
+      "newer_release_date",
+      "newer_review_status",
+      "outcome",
+      "outcome_group",
+      "result",
+      "target",
+      "test_label"
+    ],
+    "declared_fields": [
+      "canonical_splice_consequence",
+      "conflict_warning",
+      "criteria_without_conflict",
+      "expert_panel_review",
+      "loss_of_function_consequence",
+      "missense_consequence",
+      "multiple_agreeing_submitters",
+      "noncoding_consequence",
+      "synonymous_consequence"
+    ],
+    "findings": [],
+    "status": "pass",
+    "warning": "Name-based audit passed; source-date and data-lineage review remain required."
+  },
+  "leakage_audit_status": "pass",
+  "limitations": [
+    "This is an internal held-out evaluation within the already inspected Resolved Direction V2 cohort, not independent temporal validation.",
+    "The original V3 source database hash is not available in the current workspace; recorded results are preserved but cannot be reproduced from the current V2 database byte-for-byte."
+  ],
+  "manual_review": "unknown/not recorded",
+  "manual_review_status": "not started",
+  "metrics": {
+    "accuracy": 0.5824933687002652,
+    "average_precision_pathogenic": 0.5459423133126523,
+    "balanced_accuracy": 0.705954316686024,
+    "benign_f1": "unknown/not recorded",
+    "benign_precision": 0.9628571428571429,
+    "benign_recall": 0.4696864111498258,
+    "brier_score": 0.171442729047524,
+    "class_distribution": "unknown/not recorded",
+    "macro_f1": "unknown/not recorded",
+    "macro_precision": "unknown/not recorded",
+    "macro_recall": "unknown/not recorded",
+    "number_correct": "unknown/not recorded",
+    "number_no_prediction": "unknown/not recorded",
+    "number_not_scorable": "unknown/not recorded",
+    "number_of_predictions": "unknown/not recorded",
+    "number_wrong": "unknown/not recorded",
+    "pathogenic_f1": "unknown/not recorded",
+    "pathogenic_precision": 0.35780590717299576,
+    "pathogenic_recall": 0.9422222222222222,
+    "per_class": "unknown/not recorded",
+    "roc_auc": 0.7883677893921796,
+    "weighted_f1": "unknown/not recorded"
+  },
+  "model_id": "V3",
+  "model_type": "logistic regression",
+  "model_version_name": "V3",
+  "name": "Statistical Model V3",
+  "number_test_records": 1885,
+  "number_training_records": 6933,
+  "number_validation_records": "unknown/not recorded",
+  "output_files": [
+    "outputs/statistical_model_v3/coefficients.csv",
+    "outputs/statistical_model_v3/experiment_report.md",
+    "outputs/statistical_model_v3/held_out_predictions.csv",
+    "outputs/statistical_model_v3/metric_summary.json",
+    "outputs/statistical_model_v3/model.json",
+    "outputs/statistical_model_v3/partition_manifest.json",
+    "outputs/statistical_model_v3/statistical_model_v3.yaml"
+  ],
+  "partition": {
+    "algorithm": "sha256_connected_gene_group",
+    "group_rule": "Keep every record sharing any normalized older gene token in one connected component; records without a usable gene group by Variation ID.",
+    "salt": "variant-time-machine-statistical-model-v3-2026-07-29",
+    "test_fraction": 0.2
+  },
+  "prediction_snapshot_date": "2022-01-06",
+  "preprocessing_steps": "Binary applied indicators reconstructed from older-only clues_json. Assigned points, total score, predictions, newer fields, and outcomes are forbidden as model inputs.",
+  "random_seed": 314159,
+  "schema_version": 1,
+  "source_experiment": "Resolved Direction V2",
+  "status": "frozen",
+  "target_outcome_definition": {
+    "moved_toward_benign": 0,
+    "moved_toward_pathogenic": 1
+  },
+  "task": "Training-only learned weights with a grouped held-out test partition.",
+  "test_records": 1885,
+  "train_records": 6933,
+  "train_validation_test_split_method": {
+    "algorithm": "sha256_connected_gene_group",
+    "group_rule": "Keep every record sharing any normalized older gene token in one connected component; records without a usable gene group by Variation ID.",
+    "salt": "variant-time-machine-statistical-model-v3-2026-07-29",
+    "test_fraction": 0.2
+  },
+  "training_runtime_seconds": "unknown/not recorded",
+  "training_timestamp": "unknown/not recorded",
+  "vcv_verification": "unknown/not recorded",
+  "warnings": [
+    "This is an internal held-out evaluation within the already inspected Resolved Direction V2 cohort, not independent temporal validation.",
+    "The original V3 source database hash is not available in the current workspace; recorded results are preserved but cannot be reproduced from the current V2 database byte-for-byte."
+  ]
+}

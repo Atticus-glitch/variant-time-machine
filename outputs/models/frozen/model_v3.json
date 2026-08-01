@@ -1,0 +1,21 @@
+{
+  "model_id": "V3",
+  "output_files": [
+    "outputs/statistical_model_v3/coefficients.csv",
+    "outputs/statistical_model_v3/experiment_report.md",
+    "outputs/statistical_model_v3/held_out_predictions.csv",
+    "outputs/statistical_model_v3/metric_summary.json",
+    "outputs/statistical_model_v3/model.json",
+    "outputs/statistical_model_v3/partition_manifest.json",
+    "outputs/statistical_model_v3/statistical_model_v3.yaml"
+  ],
+  "schema_version": 1,
+  "source_artifact": {
+    "exists": true,
+    "path": "outputs/statistical_model_v3/model.json",
+    "sha256": "ea5b122e267aab3537210ac08f518dfc2bb86a9efab26c7e784f3deff43743db",
+    "size_bytes": 1450
+  },
+  "status": "frozen_reference",
+  "warning": "Model binary/config remains at its original immutable path."
+}

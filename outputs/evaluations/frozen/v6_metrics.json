@@ -1,0 +1,132 @@
+{
+  "accuracy": 0.756,
+  "accuracy_95_percent_wilson_interval": [
+    0.7284335318206567,
+    0.7816071678347392
+  ],
+  "average_precision": 0.7249931260209987,
+  "balanced_accuracy": 0.7435492978780002,
+  "baseline_comparison": [
+    {
+      "accuracy": 0.756,
+      "actual_benign": 689,
+      "actual_pathogenic": 311,
+      "balanced_accuracy": 0.7435492978780002,
+      "benign_recall": 0.7764876632801161,
+      "coverage": 1.0,
+      "macro_f1": 0.7293111634738696,
+      "model": "V6",
+      "pathogenic_recall": 0.7106109324758842,
+      "provenance": "recorded predictions",
+      "records": 1000,
+      "test_set": "V6",
+      "warning": "Internal test (n=1,000); larger than V4/V5 but still not independent temporal or clinical validation."
+    },
+    {
+      "accuracy": 0.689,
+      "actual_benign": 689,
+      "actual_pathogenic": 311,
+      "balanced_accuracy": 0.5,
+      "benign_recall": 1.0,
+      "coverage": 1.0,
+      "macro_f1": 0.4079336885731201,
+      "model": "majority",
+      "pathogenic_recall": 0.0,
+      "provenance": "deterministic baseline on same IDs",
+      "records": 1000,
+      "test_set": "V6",
+      "warning": "Internal test (n=1,000); larger than V4/V5 but still not independent temporal or clinical validation."
+    },
+    {
+      "accuracy": 0.59,
+      "actual_benign": 689,
+      "actual_pathogenic": 311,
+      "balanced_accuracy": 0.5216516784192571,
+      "benign_recall": 0.7024673439767779,
+      "coverage": 1.0,
+      "macro_f1": 0.5216516784192571,
+      "model": "seeded_random_stratified",
+      "pathogenic_recall": 0.3408360128617363,
+      "provenance": "deterministic baseline on same IDs",
+      "records": 1000,
+      "test_set": "V6",
+      "warning": "Internal test (n=1,000); larger than V4/V5 but still not independent temporal or clinical validation."
+    },
+    {
+      "accuracy": 0.6901734104046243,
+      "actual_benign": 570,
+      "actual_pathogenic": 295,
+      "balanced_accuracy": 0.7608236693428487,
+      "benign_recall": 0.5385964912280702,
+      "coverage": 0.865,
+      "macro_f1": 0.6900536944337483,
+      "model": "V2_clue_baseline",
+      "pathogenic_recall": 0.9830508474576272,
+      "provenance": "recorded V2 predictions on same IDs; no-predictions excluded",
+      "records": 865,
+      "test_set": "V6",
+      "warning": "Coverage is reported because V2 can abstain."
+    }
+  ],
+  "benign_f1": 0.8143074581430746,
+  "benign_precision": 0.856,
+  "benign_recall": 0.7764876632801161,
+  "brier_score": 0.1539841081639823,
+  "class_distribution": {
+    "moved_toward_benign": 689,
+    "moved_toward_pathogenic": 311
+  },
+  "confusion_matrix": {
+    "actual_benign": {
+      "predicted_benign": 535,
+      "predicted_pathogenic": 154
+    },
+    "actual_pathogenic": {
+      "predicted_benign": 90,
+      "predicted_pathogenic": 221
+    }
+  },
+  "evaluation_kind": "recorded_hidden_test",
+  "macro_f1": 0.7293111634738696,
+  "macro_precision": 0.7226666666666667,
+  "macro_recall": 0.7435492978780002,
+  "model_id": "V6",
+  "number_correct": 756,
+  "number_no_prediction": 0,
+  "number_not_scorable": 0,
+  "number_of_predictions": 1000,
+  "number_wrong": 244,
+  "partition_isolation": {
+    "train_test_connected_groups": 0,
+    "train_test_variation_ids": 0,
+    "v6_test_prior_test_groups": 0,
+    "v6_train_prior_test_groups": 0
+  },
+  "pathogenic_f1": 0.6443148688046647,
+  "pathogenic_precision": 0.5893333333333334,
+  "pathogenic_recall": 0.7106109324758842,
+  "per_class": {
+    "benign": {
+      "f1": 0.8143074581430746,
+      "precision": 0.856,
+      "recall": 0.7764876632801161,
+      "support": 689
+    },
+    "pathogenic": {
+      "f1": 0.6443148688046647,
+      "precision": 0.5893333333333334,
+      "recall": 0.7106109324758842,
+      "support": 311
+    }
+  },
+  "records": 1000,
+  "roc_auc": 0.8435124300561418,
+  "source_predictions": "/home/bob/variant_time_machine/variant-time-machine/outputs/ai_holdout_v6/hidden_test_predictions.csv",
+  "synthetic": false,
+  "tested_at_utc": "2026-08-01T22:46:08.157223+00:00",
+  "warnings": [
+    "V6 is an internal conditional test from the previously inspected V2 cohort, not independent temporal or clinical validation. Its 1,000 records and their connected groups are excluded from V6 training, and all prior V4/V5 test groups are excluded from both V6 training and V6 testing.",
+    "Internal test (n=1,000); larger than V4/V5 but still not independent temporal or clinical validation."
+  ],
+  "weighted_f1": 0.761439762858829
+}

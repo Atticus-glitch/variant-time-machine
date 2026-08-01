@@ -1,0 +1,119 @@
+{
+  "accuracy": 0.82,
+  "balanced_accuracy": 0.8219780219780219,
+  "baseline_comparison": [
+    {
+      "accuracy": 0.82,
+      "actual_benign": 65,
+      "actual_pathogenic": 35,
+      "balanced_accuracy": 0.8219780219780219,
+      "benign_recall": 0.8153846153846154,
+      "coverage": 1.0,
+      "macro_f1": 0.8089983022071308,
+      "model": "V5",
+      "pathogenic_recall": 0.8285714285714286,
+      "provenance": "recorded predictions",
+      "records": 100,
+      "test_set": "V5",
+      "warning": "Small internal test (n=100): estimates are uncertain and are not independent temporal or clinical validation."
+    },
+    {
+      "accuracy": 0.65,
+      "actual_benign": 65,
+      "actual_pathogenic": 35,
+      "balanced_accuracy": 0.5,
+      "benign_recall": 1.0,
+      "coverage": 1.0,
+      "macro_f1": 0.393939393939394,
+      "model": "majority",
+      "pathogenic_recall": 0.0,
+      "provenance": "deterministic baseline on same IDs",
+      "records": 100,
+      "test_set": "V5",
+      "warning": "Small internal test (n=100): estimates are uncertain and are not independent temporal or clinical validation."
+    },
+    {
+      "accuracy": 0.54,
+      "actual_benign": 65,
+      "actual_pathogenic": 35,
+      "balanced_accuracy": 0.4945054945054945,
+      "benign_recall": 0.6461538461538462,
+      "coverage": 1.0,
+      "macro_f1": 0.4945054945054945,
+      "model": "seeded_random_stratified",
+      "pathogenic_recall": 0.34285714285714286,
+      "provenance": "deterministic baseline on same IDs",
+      "records": 100,
+      "test_set": "V5",
+      "warning": "Small internal test (n=100): estimates are uncertain and are not independent temporal or clinical validation."
+    },
+    {
+      "accuracy": 0.7441860465116279,
+      "actual_benign": 52,
+      "actual_pathogenic": 34,
+      "balanced_accuracy": 0.7884615384615384,
+      "benign_recall": 0.5769230769230769,
+      "coverage": 0.86,
+      "macro_f1": 0.743631436314363,
+      "model": "V2_clue_baseline",
+      "pathogenic_recall": 1.0,
+      "provenance": "recorded V2 predictions on same IDs; no-predictions excluded",
+      "records": 86,
+      "test_set": "V5",
+      "warning": "Coverage is reported because V2 can abstain."
+    }
+  ],
+  "benign_f1": 0.8548387096774194,
+  "benign_precision": 0.8983050847457628,
+  "benign_recall": 0.8153846153846154,
+  "class_distribution": {
+    "moved_toward_benign": 65,
+    "moved_toward_pathogenic": 35
+  },
+  "confusion_matrix": {
+    "actual_benign": {
+      "predicted_benign": 53,
+      "predicted_pathogenic": 12
+    },
+    "actual_pathogenic": {
+      "predicted_benign": 6,
+      "predicted_pathogenic": 29
+    }
+  },
+  "evaluation_kind": "recorded_hidden_test",
+  "macro_f1": 0.8089983022071308,
+  "macro_precision": 0.8028110789582472,
+  "macro_recall": 0.8219780219780219,
+  "model_id": "V5",
+  "number_correct": 82,
+  "number_no_prediction": 0,
+  "number_not_scorable": 0,
+  "number_of_predictions": 100,
+  "number_wrong": 18,
+  "pathogenic_f1": 0.7631578947368421,
+  "pathogenic_precision": 0.7073170731707317,
+  "pathogenic_recall": 0.8285714285714286,
+  "per_class": {
+    "benign": {
+      "f1": 0.8548387096774194,
+      "precision": 0.8983050847457628,
+      "recall": 0.8153846153846154,
+      "support": 65
+    },
+    "pathogenic": {
+      "f1": 0.7631578947368421,
+      "precision": 0.7073170731707317,
+      "recall": 0.8285714285714286,
+      "support": 35
+    }
+  },
+  "records": 100,
+  "source_predictions": "/home/bob/variant_time_machine/variant-time-machine/outputs/ai_holdout_v5/hidden_test_predictions.csv",
+  "synthetic": false,
+  "tested_at_utc": "2026-08-01T21:05:05.514653+00:00",
+  "warnings": [
+    "V5 was designed after V4 aggregate results were known. Its fresh holdout is unseen by V5 and disjoint from V4 test groups, but it is still internal to the already inspected V2 cohort.",
+    "Small internal test (n=100): estimates are uncertain and are not independent temporal or clinical validation."
+  ],
+  "weighted_f1": 0.8227504244482173
+}

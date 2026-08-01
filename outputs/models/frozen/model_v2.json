@@ -1,0 +1,24 @@
+{
+  "model_id": "V2",
+  "output_files": [
+    "outputs/resolved_direction_v2/confusion_matrix.csv",
+    "outputs/resolved_direction_v2/correct_predictions.csv",
+    "outputs/resolved_direction_v2/experiment_report.md",
+    "outputs/resolved_direction_v2/metric_summary.json",
+    "outputs/resolved_direction_v2/no_prediction.csv",
+    "outputs/resolved_direction_v2/outcome_by_score.csv",
+    "outputs/resolved_direction_v2/resolved_direction_results.csv",
+    "outputs/resolved_direction_v2/resolved_direction_v2.yaml",
+    "outputs/resolved_direction_v2/score_distribution.png",
+    "outputs/resolved_direction_v2/wrong_predictions.csv"
+  ],
+  "schema_version": 1,
+  "source_artifact": {
+    "exists": true,
+    "path": "config/resolved_direction_v2.yaml",
+    "sha256": "c3b0b5ce0f19ac2c841808cbd630ff64d02746a606c51e73dbb31f418bebc871",
+    "size_bytes": 2030
+  },
+  "status": "frozen_reference",
+  "warning": "Model binary/config remains at its original immutable path."
+}

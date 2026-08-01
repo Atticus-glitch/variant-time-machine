@@ -1,0 +1,89 @@
+{
+  "command_or_dashboard_action": "not recorded",
+  "dataset_used": {
+    "answer_snapshot": "2024-01-04",
+    "dates_inherited_from": "Resolved Direction V2 source cohort",
+    "prediction_snapshot": "2022-01-06",
+    "source_database_sha256": "bb66cc4e2e682300251180f3eda89e27828b5b80dd91abd02a2758653913c97b"
+  },
+  "disk_usage_after_bytes": "unknown/not recorded",
+  "disk_usage_before_bytes": "unknown/not recorded",
+  "errors": [],
+  "features_used": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning"
+  ],
+  "hyperparameters": {
+    "C": 1.0,
+    "class_weight": "balanced",
+    "decision_threshold": 0.5,
+    "max_iter": 1000,
+    "name": "LogisticRegression",
+    "random_state": 314159,
+    "solver": "liblinear"
+  },
+  "metrics": {
+    "accuracy": 0.5824933687002652,
+    "average_precision_pathogenic": 0.5459423133126523,
+    "balanced_accuracy": 0.705954316686024,
+    "benign_f1": "unknown/not recorded",
+    "benign_precision": 0.9628571428571429,
+    "benign_recall": 0.4696864111498258,
+    "brier_score": 0.171442729047524,
+    "class_distribution": "unknown/not recorded",
+    "macro_f1": "unknown/not recorded",
+    "macro_precision": "unknown/not recorded",
+    "macro_recall": "unknown/not recorded",
+    "number_correct": "unknown/not recorded",
+    "number_no_prediction": "unknown/not recorded",
+    "number_not_scorable": "unknown/not recorded",
+    "number_of_predictions": "unknown/not recorded",
+    "number_wrong": "unknown/not recorded",
+    "pathogenic_f1": "unknown/not recorded",
+    "pathogenic_precision": 0.35780590717299576,
+    "pathogenic_recall": 0.9422222222222222,
+    "per_class": "unknown/not recorded",
+    "roc_auc": 0.7883677893921796,
+    "weighted_f1": "unknown/not recorded"
+  },
+  "model_version": "V3",
+  "output_files": [
+    "outputs/statistical_model_v3/coefficients.csv",
+    "outputs/statistical_model_v3/experiment_report.md",
+    "outputs/statistical_model_v3/held_out_predictions.csv",
+    "outputs/statistical_model_v3/metric_summary.json",
+    "outputs/statistical_model_v3/model.json",
+    "outputs/statistical_model_v3/partition_manifest.json",
+    "outputs/statistical_model_v3/statistical_model_v3.yaml"
+  ],
+  "random_seed": 314159,
+  "records_excluded": "unknown/not recorded",
+  "records_loaded": 6933,
+  "records_used": "unknown/not recorded",
+  "run_classification": "official reconstructed historical record",
+  "runtime_seconds": "unknown/not recorded",
+  "schema_version": 1,
+  "split_sizes": {
+    "test": 1885,
+    "train": 6933,
+    "validation": "unknown/not recorded"
+  },
+  "started_by": "historical artifact reconstruction",
+  "target_labels": {
+    "moved_toward_benign": 0,
+    "moved_toward_pathogenic": 1
+  },
+  "timestamp": "unknown/not recorded",
+  "warnings": [
+    "Reconstructed from existing artifacts; not an original runtime log.",
+    "This is an internal held-out evaluation within the already inspected Resolved Direction V2 cohort, not independent temporal validation.",
+    "The original V3 source database hash is not available in the current workspace; recorded results are preserved but cannot be reproduced from the current V2 database byte-for-byte."
+  ]
+}

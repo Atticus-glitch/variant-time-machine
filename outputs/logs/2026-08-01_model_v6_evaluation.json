@@ -1,0 +1,116 @@
+{
+  "command_or_dashboard_action": "not recorded",
+  "dataset_used": {
+    "answer_snapshot": "2024-01-04",
+    "dates_inherited_from": "Resolved Direction V2 source cohort",
+    "prediction_snapshot": "2022-01-06",
+    "source_database_sha256": "d9d66ba2384f2d9e0b8cb55be43432f8e02fdd8fcd70ecd2266d65e52af73a04"
+  },
+  "disk_usage_after_bytes": "unknown/not recorded",
+  "disk_usage_before_bytes": "unknown/not recorded",
+  "errors": [],
+  "features_used": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning",
+    "classification_age_available",
+    "record_completeness_available",
+    "classification_age_days",
+    "maximum_submitter_count",
+    "missing_core_field_count"
+  ],
+  "hyperparameters": {
+    "activation": "relu",
+    "alpha": 0.002,
+    "batch_size": 64,
+    "decision_threshold": 0.5,
+    "early_stopping": false,
+    "hidden_layer_sizes": [
+      32,
+      16
+    ],
+    "learning_rate_init": 0.001,
+    "max_iter": 500,
+    "name": "MLPClassifier",
+    "random_state": 141421,
+    "solver": "adam"
+  },
+  "metrics": {
+    "accuracy": 0.756,
+    "average_precision_pathogenic": "unknown/not recorded",
+    "balanced_accuracy": 0.7435492978780002,
+    "benign_f1": 0.8143074581430746,
+    "benign_precision": 0.856,
+    "benign_recall": 0.7764876632801161,
+    "brier_score": 0.1539841081639823,
+    "class_distribution": {
+      "moved_toward_benign": 689,
+      "moved_toward_pathogenic": 311
+    },
+    "macro_f1": 0.7293111634738696,
+    "macro_precision": 0.7226666666666667,
+    "macro_recall": 0.7435492978780002,
+    "number_correct": 756,
+    "number_no_prediction": 0,
+    "number_not_scorable": 0,
+    "number_of_predictions": 1000,
+    "number_wrong": 244,
+    "pathogenic_f1": 0.6443148688046647,
+    "pathogenic_precision": 0.5893333333333334,
+    "pathogenic_recall": 0.7106109324758842,
+    "per_class": {
+      "benign": {
+        "f1": 0.8143074581430746,
+        "precision": 0.856,
+        "recall": 0.7764876632801161,
+        "support": 689
+      },
+      "pathogenic": {
+        "f1": 0.6443148688046647,
+        "precision": 0.5893333333333334,
+        "recall": 0.7106109324758842,
+        "support": 311
+      }
+    },
+    "roc_auc": 0.8435124300561418,
+    "weighted_f1": 0.761439762858829
+  },
+  "model_version": "V6",
+  "output_files": [
+    "outputs/ai_holdout_v6/ai_holdout_v6.yaml",
+    "outputs/ai_holdout_v6/hidden_test_predictions.csv",
+    "outputs/ai_holdout_v6/model.joblib",
+    "outputs/ai_holdout_v6/partition_manifest.json",
+    "outputs/ai_holdout_v6/test_metrics.json",
+    "outputs/ai_holdout_v6/training_summary.json"
+  ],
+  "random_seed": 141421,
+  "records_excluded": "unknown/not recorded",
+  "records_loaded": 2518,
+  "records_used": 1000,
+  "run_classification": "official reconstructed historical record",
+  "runtime_seconds": "unknown/not recorded",
+  "schema_version": 1,
+  "split_sizes": {
+    "test": 1000,
+    "train": 2518,
+    "validation": 0
+  },
+  "started_by": "historical artifact reconstruction",
+  "target_labels": {
+    "moved_toward_benign": 0,
+    "moved_toward_pathogenic": 1
+  },
+  "timestamp": "unknown/not recorded",
+  "warnings": [
+    "Reconstructed from existing artifacts; not an original runtime log.",
+    "V6 is an internal conditional test from the previously inspected V2 cohort, not independent temporal or clinical validation. Its 1,000 records and their connected groups are excluded from V6 training, and all prior V4/V5 test groups are excluded from both V6 training and V6 testing.",
+    "This rebuilt local V2 database has the same 8,818-record cohort and IDs used by the manifests, but its byte hash differs from the source hash recorded by V4/V5. V6 freezes and reports the current hash rather than rewriting prior provenance."
+  ]
+}

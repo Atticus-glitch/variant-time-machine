@@ -1,0 +1,86 @@
+{
+  "command_or_dashboard_action": "not recorded",
+  "dataset_used": {
+    "answer_snapshot": "2024-01-04",
+    "prediction_snapshot": "2022-01-06",
+    "source_database_sha256": "unknown/not recorded"
+  },
+  "disk_usage_after_bytes": "unknown/not recorded",
+  "disk_usage_before_bytes": "unknown/not recorded",
+  "errors": [],
+  "features_used": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning",
+    "classification_age",
+    "record_completeness"
+  ],
+  "hyperparameters": {
+    "name": "frozen hand-designed score"
+  },
+  "metrics": {
+    "accuracy": 0.8097125301852812,
+    "average_precision_pathogenic": "unknown/not recorded",
+    "balanced_accuracy": 0.4749112763166247,
+    "benign_f1": "unknown/not recorded",
+    "benign_precision": "unknown/not recorded",
+    "benign_recall": "unknown/not recorded",
+    "brier_score": "unknown/not recorded",
+    "class_distribution": "unknown/not recorded",
+    "macro_f1": "unknown/not recorded",
+    "macro_precision": "unknown/not recorded",
+    "macro_recall": "unknown/not recorded",
+    "number_correct": 298090,
+    "number_no_prediction": 17831,
+    "number_not_scorable": 65175,
+    "number_of_predictions": 421578,
+    "number_wrong": 70053,
+    "pathogenic_f1": "unknown/not recorded",
+    "pathogenic_precision": "unknown/not recorded",
+    "pathogenic_recall": "unknown/not recorded",
+    "per_class": "unknown/not recorded",
+    "roc_auc": "unknown/not recorded",
+    "weighted_f1": "unknown/not recorded"
+  },
+  "model_version": "V1",
+  "output_files": [
+    "outputs/clue_score_v1/clue_score_v1.yaml",
+    "outputs/clue_score_v1/confusion_matrix.csv",
+    "outputs/clue_score_v1/correct_predictions.csv",
+    "outputs/clue_score_v1/experiment_report.md",
+    "outputs/clue_score_v1/manual_review.csv",
+    "outputs/clue_score_v1/metric_summary.json",
+    "outputs/clue_score_v1/no_prediction.csv",
+    "outputs/clue_score_v1/outcome_by_score.csv",
+    "outputs/clue_score_v1/outcome_by_score.png",
+    "outputs/clue_score_v1/prediction_results.csv",
+    "outputs/clue_score_v1/score_distribution.png",
+    "outputs/clue_score_v1/unscorable.csv",
+    "outputs/clue_score_v1/wrong_predictions.csv"
+  ],
+  "random_seed": "unknown/not recorded",
+  "records_excluded": "unknown/not recorded",
+  "records_loaded": "unknown/not recorded",
+  "records_used": 421578,
+  "run_classification": "official reconstructed historical record",
+  "runtime_seconds": "unknown/not recorded",
+  "schema_version": 1,
+  "split_sizes": {
+    "test": 439409,
+    "train": "unknown/not recorded",
+    "validation": "unknown/not recorded"
+  },
+  "started_by": "historical artifact reconstruction",
+  "target_labels": "Later normalized ClinVar aggregate classification outcome; see the frozen version configuration.",
+  "timestamp": "unknown/not recorded",
+  "warnings": [
+    "Reconstructed from existing artifacts; not an original runtime log.",
+    "unknown/not recorded"
+  ]
+}

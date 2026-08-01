@@ -30,6 +30,42 @@
   width: min(1380px, calc(100% - 40px));
 }
 
+.model-registry-grid,
+.timeline-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+}
+
+.explorer-card {
+  border-left: 0.45rem solid var(--line);
+}
+
+.explorer-card.result-correct {
+  border-left-color: #2f8060;
+  box-shadow: 0 0 1.2rem rgb(47 128 96 / 18%);
+}
+
+.explorer-card.result-wrong {
+  border-left-color: #a84444;
+  box-shadow: 0 0 1.2rem rgb(168 68 68 / 18%);
+}
+
+.explorer-card.result-review {
+  border-left-color: #c17824;
+  box-shadow: 0 0 1.2rem rgb(193 120 36 / 18%);
+}
+
+.explorer-card.result-neutral {
+  border-left-color: #7b8589;
+}
+
+.timeline-card select,
+.manual-review-box select {
+  margin-top: 0.7rem;
+  width: 100%;
+}
+
 .formula-thresholds,
 .prediction-arithmetic {
   margin: 1rem 0;

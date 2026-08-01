@@ -1,0 +1,51 @@
+{
+  "evaluation_source": "outputs/ai_holdout_v6/hidden_test_predictions.csv",
+  "metrics": {
+    "accuracy": 0.756,
+    "average_precision_pathogenic": "unknown/not recorded",
+    "balanced_accuracy": 0.7435492978780002,
+    "benign_f1": 0.8143074581430746,
+    "benign_precision": 0.856,
+    "benign_recall": 0.7764876632801161,
+    "brier_score": 0.1539841081639823,
+    "class_distribution": {
+      "moved_toward_benign": 689,
+      "moved_toward_pathogenic": 311
+    },
+    "macro_f1": 0.7293111634738696,
+    "macro_precision": 0.7226666666666667,
+    "macro_recall": 0.7435492978780002,
+    "number_correct": 756,
+    "number_no_prediction": 0,
+    "number_not_scorable": 0,
+    "number_of_predictions": 1000,
+    "number_wrong": 244,
+    "pathogenic_f1": 0.6443148688046647,
+    "pathogenic_precision": 0.5893333333333334,
+    "pathogenic_recall": 0.7106109324758842,
+    "per_class": {
+      "benign": {
+        "f1": 0.8143074581430746,
+        "precision": 0.856,
+        "recall": 0.7764876632801161,
+        "support": 689
+      },
+      "pathogenic": {
+        "f1": 0.6443148688046647,
+        "precision": 0.5893333333333334,
+        "recall": 0.7106109324758842,
+        "support": 311
+      }
+    },
+    "roc_auc": 0.8435124300561418,
+    "weighted_f1": 0.761439762858829
+  },
+  "model_id": "V6",
+  "schema_version": 1,
+  "status": "frozen",
+  "synthetic_evaluation": false,
+  "warnings": [
+    "V6 is an internal conditional test from the previously inspected V2 cohort, not independent temporal or clinical validation. Its 1,000 records and their connected groups are excluded from V6 training, and all prior V4/V5 test groups are excluded from both V6 training and V6 testing.",
+    "This rebuilt local V2 database has the same 8,818-record cohort and IDs used by the manifests, but its byte hash differs from the source hash recorded by V4/V5. V6 freezes and reports the current hash rather than rewriting prior provenance."
+  ]
+}

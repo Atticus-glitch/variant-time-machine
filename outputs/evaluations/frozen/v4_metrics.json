@@ -1,0 +1,119 @@
+{
+  "accuracy": 0.76,
+  "balanced_accuracy": 0.625,
+  "baseline_comparison": [
+    {
+      "accuracy": 0.76,
+      "actual_benign": 68,
+      "actual_pathogenic": 32,
+      "balanced_accuracy": 0.625,
+      "benign_recall": 1.0,
+      "coverage": 1.0,
+      "macro_f1": 0.625,
+      "model": "V4",
+      "pathogenic_recall": 0.25,
+      "provenance": "recorded predictions",
+      "records": 100,
+      "test_set": "V4",
+      "warning": "Small internal test (n=100): estimates are uncertain and are not independent temporal or clinical validation."
+    },
+    {
+      "accuracy": 0.68,
+      "actual_benign": 68,
+      "actual_pathogenic": 32,
+      "balanced_accuracy": 0.5,
+      "benign_recall": 1.0,
+      "coverage": 1.0,
+      "macro_f1": 0.40476190476190477,
+      "model": "majority",
+      "pathogenic_recall": 0.0,
+      "provenance": "deterministic baseline on same IDs",
+      "records": 100,
+      "test_set": "V4",
+      "warning": "Small internal test (n=100): estimates are uncertain and are not independent temporal or clinical validation."
+    },
+    {
+      "accuracy": 0.56,
+      "actual_benign": 68,
+      "actual_pathogenic": 32,
+      "balanced_accuracy": 0.4944852941176471,
+      "benign_recall": 0.6764705882352942,
+      "coverage": 1.0,
+      "macro_f1": 0.4944852941176471,
+      "model": "seeded_random_stratified",
+      "pathogenic_recall": 0.3125,
+      "provenance": "deterministic baseline on same IDs",
+      "records": 100,
+      "test_set": "V4",
+      "warning": "Small internal test (n=100): estimates are uncertain and are not independent temporal or clinical validation."
+    },
+    {
+      "accuracy": 0.75,
+      "actual_benign": 58,
+      "actual_pathogenic": 30,
+      "balanced_accuracy": 0.8022988505747126,
+      "benign_recall": 0.6379310344827587,
+      "coverage": 0.88,
+      "macro_f1": 0.7479166666666668,
+      "model": "V2_clue_baseline",
+      "pathogenic_recall": 0.9666666666666667,
+      "provenance": "recorded V2 predictions on same IDs; no-predictions excluded",
+      "records": 88,
+      "test_set": "V4",
+      "warning": "Coverage is reported because V2 can abstain."
+    }
+  ],
+  "benign_f1": 0.85,
+  "benign_precision": 0.7391304347826086,
+  "benign_recall": 1.0,
+  "class_distribution": {
+    "moved_toward_benign": 68,
+    "moved_toward_pathogenic": 32
+  },
+  "confusion_matrix": {
+    "actual_benign": {
+      "predicted_benign": 68,
+      "predicted_pathogenic": 0
+    },
+    "actual_pathogenic": {
+      "predicted_benign": 24,
+      "predicted_pathogenic": 8
+    }
+  },
+  "evaluation_kind": "recorded_hidden_test",
+  "macro_f1": 0.625,
+  "macro_precision": 0.8695652173913043,
+  "macro_recall": 0.625,
+  "model_id": "V4",
+  "number_correct": 76,
+  "number_no_prediction": 0,
+  "number_not_scorable": 0,
+  "number_of_predictions": 100,
+  "number_wrong": 24,
+  "pathogenic_f1": 0.4,
+  "pathogenic_precision": 1.0,
+  "pathogenic_recall": 0.25,
+  "per_class": {
+    "benign": {
+      "f1": 0.85,
+      "precision": 0.7391304347826086,
+      "recall": 1.0,
+      "support": 68
+    },
+    "pathogenic": {
+      "f1": 0.4,
+      "precision": 1.0,
+      "recall": 0.25,
+      "support": 32
+    }
+  },
+  "records": 100,
+  "source_predictions": "/home/bob/variant_time_machine/variant-time-machine/outputs/ai_holdout_v4/hidden_test_predictions.csv",
+  "synthetic": false,
+  "tested_at_utc": "2026-08-01T20:43:37.195915+00:00",
+  "warnings": [
+    "This is an internal holdout from the already inspected Resolved Direction V2 cohort, not independent temporal or clinical validation.",
+    "Small internal test (n=100): estimates are uncertain and are not independent temporal or clinical validation."
+  ],
+  "weighted_f1": 0.706
+}

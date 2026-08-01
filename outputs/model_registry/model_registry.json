@@ -1,0 +1,1446 @@
+{
+  "models": [
+    {
+      "answer_snapshot_date": "2024-01-04",
+      "artifact": {
+        "exists": true,
+        "path": "config/clue_score_v1.yaml",
+        "sha256": "2ee751040aa9c86ebe8645c0e02b1cca51d9d9b7d3a4cbdc4675819f10c50d3c",
+        "size_bytes": 6639
+      },
+      "author_notes": "Evidence-backed reconstruction from existing frozen artifacts; not an original runtime record.",
+      "class_distribution": "unknown/not recorded",
+      "code_commit_hash": "093e4e1",
+      "conditional_task": false,
+      "confusion_matrix": {
+        "moved_toward_benign": {
+          "benign_direction": 2091,
+          "no_prediction": 29,
+          "pathogenic_direction": 96,
+          "remain_uncertain": 4071
+        },
+        "moved_toward_pathogenic": {
+          "benign_direction": 19,
+          "no_prediction": 9,
+          "pathogenic_direction": 719,
+          "remain_uncertain": 1784
+        },
+        "remained_uncertain": {
+          "benign_direction": 10868,
+          "no_prediction": 6053,
+          "pathogenic_direction": 53215,
+          "remain_uncertain": 295280
+        }
+      },
+      "dataset_version": {
+        "answer_snapshot": "2024-01-04",
+        "prediction_snapshot": "2022-01-06",
+        "source_database_sha256": "unknown/not recorded"
+      },
+      "date_created": "2026-07-28T21:30:00+00:00",
+      "effective_status": "frozen_evaluated",
+      "estimator": {
+        "name": "frozen hand-designed score"
+      },
+      "evaluation_reliability": "exploratory/full observed cohort",
+      "evaluation_runtime_seconds": "unknown/not recorded",
+      "evaluation_source": "outputs/clue_score_v1/metric_summary.json",
+      "excluded_feature_list": [
+        "actual_outcome",
+        "answer",
+        "answer_key",
+        "correct",
+        "current_classification",
+        "latest_classification",
+        "new_classification",
+        "new_release_date",
+        "new_review_status",
+        "newer_classification",
+        "newer_release_date",
+        "newer_review_status",
+        "outcome",
+        "outcome_group",
+        "result",
+        "target",
+        "test_label",
+        "2024_classification"
+      ],
+      "feature_count": 11,
+      "features": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age",
+        "record_completeness"
+      ],
+      "frozen_at_utc": "2026-07-28T21:30:00+00:00",
+      "hyperparameters": {
+        "name": "frozen hand-designed score"
+      },
+      "input_feature_list": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age",
+        "record_completeness"
+      ],
+      "interpretability": "high: explicit clue weights and arithmetic",
+      "leakage_audit": {
+        "banned_fields": [
+          "2024_classification",
+          "actual_outcome",
+          "answer",
+          "answer_key",
+          "correct",
+          "current_classification",
+          "latest_classification",
+          "new_classification",
+          "new_release_date",
+          "new_review_status",
+          "newer_classification",
+          "newer_release_date",
+          "newer_review_status",
+          "outcome",
+          "outcome_group",
+          "result",
+          "target",
+          "test_label"
+        ],
+        "declared_fields": [
+          "canonical_splice_consequence",
+          "classification_age",
+          "conflict_warning",
+          "criteria_without_conflict",
+          "expert_panel_review",
+          "loss_of_function_consequence",
+          "missense_consequence",
+          "multiple_agreeing_submitters",
+          "noncoding_consequence",
+          "record_completeness",
+          "synonymous_consequence"
+        ],
+        "findings": [],
+        "status": "pass",
+        "warning": "Name-based audit passed; source-date and data-lineage review remain required."
+      },
+      "leakage_audit_status": "pass",
+      "limitations": [
+        "unknown/not recorded"
+      ],
+      "manual_review": "unknown/not recorded",
+      "manual_review_status": "not started",
+      "metrics": {
+        "accuracy": 0.8097125301852812,
+        "average_precision_pathogenic": "unknown/not recorded",
+        "balanced_accuracy": 0.4749112763166247,
+        "benign_f1": "unknown/not recorded",
+        "benign_precision": "unknown/not recorded",
+        "benign_recall": "unknown/not recorded",
+        "brier_score": "unknown/not recorded",
+        "class_distribution": "unknown/not recorded",
+        "macro_f1": "unknown/not recorded",
+        "macro_precision": "unknown/not recorded",
+        "macro_recall": "unknown/not recorded",
+        "number_correct": 298090,
+        "number_no_prediction": 17831,
+        "number_not_scorable": 65175,
+        "number_of_predictions": 421578,
+        "number_wrong": 70053,
+        "pathogenic_f1": "unknown/not recorded",
+        "pathogenic_precision": "unknown/not recorded",
+        "pathogenic_recall": "unknown/not recorded",
+        "per_class": "unknown/not recorded",
+        "roc_auc": "unknown/not recorded",
+        "weighted_f1": "unknown/not recorded"
+      },
+      "model_id": "V1",
+      "model_type": "frozen hand-designed score",
+      "model_version_name": "V1",
+      "name": "Clue Score V1",
+      "number_test_records": 439409,
+      "number_training_records": "unknown/not recorded",
+      "number_validation_records": "unknown/not recorded",
+      "output_files": [
+        "outputs/clue_score_v1/clue_score_v1.yaml",
+        "outputs/clue_score_v1/confusion_matrix.csv",
+        "outputs/clue_score_v1/correct_predictions.csv",
+        "outputs/clue_score_v1/experiment_report.md",
+        "outputs/clue_score_v1/manual_review.csv",
+        "outputs/clue_score_v1/metric_summary.json",
+        "outputs/clue_score_v1/no_prediction.csv",
+        "outputs/clue_score_v1/outcome_by_score.csv",
+        "outputs/clue_score_v1/outcome_by_score.png",
+        "outputs/clue_score_v1/prediction_results.csv",
+        "outputs/clue_score_v1/score_distribution.png",
+        "outputs/clue_score_v1/unscorable.csv",
+        "outputs/clue_score_v1/wrong_predictions.csv"
+      ],
+      "partition": "unknown/not recorded",
+      "prediction_snapshot_date": "2022-01-06",
+      "preprocessing_steps": "unknown/not recorded",
+      "random_seed": "unknown/not recorded",
+      "schema_version": 1,
+      "source_experiment": "unknown/not recorded",
+      "status": "frozen",
+      "target_outcome_definition": "Later normalized ClinVar aggregate classification outcome; see the frozen version configuration.",
+      "task": "Version 1 provisional weights chosen before evaluating the full outcome data.",
+      "test_records": 439409,
+      "train_records": "unknown/not recorded",
+      "train_validation_test_split_method": "unknown/not recorded",
+      "training_runtime_seconds": "unknown/not recorded",
+      "training_timestamp": "unknown/not recorded",
+      "vcv_verification": "unknown/not recorded",
+      "warnings": [
+        "unknown/not recorded"
+      ]
+    },
+    {
+      "answer_snapshot_date": "2024-01-04",
+      "artifact": {
+        "exists": true,
+        "path": "config/resolved_direction_v2.yaml",
+        "sha256": "c3b0b5ce0f19ac2c841808cbd630ff64d02746a606c51e73dbb31f418bebc871",
+        "size_bytes": 2030
+      },
+      "author_notes": "Evidence-backed reconstruction from existing frozen artifacts; not an original runtime record.",
+      "class_distribution": "unknown/not recorded",
+      "code_commit_hash": "b3d0b1d",
+      "conditional_task": true,
+      "confusion_matrix": {
+        "moved_toward_benign": {
+          "benign_direction": 2178,
+          "no_prediction": 865,
+          "pathogenic_direction": 3244
+        },
+        "moved_toward_pathogenic": {
+          "benign_direction": 20,
+          "no_prediction": 94,
+          "pathogenic_direction": 2417
+        }
+      },
+      "dataset_version": {
+        "answer_snapshot": "2024-01-04",
+        "prediction_snapshot": "2022-01-06",
+        "source_database_sha256": "unknown/not recorded"
+      },
+      "date_created": "2026-07-29T15:40:00+00:00",
+      "effective_status": "frozen_evaluated",
+      "estimator": {
+        "name": "frozen hand-designed binary rule"
+      },
+      "evaluation_reliability": "exploratory/full observed cohort",
+      "evaluation_runtime_seconds": "unknown/not recorded",
+      "evaluation_source": "outputs/resolved_direction_v2/metric_summary.json",
+      "excluded_feature_list": [
+        "actual_outcome",
+        "answer",
+        "answer_key",
+        "correct",
+        "current_classification",
+        "latest_classification",
+        "new_classification",
+        "new_release_date",
+        "new_review_status",
+        "newer_classification",
+        "newer_release_date",
+        "newer_review_status",
+        "outcome",
+        "outcome_group",
+        "result",
+        "target",
+        "test_label",
+        "2024_classification"
+      ],
+      "feature_count": 11,
+      "features": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age",
+        "record_completeness"
+      ],
+      "frozen_at_utc": "2026-07-29T15:40:00+00:00",
+      "hyperparameters": {
+        "name": "frozen hand-designed binary rule"
+      },
+      "input_feature_list": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age",
+        "record_completeness"
+      ],
+      "interpretability": "high: explicit V1 score thresholds",
+      "leakage_audit": {
+        "banned_fields": [
+          "2024_classification",
+          "actual_outcome",
+          "answer",
+          "answer_key",
+          "correct",
+          "current_classification",
+          "latest_classification",
+          "new_classification",
+          "new_release_date",
+          "new_review_status",
+          "newer_classification",
+          "newer_release_date",
+          "newer_review_status",
+          "outcome",
+          "outcome_group",
+          "result",
+          "target",
+          "test_label"
+        ],
+        "declared_fields": [
+          "canonical_splice_consequence",
+          "classification_age",
+          "conflict_warning",
+          "criteria_without_conflict",
+          "expert_panel_review",
+          "loss_of_function_consequence",
+          "missense_consequence",
+          "multiple_agreeing_submitters",
+          "noncoding_consequence",
+          "record_completeness",
+          "synonymous_consequence"
+        ],
+        "findings": [],
+        "status": "pass",
+        "warning": "Name-based audit passed; source-date and data-lineage review remain required."
+      },
+      "leakage_audit_status": "pass",
+      "limitations": [
+        "This cohort and binary task were defined after reviewing Version 1 aggregate results. It is exploratory and is not an independent validation."
+      ],
+      "manual_review": "unknown/not recorded",
+      "manual_review_status": "not started",
+      "metrics": {
+        "accuracy": 0.5846799847308818,
+        "average_precision_pathogenic": "unknown/not recorded",
+        "balanced_accuracy": 0.6506938269576859,
+        "benign_f1": "unknown/not recorded",
+        "benign_precision": "unknown/not recorded",
+        "benign_recall": "unknown/not recorded",
+        "brier_score": "unknown/not recorded",
+        "class_distribution": "unknown/not recorded",
+        "macro_f1": "unknown/not recorded",
+        "macro_precision": "unknown/not recorded",
+        "macro_recall": "unknown/not recorded",
+        "number_correct": 4595,
+        "number_no_prediction": 959,
+        "number_not_scorable": 0,
+        "number_of_predictions": 7859,
+        "number_wrong": 3264,
+        "pathogenic_f1": "unknown/not recorded",
+        "pathogenic_precision": "unknown/not recorded",
+        "pathogenic_recall": "unknown/not recorded",
+        "per_class": "unknown/not recorded",
+        "roc_auc": "unknown/not recorded",
+        "weighted_f1": "unknown/not recorded"
+      },
+      "model_id": "V2",
+      "model_type": "frozen hand-designed binary rule",
+      "model_version_name": "V2",
+      "name": "Resolved Direction V2",
+      "number_test_records": 8818,
+      "number_training_records": "unknown/not recorded",
+      "number_validation_records": "unknown/not recorded",
+      "output_files": [
+        "outputs/resolved_direction_v2/confusion_matrix.csv",
+        "outputs/resolved_direction_v2/correct_predictions.csv",
+        "outputs/resolved_direction_v2/experiment_report.md",
+        "outputs/resolved_direction_v2/metric_summary.json",
+        "outputs/resolved_direction_v2/no_prediction.csv",
+        "outputs/resolved_direction_v2/outcome_by_score.csv",
+        "outputs/resolved_direction_v2/resolved_direction_results.csv",
+        "outputs/resolved_direction_v2/resolved_direction_v2.yaml",
+        "outputs/resolved_direction_v2/score_distribution.png",
+        "outputs/resolved_direction_v2/wrong_predictions.csv"
+      ],
+      "partition": "unknown/not recorded",
+      "prediction_snapshot_date": "2022-01-06",
+      "preprocessing_steps": "unknown/not recorded",
+      "random_seed": "unknown/not recorded",
+      "schema_version": 1,
+      "source_experiment": "unknown/not recorded",
+      "status": "frozen",
+      "target_outcome_definition": "Later normalized ClinVar aggregate classification outcome; see the frozen version configuration.",
+      "task": "Changed-outcome-only pathogenic-versus-benign experiment.",
+      "test_records": 8818,
+      "train_records": "unknown/not recorded",
+      "train_validation_test_split_method": "unknown/not recorded",
+      "training_runtime_seconds": "unknown/not recorded",
+      "training_timestamp": "unknown/not recorded",
+      "vcv_verification": "unknown/not recorded",
+      "warnings": [
+        "This cohort and binary task were defined after reviewing Version 1 aggregate results. It is exploratory and is not an independent validation."
+      ]
+    },
+    {
+      "answer_snapshot_date": "2024-01-04",
+      "artifact": {
+        "exists": true,
+        "path": "outputs/statistical_model_v3/model.json",
+        "sha256": "ea5b122e267aab3537210ac08f518dfc2bb86a9efab26c7e784f3deff43743db",
+        "size_bytes": 1450
+      },
+      "author_notes": "Evidence-backed reconstruction from existing frozen artifacts; not an original runtime record.",
+      "class_distribution": "unknown/not recorded",
+      "code_commit_hash": "9a22613",
+      "conditional_task": true,
+      "confusion_matrix": {
+        "actual_benign": {
+          "predicted_benign": 674,
+          "predicted_pathogenic": 761
+        },
+        "actual_pathogenic": {
+          "predicted_benign": 26,
+          "predicted_pathogenic": 424
+        }
+      },
+      "dataset_version": {
+        "answer_snapshot": "2024-01-04",
+        "dates_inherited_from": "Resolved Direction V2 source cohort",
+        "prediction_snapshot": "2022-01-06",
+        "source_database_sha256": "bb66cc4e2e682300251180f3eda89e27828b5b80dd91abd02a2758653913c97b"
+      },
+      "date_created": "2026-07-29T20:15:00+00:00",
+      "effective_status": "frozen_evaluated",
+      "estimator": {
+        "C": 1.0,
+        "class_weight": "balanced",
+        "decision_threshold": 0.5,
+        "max_iter": 1000,
+        "name": "LogisticRegression",
+        "random_state": 314159,
+        "solver": "liblinear"
+      },
+      "evaluation_reliability": "internal holdout",
+      "evaluation_runtime_seconds": "unknown/not recorded",
+      "evaluation_source": "outputs/statistical_model_v3/held_out_predictions.csv",
+      "excluded_feature_list": [
+        "actual_outcome",
+        "answer",
+        "answer_key",
+        "correct",
+        "current_classification",
+        "latest_classification",
+        "new_classification",
+        "new_release_date",
+        "new_review_status",
+        "newer_classification",
+        "newer_release_date",
+        "newer_review_status",
+        "outcome",
+        "outcome_group",
+        "result",
+        "target",
+        "test_label",
+        "2024_classification"
+      ],
+      "feature_count": 9,
+      "features": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning"
+      ],
+      "frozen_at_utc": "2026-07-29T20:15:00+00:00",
+      "hyperparameters": {
+        "C": 1.0,
+        "class_weight": "balanced",
+        "decision_threshold": 0.5,
+        "max_iter": 1000,
+        "name": "LogisticRegression",
+        "random_state": 314159,
+        "solver": "liblinear"
+      },
+      "input_feature_list": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning"
+      ],
+      "interpretability": "high: linear coefficients are recorded",
+      "leakage_audit": {
+        "banned_fields": [
+          "2024_classification",
+          "actual_outcome",
+          "answer",
+          "answer_key",
+          "correct",
+          "current_classification",
+          "latest_classification",
+          "new_classification",
+          "new_release_date",
+          "new_review_status",
+          "newer_classification",
+          "newer_release_date",
+          "newer_review_status",
+          "outcome",
+          "outcome_group",
+          "result",
+          "target",
+          "test_label"
+        ],
+        "declared_fields": [
+          "canonical_splice_consequence",
+          "conflict_warning",
+          "criteria_without_conflict",
+          "expert_panel_review",
+          "loss_of_function_consequence",
+          "missense_consequence",
+          "multiple_agreeing_submitters",
+          "noncoding_consequence",
+          "synonymous_consequence"
+        ],
+        "findings": [],
+        "status": "pass",
+        "warning": "Name-based audit passed; source-date and data-lineage review remain required."
+      },
+      "leakage_audit_status": "pass",
+      "limitations": [
+        "This is an internal held-out evaluation within the already inspected Resolved Direction V2 cohort, not independent temporal validation.",
+        "The original V3 source database hash is not available in the current workspace; recorded results are preserved but cannot be reproduced from the current V2 database byte-for-byte."
+      ],
+      "manual_review": "unknown/not recorded",
+      "manual_review_status": "not started",
+      "metrics": {
+        "accuracy": 0.5824933687002652,
+        "average_precision_pathogenic": 0.5459423133126523,
+        "balanced_accuracy": 0.705954316686024,
+        "benign_f1": "unknown/not recorded",
+        "benign_precision": 0.9628571428571429,
+        "benign_recall": 0.4696864111498258,
+        "brier_score": 0.171442729047524,
+        "class_distribution": "unknown/not recorded",
+        "macro_f1": "unknown/not recorded",
+        "macro_precision": "unknown/not recorded",
+        "macro_recall": "unknown/not recorded",
+        "number_correct": "unknown/not recorded",
+        "number_no_prediction": "unknown/not recorded",
+        "number_not_scorable": "unknown/not recorded",
+        "number_of_predictions": "unknown/not recorded",
+        "number_wrong": "unknown/not recorded",
+        "pathogenic_f1": "unknown/not recorded",
+        "pathogenic_precision": 0.35780590717299576,
+        "pathogenic_recall": 0.9422222222222222,
+        "per_class": "unknown/not recorded",
+        "roc_auc": 0.7883677893921796,
+        "weighted_f1": "unknown/not recorded"
+      },
+      "model_id": "V3",
+      "model_type": "logistic regression",
+      "model_version_name": "V3",
+      "name": "Statistical Model V3",
+      "number_test_records": 1885,
+      "number_training_records": 6933,
+      "number_validation_records": "unknown/not recorded",
+      "output_files": [
+        "outputs/statistical_model_v3/coefficients.csv",
+        "outputs/statistical_model_v3/experiment_report.md",
+        "outputs/statistical_model_v3/held_out_predictions.csv",
+        "outputs/statistical_model_v3/metric_summary.json",
+        "outputs/statistical_model_v3/model.json",
+        "outputs/statistical_model_v3/partition_manifest.json",
+        "outputs/statistical_model_v3/statistical_model_v3.yaml"
+      ],
+      "partition": {
+        "algorithm": "sha256_connected_gene_group",
+        "group_rule": "Keep every record sharing any normalized older gene token in one connected component; records without a usable gene group by Variation ID.",
+        "salt": "variant-time-machine-statistical-model-v3-2026-07-29",
+        "test_fraction": 0.2
+      },
+      "prediction_snapshot_date": "2022-01-06",
+      "preprocessing_steps": "Binary applied indicators reconstructed from older-only clues_json. Assigned points, total score, predictions, newer fields, and outcomes are forbidden as model inputs.",
+      "random_seed": 314159,
+      "schema_version": 1,
+      "source_experiment": "Resolved Direction V2",
+      "status": "frozen",
+      "target_outcome_definition": {
+        "moved_toward_benign": 0,
+        "moved_toward_pathogenic": 1
+      },
+      "task": "Training-only learned weights with a grouped held-out test partition.",
+      "test_records": 1885,
+      "train_records": 6933,
+      "train_validation_test_split_method": {
+        "algorithm": "sha256_connected_gene_group",
+        "group_rule": "Keep every record sharing any normalized older gene token in one connected component; records without a usable gene group by Variation ID.",
+        "salt": "variant-time-machine-statistical-model-v3-2026-07-29",
+        "test_fraction": 0.2
+      },
+      "training_runtime_seconds": "unknown/not recorded",
+      "training_timestamp": "unknown/not recorded",
+      "vcv_verification": "unknown/not recorded",
+      "warnings": [
+        "This is an internal held-out evaluation within the already inspected Resolved Direction V2 cohort, not independent temporal validation.",
+        "The original V3 source database hash is not available in the current workspace; recorded results are preserved but cannot be reproduced from the current V2 database byte-for-byte."
+      ]
+    },
+    {
+      "answer_snapshot_date": "2024-01-04",
+      "artifact": {
+        "exists": true,
+        "path": "outputs/ai_holdout_v4/model.joblib",
+        "sha256": "082d52cd5b0008112a666f064f0308baa9e186a17cdc4e242eb38e0ba22dde47",
+        "size_bytes": 10741
+      },
+      "author_notes": "Evidence-backed reconstruction from existing frozen artifacts; not an original runtime record.",
+      "class_distribution": {
+        "prior_holdout_excluded": {},
+        "quarantine": {
+          "moved_toward_benign": 296,
+          "moved_toward_pathogenic": 97
+        },
+        "test": {
+          "moved_toward_benign": 68,
+          "moved_toward_pathogenic": 32
+        },
+        "train": {
+          "moved_toward_benign": 5923,
+          "moved_toward_pathogenic": 2402
+        }
+      },
+      "code_commit_hash": "a8cd286",
+      "conditional_task": true,
+      "confusion_matrix": {
+        "actual_benign": {
+          "predicted_benign": 68,
+          "predicted_pathogenic": 0
+        },
+        "actual_pathogenic": {
+          "predicted_benign": 24,
+          "predicted_pathogenic": 8
+        }
+      },
+      "dataset_version": {
+        "answer_snapshot": "2024-01-04",
+        "dates_inherited_from": "Resolved Direction V2 source cohort",
+        "prediction_snapshot": "2022-01-06",
+        "source_database_sha256": "b923497cb638cb8252a41744009980eb7210e786e1de0f9a9bdb19d19a4524bd"
+      },
+      "date_created": "2026-07-31T17:10:00+00:00",
+      "effective_status": "frozen_evaluated",
+      "estimator": {
+        "activation": "relu",
+        "alpha": 0.001,
+        "batch_size": 64,
+        "decision_threshold": 0.5,
+        "early_stopping": true,
+        "hidden_layer_sizes": [
+          8
+        ],
+        "learning_rate_init": 0.001,
+        "max_iter": 500,
+        "n_iter_no_change": 20,
+        "name": "MLPClassifier",
+        "random_state": 271828,
+        "solver": "adam",
+        "validation_fraction": 0.1
+      },
+      "evaluation_reliability": "internal holdout",
+      "evaluation_runtime_seconds": "unknown/not recorded",
+      "evaluation_source": "outputs/ai_holdout_v4/hidden_test_predictions.csv",
+      "excluded_feature_list": [
+        "actual_outcome",
+        "answer",
+        "answer_key",
+        "correct",
+        "current_classification",
+        "latest_classification",
+        "new_classification",
+        "new_release_date",
+        "new_review_status",
+        "newer_classification",
+        "newer_release_date",
+        "newer_review_status",
+        "outcome",
+        "outcome_group",
+        "result",
+        "target",
+        "test_label",
+        "2024_classification"
+      ],
+      "feature_count": 11,
+      "features": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age",
+        "record_completeness"
+      ],
+      "frozen_at_utc": "2026-07-31T17:10:00+00:00",
+      "hyperparameters": {
+        "activation": "relu",
+        "alpha": 0.001,
+        "batch_size": 64,
+        "decision_threshold": 0.5,
+        "early_stopping": true,
+        "hidden_layer_sizes": [
+          8
+        ],
+        "learning_rate_init": 0.001,
+        "max_iter": 500,
+        "n_iter_no_change": 20,
+        "name": "MLPClassifier",
+        "random_state": 271828,
+        "solver": "adam",
+        "validation_fraction": 0.1
+      },
+      "input_feature_list": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age",
+        "record_completeness"
+      ],
+      "interpretability": "limited: one hidden-layer neural network",
+      "leakage_audit": {
+        "banned_fields": [
+          "2024_classification",
+          "actual_outcome",
+          "answer",
+          "answer_key",
+          "correct",
+          "current_classification",
+          "latest_classification",
+          "new_classification",
+          "new_release_date",
+          "new_review_status",
+          "newer_classification",
+          "newer_release_date",
+          "newer_review_status",
+          "outcome",
+          "outcome_group",
+          "result",
+          "target",
+          "test_label"
+        ],
+        "declared_fields": [
+          "canonical_splice_consequence",
+          "classification_age",
+          "conflict_warning",
+          "criteria_without_conflict",
+          "expert_panel_review",
+          "loss_of_function_consequence",
+          "missense_consequence",
+          "multiple_agreeing_submitters",
+          "noncoding_consequence",
+          "record_completeness",
+          "synonymous_consequence"
+        ],
+        "findings": [],
+        "status": "pass",
+        "warning": "Name-based audit passed; source-date and data-lineage review remain required."
+      },
+      "leakage_audit_status": "pass",
+      "limitations": [
+        "This is an internal holdout from the already inspected Resolved Direction V2 cohort, not independent temporal or clinical validation.",
+        "Recorded configuration frozen_at_utc occurs after the recorded training timestamp; chronology is inconsistent and was not rewritten.",
+        "Training summary retains trained_hidden_test_unopened, but a saved test_metrics.json establishes that the effective state is tested."
+      ],
+      "manual_review": "unknown/not recorded",
+      "manual_review_status": "not started",
+      "metrics": {
+        "accuracy": 0.76,
+        "average_precision_pathogenic": "unknown/not recorded",
+        "balanced_accuracy": 0.625,
+        "benign_f1": 0.85,
+        "benign_precision": 0.7391304347826086,
+        "benign_recall": 1.0,
+        "brier_score": "unknown/not recorded",
+        "class_distribution": {
+          "moved_toward_benign": 68,
+          "moved_toward_pathogenic": 32
+        },
+        "macro_f1": 0.625,
+        "macro_precision": 0.8695652173913043,
+        "macro_recall": 0.625,
+        "number_correct": 76,
+        "number_no_prediction": 0,
+        "number_not_scorable": 0,
+        "number_of_predictions": 100,
+        "number_wrong": 24,
+        "pathogenic_f1": 0.4,
+        "pathogenic_precision": 1.0,
+        "pathogenic_recall": 0.25,
+        "per_class": {
+          "benign": {
+            "f1": 0.85,
+            "precision": 0.7391304347826086,
+            "recall": 1.0,
+            "support": 68
+          },
+          "pathogenic": {
+            "f1": 0.4,
+            "precision": 1.0,
+            "recall": 0.25,
+            "support": 32
+          }
+        },
+        "roc_auc": "unknown/not recorded",
+        "weighted_f1": 0.706
+      },
+      "model_id": "V4",
+      "model_type": "neural network",
+      "model_version_name": "V4",
+      "name": "AI Holdout V4",
+      "number_test_records": 100,
+      "number_training_records": 8325,
+      "number_validation_records": "not recorded",
+      "output_files": [
+        "outputs/ai_holdout_v4/ai_holdout_v4.yaml",
+        "outputs/ai_holdout_v4/hidden_test_predictions.csv",
+        "outputs/ai_holdout_v4/model.joblib",
+        "outputs/ai_holdout_v4/partition_manifest.json",
+        "outputs/ai_holdout_v4/test_metrics.json",
+        "outputs/ai_holdout_v4/training_summary.json"
+      ],
+      "partition": {
+        "algorithm": "sha256_100_connected_gene_groups",
+        "group_rule": "Select 100 connected older-gene groups without labels, choose one deterministic test record from each, quarantine every companion record in those groups, and train on all other groups.",
+        "holdout_records": 100,
+        "salt": "variant-time-machine-ai-holdout-v4-2026-07-31"
+      },
+      "prediction_snapshot_date": "2022-01-06",
+      "preprocessing_steps": "Use only the binary applied state of every older-only clue. Points, total score, prior predictions, newer fields, and outcomes are forbidden model inputs.",
+      "random_seed": 271828,
+      "schema_version": 1,
+      "source_experiment": "Resolved Direction V2",
+      "status": "frozen",
+      "target_outcome_definition": {
+        "moved_toward_benign": 0,
+        "moved_toward_pathogenic": 1
+      },
+      "task": "Neural-network training with exactly 100 unseen test records.",
+      "test_records": 100,
+      "train_records": 8325,
+      "train_validation_test_split_method": {
+        "algorithm": "sha256_100_connected_gene_groups",
+        "group_rule": "Select 100 connected older-gene groups without labels, choose one deterministic test record from each, quarantine every companion record in those groups, and train on all other groups.",
+        "holdout_records": 100,
+        "salt": "variant-time-machine-ai-holdout-v4-2026-07-31"
+      },
+      "training_runtime_seconds": "unknown/not recorded",
+      "training_timestamp": "2026-07-31T16:53:50.078507+00:00",
+      "vcv_verification": "unknown/not recorded",
+      "warnings": [
+        "This is an internal holdout from the already inspected Resolved Direction V2 cohort, not independent temporal or clinical validation.",
+        "Recorded configuration frozen_at_utc occurs after the recorded training timestamp; chronology is inconsistent and was not rewritten.",
+        "Training summary retains trained_hidden_test_unopened, but a saved test_metrics.json establishes that the effective state is tested."
+      ]
+    },
+    {
+      "answer_snapshot_date": "2024-01-04",
+      "artifact": {
+        "exists": true,
+        "path": "outputs/ai_holdout_v5/model.joblib",
+        "sha256": "4782ff8995de302bbd2c42b9881354d01ac248bb477f854b0c1c91e9bc027ea9",
+        "size_bytes": 45025
+      },
+      "author_notes": "Evidence-backed reconstruction from existing frozen artifacts; not an original runtime record.",
+      "class_distribution": {
+        "prior_holdout_excluded": {},
+        "quarantine": {
+          "moved_toward_benign": 24,
+          "moved_toward_pathogenic": 11
+        },
+        "test": {
+          "moved_toward_benign": 65,
+          "moved_toward_pathogenic": 35
+        },
+        "train": {
+          "moved_toward_benign": 6198,
+          "moved_toward_pathogenic": 2485
+        }
+      },
+      "code_commit_hash": "036c475",
+      "conditional_task": true,
+      "confusion_matrix": {
+        "actual_benign": {
+          "predicted_benign": 53,
+          "predicted_pathogenic": 12
+        },
+        "actual_pathogenic": {
+          "predicted_benign": 6,
+          "predicted_pathogenic": 29
+        }
+      },
+      "dataset_version": {
+        "answer_snapshot": "2024-01-04",
+        "dates_inherited_from": "Resolved Direction V2 source cohort",
+        "prediction_snapshot": "2022-01-06",
+        "source_database_sha256": "b923497cb638cb8252a41744009980eb7210e786e1de0f9a9bdb19d19a4524bd"
+      },
+      "date_created": "2026-08-01T21:05:00+00:00",
+      "effective_status": "frozen_evaluated",
+      "estimator": {
+        "activation": "relu",
+        "alpha": 0.002,
+        "batch_size": 64,
+        "decision_threshold": 0.5,
+        "early_stopping": false,
+        "hidden_layer_sizes": [
+          32,
+          16
+        ],
+        "learning_rate_init": 0.001,
+        "max_iter": 500,
+        "name": "MLPClassifier",
+        "random_state": 161803,
+        "solver": "adam"
+      },
+      "evaluation_reliability": "internal holdout",
+      "evaluation_runtime_seconds": "unknown/not recorded",
+      "evaluation_source": "outputs/ai_holdout_v5/hidden_test_predictions.csv",
+      "excluded_feature_list": [
+        "actual_outcome",
+        "answer",
+        "answer_key",
+        "correct",
+        "current_classification",
+        "latest_classification",
+        "new_classification",
+        "new_release_date",
+        "new_review_status",
+        "newer_classification",
+        "newer_release_date",
+        "newer_review_status",
+        "outcome",
+        "outcome_group",
+        "result",
+        "target",
+        "test_label",
+        "2024_classification"
+      ],
+      "feature_count": 14,
+      "features": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age_available",
+        "record_completeness_available",
+        "classification_age_days",
+        "maximum_submitter_count",
+        "missing_core_field_count"
+      ],
+      "frozen_at_utc": "2026-08-01T21:05:00+00:00",
+      "hyperparameters": {
+        "activation": "relu",
+        "alpha": 0.002,
+        "batch_size": 64,
+        "decision_threshold": 0.5,
+        "early_stopping": false,
+        "hidden_layer_sizes": [
+          32,
+          16
+        ],
+        "learning_rate_init": 0.001,
+        "max_iter": 500,
+        "name": "MLPClassifier",
+        "random_state": 161803,
+        "solver": "adam"
+      },
+      "input_feature_list": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age_available",
+        "record_completeness_available",
+        "classification_age_days",
+        "maximum_submitter_count",
+        "missing_core_field_count"
+      ],
+      "interpretability": "limited: two hidden-layer neural network",
+      "leakage_audit": {
+        "banned_fields": [
+          "2024_classification",
+          "actual_outcome",
+          "answer",
+          "answer_key",
+          "correct",
+          "current_classification",
+          "latest_classification",
+          "new_classification",
+          "new_release_date",
+          "new_review_status",
+          "newer_classification",
+          "newer_release_date",
+          "newer_review_status",
+          "outcome",
+          "outcome_group",
+          "result",
+          "target",
+          "test_label"
+        ],
+        "declared_fields": [
+          "canonical_splice_consequence",
+          "classification_age_available",
+          "classification_age_days",
+          "conflict_warning",
+          "criteria_without_conflict",
+          "expert_panel_review",
+          "loss_of_function_consequence",
+          "maximum_submitter_count",
+          "missense_consequence",
+          "missing_core_field_count",
+          "multiple_agreeing_submitters",
+          "noncoding_consequence",
+          "record_completeness_available",
+          "synonymous_consequence"
+        ],
+        "findings": [],
+        "status": "pass",
+        "warning": "Name-based audit passed; source-date and data-lineage review remain required."
+      },
+      "leakage_audit_status": "pass",
+      "limitations": [
+        "V5 was designed after V4 aggregate results were known. Its fresh holdout is unseen by V5 and disjoint from V4 test groups, but it is still internal to the already inspected V2 cohort.",
+        "Recorded configuration frozen_at_utc occurs after the recorded training timestamp; chronology is inconsistent and was not rewritten.",
+        "Training summary retains trained_hidden_test_unopened, but a saved test_metrics.json establishes that the effective state is tested."
+      ],
+      "manual_review": "unknown/not recorded",
+      "manual_review_status": "not started",
+      "metrics": {
+        "accuracy": 0.82,
+        "average_precision_pathogenic": "unknown/not recorded",
+        "balanced_accuracy": 0.8219780219780219,
+        "benign_f1": 0.8548387096774194,
+        "benign_precision": 0.8983050847457628,
+        "benign_recall": 0.8153846153846154,
+        "brier_score": "unknown/not recorded",
+        "class_distribution": {
+          "moved_toward_benign": 65,
+          "moved_toward_pathogenic": 35
+        },
+        "macro_f1": 0.8089983022071308,
+        "macro_precision": 0.8028110789582472,
+        "macro_recall": 0.8219780219780219,
+        "number_correct": 82,
+        "number_no_prediction": 0,
+        "number_not_scorable": 0,
+        "number_of_predictions": 100,
+        "number_wrong": 18,
+        "pathogenic_f1": 0.7631578947368421,
+        "pathogenic_precision": 0.7073170731707317,
+        "pathogenic_recall": 0.8285714285714286,
+        "per_class": {
+          "benign": {
+            "f1": 0.8548387096774194,
+            "precision": 0.8983050847457628,
+            "recall": 0.8153846153846154,
+            "support": 65
+          },
+          "pathogenic": {
+            "f1": 0.7631578947368421,
+            "precision": 0.7073170731707317,
+            "recall": 0.8285714285714286,
+            "support": 35
+          }
+        },
+        "roc_auc": "unknown/not recorded",
+        "weighted_f1": 0.8227504244482173
+      },
+      "model_id": "V5",
+      "model_type": "scaled class-balanced neural network",
+      "model_version_name": "V5",
+      "name": "AI Holdout V5",
+      "number_test_records": 100,
+      "number_training_records": 8683,
+      "number_validation_records": 0,
+      "output_files": [
+        "outputs/ai_holdout_v5/ai_holdout_v5.yaml",
+        "outputs/ai_holdout_v5/hidden_test_predictions.csv",
+        "outputs/ai_holdout_v5/model.joblib",
+        "outputs/ai_holdout_v5/partition_manifest.json",
+        "outputs/ai_holdout_v5/test_metrics.json",
+        "outputs/ai_holdout_v5/training_summary.json"
+      ],
+      "partition": {
+        "algorithm": "sha256_fresh_100_low_dependency_groups",
+        "group_rule": "Exclude every V4 test group, rank connected older-gene groups containing at most two records without labels, select 100 groups, choose one deterministic test record per group, quarantine companions, and train on all other records.",
+        "holdout_records": 100,
+        "maximum_holdout_group_size": 2,
+        "salt": "variant-time-machine-ai-holdout-v5-2026-08-01"
+      },
+      "prediction_snapshot_date": "2022-01-06",
+      "preprocessing_steps": {
+        "class_balance": "deterministic_random_oversampling_within_training_only",
+        "feature_scaling": "StandardScaler fit on training data only"
+      },
+      "random_seed": 161803,
+      "schema_version": 1,
+      "source_experiment": "Resolved Direction V2",
+      "status": "frozen",
+      "target_outcome_definition": {
+        "moved_toward_benign": 0,
+        "moved_toward_pathogenic": 1
+      },
+      "task": "Richer class-balanced neural network with a fresh 100-record holdout.",
+      "test_records": 100,
+      "train_records": 8683,
+      "train_validation_test_split_method": {
+        "algorithm": "sha256_fresh_100_low_dependency_groups",
+        "group_rule": "Exclude every V4 test group, rank connected older-gene groups containing at most two records without labels, select 100 groups, choose one deterministic test record per group, quarantine companions, and train on all other records.",
+        "holdout_records": 100,
+        "maximum_holdout_group_size": 2,
+        "salt": "variant-time-machine-ai-holdout-v5-2026-08-01"
+      },
+      "training_runtime_seconds": "unknown/not recorded",
+      "training_timestamp": "2026-08-01T21:00:21.040810+00:00",
+      "vcv_verification": "unknown/not recorded",
+      "warnings": [
+        "V5 was designed after V4 aggregate results were known. Its fresh holdout is unseen by V5 and disjoint from V4 test groups, but it is still internal to the already inspected V2 cohort.",
+        "Recorded configuration frozen_at_utc occurs after the recorded training timestamp; chronology is inconsistent and was not rewritten.",
+        "Training summary retains trained_hidden_test_unopened, but a saved test_metrics.json establishes that the effective state is tested."
+      ]
+    },
+    {
+      "answer_snapshot_date": "2024-01-04",
+      "artifact": {
+        "exists": true,
+        "path": "outputs/ai_holdout_v6/model.joblib",
+        "sha256": "a0eb6e82bb0142373286ef2a1af70bbf0ba3d965fbe14f7950b67879b695d801",
+        "size_bytes": 44609
+      },
+      "author_notes": "Evidence-backed reconstruction from existing frozen artifacts; not an original runtime record.",
+      "class_distribution": {
+        "prior_holdout_excluded": {
+          "moved_toward_benign": 453,
+          "moved_toward_pathogenic": 175
+        },
+        "quarantine": {
+          "moved_toward_benign": 3396,
+          "moved_toward_pathogenic": 1276
+        },
+        "test": {
+          "moved_toward_benign": 689,
+          "moved_toward_pathogenic": 311
+        },
+        "train": {
+          "moved_toward_benign": 1749,
+          "moved_toward_pathogenic": 769
+        }
+      },
+      "code_commit_hash": "unknown/not recorded",
+      "conditional_task": true,
+      "confusion_matrix": {
+        "actual_benign": {
+          "predicted_benign": 535,
+          "predicted_pathogenic": 154
+        },
+        "actual_pathogenic": {
+          "predicted_benign": 90,
+          "predicted_pathogenic": 221
+        }
+      },
+      "dataset_version": {
+        "answer_snapshot": "2024-01-04",
+        "dates_inherited_from": "Resolved Direction V2 source cohort",
+        "prediction_snapshot": "2022-01-06",
+        "source_database_sha256": "d9d66ba2384f2d9e0b8cb55be43432f8e02fdd8fcd70ecd2266d65e52af73a04"
+      },
+      "date_created": "2026-08-01T22:42:43+00:00",
+      "effective_status": "frozen_evaluated",
+      "estimator": {
+        "activation": "relu",
+        "alpha": 0.002,
+        "batch_size": 64,
+        "decision_threshold": 0.5,
+        "early_stopping": false,
+        "hidden_layer_sizes": [
+          32,
+          16
+        ],
+        "learning_rate_init": 0.001,
+        "max_iter": 500,
+        "name": "MLPClassifier",
+        "random_state": 141421,
+        "solver": "adam"
+      },
+      "evaluation_reliability": "internal holdout",
+      "evaluation_runtime_seconds": "unknown/not recorded",
+      "evaluation_source": "outputs/ai_holdout_v6/hidden_test_predictions.csv",
+      "excluded_feature_list": [
+        "actual_outcome",
+        "answer",
+        "answer_key",
+        "correct",
+        "current_classification",
+        "latest_classification",
+        "new_classification",
+        "new_release_date",
+        "new_review_status",
+        "newer_classification",
+        "newer_release_date",
+        "newer_review_status",
+        "outcome",
+        "outcome_group",
+        "result",
+        "target",
+        "test_label",
+        "2024_classification"
+      ],
+      "feature_count": 14,
+      "features": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age_available",
+        "record_completeness_available",
+        "classification_age_days",
+        "maximum_submitter_count",
+        "missing_core_field_count"
+      ],
+      "frozen_at_utc": "2026-08-01T22:42:43+00:00",
+      "hyperparameters": {
+        "activation": "relu",
+        "alpha": 0.002,
+        "batch_size": 64,
+        "decision_threshold": 0.5,
+        "early_stopping": false,
+        "hidden_layer_sizes": [
+          32,
+          16
+        ],
+        "learning_rate_init": 0.001,
+        "max_iter": 500,
+        "name": "MLPClassifier",
+        "random_state": 141421,
+        "solver": "adam"
+      },
+      "input_feature_list": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age_available",
+        "record_completeness_available",
+        "classification_age_days",
+        "maximum_submitter_count",
+        "missing_core_field_count"
+      ],
+      "interpretability": "limited: two hidden-layer neural network",
+      "leakage_audit": {
+        "banned_fields": [
+          "2024_classification",
+          "actual_outcome",
+          "answer",
+          "answer_key",
+          "correct",
+          "current_classification",
+          "latest_classification",
+          "new_classification",
+          "new_release_date",
+          "new_review_status",
+          "newer_classification",
+          "newer_release_date",
+          "newer_review_status",
+          "outcome",
+          "outcome_group",
+          "result",
+          "target",
+          "test_label"
+        ],
+        "declared_fields": [
+          "canonical_splice_consequence",
+          "classification_age_available",
+          "classification_age_days",
+          "conflict_warning",
+          "criteria_without_conflict",
+          "expert_panel_review",
+          "loss_of_function_consequence",
+          "maximum_submitter_count",
+          "missense_consequence",
+          "missing_core_field_count",
+          "multiple_agreeing_submitters",
+          "noncoding_consequence",
+          "record_completeness_available",
+          "synonymous_consequence"
+        ],
+        "findings": [],
+        "status": "pass",
+        "warning": "Name-based audit passed; source-date and data-lineage review remain required."
+      },
+      "leakage_audit_status": "pass",
+      "limitations": [
+        "V6 is an internal conditional test from the previously inspected V2 cohort, not independent temporal or clinical validation. Its 1,000 records and their connected groups are excluded from V6 training, and all prior V4/V5 test groups are excluded from both V6 training and V6 testing.",
+        "This rebuilt local V2 database has the same 8,818-record cohort and IDs used by the manifests, but its byte hash differs from the source hash recorded by V4/V5. V6 freezes and reports the current hash rather than rewriting prior provenance."
+      ],
+      "manual_review": "unknown/not recorded",
+      "manual_review_status": "not started",
+      "metrics": {
+        "accuracy": 0.756,
+        "average_precision_pathogenic": "unknown/not recorded",
+        "balanced_accuracy": 0.7435492978780002,
+        "benign_f1": 0.8143074581430746,
+        "benign_precision": 0.856,
+        "benign_recall": 0.7764876632801161,
+        "brier_score": 0.1539841081639823,
+        "class_distribution": {
+          "moved_toward_benign": 689,
+          "moved_toward_pathogenic": 311
+        },
+        "macro_f1": 0.7293111634738696,
+        "macro_precision": 0.7226666666666667,
+        "macro_recall": 0.7435492978780002,
+        "number_correct": 756,
+        "number_no_prediction": 0,
+        "number_not_scorable": 0,
+        "number_of_predictions": 1000,
+        "number_wrong": 244,
+        "pathogenic_f1": 0.6443148688046647,
+        "pathogenic_precision": 0.5893333333333334,
+        "pathogenic_recall": 0.7106109324758842,
+        "per_class": {
+          "benign": {
+            "f1": 0.8143074581430746,
+            "precision": 0.856,
+            "recall": 0.7764876632801161,
+            "support": 689
+          },
+          "pathogenic": {
+            "f1": 0.6443148688046647,
+            "precision": 0.5893333333333334,
+            "recall": 0.7106109324758842,
+            "support": 311
+          }
+        },
+        "roc_auc": 0.8435124300561418,
+        "weighted_f1": 0.761439762858829
+      },
+      "model_id": "V6",
+      "model_type": "scaled class-balanced neural network",
+      "model_version_name": "V6",
+      "name": "AI Holdout V6",
+      "number_test_records": 1000,
+      "number_training_records": 2518,
+      "number_validation_records": 0,
+      "output_files": [
+        "outputs/ai_holdout_v6/ai_holdout_v6.yaml",
+        "outputs/ai_holdout_v6/hidden_test_predictions.csv",
+        "outputs/ai_holdout_v6/model.joblib",
+        "outputs/ai_holdout_v6/partition_manifest.json",
+        "outputs/ai_holdout_v6/test_metrics.json",
+        "outputs/ai_holdout_v6/training_summary.json"
+      ],
+      "partition": {
+        "algorithm": "sha256_fresh_1000_connected_groups",
+        "group_rule": "Recompute connected older-gene groups; exclude complete V4/V5 test groups from all V6 use; rank every remaining group without labels; select 1,000 groups; choose one deterministic test representative per selected group; quarantine companions; train only on unselected fresh groups.",
+        "holdout_records": 1000,
+        "salt": "variant-time-machine-ai-holdout-v6-1000-2026-08-01"
+      },
+      "prediction_snapshot_date": "2022-01-06",
+      "preprocessing_steps": {
+        "class_balance": "deterministic_random_oversampling_within_training_only",
+        "feature_scaling": "StandardScaler fit on training data only"
+      },
+      "random_seed": 141421,
+      "schema_version": 1,
+      "source_experiment": "Resolved Direction V2",
+      "status": "frozen",
+      "target_outcome_definition": {
+        "moved_toward_benign": 0,
+        "moved_toward_pathogenic": 1
+      },
+      "task": "V5-style class-balanced neural network retrained around a precommitted 1,000-record group-isolated holdout.",
+      "test_records": 1000,
+      "train_records": 2518,
+      "train_validation_test_split_method": {
+        "algorithm": "sha256_fresh_1000_connected_groups",
+        "group_rule": "Recompute connected older-gene groups; exclude complete V4/V5 test groups from all V6 use; rank every remaining group without labels; select 1,000 groups; choose one deterministic test representative per selected group; quarantine companions; train only on unselected fresh groups.",
+        "holdout_records": 1000,
+        "salt": "variant-time-machine-ai-holdout-v6-1000-2026-08-01"
+      },
+      "training_runtime_seconds": "unknown/not recorded",
+      "training_timestamp": "2026-08-01T22:46:07.470288+00:00",
+      "vcv_verification": "unknown/not recorded",
+      "warnings": [
+        "V6 is an internal conditional test from the previously inspected V2 cohort, not independent temporal or clinical validation. Its 1,000 records and their connected groups are excluded from V6 training, and all prior V4/V5 test groups are excluded from both V6 training and V6 testing.",
+        "This rebuilt local V2 database has the same 8,818-record cohort and IDs used by the manifests, but its byte hash differs from the source hash recorded by V4/V5. V6 freezes and reports the current hash rather than rewriting prior provenance."
+      ]
+    }
+  ],
+  "ranking_policy": [
+    "Do not total-rank models evaluated on different tasks or cohorts.",
+    "Compare test design, sample size, class recall, uncertainty, and coverage.",
+    "Treat leakage-audit failure as disqualifying, not as a ranking penalty."
+  ],
+  "registry_kind": "evidence_backed_model_registry",
+  "schema_version": 1,
+  "unknown_value": "unknown/not recorded",
+  "warnings": [
+    "V4, V5, and V6 used different group-isolated internal tests and different training memberships. Their point estimates are descriptive, not paired head-to-head effects."
+  ]
+}

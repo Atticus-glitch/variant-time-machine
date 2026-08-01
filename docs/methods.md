@@ -2,7 +2,22 @@
 
 ## Current Scientific Milestone
 
-The current milestone is AI Holdout V5. Frozen Clue Score V1, Resolved Direction V2, Statistical Model V3, and the completed V4 test remain unchanged. V5 uses richer older-only inputs, class-balanced training, and a larger network with a fresh 100-record holdout.
+The current milestone is Model Validation and Error Analysis. Frozen V1 through V6 artifacts remain unchanged. The registry standardizes metrics, leakage audits, baselines, provenance, error-analysis rows, and known missing information. V6 completed the planned larger held-out evaluation with 1,000 records.
+
+## AI Holdout V6
+
+V6 retains V5's 14 older-only features, scaling, training-only class balancing, network
+shape, and 0.5 threshold, but it is a separately trained model with a new frozen
+partition. Complete V4/V5 test-connected groups are excluded from all V6 use. A
+label-independent SHA-256 rule selects 1,000 additional connected groups and one test
+representative per group; companions are quarantined. Only records in remaining fresh
+groups enter training.
+
+The resulting split contains 2,518 training records, 1,000 test records, 4,672
+quarantined companions, and 628 prior-test-group exclusions. Recorded train/test ID and
+connected-group intersections are zero. V6 scored 75.6% accuracy, 74.4% balanced
+accuracy, and 72.9% macro F1 (`TN 535, FP 154, FN 90, TP 221`). The larger test is still
+internal to the outcome-selected V2 cohort.
 
 ## AI Holdout V5
 
@@ -10,7 +25,11 @@ V5 retains the eleven older clue states and adds numeric classification age in d
 
 The fresh holdout excludes every V4 test group. To reduce quarantine while preserving gene isolation, candidate test groups contain at most two records. A frozen label-independent SHA-256 rule selects 100 groups and one test record from each; any companion record is quarantined. All other records are available for V5 training.
 
-V5 was designed after seeing V4 aggregate performance, so its architecture addresses the documented class-recall weakness. The new test answers remain unopened during design and training. No architecture, feature, balancing, threshold, or partition decision may be changed after V5 test results are known.
+V5 was designed after seeing V4 aggregate performance, so its architecture addresses the documented class-recall weakness. Its test was opened once after training: accuracy was 82.0%, balanced accuracy was 82.2%, and macro F1 was 80.9%. No architecture, feature, balancing, threshold, or partition decision may now be changed and presented as the same V5.
+
+## Model Registry And Audits
+
+`scripts/build_model_registry.py` reads existing artifacts without training. It writes one record per version, a combined index, standardized V4-V6 evaluations, deterministic baselines, leakage audits, reconstructed logs, comparison files, and error-analysis tables. Historical gaps remain `unknown/not recorded`. Reconstructed logs are explicitly labeled and never presented as original runtime logs.
 
 ## AI Holdout V4
 

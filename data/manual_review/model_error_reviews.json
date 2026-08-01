@@ -1,0 +1,16 @@
+{
+  "allowed_categories": [
+    "bad match",
+    "condition scope changed",
+    "ambiguous ClinVar aggregation",
+    "conflicting classification",
+    "model over-predicted pathogenic",
+    "model over-predicted benign",
+    "missing feature",
+    "weak feature signal",
+    "possible data-label problem",
+    "unknown"
+  ],
+  "reviews": {},
+  "schema_version": 1
+}

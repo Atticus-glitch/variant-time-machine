@@ -1,0 +1,146 @@
+{
+  "item_count": 14,
+  "schema_version": 1,
+  "tasks": [
+    {
+      "category": "model validation",
+      "description": "Preserve exact artifacts, hashes, metrics, and provenance warnings.",
+      "due_date": "2026-08-03",
+      "priority": "high",
+      "related_output_file": "outputs/model_registry/model_index.json",
+      "status": "completed",
+      "success_condition": "V4 and V5 registry records are frozen without rewriting results.",
+      "title": "Freeze current V4/V5 results"
+    },
+    {
+      "category": "model validation",
+      "description": "Audit every declared input against future and answer-derived fields.",
+      "due_date": "2026-08-07",
+      "priority": "high",
+      "related_output_file": "outputs/leakage_audits/",
+      "status": "completed",
+      "success_condition": "Versioned leakage reports exist and failures are excluded from trusted ranking.",
+      "title": "Complete leakage audit"
+    },
+    {
+      "category": "model validation",
+      "description": "Freeze 1,000 connected-group representatives before fitting V6 and exclude all test-connected groups from training.",
+      "due_date": "2026-08-10",
+      "priority": "high",
+      "related_output_file": "research/test-set-expansion-plan.md",
+      "status": "completed",
+      "success_condition": "A group-isolated test is frozen before tuning and evaluated once.",
+      "title": "Test 1,000 held-out variants"
+    },
+    {
+      "category": "research",
+      "description": "Review high-confidence errors, low-confidence cases, scope issues, and labels.",
+      "due_date": "2026-08-14",
+      "priority": "high",
+      "related_output_file": "outputs/error_analysis/",
+      "status": "in_progress",
+      "success_condition": "Error files are generated and a representative sample is manually reviewed.",
+      "title": "Complete error analysis"
+    },
+    {
+      "category": "writing",
+      "description": "Revise the evidence-backed abstract after larger validation.",
+      "due_date": "2026-08-26",
+      "priority": "medium",
+      "related_output_file": "research/one-page-abstract.md",
+      "status": "draft",
+      "success_condition": "One-page abstract is accurate, concise, and mentor-ready.",
+      "title": "Finish one-page abstract"
+    },
+    {
+      "category": "mentor outreach",
+      "description": "Send an honest project summary and focused feedback questions.",
+      "due_date": "2026-08-31",
+      "priority": "medium",
+      "related_output_file": "research/project-summary-for-mentors.md",
+      "status": "pending",
+      "success_condition": "Ten individualized mentor emails are sent and tracked.",
+      "title": "Email 10 mentors"
+    },
+    {
+      "category": "dashboard",
+      "description": "Remove stale claims, keep limitations visible, and verify public navigation.",
+      "due_date": "2026-09-20",
+      "priority": "high",
+      "related_output_file": "README.md",
+      "status": "in_progress",
+      "success_condition": "Repository and dashboard pass tests and contain no secrets or large data.",
+      "title": "Clean public GitHub/dashboard"
+    },
+    {
+      "category": "competition",
+      "description": "Draft figures, methods, results, limitations, and next steps.",
+      "due_date": "2026-09-25",
+      "priority": "medium",
+      "related_output_file": "research/competition-notes.md",
+      "status": "pending",
+      "success_condition": "A complete poster draft is ready for review.",
+      "title": "Poster draft complete"
+    },
+    {
+      "category": "research",
+      "description": "Review correct and wrong predictions across confidence and outcome classes.",
+      "due_date": "2026-09-30",
+      "priority": "high",
+      "related_output_file": "data/manual_review/model_error_reviews.json",
+      "status": "pending",
+      "success_condition": "Fifty reviews include sources, category, and notes.",
+      "title": "Manually review 50 predictions"
+    },
+    {
+      "category": "admissions",
+      "description": "Complete honest essay drafts without overstating research impact.",
+      "due_date": "2026-10-12",
+      "priority": "medium",
+      "related_output_file": "research/mit-activity-draft.md",
+      "status": "pending",
+      "success_condition": "All MIT essay prompts have reviewable drafts.",
+      "title": "MIT essay drafts complete"
+    },
+    {
+      "category": "admissions",
+      "description": "Prepare a concise supplement with methods, results, and limitations.",
+      "due_date": "2026-10-17",
+      "priority": "medium",
+      "related_output_file": "research/one-page-abstract.md",
+      "status": "pending",
+      "success_condition": "Supplement draft links to reproducible project evidence.",
+      "title": "Research supplement draft complete"
+    },
+    {
+      "category": "research",
+      "description": "Freeze code, model registry, reports, and documented known limitations.",
+      "due_date": "2026-10-22",
+      "priority": "high",
+      "related_output_file": "outputs/model_registry/model_index.json",
+      "status": "pending",
+      "success_condition": "A tagged reproducible release is ready without changing old metrics.",
+      "title": "Freeze project v1.0"
+    },
+    {
+      "category": "admissions",
+      "description": "Submit before the final deadline after complete review.",
+      "due_date": "2026-10-31",
+      "priority": "high",
+      "related_output_file": "research/admissions-research-timeline.md",
+      "status": "pending",
+      "success_condition": "Application is submitted and confirmation is saved.",
+      "title": "Submit MIT Early Action early"
+    },
+    {
+      "category": "competition",
+      "description": "Submit only if eligibility, mentor review, and evidence quality are sufficient.",
+      "due_date": "2026-11-05",
+      "priority": "medium",
+      "related_output_file": "research/admissions-research-timeline.md",
+      "status": "pending",
+      "success_condition": "Submission is complete or a documented no-submit decision is made.",
+      "title": "Regeneron STS deadline, if submitting"
+    }
+  ]
+}

@@ -23,8 +23,8 @@
         </div>
         <div class="milestone-card">
           <span>Current milestone</span>
-          <strong id="current-milestone">AI Holdout V5</strong>
-          <small>Fresh machine-learning holdout; not a medical tool</small>
+          <strong id="current-milestone">Model Validation and Error Analysis</strong>
+          <small>Preliminary research; not a medical tool</small>
         </div>
       </div>
     </header>
@@ -37,6 +37,9 @@
       <a href="/pilot_results.html">Pilot Results</a>
       <a href="/historical_variants.html">Variant Spreadsheet</a>
       <a href="/prediction_results.html">Prediction Results</a>
+      <a href="/model_versions.html">Model Versions</a>
+      <a href="/prediction_explorer.html">Prediction Explorer</a>
+      <a href="/research_timeline.html">Research Timeline</a>
       <a href="/variant_lookup.html">Current Lookup</a>
     </nav>
 
@@ -52,9 +55,19 @@
           Loading the project explanation...
         </p>
         <p class="plain-language-note">
-          The goal right now is to match old and new records correctly. A reliable
-          small dataset matters more than an impressive but incorrect model.
+          The first scores raised more questions than they answered. That turned out
+          to be useful: each weakness became a reason to design the next test more
+          carefully instead of polishing the same result.
         </p>
+      </section>
+
+      <section class="panel" aria-labelledby="model-validation-title">
+        <div class="section-heading">
+          <div><p class="section-number">Frozen evidence</p><h2 id="model-validation-title">Model Validation and Error Analysis</h2></div>
+          <a class="text-link" href="/model_versions.html">Open Model Versions</a>
+        </div>
+        <dl id="model-validation-summary" class="history-grid research-progress-grid"><div><dt>Status</dt><dd>Loading...</dd></div></dl>
+        <div id="model-validation-warnings" class="warning-list"></div>
       </section>
 
       <section class="panel" aria-labelledby="current-pilot-title">

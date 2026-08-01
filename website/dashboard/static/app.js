@@ -130,6 +130,7 @@ function renderStatus(data) {
   renderCurrentPilot(data.current_pilot_variant);
   renderResearchProgress(data.research_progress);
   renderClueScoreProgress(data.clue_score_baseline);
+  renderModelValidation(data.model_validation);
 
   const list = document.querySelector("#system-status");
   list.replaceChildren();
@@ -144,6 +145,26 @@ function renderStatus(data) {
     data.research_notes.title;
   document.querySelector("#notes-entry-content").textContent =
     data.research_notes.content;
+}
+
+function renderModelValidation(summary) {
+  const list = document.querySelector("#model-validation-summary");
+  const warnings = document.querySelector("#model-validation-warnings");
+  list.replaceChildren(); warnings.replaceChildren();
+  if (summary.available === false) { addStatusRow(list, "Status", "Registry unavailable"); }
+  else {
+    const pct = (value) => typeof value === "number" ? `${(value * 100).toFixed(1)}%` : "Not recorded";
+    const fields = [
+      ["Project stage", summary.project_stage], ["Latest model", summary.latest_model_version], ["Current conclusion", summary.best_validated_model],
+      ["V4 accuracy", pct(summary.v4?.accuracy)], ["V4 balanced accuracy", pct(summary.v4?.balanced_accuracy)],
+      ["V5 accuracy", pct(summary.v5?.accuracy)], ["V5 balanced accuracy", pct(summary.v5?.balanced_accuracy)],
+      ["V6 accuracy", pct(summary.v6?.accuracy)], ["V6 balanced accuracy", pct(summary.v6?.balanced_accuracy)],
+      ["Test sizes", "V4: 100; V5: 100; V6: 1,000 (different cohorts)"], ["Leakage audits", Object.entries(summary.leakage_audit_status || {}).map(([key, value]) => `${key}: ${value}`).join("; ")],
+      ["Next validation", summary.next_required_validation_step], ["Upcoming deadline", summary.upcoming_deadline ? `${summary.upcoming_deadline.due_date}: ${summary.upcoming_deadline.title}` : "None"], ["GitHub", summary.github_status],
+    ];
+    fields.forEach(([label, value]) => addStatusRow(list, label, value));
+  }
+  (summary.warnings || []).forEach((value) => { const item = document.createElement("p"); item.textContent = value; warnings.append(item); });
 }
 
 function renderClueScoreProgress(progress) {

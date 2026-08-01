@@ -1,0 +1,105 @@
+{
+  "best_validated_model": "No stable winner yet.",
+  "latest_model_version": "V6",
+  "models": [
+    {
+      "accuracy": 0.8097125301852812,
+      "balanced_accuracy": 0.4749112763166247,
+      "leakage_status": "pass",
+      "macro_f1": "unknown/not recorded",
+      "model_id": "V1",
+      "model_type": "frozen hand-designed score",
+      "name": "Clue Score V1",
+      "record_path": "outputs/model_registry/model_v1.json",
+      "status": "frozen_evaluated",
+      "test_records": 439409
+    },
+    {
+      "accuracy": 0.5846799847308818,
+      "balanced_accuracy": 0.6506938269576859,
+      "leakage_status": "pass",
+      "macro_f1": "unknown/not recorded",
+      "model_id": "V2",
+      "model_type": "frozen hand-designed binary rule",
+      "name": "Resolved Direction V2",
+      "record_path": "outputs/model_registry/model_v2.json",
+      "status": "frozen_evaluated",
+      "test_records": 8818
+    },
+    {
+      "accuracy": 0.5824933687002652,
+      "balanced_accuracy": 0.705954316686024,
+      "leakage_status": "pass",
+      "macro_f1": "unknown/not recorded",
+      "model_id": "V3",
+      "model_type": "logistic regression",
+      "name": "Statistical Model V3",
+      "record_path": "outputs/model_registry/model_v3.json",
+      "status": "frozen_evaluated",
+      "test_records": 1885
+    },
+    {
+      "accuracy": 0.76,
+      "balanced_accuracy": 0.625,
+      "leakage_status": "pass",
+      "macro_f1": 0.625,
+      "model_id": "V4",
+      "model_type": "neural network",
+      "name": "AI Holdout V4",
+      "record_path": "outputs/model_registry/model_v4.json",
+      "status": "frozen_evaluated",
+      "test_records": 100
+    },
+    {
+      "accuracy": 0.82,
+      "balanced_accuracy": 0.8219780219780219,
+      "leakage_status": "pass",
+      "macro_f1": 0.8089983022071308,
+      "model_id": "V5",
+      "model_type": "scaled class-balanced neural network",
+      "name": "AI Holdout V5",
+      "record_path": "outputs/model_registry/model_v5.json",
+      "status": "frozen_evaluated",
+      "test_records": 100
+    },
+    {
+      "accuracy": 0.756,
+      "balanced_accuracy": 0.7435492978780002,
+      "leakage_status": "pass",
+      "macro_f1": 0.7293111634738696,
+      "model_id": "V6",
+      "model_type": "scaled class-balanced neural network",
+      "name": "AI Holdout V6",
+      "record_path": "outputs/model_registry/model_v6.json",
+      "status": "frozen_evaluated",
+      "test_records": 1000
+    }
+  ],
+  "ranking": {
+    "comparison_status": "not_rankable_across_current_evaluations",
+    "conclusion": "No stable winner. V6 supplies the largest internal test; V5 has the highest point balanced accuracy on its own much smaller test.",
+    "criteria": [
+      "test design",
+      "sample size",
+      "class recall",
+      "uncertainty"
+    ],
+    "evidence_summary": {
+      "highest_own_test_balanced_accuracy": "V5 (82.2%, n=100)",
+      "largest_internal_test": "V6 (n=1,000)",
+      "most_interpretable_models": "V1-V3"
+    },
+    "ranking": [],
+    "stable_winner": null,
+    "warning": "V4, V5, and V6 used different group-isolated internal tests and different training memberships. Their point estimates are descriptive, not paired head-to-head effects."
+  },
+  "ranking_policy": [
+    "Do not total-rank models evaluated on different tasks or cohorts.",
+    "Compare test design, sample size, class recall, uncertainty, and coverage.",
+    "Treat leakage-audit failure as disqualifying, not as a ranking penalty."
+  ],
+  "schema_version": 1,
+  "warnings": [
+    "V4, V5, and V6 used different group-isolated internal tests and different training memberships. Their point estimates are descriptive, not paired head-to-head effects."
+  ]
+}

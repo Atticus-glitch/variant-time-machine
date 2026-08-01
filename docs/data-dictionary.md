@@ -53,7 +53,18 @@ After the separately approved website test, `test_metrics.json` stores correctne
 
 `outputs/ai_holdout_v5/` has the same train-then-test artifact separation as V4. Its feature array has 14 columns: nine directional clue states, age/completeness availability, age in days, maximum submitter count, and missing-core-field count. `training_summary.json` distinguishes unique training records from effective class-balanced rows created by training-only oversampling.
 
-The V5 partition manifest records the V4 manifest hash, verifies zero V4/V5 test-group overlap, limits V5 holdout groups to at most two records, and preserves train/test/quarantine assignments. Test metrics are absent until the separately approved website action runs.
+The V5 partition manifest records the V4 manifest hash, verifies zero V4/V5 test-group overlap, limits V5 holdout groups to at most two records, and preserves train/test/quarantine assignments. The one-time test now exists and is preserved at 82.0% accuracy and 82.2% balanced accuracy.
+
+## Model Registry And Reporting
+
+`outputs/model_registry/model_v1.json` through `model_v6.json` contain standardized version records. `model_index.json` provides dashboard summaries and an evidence summary that avoids a total ranking across different cohorts. `outputs/evaluations/frozen/` stores standardized official metrics and immutable references; `outputs/evaluations/experiments/` is reserved for temporary evaluations.
+
+`outputs/leakage_audits/` records declared features, banned and suspicious findings, status, explanation, date, and recommendation. `outputs/logs/` contains paired JSON and Markdown historical reconstructions; they are not original runtime logs. `outputs/error_analysis/model_v4_errors.csv` through `model_v6_errors.csv` include every frozen test row so correct, wrong, high-confidence, low-confidence, and manually reviewed cases remain visible.
+
+`outputs/ai_holdout_v6/partition_manifest.json` uses `train`, `test`, `quarantine`, and
+`prior_holdout_excluded`. `quarantine` means the row shares a connected group with a V6
+test representative. `prior_holdout_excluded` means the row belongs to a complete V4 or
+V5 test-connected group and was excluded from both V6 fitting and V6 testing.
 
 ## Standardized Release Table
 

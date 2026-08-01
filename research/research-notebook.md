@@ -569,3 +569,33 @@ Exactly 100 fresh records remain hidden and only 35 companion records were
 quarantined. Train and test share zero connected groups, and V4 and V5 share zero test
 groups. No V5 test metrics or hidden predictions exist yet. The website now provides
 the separately approved one-time V5 evaluation.
+
+## 2026-08-01 V5 Result And Model Registry
+
+The saved V5 test contains 100 records: 82 correct and 18 wrong. Accuracy was 82.0%,
+balanced accuracy was 82.2%, and macro F1 was 80.9%. The confusion matrix was 53 true
+benign, 12 false pathogenic, 6 false benign, and 29 true pathogenic. This result does
+not alter the earlier training note; it records the later one-time evaluation.
+
+The project now has evidence-backed V1-V5 registry records, standardized evaluations,
+deterministic baselines, name-based leakage audits, reconstructed run logs, error
+analysis, and planning milestones. All five declared feature lists passed the current
+audit, but source-date review remains required. V3's original source database hash is
+not available, and V4/V5 freeze timestamps occur after their recorded training times;
+both provenance problems are retained as warnings. No stable winner is claimed because
+V4 and V5 used different internal tests of only 100 records each.
+
+## 2026-08-01 V6 1,000-Record Test
+
+Expanding V5 directly was not valid because its training set already contained nearly
+all remaining V2 records, including every V4 test record. I froze V6 instead. It kept
+the V5 feature design but selected 1,000 new connected-group representatives before
+training, quarantined 4,672 companions, excluded 628 records in prior test groups, and
+trained on the remaining 2,518 records. All recorded ID/group overlap checks are zero.
+
+V6 scored 75.6% accuracy, 74.4% balanced accuracy, and 72.9% macro F1. The confusion
+matrix was `TN 535, FP 154, FN 90, TP 221`. The result did not reproduce V5's 82.2%
+balanced accuracy, which is useful evidence against overreading the small test. V5 has
+the higher point estimate on its own cohort; V6 has the larger internal test. Neither
+creates a stable winner, and the next stronger question requires a later untouched
+cohort rather than another rearrangement of V2.

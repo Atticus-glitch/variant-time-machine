@@ -1,0 +1,27 @@
+{
+  "model_id": "V1",
+  "output_files": [
+    "outputs/clue_score_v1/clue_score_v1.yaml",
+    "outputs/clue_score_v1/confusion_matrix.csv",
+    "outputs/clue_score_v1/correct_predictions.csv",
+    "outputs/clue_score_v1/experiment_report.md",
+    "outputs/clue_score_v1/manual_review.csv",
+    "outputs/clue_score_v1/metric_summary.json",
+    "outputs/clue_score_v1/no_prediction.csv",
+    "outputs/clue_score_v1/outcome_by_score.csv",
+    "outputs/clue_score_v1/outcome_by_score.png",
+    "outputs/clue_score_v1/prediction_results.csv",
+    "outputs/clue_score_v1/score_distribution.png",
+    "outputs/clue_score_v1/unscorable.csv",
+    "outputs/clue_score_v1/wrong_predictions.csv"
+  ],
+  "schema_version": 1,
+  "source_artifact": {
+    "exists": true,
+    "path": "config/clue_score_v1.yaml",
+    "sha256": "2ee751040aa9c86ebe8645c0e02b1cca51d9d9b7d3a4cbdc4675819f10c50d3c",
+    "size_bytes": 6639
+  },
+  "status": "frozen_reference",
+  "warning": "Model binary/config remains at its original immutable path."
+}

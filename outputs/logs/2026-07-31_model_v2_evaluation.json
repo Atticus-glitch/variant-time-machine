@@ -1,0 +1,83 @@
+{
+  "command_or_dashboard_action": "not recorded",
+  "dataset_used": {
+    "answer_snapshot": "2024-01-04",
+    "prediction_snapshot": "2022-01-06",
+    "source_database_sha256": "unknown/not recorded"
+  },
+  "disk_usage_after_bytes": "unknown/not recorded",
+  "disk_usage_before_bytes": "unknown/not recorded",
+  "errors": [],
+  "features_used": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning",
+    "classification_age",
+    "record_completeness"
+  ],
+  "hyperparameters": {
+    "name": "frozen hand-designed binary rule"
+  },
+  "metrics": {
+    "accuracy": 0.5846799847308818,
+    "average_precision_pathogenic": "unknown/not recorded",
+    "balanced_accuracy": 0.6506938269576859,
+    "benign_f1": "unknown/not recorded",
+    "benign_precision": "unknown/not recorded",
+    "benign_recall": "unknown/not recorded",
+    "brier_score": "unknown/not recorded",
+    "class_distribution": "unknown/not recorded",
+    "macro_f1": "unknown/not recorded",
+    "macro_precision": "unknown/not recorded",
+    "macro_recall": "unknown/not recorded",
+    "number_correct": 4595,
+    "number_no_prediction": 959,
+    "number_not_scorable": 0,
+    "number_of_predictions": 7859,
+    "number_wrong": 3264,
+    "pathogenic_f1": "unknown/not recorded",
+    "pathogenic_precision": "unknown/not recorded",
+    "pathogenic_recall": "unknown/not recorded",
+    "per_class": "unknown/not recorded",
+    "roc_auc": "unknown/not recorded",
+    "weighted_f1": "unknown/not recorded"
+  },
+  "model_version": "V2",
+  "output_files": [
+    "outputs/resolved_direction_v2/confusion_matrix.csv",
+    "outputs/resolved_direction_v2/correct_predictions.csv",
+    "outputs/resolved_direction_v2/experiment_report.md",
+    "outputs/resolved_direction_v2/metric_summary.json",
+    "outputs/resolved_direction_v2/no_prediction.csv",
+    "outputs/resolved_direction_v2/outcome_by_score.csv",
+    "outputs/resolved_direction_v2/resolved_direction_results.csv",
+    "outputs/resolved_direction_v2/resolved_direction_v2.yaml",
+    "outputs/resolved_direction_v2/score_distribution.png",
+    "outputs/resolved_direction_v2/wrong_predictions.csv"
+  ],
+  "random_seed": "unknown/not recorded",
+  "records_excluded": "unknown/not recorded",
+  "records_loaded": "unknown/not recorded",
+  "records_used": 7859,
+  "run_classification": "official reconstructed historical record",
+  "runtime_seconds": "unknown/not recorded",
+  "schema_version": 1,
+  "split_sizes": {
+    "test": 8818,
+    "train": "unknown/not recorded",
+    "validation": "unknown/not recorded"
+  },
+  "started_by": "historical artifact reconstruction",
+  "target_labels": "Later normalized ClinVar aggregate classification outcome; see the frozen version configuration.",
+  "timestamp": "unknown/not recorded",
+  "warnings": [
+    "Reconstructed from existing artifacts; not an original runtime log.",
+    "This cohort and binary task were defined after reviewing Version 1 aggregate results. It is exploratory and is not an independent validation."
+  ]
+}

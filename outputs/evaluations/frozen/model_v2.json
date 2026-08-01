@@ -1,0 +1,34 @@
+{
+  "evaluation_source": "outputs/resolved_direction_v2/metric_summary.json",
+  "metrics": {
+    "accuracy": 0.5846799847308818,
+    "average_precision_pathogenic": "unknown/not recorded",
+    "balanced_accuracy": 0.6506938269576859,
+    "benign_f1": "unknown/not recorded",
+    "benign_precision": "unknown/not recorded",
+    "benign_recall": "unknown/not recorded",
+    "brier_score": "unknown/not recorded",
+    "class_distribution": "unknown/not recorded",
+    "macro_f1": "unknown/not recorded",
+    "macro_precision": "unknown/not recorded",
+    "macro_recall": "unknown/not recorded",
+    "number_correct": 4595,
+    "number_no_prediction": 959,
+    "number_not_scorable": 0,
+    "number_of_predictions": 7859,
+    "number_wrong": 3264,
+    "pathogenic_f1": "unknown/not recorded",
+    "pathogenic_precision": "unknown/not recorded",
+    "pathogenic_recall": "unknown/not recorded",
+    "per_class": "unknown/not recorded",
+    "roc_auc": "unknown/not recorded",
+    "weighted_f1": "unknown/not recorded"
+  },
+  "model_id": "V2",
+  "schema_version": 1,
+  "status": "frozen",
+  "synthetic_evaluation": false,
+  "warnings": [
+    "This cohort and binary task were defined after reviewing Version 1 aggregate results. It is exploratory and is not an independent validation."
+  ]
+}
