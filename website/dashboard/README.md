@@ -1,6 +1,6 @@
 # Local Development Dashboard
 
-This local Flask dashboard is the normal bounded VCV history workflow. Its startup target is **Pilot Results**, a preliminary descriptive result rather than a final study or medical tool.
+This local Flask site starts at **Overview**, the canonical guide to the research question, evidence, and review flow. It keeps preliminary results, exact VCV history retrieval, manual review, and development status distinct; it is not a medical tool.
 
 ## Start the Dashboard
 
@@ -14,10 +14,10 @@ After the documented Python 3.12 installation succeeds, that command is recommen
 The current `.venv` is Python 3.14.4, not Python 3.12; use
 `.venv/bin/python scripts/start_dashboard.py` only as a temporary fallback.
 
-Pilot Results normally opens automatically at:
+Overview normally opens automatically at:
 
 ```text
-http://127.0.0.1:5000/pilot_results.html
+http://127.0.0.1:5000/overview.html
 ```
 
 To start without opening a browser:
@@ -36,30 +36,26 @@ Press `Ctrl+C` in the server terminal when you want to stop it.
 4. Approve the exact list. Up to 25 historical versions are requested individually and sequentially from official NCBI EFetch. An exact `.version` response is rejected as missing if NCBI returns a different version.
 5. Inspect the parsed timeline, warnings, source requests, and comparisons, then complete the separate manual review. A cancellation request takes effect between requests, after any active request finishes.
 
-The initial latest-version lookup is separate from the maximum 25 historical requests. Requests use 0.34-second sequential pacing, 10-second connect and 30-second read timeouts, and two limited retries for connection/read errors and selected transient statuses. Each response has a 10 MiB hard cap (approximately 10 MB); one exploration has a 50 MiB hard cap. Only official NCBI ESearch, ESummary, and EFetch endpoints are used in this workflow. The separate Historical Dataset Builder controls the fixed archived summary pair.
+The initial latest-version lookup is separate from the maximum 25 historical requests. Requests use 0.34-second sequential pacing, 10-second connect and 30-second read timeouts, and two limited retries for connection/read errors and selected transient statuses. Each response has a 10 MiB hard cap (approximately 10 MB); one exploration has a 50 MiB hard cap. Only official NCBI ESearch, ESummary, and EFetch endpoints are used in this workflow. The separate Data Setup utility controls the fixed archived summary pair.
 
-## What Each Section Means
+## Site Structure
 
-- What Is This Project? gives the research question in plain language.
-- Project Progress shows the seven current stages and whether each is `Not Started`, `Working`, or `Complete`.
-- Fake Example Dataset shows the shape of a future comparison table. It reads `data/example_variants.csv`, which contains only invented examples.
-- What Each Folder Does explains where plans, code, tests, data, outputs, and website files belong.
-- Next Three Tasks gives a short list of reasonable scientific development steps.
-- Computer Status reports the active Python environment and whether local data or timeline outputs exist.
-- Latest Research Note displays the newest main entry from `research/research-notebook.md`.
-- Live ClinVar Connection shows whether this dashboard session has completed a current one-record NCBI lookup.
-- Historical Variant Comparison counts only browser workspace records that passed every verification rule. It starts at zero by design.
-- Data Transfer Safety shows the largest planned request, current transfer, total raw download size, data storage use, and that large-download protection is on.
-- Version History Explorer is the main control center for current VCV confirmation, exact version plans, progress, cancellation, saved histories, automatic timelines, and ten-item manual verification.
+- **Overview** is the canonical start. It states the purpose once, shows key evidence, and gives the three-step flow: find a variant, inspect evidence, and investigate history.
+- **Variants** searches the full local two-release index in a compact six-column table; complete snapshot fields remain in the selected detail panel.
+- **Results** centers the resolved-direction summary and searchable predictions. Formula, run, test-opening, and download controls are disclosed on demand.
+- **Models** is the authoritative location for V1-V8 metrics, leakage audits, comparison limits, and V8 claim boundaries.
+- **V8 Result Summary** (`/v8_results.html`) is the screenshot-ready public aggregate with exact metrics, the same-record V7 caveat, 20 stable case studies, and whitelisted downloads.
+- **Error Review** filters and pages V4-V8 predictions. Its prominent V8 link opens the separate **Manual Review Queue** (`/v8_review.html`), which preserves CSV order and stores only validated decisions and notes in `outputs/manual_review/v8_review_notes.json`.
+- **Timeline** displays dated research and application milestones; only task status is editable.
+
+The **Tools** group is consistent on every page:
+
+- Version History is the promoted exact-history workflow for bounded current and historical VCV requests, saved timelines, and manual verification.
 - Pilot Results shows the real aggregate summary, batch transfer plan, timelines, review controls, and five downloadable outputs.
-- Historical Dataset Builder shows the exact fixed release pair, live disk calculation, automatic safety limit, and one-use download confirmation.
-- Variant Spreadsheet pages through the full local two-release index and opens a two-card timeline with all collapsed fields for one Variation ID.
-- Start Here is the recommended landing page. It reports the live older-VUS update queue and presents the review workflow and site map on one page.
-- Prediction Results defaults to Resolved Direction V2: only safely matched older VUS records with a clear pathogenic or benign newer outcome, binary predictions, complete inherited clue calculations, reviews, rerun control, and downloads. Version 1 remains preserved as the broad baseline.
-- Model Versions reads the frozen V1-V8 registry, standardized metrics, leakage audits, same-cohort baselines, and comparison warnings. It presents V8's component-disjoint result and same-record V7 comparison without converting the nonsignificant point difference into a winner claim.
-- Prediction Explorer joins the distinct V4-V8 test rows to available older-snapshot details and supports model-scoped manual error categories and notes.
-- Research Timeline displays the dated research, validation, outreach, writing, competition, and admissions milestones; only task status is editable.
-- Pilot Workspace remains available for the older current-record/manual-date workflow.
+- Legacy Manual Workspace preserves the older current-record/manual-date workflow but is not the recommended exact-history path.
+- Data Setup shows the exact fixed release pair, live disk calculation, safety limit, and one-use download confirmation.
+- Current Lookup requests one current ClinVar summary and does not establish history.
+- Project Status shows the current result, current scientific boundary, and next step first. Development progress, synthetic examples, repository folders, transfer safety, system status, and notes remain available under a disclosure.
 
 ## How This Helps Development
 
@@ -86,12 +82,16 @@ The browser loads information from these Flask API endpoints:
 - `GET /api/historical-variants` and `/api/historical-variants/<VariationID>`
 - `GET /api/predictions/summary`, `/api/predictions`, and `/api/predictions/<VariationID>`
 - `POST /api/predictions/run`, operation progress, manual review, formula, and download routes
+- `GET /api/v8/summary`, `/api/v8/case-studies`, `/api/v8/review-queue`, and `/api/v8/review-notes`
+- `PATCH /api/v8/review/<VariationID>` and `GET /api/v8/download/<filename>`
 
-The separate browser lookup and Pilot Workspace remain available, but normal pilot work should use the Version History Explorer. Current ESummary candidate results are not historical results, and VCV versions are not monthly snapshots.
+The separate Current Lookup and Legacy Manual Workspace remain available, but normal exact-history work should use Version History. Current ESummary candidate results are not historical results, and VCV versions are not monthly snapshots.
 
-Pilot Workspace records are stored in `data/manual_review/pilot_workspace.json`. Each change uses validation, a backup, and an atomic file replacement. The workspace stores no secrets and runs no shell commands. The Historical Dataset Builder is separate and permits only the configured 319,441,148-byte compressed TSV pair; the multi-gigabyte XML strategy remains paused.
+Legacy Manual Workspace records are stored in `data/manual_review/pilot_workspace.json`. Each change uses validation, a backup, and an atomic file replacement. The workspace stores no secrets and runs no shell commands. Data Setup is separate and permits only the configured 319,441,148-byte compressed TSV pair; the multi-gigabyte XML strategy remains paused.
 
 Version-history artifacts are stored under the Git-ignored `data/manual_review/vcv_history/<VCV>/` layout documented in `data/manual_review/README.md`. Automatic parsed data and XML are never overwritten by manual corrections; review annotations and status remain in `review.json`.
+
+V8 review decisions are a separate presentation audit. The API validates queue membership, the exact decision enum, note length, and required notes before atomically replacing only `v8_review_notes.json`; it never writes the temporal prediction CSV or frozen evaluation files. Paths are Flask-configurable for isolated tests.
 
 To update progress, edit `PROGRESS_ITEMS` in `website/dashboard/app.py`. Change a status only when the explanation is accurate. Do not mark historical comparison complete until real matches have been checked manually.
 

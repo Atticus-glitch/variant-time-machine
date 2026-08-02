@@ -1636,7 +1636,11 @@ def load_prediction_explorer(project_root: Path, review_path: Path) -> dict[str,
     reviews = _load_review_document(review_path).get("reviews", {})
     rows_by_id: dict[str, dict[str, Any]] = {}
     for model_id in ("V4", "V5", "V6", "V7", "V8"):
-        path = root / f"outputs/error_analysis/model_{model_id.lower()}_errors.csv"
+        path = root / (
+            "outputs/error_analysis/v8_all_rows.csv"
+            if model_id == "V8"
+            else f"outputs/error_analysis/model_{model_id.lower()}_errors.csv"
+        )
         with path.open(newline="", encoding="utf-8") as handle:
             for row in csv.DictReader(handle):
                 identifier = row["variation_id"]
@@ -1668,7 +1672,11 @@ def load_prediction_explorer(project_root: Path, review_path: Path) -> dict[str,
                 item[f"{prefix}_prediction"] = row["predicted_class"]
                 item[f"{prefix}_correct"] = row["correct"] == "true"
                 item[f"{prefix}_confidence"] = float(row["confidence"])
-                model_review = reviews.get(f"{model_id}:{identifier}", {})
+                model_review = (
+                    reviews.get(f"{model_id}:{identifier}", {})
+                    if model_id != "V8"
+                    else {}
+                )
                 if model_review:
                     item["manual_review_status"] = model_review.get(
                         "status", "unreviewed"
@@ -1725,7 +1733,11 @@ def prediction_explorer_detail(
         )
     model_rows: dict[str, dict[str, str]] = {}
     for model_id in ("V4", "V5", "V6", "V7", "V8"):
-        path = root / f"outputs/error_analysis/model_{model_id.lower()}_errors.csv"
+        path = root / (
+            "outputs/error_analysis/v8_all_rows.csv"
+            if model_id == "V8"
+            else f"outputs/error_analysis/model_{model_id.lower()}_errors.csv"
+        )
         with path.open(newline="", encoding="utf-8") as handle:
             match = next(
                 (
@@ -1772,7 +1784,7 @@ def prediction_explorer_detail(
         "manual_reviews": {
             key: value
             for key, value in reviews.items()
-            if key.endswith(f":{variation_id}")
+            if key.endswith(f":{variation_id}") and not key.startswith("V8:")
         },
         "explanation_boundary": (
             "Neural-network probability and older inputs are shown, but a neural "
@@ -1791,7 +1803,9 @@ def update_error_review(
     category: str,
     notes: str,
 ) -> dict[str, Any]:
-    if model_id not in {"V4", "V5", "V6", "V7", "V8"} or not variation_id.isdigit():
+    if model_id == "V8":
+        raise RegistryError("V8 reviews must use the focused Manual Review Queue.")
+    if model_id not in {"V4", "V5", "V6", "V7"} or not variation_id.isdigit():
         raise RegistryError("Unknown model or Variation ID.")
     if status not in {
         "unreviewed",
@@ -2113,9 +2127,15 @@ def build_reports(project_root: Path) -> list[Path]:
             root / f"outputs/error_analysis/model_{model_id.lower()}_errors.csv",
         )
         generated = generate_error_analysis(model_id, rows, paths[0], details)
-        _write_csv(paths[1], generated, tuple(generated[0]))
+        error_rows = (
+            [row for row in generated if row["correct"] == "false"]
+            if model_id == "V8"
+            else generated
+        )
+        if model_id != "V8":
+            _write_csv(paths[1], error_rows, tuple(generated[0]))
         all_error_rows.extend(generated)
-        created.extend(paths)
+        created.extend(paths[:1] if model_id == "V8" else paths)
     union_path = root / "outputs/error_analysis/model_test_rows_union.csv"
     _write_csv(union_path, all_error_rows, tuple(all_error_rows[0]))
     created.append(union_path)
@@ -2275,4 +2295,7 @@ def build_reports(project_root: Path) -> list[Path]:
             },
         )
         created.append(review_path)
+    from variant_time_machine.v8_presentation import build_v8_presentation
+
+    created.extend(build_v8_presentation(root))
     return created

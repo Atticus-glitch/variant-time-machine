@@ -4,16 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Explore bounded official ClinVar VCV version histories">
-    <title>Version History Explorer | Variant Time Machine</title>
+    <title>Version History | Variant Time Machine</title>
     <link rel="stylesheet" href="/static/styles.css">
     <script src="/static/version_history.js" defer></script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="site-header history-explorer-header">
       <div class="header-grid">
         <div>
           <p class="eyebrow">Official VCV records, one bounded request at a time</p>
-          <h1>Version History Explorer</h1>
+          <h1>Version History</h1>
           <p class="subtitle">Inspect exact versions of one aggregated ClinVar variant record without treating a version change as a medical conclusion.</p>
         </div>
         <div class="milestone-card">
@@ -24,18 +25,12 @@
       </div>
     </header>
 
-    <nav class="workspace-nav" aria-label="Main navigation">
-      <a href="/overview.html">Start Here</a>
-      <a href="/">Project Dashboard</a>
-      <a href="/pilot_workspace.html">Pilot Workspace</a>
-      <a href="/version_history.html" aria-current="page">Version History Explorer</a>
-      <a href="/pilot_results.html">Pilot Results</a>
-      <a href="/historical_variants.html">Variant Spreadsheet</a>
-      <a href="/prediction_results.html">Prediction Results</a>
-      <a href="#saved-histories">Saved Histories</a>
+    <nav class="workspace-nav" aria-label="Site navigation">
+      <div class="nav-primary" aria-label="Primary destinations"><a href="/overview.html">Overview</a><a href="/historical_variants.html">Variants</a><a href="/prediction_results.html">Results</a><a href="/model_versions.html">Models</a><a href="/prediction_explorer.html">Error Review</a><a href="/research_timeline.html">Timeline</a></div>
+      <details class="nav-tools"><summary>Tools</summary><div><a href="/version_history.html" aria-current="page">Version History</a><a href="/pilot_results.html">Pilot Results</a><a href="/pilot_workspace.html">Legacy Manual Workspace</a><a href="/historical_dataset.html">Data Setup</a><a href="/variant_lookup.html">Current Lookup</a><a href="/">Project Status</a></div></details>
     </nav>
 
-    <main class="history-explorer-main">
+    <main id="main-content" class="history-explorer-main">
       <section class="panel explorer-intro" aria-labelledby="explorer-intro-title">
         <div class="section-heading compact"><div><p class="section-number">Read before exploring</p><h2 id="explorer-intro-title">What A Version Can Tell You</h2></div></div>
         <p class="large-explanation">A VCV version changes when content in the aggregated variant record changes. A new version does not necessarily mean the medical classification changed.</p>
@@ -44,7 +39,9 @@
 
       <div class="explorer-layout">
         <div>
-          <section class="panel" aria-labelledby="candidate-title">
+          <details class="panel disclosure-panel" aria-labelledby="candidate-title">
+            <summary><span><strong>Optional: find VCV candidates by gene</strong><small>Use this only when you do not already have a VCV accession</small></span></summary>
+            <div class="disclosure-content">
             <div class="section-heading">
               <div><p class="section-number">Optional helper</p><h2 id="candidate-title">Find VCV Candidates By Gene</h2></div>
               <p>Search one gene. At most five current records are shown.</p>
@@ -66,7 +63,8 @@
             <p class="current-only-notice"><strong>Candidate results describe current ClinVar records only.</strong> They do not show that a candidate was formerly a VUS. A version above 1 is only a hint that earlier record content may exist. Current classification and classification category limitations are preserved.</p>
             <p id="candidate-status" aria-live="polite">No candidate search planned.</p>
             <div id="candidate-results" class="candidate-grid history-candidates"></div>
-          </section>
+            </div>
+          </details>
 
           <section class="panel" aria-labelledby="current-title">
             <div class="section-heading">

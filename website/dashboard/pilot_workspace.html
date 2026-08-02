@@ -4,16 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Browser workspace for the small ClinVar pilot">
-    <title>Pilot Workspace | Variant Time Machine</title>
+    <title>Legacy Manual Workspace | Variant Time Machine</title>
     <link rel="stylesheet" href="/static/styles.css">
     <script src="/static/workspace.js" defer></script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="site-header workspace-header">
       <div class="header-grid">
         <div>
-          <p class="eyebrow">Main research control center</p>
-          <h1>Pilot Workspace</h1>
+          <p class="eyebrow">Legacy utility</p>
+          <h1>Legacy Manual Workspace</h1>
           <p class="subtitle">
             Find current ClinVar information, build a small pilot list, and check past
             classifications one record at a time.
@@ -27,19 +28,12 @@
       </div>
     </header>
 
-    <nav class="workspace-nav" aria-label="Main navigation">
-      <a href="/overview.html">Start Here</a>
-      <a href="/">Project Dashboard</a>
-      <a href="/version_history.html">Version History Explorer</a>
-      <a href="/pilot_results.html">Pilot Results</a>
-      <a href="/historical_variants.html">Variant Spreadsheet</a>
-      <a href="/prediction_results.html">Prediction Results</a>
-      <a href="#find-variant">Find a Variant</a>
-      <a href="#pilot-list">Pilot List</a>
-      <a href="#review-workspace">Open Review</a>
+    <nav class="workspace-nav" aria-label="Site navigation">
+      <div class="nav-primary" aria-label="Primary destinations"><a href="/overview.html">Overview</a><a href="/historical_variants.html">Variants</a><a href="/prediction_results.html">Results</a><a href="/model_versions.html">Models</a><a href="/prediction_explorer.html">Error Review</a><a href="/research_timeline.html">Timeline</a></div>
+      <details class="nav-tools"><summary>Tools</summary><div><a href="/version_history.html">Version History</a><a href="/pilot_results.html">Pilot Results</a><a href="/pilot_workspace.html" aria-current="page">Legacy Manual Workspace</a><a href="/historical_dataset.html">Data Setup</a><a href="/variant_lookup.html">Current Lookup</a><a href="/">Project Status</a></div></details>
     </nav>
 
-    <main class="workspace-main">
+    <main id="main-content" class="workspace-main">
       <section id="first-run-guide" class="panel first-run" hidden>
         <div class="section-heading compact">
           <div>

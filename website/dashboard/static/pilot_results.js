@@ -320,7 +320,7 @@ function resultCase(row) {
   checklist.append(document.createTextNode("Mark Verified uses the existing exact checklist and will be rejected until every item is complete. "));
   const explorer = document.createElement("a");
   explorer.href = `/version_history.html#history-review`;
-  explorer.textContent = "Open Version History Explorer to complete the exact checklist.";
+  explorer.textContent = "Open Version History to complete the exact checklist.";
   checklist.append(explorer);
   reviewBox.append(noteLabel, actions, message, checklist);
   const exact = document.createElement("div");

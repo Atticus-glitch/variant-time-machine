@@ -135,6 +135,14 @@ from variant_time_machine.resolved_direction import (  # noqa: E402
     load_resolved_direction_config,
     run_resolved_direction_experiment,
 )
+from variant_time_machine.v8_presentation import (  # noqa: E402
+    V8PresentationError,
+    list_review_queue,
+    load_case_studies,
+    load_review_notes,
+    load_summary,
+    update_review_decision,
+)
 from variant_time_machine.vcv_history import (  # noqa: E402
     CLINVAR_EFETCH_URL,
     DEFAULT_MAX_REQUESTS,
@@ -622,6 +630,86 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         MODEL_REGISTRY_DIR=MODEL_REGISTRY_DIR,
         MODEL_ERROR_REVIEW_PATH=MODEL_ERROR_REVIEW_PATH,
         PROJECT_TIMELINE_PATH=PROJECT_TIMELINE_PATH,
+        V8_SUMMARY_PATH=(
+            PROJECT_ROOT
+            / "outputs"
+            / "evaluations"
+            / "frozen"
+            / "v8_public_summary.json"
+        ),
+        V8_CASE_STUDIES_PATH=(
+            PROJECT_ROOT / "outputs" / "case_studies" / "v8_case_studies.json"
+        ),
+        V8_REVIEW_QUEUE_PATH=(
+            PROJECT_ROOT / "outputs" / "manual_review" / "v8_review_queue.csv"
+        ),
+        V8_REVIEW_NOTES_PATH=(
+            PROJECT_ROOT / "outputs" / "manual_review" / "v8_review_notes.json"
+        ),
+        V8_DOWNLOADS={
+            "v8_public_summary.json": PROJECT_ROOT
+            / "outputs"
+            / "evaluations"
+            / "frozen"
+            / "v8_public_summary.json",
+            "v8_metrics.json": PROJECT_ROOT
+            / "outputs"
+            / "evaluations"
+            / "frozen"
+            / "v8_metrics.json",
+            "v8_protocol_audit.json": PROJECT_ROOT
+            / "outputs"
+            / "evaluations"
+            / "frozen"
+            / "v8_protocol_audit.json",
+            "v8_vault_commitment.json": PROJECT_ROOT
+            / "outputs"
+            / "evaluations"
+            / "frozen"
+            / "v8_vault_commitment.json",
+            "v8_model_commitment.json": PROJECT_ROOT
+            / "outputs"
+            / "evaluations"
+            / "frozen"
+            / "v8_model_commitment.json",
+            "temporal_test_predictions.csv": PROJECT_ROOT
+            / "outputs"
+            / "ai_temporal_v8"
+            / "temporal_test_predictions.csv",
+            "wrong_predictions.csv": PROJECT_ROOT
+            / "outputs"
+            / "error_analysis"
+            / "model_v8_errors.csv",
+            "v8_case_studies.json": PROJECT_ROOT
+            / "outputs"
+            / "case_studies"
+            / "v8_case_studies.json",
+            "error_analysis.csv": PROJECT_ROOT
+            / "outputs"
+            / "error_analysis"
+            / "model_v8_errors.csv",
+            "v8_review_queue.csv": PROJECT_ROOT
+            / "outputs"
+            / "manual_review"
+            / "v8_review_queue.csv",
+            "one-page-abstract.md": PROJECT_ROOT / "research" / "one-page-abstract.md",
+            "v8-case-studies.md": PROJECT_ROOT / "research" / "v8-case-studies.md",
+            "v8-error-analysis.md": PROJECT_ROOT / "research" / "v8-error-analysis.md",
+            "ai-temporal-v8-preregistration.md": PROJECT_ROOT
+            / "research"
+            / "ai-temporal-v8-preregistration.md",
+            "ai-temporal-v8-results.md": PROJECT_ROOT
+            / "research"
+            / "ai-temporal-v8-results.md",
+            "v8_poster_outline.md": PROJECT_ROOT / "research" / "poster-outline.md",
+            "poster-outline.md": PROJECT_ROOT / "research" / "poster-outline.md",
+            "strongest_truthful_claim.txt": PROJECT_ROOT
+            / "research"
+            / "strongest-truthful-claim.md",
+            "strongest-truthful-claim.md": PROJECT_ROOT
+            / "research"
+            / "strongest-truthful-claim.md",
+        },
     )
     if test_config:
         app.config.update(test_config)
@@ -1495,6 +1583,96 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     def research_timeline_page():
         return send_from_directory(Path(__file__).parent, "research_timeline.html")
 
+    @app.get("/v8_results.html")
+    def v8_results_page():
+        return send_from_directory(Path(__file__).parent, "v8_results.html")
+
+    @app.get("/v8_review.html")
+    def v8_review_page():
+        return send_from_directory(Path(__file__).parent, "v8_review.html")
+
+    @app.get("/api/v8/summary")
+    def api_v8_summary():
+        try:
+            summary = load_summary(Path(app.config["V8_SUMMARY_PATH"]))
+            queue = list_review_queue(
+                Path(app.config["V8_REVIEW_QUEUE_PATH"]),
+                Path(app.config["V8_REVIEW_NOTES_PATH"]),
+            )
+            return jsonify(
+                {**summary, "completed_review_count": queue["completed_review_count"]}
+            )
+        except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
+            return jsonify({"error": f"V8 summary unavailable: {exc}"}), 503
+
+    @app.get("/api/v8/case-studies")
+    def api_v8_case_studies():
+        try:
+            return jsonify(load_case_studies(Path(app.config["V8_CASE_STUDIES_PATH"])))
+        except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
+            return jsonify({"error": f"V8 case studies unavailable: {exc}"}), 503
+
+    @app.get("/api/v8/review-queue")
+    def api_v8_review_queue():
+        try:
+
+            def enabled(name: str) -> bool:
+                return request.args.get(name, "").casefold() in {"1", "true", "yes"}
+
+            return jsonify(
+                list_review_queue(
+                    Path(app.config["V8_REVIEW_QUEUE_PATH"]),
+                    Path(app.config["V8_REVIEW_NOTES_PATH"]),
+                    confusion_group=request.args.get("confusion_group", ""),
+                    disagreement=enabled("disagreement"),
+                    high_confidence=enabled("high_confidence"),
+                    gene=request.args.get("gene", ""),
+                    consequence=request.args.get("consequence", ""),
+                    match_warning=enabled("match_warning"),
+                    status=request.args.get("status", ""),
+                    page=int(request.args.get("page", "1")),
+                    page_size=int(request.args.get("page_size", "25")),
+                )
+            )
+        except (V8PresentationError, ValueError) as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"V8 review queue unavailable: {exc}"}), 503
+
+    @app.get("/api/v8/review-notes")
+    def api_v8_review_notes():
+        try:
+            return jsonify(load_review_notes(Path(app.config["V8_REVIEW_NOTES_PATH"])))
+        except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
+            return jsonify({"error": f"V8 review notes unavailable: {exc}"}), 503
+
+    @app.patch("/api/v8/review/<variation_id>")
+    def api_v8_review_decision(variation_id: str):
+        try:
+            body = _json_body()
+            review = update_review_decision(
+                Path(app.config["V8_REVIEW_QUEUE_PATH"]),
+                Path(app.config["V8_REVIEW_NOTES_PATH"]),
+                variation_id,
+                body.get("decision"),
+                body.get("note", ""),
+            )
+            return jsonify({"variation_id": variation_id, "review": review})
+        except (V8PresentationError, ValueError) as exc:
+            return jsonify({"error": str(exc)}), 400
+        except (OSError, json.JSONDecodeError) as exc:
+            return jsonify({"error": f"Could not save V8 review: {exc}"}), 503
+
+    @app.get("/api/v8/download/<filename>")
+    def api_v8_download(filename: str):
+        downloads = app.config["V8_DOWNLOADS"]
+        path = Path(downloads[filename]) if filename in downloads else None
+        if path is None:
+            return jsonify({"error": "Unknown V8 download."}), 404
+        if not path.is_file() or path.is_symlink():
+            return jsonify({"error": "V8 download is unavailable."}), 404
+        return send_file(path, as_attachment=True, download_name=filename)
+
     @app.get("/api/model-versions")
     def api_model_versions():
         try:
@@ -1550,6 +1728,10 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     def api_prediction_explorer_review(model_id: str, variation_id: str):
         try:
             body = _json_body()
+            if model_id.upper() == "V8":
+                raise RegistryError(
+                    "V8 reviews must use the focused Manual Review Queue."
+                )
             detail = prediction_explorer_detail(
                 PROJECT_ROOT,
                 variation_id,
@@ -1989,7 +2171,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 None,
             )
             model_validation = {
-                "project_stage": "Model Validation and Error Analysis",
+                "project_stage": "V8 Results and Manual Review",
                 "latest_model_version": model_dashboard["latest_model_version"],
                 "best_validated_model": model_dashboard["best_validated_model"],
                 "v4": model_index.get("V4"),
@@ -2030,7 +2212,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             }
         except (OSError, RegistryError, json.JSONDecodeError):
             model_validation = {
-                "project_stage": "Model Validation and Error Analysis",
+                "project_stage": "V8 Results and Manual Review",
                 "available": False,
                 "warnings": ["Model registry is unavailable."],
             }
@@ -2038,7 +2220,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             {
                 "project_name": "Variant Time Machine",
                 "project_explanation": PROJECT_EXPLANATION,
-                "current_milestone": "Model Validation and Error Analysis",
+                "current_milestone": "V8 Results and Manual Review",
                 "folders": FOLDER_GUIDE,
                 "next_tasks": dynamic_next_tasks(progress),
                 "research_progress": progress,

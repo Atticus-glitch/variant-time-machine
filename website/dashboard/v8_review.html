@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Separate manual review queue for frozen V8 presentation records">
+    <title>Manual Review Queue | Variant Time Machine</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/v8_review.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="site-header"><div class="header-grid"><div><p class="eyebrow">V8 presentation audit</p><h1>Manual Review Queue</h1><p class="subtitle">Review match quality and classification scope without altering frozen predictions.</p></div><div class="milestone-card"><span>Queue</span><strong id="review-count">Loading...</strong><small>Default order is preserved from the source CSV</small></div></div></header>
+    <nav class="workspace-nav" aria-label="Site navigation"><div class="nav-primary" aria-label="Primary destinations"><a href="/overview.html">Overview</a><a href="/historical_variants.html">Variants</a><a href="/prediction_results.html">Results</a><a href="/model_versions.html">Models</a><a href="/prediction_explorer.html" aria-current="page">Error Review</a><a href="/research_timeline.html">Timeline</a></div><details class="nav-tools"><summary>Tools</summary><div><a href="/version_history.html">Version History</a><a href="/pilot_results.html">Pilot Results</a><a href="/pilot_workspace.html">Legacy Manual Workspace</a><a href="/historical_dataset.html">Data Setup</a><a href="/variant_lookup.html">Current Lookup</a><a href="/">Project Status</a></div></details></nav>
+    <main id="main-content" class="prediction-main">
+      <section class="panel v8-warning"><p><strong>Review decisions are saved separately in <code>v8_review_notes.json</code>. Frozen predictions and evaluation artifacts are never modified.</strong> This is retrospective research, not medical advice, clinical validation, or patient interpretation.</p><p>“Probability assigned to predicted direction” follows the recorded V8 decision and its frozen 0.315 pathogenic threshold; it is a model output, not clinical confidence.</p><p><a class="text-link" href="/v8_results.html">Return to V8 Result Summary</a></p></section>
+      <section class="panel" aria-labelledby="filters-title"><div class="section-heading"><div><p class="section-number">Narrow the audit</p><h2 id="filters-title">Queue Filters</h2></div><button id="clear-review-filters" class="button-secondary" type="button">Clear filters</button></div><form id="review-filters" class="v8-review-filters"><label>Confusion group<select id="review-group"><option value="">All priority groups</option><option value="FP">False positives</option><option value="FN">False negatives</option></select></label><label>Gene<input id="review-gene" type="search" maxlength="80"></label><label>Consequence<input id="review-consequence" type="search" maxlength="80"></label><label>Status<select id="review-status"><option value="">Any status</option><option value="unreviewed">Unreviewed</option><option value="reviewed">Reviewed</option><option value="ambiguous">Ambiguous</option><option value="excluded">Excluded</option></select></label><label class="check-line"><input id="review-disagreement" type="checkbox"> V8/V7 disagreement</label><label class="check-line"><input id="review-high-confidence" type="checkbox"> High confidence wrong</label><label class="check-line"><input id="review-match-warning" type="checkbox"> Match warning</label><button type="submit">Apply filters</button></form><p id="review-status-message" aria-live="polite">Loading review queue...</p></section>
+      <section aria-labelledby="items-title"><h2 id="items-title" class="visually-hidden">Review items</h2><div id="review-items" class="v8-review-list"></div><div class="spreadsheet-pagination"><button id="v8-review-previous" type="button" class="button-secondary">Previous</button><span id="v8-review-page">Page 1</span><button id="v8-review-next" type="button" class="button-secondary">Next</button></div></section>
+    </main>
+    <footer><p>Manual annotations remain separate from frozen model outputs.</p></footer>
+  </body>
+</html>

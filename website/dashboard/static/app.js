@@ -117,7 +117,7 @@ function addStatusRow(list, label, value) {
 }
 
 function renderStatus(data) {
-  document.querySelector("#project-name").textContent = data.project_name;
+  document.querySelector("#project-name").title = data.project_name;
   document.querySelector("#current-milestone").textContent =
     data.current_milestone;
   document.querySelector("#project-explanation").textContent =
@@ -145,6 +145,17 @@ function renderStatus(data) {
     data.research_notes.title;
   document.querySelector("#notes-entry-content").textContent =
     data.research_notes.content;
+}
+
+function renderV8Summary(summary, queue) {
+  document.querySelector("#v8-completed-reviews").textContent =
+    Number(summary.completed_review_count).toLocaleString();
+  const next = queue.rows[0];
+  if (next) {
+    const link = document.querySelector("#v8-next-review");
+    link.textContent = `${next.confusion_group} ${next.gene}, Variation ${next.variation_id}`;
+    link.href = "/v8_review.html?high_confidence=true";
+  }
 }
 
 function renderModelValidation(summary) {
@@ -313,14 +324,17 @@ function renderError(error) {
 
 async function loadDashboard() {
   try {
-    const [status, progress, dataset] = await Promise.all([
+    const [status, progress, dataset, v8Summary, v8Queue] = await Promise.all([
       fetchJson("/api/status"),
       fetchJson("/api/progress"),
       fetchJson("/api/dataset"),
+      fetchJson("/api/v8/summary"),
+      fetchJson("/api/v8/review-queue?high_confidence=true"),
     ]);
     renderStatus(status);
     renderProgress(progress);
     renderDataset(dataset);
+    renderV8Summary(v8Summary, v8Queue);
     document.querySelector("#dashboard-health").textContent =
       "Local API connected";
   } catch (error) {

@@ -2,6 +2,7 @@
 
 const state = {page: 1, pageCount: 1, pageSize: 50};
 const byId = (id) => document.getElementById(id);
+let lastDetailTrigger = null;
 
 async function api(path) {
   const response = await fetch(path, {headers: {Accept: "application/json"}});
@@ -33,7 +34,7 @@ function renderRows(rows) {
   if (!rows.length) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-    cell.colSpan = 11;
+    cell.colSpan = 6;
     cell.textContent = "No variants matched this search.";
     row.append(cell);
     body.append(row);
@@ -42,21 +43,26 @@ function renderRows(rows) {
   rows.forEach((variant) => {
     const row = document.createElement("tr");
     addCell(row, variant.variation_id, "identifier-cell");
-    addCell(row, short(variant.old_gene_symbols || variant.new_gene_symbols, 35));
-    addCell(row, short(variant.old_names || variant.new_names));
+    const identity = document.createElement("td");
+    identity.className = "variant-summary-cell";
+    const gene = document.createElement("strong");
+    gene.textContent = short(variant.old_gene_symbols || variant.new_gene_symbols, 35);
+    const name = document.createElement("small");
+    name.textContent = short(variant.old_names || variant.new_names, 52);
+    identity.append(gene, name);
+    row.append(identity);
     addCell(row, short(variant.old_classifications));
-    addCell(row, variant.old_last_evaluated);
-    addCell(row, short(variant.old_review_statuses, 55));
     addCell(row, short(variant.new_classifications));
-    addCell(row, variant.new_last_evaluated);
-    addCell(row, short(variant.new_review_statuses, 55));
     addCell(row, variant.change_status.replaceAll("_", " "), `change-${variant.change_status}`);
     const action = document.createElement("td");
     const button = document.createElement("button");
     button.type = "button";
     button.className = "table-action";
     button.textContent = "Open timeline";
-    button.addEventListener("click", () => loadDetail(variant.variation_id));
+    button.addEventListener("click", () => {
+      lastDetailTrigger = button;
+      loadDetail(variant.variation_id);
+    });
     action.append(button);
     row.append(action);
     body.append(row);
@@ -148,6 +154,7 @@ async function loadDetail(variationId) {
   try {
     const payload = await api(`/api/historical-variants/${encodeURIComponent(variationId)}`);
     byId("detail-title").textContent = `Variation ID ${variationId}`;
+    byId("detail-title").focus();
     byId("detail-note").replaceChildren();
     const source = document.createElement("a");
     source.href = `https://www.ncbi.nlm.nih.gov/clinvar/variation/${variationId}/`;
@@ -176,5 +183,10 @@ byId("clear-search").addEventListener("click", () => {
 byId("previous-page").addEventListener("click", () => { if (state.page > 1) { state.page -= 1; loadRows(); } });
 byId("next-page").addEventListener("click", () => { if (state.page < state.pageCount) { state.page += 1; loadRows(); } });
 byId("page-size").addEventListener("change", (event) => { state.pageSize = Number(event.target.value); state.page = 1; loadRows(); });
-byId("close-detail").addEventListener("click", () => { byId("variant-detail").hidden = true; });
+byId("close-detail").addEventListener("click", () => {
+  byId("variant-detail").hidden = true;
+  lastDetailTrigger?.focus();
+});
+const initialQuery = new URLSearchParams(window.location.search).get("query");
+if (initialQuery) byId("variant-query").value = initialQuery;
 loadRows();

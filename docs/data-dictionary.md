@@ -59,7 +59,7 @@ The V5 partition manifest records the V4 manifest hash, verifies zero V4/V5 test
 
 `outputs/model_registry/model_v1.json` through `model_v8.json` contain standardized version records. `model_index.json` provides dashboard summaries and an evidence summary that avoids a total ranking across different cohorts. `outputs/evaluations/frozen/` stores standardized official metrics and immutable references; `outputs/evaluations/experiments/` is reserved for temporary evaluations.
 
-`outputs/leakage_audits/` records declared features, banned and suspicious findings, status, explanation, date, and recommendation. `outputs/logs/` contains paired JSON and Markdown historical reconstructions; they are not original runtime logs. `outputs/error_analysis/model_v4_errors.csv` through `model_v8_errors.csv` include frozen test rows when the applicable reporting artifact exists, so correct, wrong, high-confidence, low-confidence, and manually reviewed cases remain visible.
+`outputs/leakage_audits/` records declared features, banned and suspicious findings, status, explanation, date, and recommendation. `outputs/logs/` contains paired JSON and Markdown historical reconstructions; they are not original runtime logs. `outputs/error_analysis/model_v4_errors.csv` through `model_v7_errors.csv` include their frozen test rows. V8 keeps all 1,000 frozen rows in `v8_all_rows.csv` for exploration and reserves `model_v8_errors.csv` for its 105 wrong predictions.
 
 `outputs/ai_temporal_v7/sealed_candidate_predictions.sqlite3` is the ignored immutable
 prediction store created before answer download. `temporal_test_predictions.csv` is the

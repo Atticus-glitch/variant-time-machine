@@ -1,0 +1,35 @@
+{
+  "allowed_decisions": [
+    "match correct",
+    "match ambiguous",
+    "classification-scope problem",
+    "model genuinely wrong",
+    "exclude from final analysis"
+  ],
+  "provenance": {
+    "generation_method": "Deterministic transformation of recorded frozen artifacts; no model was trained, evaluated, or altered.",
+    "generator": "scripts/build_v8_presentation.py",
+    "source_artifacts": [
+      {
+        "path": "outputs/ai_temporal_v8/temporal_test_predictions.csv",
+        "sha256": "13d366749fa913accbced30ac574232fd9f56c695691b96e64b11d2a59427f54"
+      },
+      {
+        "path": "outputs/evaluations/frozen/v8_metrics.json",
+        "sha256": "eaba198cfe74a316c7b8aa89aee516a3cb59922522de92b1264225684ebe5974"
+      },
+      {
+        "path": "outputs/evaluations/frozen/v8_protocol_audit.json",
+        "sha256": "1e6c0682c427776e195aa58ea2b8fb3a55cf6207666cd661e29e10ce63dd4551"
+      },
+      {
+        "path": "outputs/error_analysis/v8_all_rows.csv",
+        "sha256": "5c0046d942342f8e12296baf4fe4cecf9caa70a29c18a541f6e9d42249e9d74e"
+      }
+    ]
+  },
+  "reviews": {},
+  "schema_version": 1,
+  "store_kind": "v8_manual_review_decisions",
+  "warning": "Manual decisions only; this file is never overwritten."
+}

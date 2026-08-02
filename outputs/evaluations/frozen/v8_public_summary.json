@@ -1,0 +1,75 @@
+{
+  "accuracy": 0.895,
+  "balanced_accuracy": 0.8712121212121212,
+  "caveats": [
+    "The test is outcome-selected: it scores records with a safe clear later direction, not whether a VUS will resolve.",
+    "The 1,000 records span 559 predictor-time gene components and are not 1,000 independent gene samples.",
+    "The July 2026 archive had already been accessed for V7, and V8 membership is reconstructible from the published salt and archive.",
+    "Combined component and class weighting was not strictly equal in total per component.",
+    "The simplicity tie-break did not rank regularization strengths within the selected model family.",
+    "Grouped out-of-fold labels were reused for selection, calibration, and threshold choice."
+  ],
+  "confusion_matrix": {
+    "FN": 31,
+    "FP": 74,
+    "TN": 740,
+    "TP": 155
+  },
+  "correct": 895,
+  "evaluation": "sealed_gene_component_disjoint_retrospective_temporal_test",
+  "leakage_audit": {
+    "scope": "Recorded V8 protocol, artifact-hash, and overlap checks.",
+    "status": "pass"
+  },
+  "macro_f1": 0.8403709475124472,
+  "model_id": "V8",
+  "model_type": "calibrated elastic-net logistic regression",
+  "n": 1000,
+  "provenance": {
+    "generation_method": "Deterministic transformation of recorded frozen artifacts; no model was trained, evaluated, or altered.",
+    "source_artifacts": [
+      {
+        "path": "outputs/ai_temporal_v8/temporal_test_predictions.csv",
+        "sha256": "13d366749fa913accbced30ac574232fd9f56c695691b96e64b11d2a59427f54"
+      },
+      {
+        "path": "outputs/error_analysis/v8_all_rows.csv",
+        "sha256": "5c0046d942342f8e12296baf4fe4cecf9caa70a29c18a541f6e9d42249e9d74e"
+      },
+      {
+        "path": "outputs/evaluations/frozen/v8_metrics.json",
+        "sha256": "eaba198cfe74a316c7b8aa89aee516a3cb59922522de92b1264225684ebe5974"
+      },
+      {
+        "path": "outputs/evaluations/frozen/v8_protocol_audit.json",
+        "sha256": "1e6c0682c427776e195aa58ea2b8fb3a55cf6207666cd661e29e10ce63dd4551"
+      }
+    ]
+  },
+  "recalls": {
+    "benign": 0.9090909090909091,
+    "pathogenic": 0.8333333333333334
+  },
+  "schema_version": 1,
+  "sealed_gene_components": 559,
+  "strongest_claim": "In a retrospective historical ClinVar experiment, Variant Time Machine predicted later resolved classification direction for older VUS records using only older-snapshot features. V8 achieved 89.5% accuracy and 87.1% balanced accuracy on a 1,000-record gene-component-disjoint retrospective test. However, a paired same-record comparison with V7 showed no statistically clear overall superiority, so the result supports V8 as a strong simplified retrospective model, not as a clinically validated predictor.",
+  "v7_same_record": {
+    "accuracy": 0.864,
+    "balanced_accuracy": 0.8666878021716731,
+    "claim": "No V8 performance improvement over V7 is claimed.",
+    "interval_crosses_zero": true,
+    "macro_f1": 0.8080180688876341,
+    "n": 1000,
+    "paired_difference_95_percent": [
+      -0.02450184283147039,
+      0.03312248143795588
+    ],
+    "recalls": {
+      "benign": 0.8624078624078624,
+      "pathogenic": 0.8709677419354839
+    },
+    "v8_minus_v7_balanced_accuracy": 0.004524319040448144
+  },
+  "warning": "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use.",
+  "wrong": 105
+}

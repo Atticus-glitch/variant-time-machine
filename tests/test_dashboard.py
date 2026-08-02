@@ -1,5 +1,6 @@
 """Tests for the local Flask research dashboard."""
 
+import re
 from pathlib import Path
 
 import pytest
@@ -46,7 +47,10 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert response.status_code == 200
     page = response.get_data(as_text=True)
     assert "Variant Time Machine" in page
-    assert "What Is This Project?" in page
+    assert "Project Status" in page
+    assert "V8 Results and Manual Review" in page
+    assert "Best current retrospective model" in page
+    assert "V8 is not clearly superior to V7" in page
     assert "Project Progress" in page
     assert "Live ClinVar Connection" in page
     assert "Fake Example Dataset" in page
@@ -69,12 +73,14 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert client.get("/static/model_versions.js").status_code == 200
     assert client.get("/static/prediction_explorer.js").status_code == 200
     assert client.get("/static/research_timeline.js").status_code == 200
+    assert client.get("/static/v8_results.js").status_code == 200
+    assert client.get("/static/v8_review.js").status_code == 200
     lookup_page = client.get("/variant_lookup.html")
     assert lookup_page.status_code == 200
-    assert "ClinVar Variant Lookup" in lookup_page.get_data(as_text=True)
+    assert "Current Lookup" in lookup_page.get_data(as_text=True)
     pilot_page = client.get("/historical_pilot.html")
     assert pilot_page.status_code == 200
-    assert "Pilot Workspace" in pilot_page.get_data(as_text=True)
+    assert "Legacy Manual Workspace" in pilot_page.get_data(as_text=True)
     assert client.get("/pilot_workspace.html").status_code == 200
     assert client.get("/pilot_results.html").status_code == 200
     assert client.get("/prediction_results.html").status_code == 200
@@ -82,6 +88,8 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert client.get("/model_versions.html").status_code == 200
     assert client.get("/prediction_explorer.html").status_code == 200
     assert client.get("/research_timeline.html").status_code == 200
+    assert client.get("/v8_results.html").status_code == 200
+    assert client.get("/v8_review.html").status_code == 200
 
 
 def test_ai_v4_endpoint_stays_separate_and_requires_test_approval(
@@ -110,7 +118,7 @@ def test_version_history_explorer_page_has_safety_copy_and_navigation(
     dashboard_dir = Path(__file__).parents[1] / "website" / "dashboard"
     page = (dashboard_dir / "version_history.html").read_text(encoding="utf-8")
 
-    assert "Version History Explorer" in page
+    assert "Version History" in page
     assert "/static/version_history.js" in page
     assert "Explore Version History" in page
     assert "Saved Histories" in page
@@ -130,9 +138,91 @@ def test_version_history_explorer_page_has_safety_copy_and_navigation(
     pilot = client.get("/pilot_workspace.html").get_data(as_text=True)
     explorer = client.get("/version_history.html")
     assert explorer.status_code == 200
-    assert "Version History Explorer" in explorer.get_data(as_text=True)
-    assert '<a href="/version_history.html">Version History Explorer</a>' in home
-    assert '<a href="/version_history.html">Version History Explorer</a>' in pilot
+    assert "Version History" in explorer.get_data(as_text=True)
+    assert '<a href="/version_history.html">Version History</a>' in home
+    assert '<a href="/version_history.html">Version History</a>' in pilot
+
+
+def test_dashboard_pages_share_navigation_and_accessibility(
+    client: FlaskClient,
+) -> None:
+    """Every page should expose one global IA without local anchors in the nav."""
+    routes = [
+        "/",
+        "/overview.html",
+        "/historical_variants.html",
+        "/prediction_results.html",
+        "/model_versions.html",
+        "/prediction_explorer.html",
+        "/research_timeline.html",
+        "/version_history.html",
+        "/pilot_results.html",
+        "/pilot_workspace.html",
+        "/historical_dataset.html",
+        "/variant_lookup.html",
+        "/v8_results.html",
+        "/v8_review.html",
+    ]
+    primary = ["Overview", "Variants", "Results", "Models", "Error Review", "Timeline"]
+    tools = [
+        "Version History",
+        "Pilot Results",
+        "Legacy Manual Workspace",
+        "Data Setup",
+        "Current Lookup",
+        "Project Status",
+    ]
+    for route in routes:
+        page = client.get(route).get_data(as_text=True)
+        nav = re.search(r'<nav class="workspace-nav".*?</nav>', page, re.DOTALL)
+        assert nav is not None, route
+        assert all(f">{label}</a>" in nav.group() for label in primary), route
+        assert all(label in nav.group() for label in tools), route
+        assert 'href="#' not in nav.group(), route
+        assert nav.group().count('aria-current="page"') == 1, route
+        assert 'class="skip-link" href="#main-content"' in page, route
+        assert '<main id="main-content"' in page, route
+
+
+def test_overview_has_simple_canonical_flow(client: FlaskClient) -> None:
+    page = client.get("/overview.html").get_data(as_text=True)
+    assert "Follow uncertain variants through time" in page
+    assert "Find a variant." in page
+    assert "Inspect the evidence." in page
+    assert "Investigate its history." in page
+    assert "Supporting tools" in page
+    assert page.count('class="overview-primary-action"') == 1
+    assert 'class="overview-primary-action" href="/historical_variants.html"' in page
+    assert "Core explainable baseline" in page
+
+
+def test_explorer_controls_and_compact_variant_table(client: FlaskClient) -> None:
+    explorer = client.get("/prediction_explorer.html").get_data(as_text=True)
+    for control_id in (
+        "explorer-model",
+        "explorer-correctness",
+        "explorer-review",
+        "explorer-previous",
+        "explorer-next",
+        "explorer-page",
+    ):
+        assert f'id="{control_id}"' in explorer
+    script = client.get("/static/prediction_explorer.js").get_data(as_text=True)
+    assert "const PAGE_SIZE = 24;" in script
+
+    variants = client.get("/historical_variants.html").get_data(as_text=True)
+    table_head = re.search(
+        r'<table class="historical-spreadsheet">.*?</thead>', variants, re.DOTALL
+    )
+    assert table_head is not None
+    assert table_head.group().count("<th>") == 6
+    assert 'colspan="6"' in variants
+    assert "Gene / variant" in table_head.group()
+
+    results = client.get("/prediction_results.html").get_data(as_text=True)
+    assert "Resolved Direction V2 Results" in results
+    assert "Resolved Direction V2 Summary" in results
+    assert "V2 Prediction List" in results
 
 
 def test_progress_endpoint_reports_all_stages_honestly(client: FlaskClient) -> None:
@@ -191,7 +281,7 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     assert response.status_code == 200
     payload = response.get_json()
     assert payload["project_name"] == "Variant Time Machine"
-    assert payload["current_milestone"] == "Model Validation and Error Analysis"
+    assert payload["current_milestone"] == "V8 Results and Manual Review"
     assert "uncertain genetic variant" in payload["project_explanation"]
     assert len(payload["folders"]) == 8
     assert len(payload["next_tasks"]) == 3
@@ -272,8 +362,8 @@ def test_model_registry_explorer_and_timeline_apis(
     explorer = local_client.get("/api/prediction-explorer").get_json()
     assert explorer["total"] == len(explorer["rows"])
     assert explorer["total"] == 3200
-    v8_row = next(row for row in explorer["rows"] if row["v8_prediction"])
-    assert v8_row["v8_correct"] is not None
+    v8_row = next(row for row in explorer["rows"] if row["v8_correct"] is False)
+    assert v8_row["v8_correct"] is False
     v8_identifier = v8_row["variation_id"]
     v8_detail = local_client.get(f"/api/prediction-explorer/{v8_identifier}")
     assert v8_detail.status_code == 200
@@ -282,18 +372,17 @@ def test_model_registry_explorer_and_timeline_apis(
         f"/api/prediction-explorer/V8/{v8_identifier}/review",
         json={"status": "reviewed", "category": "unknown", "notes": "Checked V8."},
     )
-    assert v8_review.status_code == 200
-    reviewed_detail = local_client.get(
-        f"/api/prediction-explorer/{v8_identifier}"
-    ).get_json()
-    assert reviewed_detail["manual_reviews"][f"V8:{v8_identifier}"]["notes"] == (
-        "Checked V8."
+    assert v8_review.status_code == 400
+    assert "focused Manual Review Queue" in v8_review.get_json()["error"]
+    explorer_row = next(
+        row
+        for row in explorer["rows"]
+        if any(row[f"v{version}_prediction"] for version in range(4, 8))
     )
-    explorer_row = explorer["rows"][0]
     identifier = explorer_row["variation_id"]
     model_id = next(
         model
-        for model in ("V4", "V5", "V6", "V7", "V8")
+        for model in ("V4", "V5", "V6", "V7")
         if explorer_row[f"{model.lower()}_prediction"]
     )
     detail = local_client.get(f"/api/prediction-explorer/{identifier}")
@@ -320,18 +409,16 @@ def test_v8_result_pages_preserve_metrics_and_claim_boundary(
     client: FlaskClient,
 ) -> None:
     prediction_page = client.get("/prediction_results.html").get_data(as_text=True)
-    assert "AI Temporal V8" in prediction_page
-    assert "87.1212%" in prediction_page
-    assert "TN 740, FP 74, FN 31, TP 155" in prediction_page
-    assert "-2.45 to +3.31 points" in prediction_page
-    assert "did not establish overall superiority" in prediction_page
-    assert "membership is reconstructible" in prediction_page
+    assert "Compare Frozen Evaluations In Context" in prediction_page
+    assert "87.1212%" not in prediction_page
+    assert "membership is reconstructible" not in prediction_page
 
     model_page = client.get("/model_versions.html").get_data(as_text=True)
     assert "V1 Through V8" in model_page
     assert "retrospective, outcome-selected test" in model_page
     assert "did not demonstrate overall superiority" in model_page
     assert "out-of-fold labels were reused" in model_page
+    assert "membership reconstructible" in model_page
 
 
 def test_pilot_endpoint_shows_empty_first_run(

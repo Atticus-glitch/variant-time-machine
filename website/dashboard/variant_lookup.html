@@ -7,16 +7,17 @@
       name="description"
       content="Look up one current ClinVar variant through the official NCBI API"
     >
-    <title>ClinVar Variant Lookup | Variant Time Machine</title>
+    <title>Current Lookup | Variant Time Machine</title>
     <link rel="stylesheet" href="/static/styles.css">
     <script src="/static/lookup.js" defer></script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="site-header lookup-header">
       <div class="header-grid">
         <div>
           <p class="eyebrow">Live official data connection</p>
-          <h1>ClinVar Variant Lookup</h1>
+          <h1>Current Lookup</h1>
           <p class="subtitle">
             Request one current variant summary from NCBI ClinVar. No large dataset
             is downloaded.
@@ -30,8 +31,12 @@
       </div>
     </header>
 
-    <main class="lookup-main">
-      <p><a class="text-link" href="/">Return to dashboard</a></p>
+    <nav class="workspace-nav" aria-label="Site navigation">
+      <div class="nav-primary" aria-label="Primary destinations"><a href="/overview.html">Overview</a><a href="/historical_variants.html">Variants</a><a href="/prediction_results.html">Results</a><a href="/model_versions.html">Models</a><a href="/prediction_explorer.html">Error Review</a><a href="/research_timeline.html">Timeline</a></div>
+      <details class="nav-tools"><summary>Tools</summary><div><a href="/version_history.html">Version History</a><a href="/pilot_results.html">Pilot Results</a><a href="/pilot_workspace.html">Legacy Manual Workspace</a><a href="/historical_dataset.html">Data Setup</a><a href="/variant_lookup.html" aria-current="page">Current Lookup</a><a href="/">Project Status</a></div></details>
+    </nav>
+
+    <main id="main-content" class="lookup-main">
 
       <section class="panel" aria-labelledby="lookup-title">
         <div class="section-heading">

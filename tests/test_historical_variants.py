@@ -108,7 +108,7 @@ def test_build_search_and_detail_preserve_two_release_states(tmp_path: Path) -> 
     assert client.get("/historical_variants.html").status_code == 200
     overview = client.get("/overview.html")
     assert overview.status_code == 200
-    assert "What To Do" in overview.get_data(as_text=True)
+    assert "From Variant To History" in overview.get_data(as_text=True)
     response = client.get("/api/historical-variants?query=GENE1&page_size=25")
     assert response.status_code == 200
     assert response.get_json()["rows"][0]["variation_id"] == "100"

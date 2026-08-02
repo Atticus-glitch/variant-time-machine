@@ -494,7 +494,7 @@ async function savePilotCase() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   byId("gene-form").addEventListener("submit", planCandidates);
   byId("approve-candidates").addEventListener("click", fetchCandidates);
   byId("dismiss-candidates").addEventListener("click", () => { byId("candidate-plan").hidden = true; });
@@ -512,5 +512,10 @@ document.addEventListener("DOMContentLoaded", () => {
   byId("refresh-histories").addEventListener("click", loadSavedHistories);
   byId("history-review-form").addEventListener("submit", submitReview);
   byId("save-pilot-case").addEventListener("click", savePilotCase);
-  loadSavedHistories();
+  await loadSavedHistories();
+  const linkedAccession = new URLSearchParams(window.location.search).get("accession");
+  if (/^VCV\d{9}(?:\.\d+)?$/.test(linkedAccession || "")) {
+    byId("vcv-accession").value = linkedAccession;
+    await openHistory(linkedAccession);
+  }
 });

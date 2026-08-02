@@ -21,10 +21,13 @@ from variant_time_machine.model_registry import (
     generate_error_analysis,
     leakage_audit,
     load_model_record_or_placeholder,
+    load_prediction_explorer,
     load_prediction_rows,
     load_registry,
+    prediction_explorer_detail,
     rank_models,
     save_registry,
+    update_error_review,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -203,6 +206,35 @@ def test_v8_error_analysis_uses_recorded_temporal_context(tmp_path: Path) -> Non
     assert generated[0]["gene"] == "GENE8"
     assert generated[0]["actual_later_classification"] == "Pathogenic"
     assert generated[0]["key_features"] == "consequence=missense"
+
+
+def test_prediction_explorer_uses_all_v8_rows_not_wrong_only() -> None:
+    explorer = load_prediction_explorer(
+        ROOT, ROOT / "data/manual_review/model_error_reviews.json"
+    )
+    v8_rows = [row for row in explorer["rows"] if row["v8_prediction"] is not None]
+    assert len(v8_rows) == 1000
+    assert sum(row["v8_correct"] is False for row in v8_rows) == 105
+
+    correct_id = next(row["variation_id"] for row in v8_rows if row["v8_correct"])
+    detail = prediction_explorer_detail(
+        ROOT, correct_id, ROOT / "data/manual_review/model_error_reviews.json"
+    )
+    assert detail["model_results"]["V8"]["correct"] == "true"
+
+
+def test_generic_review_store_rejects_v8(tmp_path: Path) -> None:
+    path = tmp_path / "reviews.json"
+    with pytest.raises(RegistryError, match="focused Manual Review Queue"):
+        update_error_review(
+            path,
+            "V8",
+            "123",
+            status="reviewed",
+            category="unknown",
+            notes="wrong store",
+        )
+    assert not path.exists()
 
 
 def test_timeline_has_exactly_fourteen_ordered_items() -> None:

@@ -1,0 +1,604 @@
+{
+  "case_studies": [
+    {
+      "actual_direction": "moved_toward_benign",
+      "confidence": 0.7881328744892198,
+      "confusion_group": "TN",
+      "consequence": "missense",
+      "correct": true,
+      "gene": "SETD1A",
+      "key_features": "consequence=missense",
+      "later_classification": "Likely benign",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_benign",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2646459/"
+        }
+      ],
+      "v8_probability": 0.2118671255107802,
+      "variation_id": "2646459",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_benign",
+      "confidence": 0.9069001801317961,
+      "confusion_group": "TN",
+      "consequence": "noncoding",
+      "correct": true,
+      "gene": "CLTC",
+      "key_features": "consequence=noncoding",
+      "later_classification": "Likely benign",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_benign",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1478553/"
+        }
+      ],
+      "v8_probability": 0.09309981986820391,
+      "variation_id": "1478553",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_benign",
+      "confidence": 0.9873387232455231,
+      "confusion_group": "TN",
+      "consequence": "synonymous",
+      "correct": true,
+      "gene": "TYROBP",
+      "key_features": "consequence=synonymous",
+      "later_classification": "Likely benign",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_benign",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1519128/"
+        }
+      ],
+      "v8_probability": 0.012661276754476947,
+      "variation_id": "1519128",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_benign",
+      "confidence": 0.987820524360464,
+      "confusion_group": "TN",
+      "consequence": "synonymous",
+      "correct": true,
+      "gene": "HEPACAM",
+      "key_features": "consequence=synonymous",
+      "later_classification": "Likely benign",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_benign",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1935539/"
+        }
+      ],
+      "v8_probability": 0.012179475639535984,
+      "variation_id": "1935539",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_benign",
+      "confidence": 0.9872616458326949,
+      "confusion_group": "TN",
+      "consequence": "synonymous",
+      "correct": true,
+      "gene": "POLR3A",
+      "key_features": "consequence=synonymous",
+      "later_classification": "Likely benign",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_benign",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1372659/"
+        }
+      ],
+      "v8_probability": 0.012738354167305021,
+      "variation_id": "1372659",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_pathogenic",
+      "confidence": 0.9733700490160396,
+      "confusion_group": "TP",
+      "consequence": "loss_of_function",
+      "correct": true,
+      "gene": "CETP",
+      "key_features": "consequence=loss_of_function",
+      "later_classification": "Pathogenic",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_pathogenic",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1675625/"
+        }
+      ],
+      "v8_probability": 0.9733700490160396,
+      "variation_id": "1675625",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_pathogenic",
+      "confidence": 0.979692832276178,
+      "confusion_group": "TP",
+      "consequence": "loss_of_function",
+      "correct": true,
+      "gene": "KCNJ2",
+      "key_features": "consequence=loss_of_function",
+      "later_classification": "Pathogenic",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_pathogenic",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1480008/"
+        }
+      ],
+      "v8_probability": 0.979692832276178,
+      "variation_id": "1480008",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_pathogenic",
+      "confidence": 0.9397394791528637,
+      "confusion_group": "TP",
+      "consequence": "canonical_splice",
+      "correct": true,
+      "gene": "OSGEP",
+      "key_features": "consequence=canonical_splice",
+      "later_classification": "Likely pathogenic",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_pathogenic",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2002672/"
+        }
+      ],
+      "v8_probability": 0.9397394791528637,
+      "variation_id": "2002672",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_pathogenic",
+      "confidence": 0.9911096989951749,
+      "confusion_group": "TP",
+      "consequence": "loss_of_function",
+      "correct": true,
+      "gene": "SORD",
+      "key_features": "consequence=loss_of_function",
+      "later_classification": "Likely pathogenic",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_pathogenic",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1805124/"
+        }
+      ],
+      "v8_probability": 0.9911096989951749,
+      "variation_id": "1805124",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_pathogenic",
+      "confidence": 0.9320138545895393,
+      "confusion_group": "TP",
+      "consequence": "loss_of_function",
+      "correct": true,
+      "gene": "TBXAS1",
+      "key_features": "consequence=loss_of_function",
+      "later_classification": "Pathogenic",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_pathogenic",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2058503/"
+        }
+      ],
+      "v8_probability": 0.9320138545895393,
+      "variation_id": "2058503",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_benign",
+      "confidence": 0.8400167965860683,
+      "confusion_group": "FP",
+      "consequence": "canonical_splice",
+      "correct": false,
+      "gene": "HMCN1",
+      "key_features": "consequence=canonical_splice",
+      "later_classification": "Likely benign",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_pathogenic",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1444570/"
+        }
+      ],
+      "v8_probability": 0.8400167965860683,
+      "variation_id": "1444570",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_benign",
+      "confidence": 0.3922204085709789,
+      "confusion_group": "FP",
+      "consequence": "missense",
+      "correct": false,
+      "gene": "SOX9",
+      "key_features": "consequence=missense",
+      "later_classification": "Likely benign",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_pathogenic",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1508049/"
+        }
+      ],
+      "v8_probability": 0.3922204085709789,
+      "variation_id": "1508049",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_benign",
+      "confidence": 0.4800239693475896,
+      "confusion_group": "FP",
+      "consequence": "missense",
+      "correct": false,
+      "gene": "PEPD",
+      "key_features": "consequence=missense",
+      "later_classification": "Likely benign",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_pathogenic",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2153622/"
+        }
+      ],
+      "v8_probability": 0.4800239693475896,
+      "variation_id": "2153622",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_benign",
+      "confidence": 0.3706502725675724,
+      "confusion_group": "FP",
+      "consequence": "missense",
+      "correct": false,
+      "gene": "MYO15A",
+      "key_features": "consequence=missense",
+      "later_classification": "Likely benign",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_pathogenic",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1358885/"
+        }
+      ],
+      "v8_probability": 0.3706502725675724,
+      "variation_id": "1358885",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_benign",
+      "confidence": 0.5451477329458659,
+      "confusion_group": "FP",
+      "consequence": "missense",
+      "correct": false,
+      "gene": "PEX16",
+      "key_features": "consequence=missense",
+      "later_classification": "Likely benign",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_pathogenic",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2530789/"
+        }
+      ],
+      "v8_probability": 0.5451477329458659,
+      "variation_id": "2530789",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_pathogenic",
+      "confidence": 0.9204452691277565,
+      "confusion_group": "FN",
+      "consequence": "noncoding",
+      "correct": false,
+      "gene": "SPAG1",
+      "key_features": "consequence=noncoding",
+      "later_classification": "Pathogenic",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_benign",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2179139/"
+        }
+      ],
+      "v8_probability": 0.07955473087224357,
+      "variation_id": "2179139",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_pathogenic",
+      "confidence": 0.7328051006751531,
+      "confusion_group": "FN",
+      "consequence": "missense",
+      "correct": false,
+      "gene": "DEAF1",
+      "key_features": "consequence=missense",
+      "later_classification": "Pathogenic",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_benign",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2085378/"
+        }
+      ],
+      "v8_probability": 0.26719489932484686,
+      "variation_id": "2085378",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_pathogenic",
+      "confidence": 0.7840041314433392,
+      "confusion_group": "FN",
+      "consequence": "missense",
+      "correct": false,
+      "gene": "PEPD",
+      "key_features": "consequence=missense",
+      "later_classification": "Pathogenic/Likely pathogenic",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_benign",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1403780/"
+        }
+      ],
+      "v8_probability": 0.2159958685566607,
+      "variation_id": "1403780",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_pathogenic",
+      "confidence": 0.7795431023140043,
+      "confusion_group": "FN",
+      "consequence": "missense",
+      "correct": false,
+      "gene": "DRAM2",
+      "key_features": "consequence=missense",
+      "later_classification": "Pathogenic",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_benign",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1367200/"
+        }
+      ],
+      "v8_probability": 0.22045689768599577,
+      "variation_id": "1367200",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    },
+    {
+      "actual_direction": "moved_toward_pathogenic",
+      "confidence": 0.9144231238837542,
+      "confusion_group": "FN",
+      "consequence": "noncoding",
+      "correct": false,
+      "gene": "EXOC6B",
+      "key_features": "consequence=noncoding",
+      "later_classification": "Likely pathogenic",
+      "manual_status": "unreviewed",
+      "match_confidence": "not recorded",
+      "old_classification": "Uncertain significance",
+      "predicted_direction": "moved_toward_benign",
+      "review_status": "not recorded",
+      "source_links": [
+        {
+          "label": "ClinVar Variation ID",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2125741/"
+        }
+      ],
+      "v8_probability": 0.08557687611624577,
+      "variation_id": "2125741",
+      "vcv_accession": "not recorded",
+      "warnings": [
+        "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+      ]
+    }
+  ],
+  "model_id": "V8",
+  "provenance": {
+    "generation_method": "Deterministic transformation of recorded frozen artifacts; no model was trained, evaluated, or altered.",
+    "source_artifacts": [
+      {
+        "path": "outputs/ai_temporal_v8/temporal_test_predictions.csv",
+        "sha256": "13d366749fa913accbced30ac574232fd9f56c695691b96e64b11d2a59427f54"
+      },
+      {
+        "path": "outputs/error_analysis/v8_all_rows.csv",
+        "sha256": "5c0046d942342f8e12296baf4fe4cecf9caa70a29c18a541f6e9d42249e9d74e"
+      },
+      {
+        "path": "outputs/evaluations/frozen/v8_metrics.json",
+        "sha256": "eaba198cfe74a316c7b8aa89aee516a3cb59922522de92b1264225684ebe5974"
+      },
+      {
+        "path": "outputs/evaluations/frozen/v8_protocol_audit.json",
+        "sha256": "1e6c0682c427776e195aa58ea2b8fb3a55cf6207666cd661e29e10ce63dd4551"
+      }
+    ]
+  },
+  "schema_version": 1,
+  "selection": {
+    "count_per_group": 5,
+    "method": "Within each frozen confusion group, rank Variation IDs by ascending SHA-256(salt + ':' + variation_id) and take the first five.",
+    "random_at_page_load": false,
+    "salt": "v8-case-studies-2026-08-02",
+    "selected_ids": {
+      "FN": [
+        "2179139",
+        "2085378",
+        "1403780",
+        "1367200",
+        "2125741"
+      ],
+      "FP": [
+        "1444570",
+        "1508049",
+        "2153622",
+        "1358885",
+        "2530789"
+      ],
+      "TN": [
+        "2646459",
+        "1478553",
+        "1519128",
+        "1935539",
+        "1372659"
+      ],
+      "TP": [
+        "1675625",
+        "1480008",
+        "2002672",
+        "1805124",
+        "2058503"
+      ]
+    }
+  },
+  "warning": "V8 is a retrospective historical model using public ClinVar aggregate data. It is not medical advice, not clinical validation, and not a tool for interpreting patient variants. It does not support clinical use."
+}

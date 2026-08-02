@@ -4,46 +4,42 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="One-page guide to the Variant Time Machine research site">
-    <title>Start Here | Variant Time Machine</title>
+    <title>Overview | Variant Time Machine</title>
     <link rel="stylesheet" href="/static/styles.css">
     <script src="/static/overview.js" defer></script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="site-header overview-header">
       <div class="header-grid">
         <div>
-          <p class="eyebrow">One-page research guide</p>
-          <h1>Start Here</h1>
-          <p class="subtitle">Study only safely matched variants that were uncertain in 2022 and had become clearly pathogenic or benign by 2024.</p>
+          <p class="eyebrow">Research overview</p>
+          <h1>Overview</h1>
+          <p class="subtitle">Start with the explainable 2022-to-2024 cohort, then follow the stricter validation sequence through V8.</p>
         </div>
         <div class="milestone-card">
           <span>Recommended first action</span>
-          <strong>Open Resolved Direction Results</strong>
-          <small>Pathogenic versus benign only</small>
+          <strong>Browse resolved variants</strong>
+          <small>Start with the records, then inspect the evidence</small>
         </div>
       </div>
     </header>
 
-    <nav class="workspace-nav" aria-label="Main navigation">
-      <a href="/overview.html" aria-current="page">Start Here</a>
-      <a href="/historical_variants.html">Variant Spreadsheet</a>
-      <a href="/prediction_results.html">Prediction Results</a>
-      <a href="/model_versions.html">Model Versions</a>
-      <a href="/prediction_explorer.html">Prediction Explorer</a>
-      <a href="/research_timeline.html">Research Timeline</a>
-      <a href="/version_history.html">Version History Explorer</a>
-      <a href="/pilot_results.html">Pilot Results</a>
-      <a href="/">Project Dashboard</a>
+    <nav class="workspace-nav" aria-label="Site navigation">
+      <div class="nav-primary" aria-label="Primary destinations">
+        <a href="/overview.html" aria-current="page">Overview</a><a href="/historical_variants.html">Variants</a><a href="/prediction_results.html">Results</a><a href="/model_versions.html">Models</a><a href="/prediction_explorer.html">Error Review</a><a href="/research_timeline.html">Timeline</a>
+      </div>
+      <details class="nav-tools"><summary>Tools</summary><div><a href="/version_history.html">Version History</a><a href="/pilot_results.html">Pilot Results</a><a href="/pilot_workspace.html">Legacy Manual Workspace</a><a href="/historical_dataset.html">Data Setup</a><a href="/variant_lookup.html">Current Lookup</a><a href="/">Project Status</a></div></details>
     </nav>
 
-    <main class="overview-main">
+    <main id="main-content" class="overview-main">
       <section class="overview-hero panel" aria-labelledby="purpose-title">
         <div>
           <p class="section-number">Purpose</p>
-          <h2 id="purpose-title">What This Site Does</h2>
-          <p class="large-explanation">The main experiment asks: among safely matched variants that were exactly <strong>Uncertain significance</strong> in January 2022 and clearly resolved by January 2024, can older-only clues predict pathogenic versus benign direction?</p>
+          <h2 id="purpose-title">Follow uncertain variants through time</h2>
+          <p class="large-explanation">The core explainable baseline asks whether information available in January 2022 can predict the pathogenic or benign direction of safely matched variants that clearly resolved by January 2024. Later model evaluations extend the timeline through July 2026 and test stricter isolation boundaries.</p>
         </div>
-        <a class="overview-primary-action" href="/prediction_results.html">Open Resolved Direction Results</a>
+        <a class="overview-primary-action" href="/historical_variants.html">Browse Resolved Variants</a>
       </section>
 
       <section class="overview-metrics" aria-label="Current historical dataset metrics">
@@ -54,40 +50,38 @@
       </section>
 
       <section class="panel" aria-labelledby="baseline-overview-title">
-        <div class="section-heading"><div><p class="section-number">Latest experiment</p><h2 id="baseline-overview-title">Resolved Direction V2 Results</h2></div><a class="text-link" href="/prediction_results.html">Open complete results</a></div>
+        <div class="section-heading"><div><p class="section-number">Core explainable baseline</p><h2 id="baseline-overview-title">Resolved Direction V2 Results</h2></div><a class="text-link" href="/prediction_results.html">Open complete results</a></div>
         <dl id="overview-baseline" class="prediction-summary-grid"><div><dt>Status</dt><dd>Loading...</dd></div></dl>
-        <p class="plain-language-note">This page now excludes records that stayed uncertain. It asks only which direction a safely matched resolved record took: pathogenic or benign.</p>
+        <p class="plain-language-note">This baseline excludes records that stayed uncertain. It asks only which direction a safely matched resolved record took. For the later V1-V8 validation sequence and its stricter boundaries, open <a href="/model_versions.html">Models</a>.</p>
       </section>
 
       <section class="panel" aria-labelledby="workflow-title">
-        <div class="section-heading"><div><p class="section-number">Recommended workflow</p><h2 id="workflow-title">What To Do</h2></div><p>Follow these steps in order for each candidate.</p></div>
+        <div class="section-heading"><div><p class="section-number">Three-step flow</p><h2 id="workflow-title">From Variant To History</h2></div></div>
         <ol class="overview-workflow">
-          <li><strong>Browse or search the filtered spreadsheet.</strong><span>It opens with only exact older VUS records whose 2024 classification text differs.</span></li>
-          <li><strong>Open the row’s timeline.</strong><span>Compare classification, LastEvaluated, review status, gene, conditions, identifiers, submitters, and coordinates at both snapshots.</span></li>
-          <li><strong>Check identity and scope.</strong><span>Confirm the Variation ID and Allele ID refer to the same biological variant and inspect condition or aggregation differences. Different text alone is not enough.</span></li>
-          <li><strong>Open the official ClinVar page.</strong><span>Use the link in the timeline to check the current record, replacements, conflicts, and record context.</span></li>
-          <li><strong>Inspect exact VCV versions when needed.</strong><span>The two release files show two time points, not every intermediate update. Use Version History Explorer for available version-by-version records.</span></li>
-          <li><strong>Record a manual decision.</strong><span>Mark the case verified, ambiguous, or excluded in the pilot tools. Do not use unreviewed automatic differences as scientific conclusions.</span></li>
+          <li><strong>Find a variant.</strong><span>Search the Variants table by identifier, gene, or name.</span></li>
+          <li><strong>Inspect the evidence.</strong><span>Compare the two snapshots or open a scored prediction and its older-only clues.</span></li>
+          <li><strong>Investigate its history.</strong><span>Use Version History for exact available VCV records, then record a source-backed review.</span></li>
         </ol>
       </section>
 
-      <section class="overview-tools" aria-labelledby="tools-title">
-        <div class="section-heading"><div><p class="section-number">Site map</p><h2 id="tools-title">Which Tool To Use</h2></div></div>
-        <a href="/historical_variants.html"><strong>Variant Spreadsheet</strong><span>Start here for the broad older-VUS update queue, search, paging, and two-snapshot details.</span></a>
-        <a href="/prediction_results.html"><strong>Prediction Results</strong><span>See every older-only score, later answer, correctness label, clue calculation, metric, and download.</span></a>
-        <a href="/version_history.html"><strong>Version History Explorer</strong><span>Retrieve and inspect exact available VCV versions after reviewing a candidate.</span></a>
-        <a href="/pilot_results.html"><strong>Pilot Results</strong><span>See saved small-pilot comparisons and keep automatic findings separate from manual review.</span></a>
-        <a href="/pilot_workspace.html"><strong>Pilot Workspace</strong><span>Store candidate notes, sources, ambiguity, and verification decisions.</span></a>
-        <a href="/historical_dataset.html"><strong>Download Builder</strong><span>Check the two official archive files and storage status. You normally do not need this after indexing.</span></a>
-        <a href="/"><strong>Project Dashboard</strong><span>See software status, folders, transfer safety, and development progress.</span></a>
-      </section>
+      <details class="panel disclosure-panel">
+        <summary><span><strong>Supporting tools</strong><small>Exact history, pilot outputs, setup, lookup, and project status</small></span></summary>
+        <div class="overview-tools" id="tools-title">
+          <a href="/version_history.html"><strong>Version History</strong><span>Retrieve exact available VCV versions with bounded requests.</span></a>
+          <a href="/pilot_results.html"><strong>Pilot Results</strong><span>Inspect the small official-record pilot.</span></a>
+          <a href="/pilot_workspace.html"><strong>Legacy Manual Workspace</strong><span>Use the older current-record and manual-date workflow.</span></a>
+          <a href="/historical_dataset.html"><strong>Data Setup</strong><span>Check the fixed archive pair and storage safeguards.</span></a>
+          <a href="/variant_lookup.html"><strong>Current Lookup</strong><span>Request one current ClinVar summary.</span></a>
+          <a href="/"><strong>Project Status</strong><span>Review the current result, boundary, next step, and system detail.</span></a>
+        </div>
+      </details>
 
       <section class="panel overview-caution" aria-labelledby="limits-title">
         <p class="section-number">Important limits</p>
         <h2 id="limits-title">What This Does Not Prove</h2>
         <ul>
           <li>A changed aggregate classification is not automatically a confirmed medical reclassification.</li>
-          <li>`LastEvaluated` is a ClinVar source field; it is not the release date or download date.</li>
+          <li><code>LastEvaluated</code> is a ClinVar source field; it is not the release date or download date.</li>
           <li>The broad spreadsheet contains two snapshots only. Intermediate changes require exact VCV history review.</li>
           <li>Condition scope, merged records, complex alleles, and conflicting submissions can make an apparent change ambiguous.</li>
           <li>This research site is not a medical device and must not be used for clinical decisions.</li>

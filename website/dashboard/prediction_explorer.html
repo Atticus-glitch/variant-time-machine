@@ -1,13 +1,38 @@
 <!doctype html>
 <html lang="en">
-    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Explore frozen V4 through V8 predictions"><title>Prediction Explorer | Variant Time Machine</title><link rel="stylesheet" href="/static/styles.css"><script src="/static/prediction_explorer.js" defer></script></head>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Review frozen V4 through V8 prediction errors">
+    <title>Error Review | Variant Time Machine</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/prediction_explorer.js" defer></script>
+  </head>
   <body>
-    <header class="site-header"><div class="header-grid"><div><p class="eyebrow">Error analysis workspace</p><h1>Prediction Explorer</h1><p class="subtitle">Inspect the mistakes closely enough to decide what question should come next.</p></div><div class="milestone-card"><span>Frozen evaluations</span><strong>V4 through V8</strong><small>Internal, temporal, and retrospective tests</small></div></div></header>
-    <nav class="workspace-nav" aria-label="Main navigation"><a href="/overview.html">Start Here</a><a href="/model_versions.html">Model Versions</a><a href="/prediction_explorer.html" aria-current="page">Prediction Explorer</a><a href="/research_timeline.html">Research Timeline</a><a href="/prediction_results.html">Prediction Results</a><a href="/">Project Dashboard</a></nav>
-    <main class="prediction-main">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="site-header"><div class="header-grid"><div><p class="eyebrow">Prediction explorer</p><h1>Error Review</h1><p class="subtitle">Filter frozen evaluations, inspect older-snapshot evidence, and record model-scoped reviews.</p></div><div class="milestone-card"><span>Frozen evaluations</span><strong>V4 through V8</strong><small>Internal, temporal, and retrospective tests</small></div></div></header>
+    <nav class="workspace-nav" aria-label="Site navigation">
+      <div class="nav-primary" aria-label="Primary destinations"><a href="/overview.html">Overview</a><a href="/historical_variants.html">Variants</a><a href="/prediction_results.html">Results</a><a href="/model_versions.html">Models</a><a href="/prediction_explorer.html" aria-current="page">Error Review</a><a href="/research_timeline.html">Timeline</a></div>
+      <details class="nav-tools"><summary>Tools</summary><div><a href="/version_history.html">Version History</a><a href="/pilot_results.html">Pilot Results</a><a href="/pilot_workspace.html">Legacy Manual Workspace</a><a href="/historical_dataset.html">Data Setup</a><a href="/variant_lookup.html">Current Lookup</a><a href="/">Project Status</a></div></details>
+    </nav>
+    <main id="main-content" class="prediction-main">
+      <section class="panel model-bridge"><div><p class="section-number">Current focused audit</p><h2>V8 Manual Review Queue</h2><p>Review the prioritized V8 presentation queue with separate, atomic decisions.</p></div><a class="button-link" href="/v8_review.html">Open Manual Review Queue</a></section>
       <section class="panel prediction-caution"><h2>Review Labels, Not Medical Conclusions</h2><p>Green means the recorded model prediction matched the normalized later aggregate direction; red means it did not. Orange means review is needed. These labels do not establish clinical correctness.</p></section>
-      <section class="panel"><div class="section-heading"><div><p class="section-number">Union of separate tests</p><h2>Variants</h2></div><input id="explorer-search" type="search" placeholder="Variation ID or gene"></div><p class="plain-language-note">Most rows were evaluated by only one model. A blank model column means “not in that model's test,” not a missing prediction.</p><p id="explorer-status" aria-live="polite">Loading predictions...</p><div id="explorer-list" class="prediction-list"></div></section>
-      <section id="explorer-detail" class="panel prediction-detail" hidden><div class="section-heading"><div><p class="section-number">Why did the model predict that?</p><h2 id="explorer-detail-title">Prediction Detail</h2></div><button id="close-explorer-detail" class="button-secondary">Close</button></div><div id="explorer-identity" class="prediction-identity"></div><div id="explorer-model-results" class="prediction-summary-grid"></div><h3>Older-Snapshot Inputs</h3><div class="table-scroll"><table><thead><tr><th>Hint</th><th>Older value</th><th>Applied</th><th>Source</th></tr></thead><tbody id="explorer-features"></tbody></table></div><h3>Warnings And Leakage Boundary</h3><div id="explorer-warnings" class="warning-list"></div><div class="manual-review-box"><h3>Manual Error Review</h3><label>Model<select id="error-model"><option>V4</option><option>V5</option><option>V6</option><option>V7</option><option>V8</option></select></label><label>Status<select id="error-status"><option>reviewed</option><option>correctly_matched</option><option>ambiguous</option><option>excluded</option><option>unreviewed</option></select></label><label>Category<select id="error-category"></select></label><textarea id="error-notes" maxlength="20000" placeholder="Source-backed notes; required for ambiguous or excluded"></textarea><button id="save-error-review">Save Review</button><p id="error-review-status" aria-live="polite"></p></div></section>
-    </main><footer><p>Preliminary computational research. Not for clinical use.</p></footer>
+      <section class="panel" aria-labelledby="explorer-title">
+        <div class="section-heading"><div><p class="section-number">Union of separate tests</p><h2 id="explorer-title">Predictions</h2></div></div>
+        <form id="explorer-filters" class="explorer-filters">
+          <label>Search<input id="explorer-search" type="search" placeholder="Variation ID or gene"></label>
+          <label>Model<select id="explorer-model"><option value="all">All models</option><option>V4</option><option>V5</option><option>V6</option><option>V7</option><option>V8</option></select></label>
+          <label>Correctness<select id="explorer-correctness"><option value="all">All results</option><option value="correct">Correct</option><option value="wrong">Wrong</option></select></label>
+          <label>Review status<select id="explorer-review"><option value="all">All statuses</option><option value="unreviewed">Unreviewed</option><option value="reviewed">Reviewed</option><option value="correctly_matched">Correctly matched</option><option value="ambiguous">Ambiguous</option><option value="excluded">Excluded</option></select></label>
+        </form>
+        <p class="plain-language-note">Most rows were evaluated by only one model. A blank model result means “not in that model's test,” not a missing prediction.</p>
+        <p id="explorer-status" aria-live="polite">Loading predictions...</p>
+        <div id="explorer-list" class="prediction-list"></div>
+        <div class="spreadsheet-pagination"><button id="explorer-previous" type="button" class="button-secondary">Previous</button><span id="explorer-page">Page 1</span><button id="explorer-next" type="button" class="button-secondary">Next</button></div>
+      </section>
+      <section id="explorer-detail" class="panel prediction-detail" hidden><div class="section-heading"><div><p class="section-number">Why did the model predict that?</p><h2 id="explorer-detail-title" tabindex="-1">Prediction Detail</h2></div><button id="close-explorer-detail" class="button-secondary">Close</button></div><div id="explorer-identity" class="prediction-identity"></div><div id="explorer-model-results" class="prediction-summary-grid"></div><h3>Older-Snapshot Inputs</h3><div class="table-scroll"><table><thead><tr><th>Hint</th><th>Older value</th><th>Applied</th><th>Source</th></tr></thead><tbody id="explorer-features"></tbody></table></div><h3>Warnings And Leakage Boundary</h3><div id="explorer-warnings" class="warning-list"></div><div class="manual-review-box"><h3>Manual Error Review</h3><label>Model<select id="error-model"><option>V4</option><option>V5</option><option>V6</option><option>V7</option><option>V8</option></select></label><label>Status<select id="error-status"><option>reviewed</option><option>correctly_matched</option><option>ambiguous</option><option>excluded</option><option>unreviewed</option></select></label><label>Category<select id="error-category"></select></label><textarea id="error-notes" maxlength="20000" placeholder="Source-backed notes; required for ambiguous or excluded"></textarea><button id="save-error-review">Save Review</button><a id="v8-focused-review-link" class="button-link" href="/v8_review.html" hidden>Open focused V8 Manual Review Queue</a><p id="error-review-status" aria-live="polite"></p></div></section>
+    </main>
+    <footer><p>Preliminary computational research. Not for clinical use.</p></footer>
   </body>
 </html>

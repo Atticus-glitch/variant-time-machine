@@ -1,8 +1,36 @@
 "use strict";
 
 const byId = (id) => document.getElementById(id);
-const pct = (value) => typeof value === "number" ? `${(value * 100).toFixed(1)}%` : "Not recorded";
-const shown = (value) => value === null || value === undefined || value === "unknown/not recorded" ? "Not recorded" : String(value);
+const pct = (value) => typeof value === "number" && Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : "Not recorded";
+const shown = (value) => {
+  if (value === null || value === undefined || value === "unknown/not recorded") return "Not recorded";
+  if (typeof value === "number") return Number.isFinite(value) ? String(value) : "Not recorded";
+  if (typeof value === "string" || typeof value === "boolean") return String(value);
+  return "Not recorded";
+};
+
+const readableLabel = (value) => value.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+function evidenceRows(container, value, path = "") {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => evidenceRows(container, item, `${path} ${index + 1}`.trim()));
+    return;
+  }
+  if (value && typeof value === "object") {
+    Object.entries(value).forEach(([key, item]) => evidenceRows(container, item, `${path} ${readableLabel(key)}`.trim()));
+    return;
+  }
+  metric(container, path || "Evidence", shown(value));
+}
+
+function presentationSanityCheck(root = document) {
+  const rendered = root.body?.textContent || root.textContent || "";
+  const forbidden = ["[object " + "Object]", "un" + "defined", "N" + "aN"];
+  if (forbidden.some((sentinel) => rendered.includes(sentinel))) {
+    throw new Error("Unsafe model presentation sentinel detected.");
+  }
+  return true;
+}
 
 function metric(container, label, value) { const box = document.createElement("div"); const term = document.createElement("dt"); const detail = document.createElement("dd"); term.textContent = label; detail.textContent = value; box.append(term, detail); container.append(box); }
 
@@ -36,6 +64,6 @@ function renderComparison(models, baselines) {
   const table = document.createElement("table"); const head = document.createElement("thead"); head.innerHTML = "<tr><th>Test cohort</th><th>Model/baseline</th><th>Records</th><th>Accuracy</th><th>Balanced accuracy</th><th>Benign recall</th><th>Pathogenic recall</th><th>Coverage</th><th>Provenance</th></tr>"; const body = document.createElement("tbody"); baselines.forEach((row) => { const tr = document.createElement("tr"); [row.test_set, row.model, row.records, pct(Number(row.accuracy)), pct(Number(row.balanced_accuracy)), pct(Number(row.benign_recall)), pct(Number(row.pathogenic_recall)), pct(Number(row.coverage)), row.provenance].forEach((value) => { const td = document.createElement("td"); td.textContent = value; tr.append(td); }); tr.title = row.warning; body.append(tr); }); table.append(head, body); byId("baseline-comparison").replaceChildren(table);
 }
 
-async function loadModels() { try { const response = await fetch("/api/model-versions", {headers: {Accept: "application/json"}}); const payload = await response.json(); if (!response.ok) throw new Error(payload.error); byId("model-registry").replaceChildren(...payload.model_records.map(modelCard)); byId("registry-status").textContent = `${payload.model_records.length} frozen model records loaded.`; renderComparison(payload.model_records, payload.baseline_comparisons); const ranking = byId("model-ranking"); const conclusion = document.createElement("h3"); conclusion.textContent = payload.ranking.conclusion; const evidence = document.createElement("p"); evidence.textContent = Object.values(payload.ranking.evidence_summary).join(". "); const criteria = document.createElement("p"); criteria.textContent = `Compared by ${payload.ranking.criteria.join(", ")}; no total ranking is assigned across different evaluations.`; const warning = document.createElement("p"); warning.className = "plain-language-note"; warning.textContent = payload.ranking.warning; ranking.replaceChildren(conclusion, evidence, criteria, warning); } catch (error) { byId("registry-status").textContent = `Could not load model registry: ${error.message}`; } }
+async function loadModels() { try { const response = await fetch("/api/model-versions", {headers: {Accept: "application/json"}}); const payload = await response.json(); if (!response.ok) throw new Error(shown(payload.error)); byId("model-registry").replaceChildren(...payload.model_records.map(modelCard)); byId("registry-status").textContent = `${payload.model_records.length} frozen model records loaded.`; renderComparison(payload.model_records, payload.baseline_comparisons); const ranking = byId("model-ranking"); const conclusion = document.createElement("h3"); conclusion.textContent = shown(payload.ranking.conclusion); const evidence = document.createElement("dl"); evidence.className = "evidence-summary-list"; evidenceRows(evidence, payload.ranking.evidence_summary); const criteria = document.createElement("p"); criteria.textContent = `Compared by ${payload.ranking.criteria.map(shown).join(", ")}; no total ranking is assigned across different evaluations.`; const warning = document.createElement("p"); warning.className = "plain-language-note"; warning.textContent = shown(payload.ranking.warning); ranking.replaceChildren(conclusion, evidence, criteria, warning); presentationSanityCheck(); } catch (error) { byId("registry-status").textContent = `Could not load model registry: ${shown(error.message)}`; } }
 
 loadModels();

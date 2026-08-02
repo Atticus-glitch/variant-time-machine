@@ -4,16 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Storage-aware builder for the fixed historical ClinVar release pair">
-    <title>Historical Dataset Builder | Variant Time Machine</title>
+    <title>Data Setup | Variant Time Machine</title>
     <link rel="stylesheet" href="/static/styles.css">
     <script src="/static/historical_dataset.js" defer></script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="site-header">
       <div class="header-grid">
         <div>
           <p class="eyebrow">Fixed official release snapshots</p>
-          <h1>Historical Dataset Builder</h1>
+          <h1>Data Setup</h1>
           <p class="subtitle">Review exact sources, storage costs, and safety limits before retrieving either archive.</p>
         </div>
         <div class="milestone-card">
@@ -24,19 +25,12 @@
       </div>
     </header>
 
-    <nav class="workspace-nav" aria-label="Main navigation">
-      <a href="/overview.html">Start Here</a>
-      <a href="/">Project Dashboard</a>
-      <a href="/pilot_workspace.html">Pilot Workspace</a>
-      <a href="/version_history.html">Version History Explorer</a>
-      <a href="/pilot_results.html">Pilot Results</a>
-      <a href="/historical_variants.html">Variant Spreadsheet</a>
-      <a href="/prediction_results.html">Prediction Results</a>
-      <a href="/historical_dataset.html" aria-current="page">Download Builder</a>
-      <a href="/variant_lookup.html">Current Lookup</a>
+    <nav class="workspace-nav" aria-label="Site navigation">
+      <div class="nav-primary" aria-label="Primary destinations"><a href="/overview.html">Overview</a><a href="/historical_variants.html">Variants</a><a href="/prediction_results.html">Results</a><a href="/model_versions.html">Models</a><a href="/prediction_explorer.html">Error Review</a><a href="/research_timeline.html">Timeline</a></div>
+      <details class="nav-tools"><summary>Tools</summary><div><a href="/version_history.html">Version History</a><a href="/pilot_results.html">Pilot Results</a><a href="/pilot_workspace.html">Legacy Manual Workspace</a><a href="/historical_dataset.html" aria-current="page">Data Setup</a><a href="/variant_lookup.html">Current Lookup</a><a href="/">Project Status</a></div></details>
     </nav>
 
-    <main>
+    <main id="main-content">
       <section class="panel pilot-caution" aria-labelledby="scope-title">
         <p class="section-number">Scientific scope</p>
         <h2 id="scope-title">Archived Summary Pair, Not Full XML</h2>
