@@ -21,13 +21,16 @@ The project now has indexed January 2022 and January 2024 ClinVar summary snapsh
 | V4 | Internal connected-group holdout | 100 | 76.0% | 62.5% | 100.0% | 25.0% |
 | V5 | Different internal connected-group holdout | 100 | 82.0% | 82.2% | 81.5% | 82.9% |
 | V6 | New groups excluded before V6 fitting | 1,000 | 75.6% | 74.4% | 77.6% | 71.1% |
+| V7 | Jan. 2024 predictions, July 2026 answers | 1,000 | 78.5% | 79.1% | 78.1% | 80.0% |
 
-V6 was trained from scratch on 2,518 records after reserving 1,000 test representatives, quarantining 4,672 connected companions, and excluding 628 records in prior V4/V5 test groups. Its train/test Variation ID overlap and connected-group overlap are both zero. V5 still has the highest point score on its own small test, while V6 supplies much stronger sample-size evidence and a more modest estimate. Since the cohorts and training memberships differ, there is **no stable winner** and the scores should not be subtracted as a head-to-head improvement. See the [full comparison](research/model-v4-v5-comparison.md).
+V6 was scientifically strict but left only 2,518 training records. Its error analysis showed that 214 of 244 mistakes were missense variants. V7 used all 8,818 permitted development records, selected shallow gradient boosting by grouped cross-validation, calibrated only from out-of-fold predictions, and sealed 761,235 January 2024 predictions before downloading the July 2026 answer archive. The final 1,000 Variation IDs had zero development overlap. V7 reached 79.1% balanced accuracy and 80.0% pathogenic recall. Its raw accuracy did not beat the 80.5% majority-benign baseline, whose balanced accuracy was only 50%; the result is about class discrimination, not a larger headline number.
+
+V7 is the strongest current evidence because it moves the predictor and answer dates forward. It is still conditional on records that clearly resolved, and 69.9% of test records shared at least one gene with development. See the [full comparison](research/model-v4-v5-comparison.md) and [V7 report](research/ai-temporal-v7-results.md).
 
 ## Research Workflow
 
-1. Open **Model Versions** and review the frozen V1-V6 records, leakage audits, baselines, and provenance warnings.
-2. Use **Prediction Explorer** to review wrong high-confidence V4-V6 predictions before easy correct examples.
+1. Open **Model Versions** and review the frozen V1-V7 records, leakage audits, baselines, and provenance warnings.
+2. Use **Prediction Explorer** to review wrong high-confidence V4-V7 predictions before easy correct examples.
 3. Inspect every older-snapshot feature, warning, prediction, probability, and newer answer label.
 4. Confirm Variation and Allele IDs, germline scope, conditions, and official ClinVar context.
 5. Record reviewed, correctly matched, ambiguous, or excluded decisions separately from automatic results.
@@ -94,7 +97,7 @@ The command refuses to replace an existing output unless `--overwrite` is suppli
 
 ## Model Registry Reports
 
-Rebuild the lightweight V1-V6 registry, standardized evaluations, leakage audits,
+Rebuild the lightweight V1-V7 registry, standardized evaluations, leakage audits,
 logs, comparison tables, error-analysis CSVs, and project timeline from existing
 frozen artifacts without training or opening a new test set:
 
@@ -185,9 +188,9 @@ The command-line workflow confirms the small API request and asks again before s
 
 ## Current Milestone
 
-Review V6's 244 errors, check probability calibration, and design a genuinely later untouched cohort before changing the model again.
+Review V7's 215 errors, especially the 186 missense mistakes, and precommit any replication before changing the reported model.
 
-The neural network adjusts internal weights by minimizing supervised classification loss on training examples. V6's 1,000 test records were excluded from V6 training by both Variation ID and connected group, but the test still comes from the already inspected Version 2 cohort. It is not independent temporal validation and still cannot predict whether resolution will happen.
+V7's 1,000 test Variation IDs were absent from development and their predictions were sealed before the answer archive was downloaded. Same-gene overlap was allowed, and the outcome-selected design still cannot predict whether resolution will happen. This is record-level temporal evidence, not clinical validation.
 
 ## Reproducibility
 

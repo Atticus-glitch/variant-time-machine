@@ -7,6 +7,7 @@ import hashlib
 import json
 import math
 import random
+import re
 import sqlite3
 from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
@@ -25,9 +26,9 @@ SMALL_TEST_WARNING = (
     "temporal or clinical validation."
 )
 DISTINCT_TEST_WARNING = (
-    "V4, V5, and V6 used different group-isolated internal tests and different "
-    "training memberships. Their point estimates are descriptive, not paired "
-    "head-to-head effects."
+    "V4-V6 used different internal group-isolated tests. V7 used a later record-level "
+    "temporal test, but allowed same-gene overlap. Point estimates across versions are "
+    "descriptive, not paired head-to-head effects."
 )
 ERROR_CATEGORIES = (
     "bad match",
@@ -509,6 +510,9 @@ def _recorded_binary_evaluation(
                 (
                     SMALL_TEST_WARNING
                     if metrics["records"] == 100
+                    else "Temporal record-level test (n=1,000); not gene-independent "
+                    "or clinical validation."
+                    if model_id == "V7"
                     else "Internal test (n=1,000); larger than V4/V5 but still not "
                     "independent temporal or clinical validation."
                 ),
@@ -588,6 +592,9 @@ def _unknown_metrics(recorded: Mapping[str, Any]) -> dict[str, Any]:
     )
     result["number_not_scorable"] = recorded.get(
         "number_not_scorable", recorded.get("not_scorable", UNKNOWN)
+    )
+    result["average_precision_pathogenic"] = recorded.get(
+        "average_precision_pathogenic", recorded.get("average_precision", UNKNOWN)
     )
     return result
 
@@ -676,7 +683,7 @@ def _partition_class_distribution(
 
 
 def create_registry(project_root: Path) -> dict[str, Any]:
-    """Create standardized V1-V6 records strictly from existing evidence."""
+    """Create standardized V1-V7 records strictly from existing evidence."""
     root = project_root.resolve()
     configs = {
         "V1": _read_json(root / "config/clue_score_v1.yaml"),
@@ -685,6 +692,7 @@ def create_registry(project_root: Path) -> dict[str, Any]:
         "V4": _read_json(root / "config/ai_holdout_v4.yaml"),
         "V5": _read_json(root / "config/ai_holdout_v5.yaml"),
         "V6": _read_json(root / "config/ai_holdout_v6.yaml"),
+        "V7": _read_json(root / "config/ai_temporal_v7.yaml"),
     }
     summaries = {
         "V1": _read_json(root / "outputs/clue_score_v1/metric_summary.json"),
@@ -706,14 +714,26 @@ def create_registry(project_root: Path) -> dict[str, Any]:
         root / "outputs/ai_holdout_v6/hidden_test_predictions.csv",
         root / "outputs/ai_holdout_v6/test_metrics.json",
     )
-    summaries.update({"V4": v4_metrics, "V5": v5_metrics, "V6": v6_metrics})
+    v7_metrics, _ = _recorded_binary_evaluation(
+        "V7",
+        root / "outputs/ai_temporal_v7/temporal_test_predictions.csv",
+        root / "outputs/ai_temporal_v7/test_metrics.json",
+    )
+    summaries.update(
+        {"V4": v4_metrics, "V5": v5_metrics, "V6": v6_metrics, "V7": v7_metrics}
+    )
     training_v4 = _read_json(root / "outputs/ai_holdout_v4/training_summary.json")
     training_v5 = _read_json(root / "outputs/ai_holdout_v5/training_summary.json")
     training_v6 = _read_json(root / "outputs/ai_holdout_v6/training_summary.json")
+    training_v7 = _read_json(root / "outputs/ai_temporal_v7/training_summary.json")
     distributions = {
         "V4": _partition_class_distribution(root, "ai_holdout_v4"),
         "V5": _partition_class_distribution(root, "ai_holdout_v5"),
         "V6": _partition_class_distribution(root, "ai_holdout_v6"),
+        "V7": {
+            "development": training_v7["out_of_fold_metrics"]["class_distribution"],
+            "test": v7_metrics["class_distribution"],
+        },
     }
     specifications = {
         "V1": (
@@ -770,6 +790,15 @@ def create_registry(project_root: Path) -> dict[str, Any]:
             v6_metrics["records"],
             "limited: two hidden-layer neural network",
         ),
+        "V7": (
+            "AI Temporal V7",
+            "calibrated histogram gradient boosting",
+            "outputs/ai_temporal_v7/model.joblib",
+            "outputs/ai_temporal_v7/temporal_test_predictions.csv",
+            training_v7.get("development_records", UNKNOWN),
+            v7_metrics["records"],
+            "medium: shallow tree ensemble with recorded selection and calibration",
+        ),
     }
     models = []
     for model_id, values in specifications.items():
@@ -793,10 +822,19 @@ def create_registry(project_root: Path) -> dict[str, Any]:
             "V4": "a8cd286",
             "V5": "036c475",
             "V6": UNKNOWN,
+            "V7": UNKNOWN,
         }
-        training_documents = {"V4": training_v4, "V5": training_v5, "V6": training_v6}
+        training_documents = {
+            "V4": training_v4,
+            "V5": training_v5,
+            "V6": training_v6,
+            "V7": training_v7,
+        }
         training_document = training_documents.get(model_id, {})
-        source_hash = configs[model_id].get("source_database_sha256", UNKNOWN)
+        source_hash = configs[model_id].get(
+            "source_database_sha256",
+            configs[model_id].get("development_source_database_sha256", UNKNOWN),
+        )
         output_directories = {
             "V1": "outputs/clue_score_v1",
             "V2": "outputs/resolved_direction_v2",
@@ -804,6 +842,7 @@ def create_registry(project_root: Path) -> dict[str, Any]:
             "V4": "outputs/ai_holdout_v4",
             "V5": "outputs/ai_holdout_v5",
             "V6": "outputs/ai_holdout_v6",
+            "V7": "outputs/ai_temporal_v7",
         }
         output_directory = root / output_directories[model_id]
         output_files = [
@@ -829,6 +868,15 @@ def create_registry(project_root: Path) -> dict[str, Any]:
             )
         if model_id == "V6":
             warnings.append(str(configs[model_id]["source_note"]))
+        if model_id == "V7":
+            warnings.extend(
+                [
+                    "All test Variation IDs were absent from development, but 69.9% "
+                    "of test records shared at least one gene with development.",
+                    "The primary test is conditional on safe clear resolution by July "
+                    "2026 and does not estimate whether a VUS will resolve.",
+                ]
+            )
         record.update(
             {
                 "model_version_name": model_id,
@@ -844,6 +892,8 @@ def create_registry(project_root: Path) -> dict[str, Any]:
                 "number_validation_records": (
                     "not recorded"
                     if model_id == "V4"
+                    else "5-fold grouped out-of-fold development"
+                    if model_id == "V7"
                     else 0
                     if model_id in {"V5", "V6"}
                     else UNKNOWN
@@ -878,7 +928,7 @@ def create_registry(project_root: Path) -> dict[str, Any]:
                 "output_files": output_files,
                 "effective_status": (
                     "frozen_evaluated"
-                    if model_id in {"V1", "V2", "V3", "V4", "V5", "V6"}
+                    if model_id in {"V1", "V2", "V3", "V4", "V5", "V6", "V7"}
                     else record["status"]
                 ),
                 "training_timestamp": training_document.get("trained_at_utc", UNKNOWN),
@@ -897,6 +947,26 @@ def create_registry(project_root: Path) -> dict[str, Any]:
             )
             if record["source_experiment"] == UNKNOWN:
                 record["source_experiment"] = "Resolved Direction V2"
+        if model_id == "V7":
+            record["evaluation_reliability"] = "external temporal holdout"
+            record["source_experiment"] = "January 2024 to July 2026 temporal cohort"
+            record["partition"] = {
+                "candidate_rule": configs[model_id]["candidate_rule"],
+                "final_test_rule": configs[model_id]["final_test_rule"],
+                "final_test_records": configs[model_id]["final_test_records"],
+            }
+            record["train_validation_test_split_method"] = record["partition"]
+            record["estimator"] = {
+                "name": training_v7["selected_model"],
+                "calibration": configs[model_id]["development"]["calibration"],
+                "decision_threshold": training_v7["selected_threshold"],
+            }
+            record["hyperparameters"] = record["estimator"]
+            record["random_seed"] = configs[model_id]["development"]["random_state"]
+            record["preprocessing_steps"] = {
+                "numeric_transform": "log1p age and submitter count",
+                "row_weight": configs[model_id]["development"]["row_weight"],
+            }
         models.append(record)
     return {
         "schema_version": SCHEMA_VERSION,
@@ -915,9 +985,9 @@ def create_registry(project_root: Path) -> dict[str, Any]:
 
 def save_registry(registry: Mapping[str, Any], path: Path) -> None:
     model_ids = [model.get("model_id") for model in registry.get("models", [])]
-    if model_ids != ["V1", "V2", "V3", "V4", "V5", "V6"]:
+    if model_ids != ["V1", "V2", "V3", "V4", "V5", "V6", "V7"]:
         raise RegistryError(
-            "Registry must contain standardized V1-V6 records in order."
+            "Registry must contain standardized V1-V7 records in order."
         )
     _write_json(path, registry)
 
@@ -933,8 +1003,9 @@ def load_registry(path: Path) -> dict[str, Any]:
         "V4",
         "V5",
         "V6",
+        "V7",
     ]:
-        raise RegistryError("Model registry does not contain ordered V1-V6 records.")
+        raise RegistryError("Model registry does not contain ordered V1-V7 records.")
     return registry
 
 
@@ -974,19 +1045,28 @@ def load_model_record_or_placeholder(
 def rank_models(models: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     """Summarize evidence without inventing a cross-cohort league table."""
     by_id = {model["model_id"]: model for model in models}
+    v7_balanced = by_id.get("V7", {}).get("metrics", {}).get("balanced_accuracy")
+    v5_balanced = by_id.get("V5", {}).get("metrics", {}).get("balanced_accuracy")
     return {
         "ranking": [],
         "comparison_status": "not_rankable_across_current_evaluations",
         "criteria": ["test design", "sample size", "class recall", "uncertainty"],
         "stable_winner": None,
         "conclusion": (
-            "No stable winner. V6 supplies the largest internal test; V5 has the "
-            "highest point balanced accuracy on its own much smaller test."
+            "V7 provides the strongest current evidence: a sealed n=1,000 temporal "
+            "record-level test. It is not gene-independent or clinical validation."
         ),
         "evidence_summary": {
-            "largest_internal_test": "V6 (n=1,000)",
+            "strongest_current_evidence": "V7 temporal test (n=1,000)",
+            "v7_balanced_accuracy": (
+                f"V7 ({v7_balanced:.1%})"
+                if isinstance(v7_balanced, int | float)
+                else "V7 not present in supplied records"
+            ),
             "highest_own_test_balanced_accuracy": (
-                f"V5 ({by_id['V5']['metrics']['balanced_accuracy']:.1%}, n=100)"
+                f"V5 ({v5_balanced:.1%}, n=100)"
+                if isinstance(v5_balanced, int | float)
+                else "V5 not present in supplied records"
             ),
             "most_interpretable_models": "V1-V3",
         },
@@ -1036,7 +1116,9 @@ def generate_error_analysis(
                 "model_version": model_id,
                 "variation_id": row["variation_id"],
                 "vcv_accession": detail.get("vcv_accession", "not recorded"),
-                "gene": detail.get("gene", "not recorded"),
+                "gene": detail.get(
+                    "gene", row.get("gene_symbols", "not recorded") or "not recorded"
+                ),
                 "old_classification": detail.get("old_classification", "not recorded"),
                 "actual_later_classification": detail.get(
                     "new_classification", "not recorded"
@@ -1054,7 +1136,9 @@ def generate_error_analysis(
                     else "low-confidence"
                 ),
                 "confidence": confidence_value,
-                "key_features": detail.get("key_features", "not recorded"),
+                "key_features": detail.get(
+                    "key_features", row.get("features_json", "not recorded")
+                ),
                 "match_confidence": detail.get("match_confidence", "not recorded"),
                 "warning_flags": detail.get("warning_flags", ""),
                 "suspected_error_category": suspected,
@@ -1125,6 +1209,78 @@ def load_variant_details(database: Path, ids: set[str]) -> dict[str, dict[str, A
     return details
 
 
+def v7_protocol_audit(
+    development_database: Path,
+    prediction_rows: Sequence[Mapping[str, str]],
+    training_summary: Mapping[str, Any],
+    test_metrics: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Summarize temporal overlap and exclusion accounting after frozen evaluation."""
+
+    def genes(value: object) -> set[str]:
+        return {
+            item.strip().upper()
+            for item in re.split(r"[,;|]", str(value or ""))
+            if item.strip() and item.strip() != "-"
+        }
+
+    development_ids = set()
+    development_genes = set()
+    with sqlite3.connect(
+        f"file:{Path(development_database).resolve()}?mode=ro", uri=True
+    ) as connection:
+        for identifier, gene_symbols in connection.execute(
+            "SELECT variation_id,old_gene_symbols FROM predictions"
+        ):
+            development_ids.add(str(identifier))
+            development_genes.update(genes(gene_symbols))
+    test_ids = {str(row["variation_id"]) for row in prediction_rows}
+    test_gene_sets = [genes(row.get("gene_symbols")) for row in prediction_rows]
+    shared_gene_records = sum(
+        bool(values & development_genes) for values in test_gene_sets
+    )
+    test_genes = set().union(*test_gene_sets)
+    exclusions = dict(test_metrics.get("exclusions", {}))
+    accounted = int(test_metrics["safe_clear_outcomes_available"]) + sum(
+        int(value) for value in exclusions.values()
+    )
+    missing = int(training_summary["temporal_candidate_records"]) - accounted
+    correct = int(test_metrics["number_correct"])
+    records = int(test_metrics["test_records"])
+    z = 1.959963984540054
+    estimate = correct / records
+    denominator = 1 + z**2 / records
+    centre = (estimate + z**2 / (2 * records)) / denominator
+    half_width = (
+        z
+        * ((estimate * (1 - estimate) / records + z**2 / (4 * records**2)) ** 0.5)
+        / denominator
+    )
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "model_id": "V7",
+        "audit_kind": "post_evaluation_protocol_accounting",
+        "test_records": records,
+        "development_test_variation_id_overlap": len(development_ids & test_ids),
+        "test_records_sharing_development_gene": shared_gene_records,
+        "same_gene_overlap_fraction": shared_gene_records / records,
+        "unique_test_genes": len(test_genes),
+        "unique_test_genes_seen_in_development": len(test_genes & development_genes),
+        "unique_test_genes_unseen_in_development": len(test_genes - development_genes),
+        "missing_from_answer_snapshot": missing,
+        "candidate_accounting_complete": accounted + missing
+        == int(training_summary["temporal_candidate_records"]),
+        "accuracy_95_percent_wilson_interval": [
+            centre - half_width,
+            centre + half_width,
+        ],
+        "warning": (
+            "This audit was calculated after the frozen test. It describes overlap "
+            "and accounting and did not alter model selection, predictions, or metrics."
+        ),
+    }
+
+
 def load_model_dashboard(project_root: Path) -> dict[str, Any]:
     """Load generated registry and comparison artifacts for read-only display."""
     root = Path(project_root).resolve()
@@ -1152,11 +1308,11 @@ def _load_review_document(path: Path) -> dict[str, Any]:
 
 
 def load_prediction_explorer(project_root: Path, review_path: Path) -> dict[str, Any]:
-    """Join V4-V6 frozen prediction rows without exposing model binaries."""
+    """Join V4-V7 frozen prediction rows without exposing model binaries."""
     root = Path(project_root).resolve()
     reviews = _load_review_document(review_path).get("reviews", {})
     rows_by_id: dict[str, dict[str, Any]] = {}
-    for model_id in ("V4", "V5", "V6"):
+    for model_id in ("V4", "V5", "V6", "V7"):
         path = root / f"outputs/error_analysis/model_{model_id.lower()}_errors.csv"
         with path.open(newline="", encoding="utf-8") as handle:
             for row in csv.DictReader(handle):
@@ -1176,6 +1332,9 @@ def load_prediction_explorer(project_root: Path, review_path: Path) -> dict[str,
                         "v6_prediction": None,
                         "v6_correct": None,
                         "v6_confidence": None,
+                        "v7_prediction": None,
+                        "v7_correct": None,
+                        "v7_confidence": None,
                         "manual_review_status": "unreviewed",
                     },
                 )
@@ -1221,9 +1380,25 @@ def prediction_explorer_detail(
             (variation_id,),
         ).fetchone()
     if row is None:
-        raise RegistryError("Underlying V2 detail was not found.")
+        summary.update(
+            {
+                "old_classification": "Uncertain significance",
+                "old_gene_symbols": summary["gene"],
+                "old_names": "not recorded in public error report",
+                "old_review_status": "not recorded in public error report",
+                "old_submitter_counts": "not recorded in public error report",
+                "old_last_evaluated": "not recorded in public error report",
+                "older_features": [],
+                "actual_later_classification": "see normalized temporal outcome",
+                "match_method": "exact Variation ID and unchanged Allele ID set",
+                "match_confidence": "high under frozen temporal rule",
+                "warning_flags": [
+                    "V7 detail is intentionally limited to the small public report."
+                ],
+            }
+        )
     model_rows: dict[str, dict[str, str]] = {}
-    for model_id in ("V4", "V5", "V6"):
+    for model_id in ("V4", "V5", "V6", "V7"):
         path = root / f"outputs/error_analysis/model_{model_id.lower()}_errors.csv"
         with path.open(newline="", encoding="utf-8") as handle:
             match = next(
@@ -1237,25 +1412,31 @@ def prediction_explorer_detail(
         if match:
             model_rows[model_id] = match
     reviews = _load_review_document(review_path).get("reviews", {})
-    return {
+    detail = {
         **summary,
-        "old_classification": row["old_classification"],
-        "old_gene_symbols": row["old_gene_symbols"],
-        "old_names": row["old_names"],
-        "old_review_status": row["old_review_status"],
-        "old_submitter_counts": row["old_submitter_counts"],
-        "old_last_evaluated": row["old_last_evaluated"],
-        "older_features": json.loads(row["clues_json"] or "[]"),
-        "actual_later_classification": row["new_classification"],
-        "actual_outcome": row["outcome_group"],
-        "match_method": row["match_method"],
-        "match_confidence": row["match_confidence"],
-        "warning_flags": [
-            *json.loads(row["warnings_json"] or "[]"),
-            *json.loads(row["match_warnings_json"] or "[]"),
-        ],
+        **(
+            {
+                "old_classification": row["old_classification"],
+                "old_gene_symbols": row["old_gene_symbols"],
+                "old_names": row["old_names"],
+                "old_review_status": row["old_review_status"],
+                "old_submitter_counts": row["old_submitter_counts"],
+                "old_last_evaluated": row["old_last_evaluated"],
+                "older_features": json.loads(row["clues_json"] or "[]"),
+                "actual_later_classification": row["new_classification"],
+                "actual_outcome": row["outcome_group"],
+                "match_method": row["match_method"],
+                "match_confidence": row["match_confidence"],
+                "warning_flags": [
+                    *json.loads(row["warnings_json"] or "[]"),
+                    *json.loads(row["match_warnings_json"] or "[]"),
+                ],
+            }
+            if row is not None
+            else {}
+        ),
         "model_results": model_rows,
-        "leakage_check": {"V4": "pass", "V5": "pass", "V6": "pass"},
+        "leakage_check": {"V4": "pass", "V5": "pass", "V6": "pass", "V7": "pass"},
         "manual_reviews": {
             key: value
             for key, value in reviews.items()
@@ -1266,6 +1447,7 @@ def prediction_explorer_detail(
             "network does not have the exact point arithmetic of the V2 baseline."
         ),
     }
+    return detail
 
 
 def update_error_review(
@@ -1277,7 +1459,7 @@ def update_error_review(
     category: str,
     notes: str,
 ) -> dict[str, Any]:
-    if model_id not in {"V4", "V5", "V6"} or not variation_id.isdigit():
+    if model_id not in {"V4", "V5", "V6", "V7"} or not variation_id.isdigit():
         raise RegistryError("Unknown model or Variation ID.")
     if status not in {
         "unreviewed",
@@ -1371,8 +1553,10 @@ def build_reports(project_root: Path) -> list[Path]:
         index_path,
         {
             "schema_version": SCHEMA_VERSION,
-            "latest_model_version": "V6",
-            "best_validated_model": "No stable winner yet.",
+            "latest_model_version": "V7",
+            "best_validated_model": (
+                "V7 has the strongest current evidence; no clinical winner is claimed."
+            ),
             "ranking_policy": registry["ranking_policy"],
             "ranking": ranking,
             "models": [
@@ -1398,14 +1582,15 @@ def build_reports(project_root: Path) -> list[Path]:
     created.append(index_path)
 
     evaluations: dict[str, tuple[dict[str, Any], list[dict[str, str]]]] = {}
-    for model_id, directory in (
-        ("V4", "ai_holdout_v4"),
-        ("V5", "ai_holdout_v5"),
-        ("V6", "ai_holdout_v6"),
+    for model_id, directory, prediction_filename in (
+        ("V4", "ai_holdout_v4", "hidden_test_predictions.csv"),
+        ("V5", "ai_holdout_v5", "hidden_test_predictions.csv"),
+        ("V6", "ai_holdout_v6", "hidden_test_predictions.csv"),
+        ("V7", "ai_temporal_v7", "temporal_test_predictions.csv"),
     ):
         evaluation = _recorded_binary_evaluation(
             model_id,
-            root / f"outputs/{directory}/hidden_test_predictions.csv",
+            root / f"outputs/{directory}/{prediction_filename}",
             root / f"outputs/{directory}/test_metrics.json",
         )
         evaluations[model_id] = evaluation
@@ -1513,6 +1698,18 @@ def build_reports(project_root: Path) -> list[Path]:
     )
     created.append(comparison_path)
 
+    v7_audit_path = root / "outputs/evaluations/frozen/v7_protocol_audit.json"
+    _write_json(
+        v7_audit_path,
+        v7_protocol_audit(
+            root / "data/processed/resolved_direction_v2.sqlite3",
+            evaluations["V7"][1],
+            _read_json(root / "outputs/ai_temporal_v7/training_summary.json"),
+            _read_json(root / "outputs/ai_temporal_v7/test_metrics.json"),
+        ),
+    )
+    created.append(v7_audit_path)
+
     all_error_rows = []
     evaluated_ids = {
         row["variation_id"] for _, rows in evaluations.values() for row in rows
@@ -1617,6 +1814,7 @@ def build_reports(project_root: Path) -> list[Path]:
         "V4": "2026-08-01",
         "V5": "2026-08-01",
         "V6": "2026-08-01",
+        "V7": "2026-08-02",
     }
     for model in registry["models"]:
         model_id = model["model_id"]

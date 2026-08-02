@@ -1,0 +1,102 @@
+{
+  "command_or_dashboard_action": "not recorded",
+  "dataset_used": {
+    "answer_snapshot": "2026-07-02",
+    "prediction_snapshot": "2024-01-04",
+    "source_database_sha256": "d9d66ba2384f2d9e0b8cb55be43432f8e02fdd8fcd70ecd2266d65e52af73a04"
+  },
+  "disk_usage_after_bytes": "unknown/not recorded",
+  "disk_usage_before_bytes": "unknown/not recorded",
+  "errors": [],
+  "features_used": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning",
+    "classification_age_available",
+    "record_completeness_available",
+    "log1p_classification_age_days",
+    "log1p_maximum_submitter_count",
+    "missing_core_field_count"
+  ],
+  "hyperparameters": {
+    "calibration": "logistic calibration fitted only to selected-model out-of-fold logits",
+    "decision_threshold": 0.2800000000000001,
+    "name": "histgb_leaf_7_l2_1"
+  },
+  "metrics": {
+    "accuracy": 0.785,
+    "average_precision_pathogenic": 0.7503930325325963,
+    "balanced_accuracy": 0.7906832298136646,
+    "benign_f1": 0.8540393754243042,
+    "benign_precision": 0.9416167664670658,
+    "benign_recall": 0.7813664596273292,
+    "brier_score": 0.08642327628664756,
+    "class_distribution": {
+      "moved_toward_benign": 805,
+      "moved_toward_pathogenic": 195
+    },
+    "macro_f1": 0.7230348679778067,
+    "macro_precision": 0.7057481422696775,
+    "macro_recall": 0.7906832298136646,
+    "number_correct": 785,
+    "number_no_prediction": 0,
+    "number_not_scorable": 0,
+    "number_of_predictions": 1000,
+    "number_wrong": 215,
+    "pathogenic_f1": 0.5920303605313093,
+    "pathogenic_precision": 0.46987951807228917,
+    "pathogenic_recall": 0.8,
+    "per_class": {
+      "benign": {
+        "f1": 0.8540393754243042,
+        "precision": 0.9416167664670658,
+        "recall": 0.7813664596273292,
+        "support": 805
+      },
+      "pathogenic": {
+        "f1": 0.5920303605313093,
+        "precision": 0.46987951807228917,
+        "recall": 0.8,
+        "support": 195
+      }
+    },
+    "roc_auc": 0.8849339066730371,
+    "weighted_f1": 0.8029476175201702
+  },
+  "model_version": "V7",
+  "output_files": [
+    "outputs/ai_temporal_v7/ai_temporal_v7.yaml",
+    "outputs/ai_temporal_v7/model.joblib",
+    "outputs/ai_temporal_v7/sealed_candidate_predictions.sqlite3",
+    "outputs/ai_temporal_v7/temporal_test_predictions.csv",
+    "outputs/ai_temporal_v7/test_metrics.json",
+    "outputs/ai_temporal_v7/training_summary.json"
+  ],
+  "random_seed": 173205,
+  "records_excluded": "unknown/not recorded",
+  "records_loaded": 8818,
+  "records_used": 1000,
+  "run_classification": "official reconstructed historical record",
+  "runtime_seconds": "unknown/not recorded",
+  "schema_version": 1,
+  "split_sizes": {
+    "test": 1000,
+    "train": 8818,
+    "validation": "5-fold grouped out-of-fold development"
+  },
+  "started_by": "historical artifact reconstruction",
+  "target_labels": "Later normalized ClinVar aggregate classification outcome; see the frozen version configuration.",
+  "timestamp": "unknown/not recorded",
+  "warnings": [
+    "Reconstructed from existing artifacts; not an original runtime log.",
+    "V7 is an external temporal test at the record level, but still uses aggregate ClinVar classifications and an outcome-selected resolved subset. Same-gene overlap with development is allowed and will be reported. It is not clinical validation.",
+    "All test Variation IDs were absent from development, but 69.9% of test records shared at least one gene with development.",
+    "The primary test is conditional on safe clear resolution by July 2026 and does not estimate whether a VUS will resolve."
+  ]
+}

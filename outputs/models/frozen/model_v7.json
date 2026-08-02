@@ -1,0 +1,20 @@
+{
+  "model_id": "V7",
+  "output_files": [
+    "outputs/ai_temporal_v7/ai_temporal_v7.yaml",
+    "outputs/ai_temporal_v7/model.joblib",
+    "outputs/ai_temporal_v7/sealed_candidate_predictions.sqlite3",
+    "outputs/ai_temporal_v7/temporal_test_predictions.csv",
+    "outputs/ai_temporal_v7/test_metrics.json",
+    "outputs/ai_temporal_v7/training_summary.json"
+  ],
+  "schema_version": 1,
+  "source_artifact": {
+    "exists": true,
+    "path": "outputs/ai_temporal_v7/model.joblib",
+    "sha256": "8fd75f2d95dffd25a94f7f35905253d3a852806bfc0d84d19c8fcc9987fc2877",
+    "size_bytes": 235141
+  },
+  "status": "frozen_reference",
+  "warning": "Model binary/config remains at its original immutable path."
+}

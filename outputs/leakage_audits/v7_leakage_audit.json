@@ -1,0 +1,27 @@
+{
+  "audit_date": "2026-08-01",
+  "banned_fields_found": [],
+  "explanation": "Name-based audit passed; source-date and data-lineage review remain required.",
+  "feature_list_inspected": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning",
+    "classification_age_available",
+    "record_completeness_available",
+    "log1p_classification_age_days",
+    "log1p_maximum_submitter_count",
+    "missing_core_field_count"
+  ],
+  "model_version": "V7",
+  "recommendation": "Keep only older-snapshot features and repeat source-date review for every future feature.",
+  "schema_version": 1,
+  "status": "pass",
+  "suspicious_fields_found": [],
+  "trusted_dashboard_result": true
+}

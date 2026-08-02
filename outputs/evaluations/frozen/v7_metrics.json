@@ -1,0 +1,107 @@
+{
+  "accuracy": 0.785,
+  "average_precision": 0.7503930325325963,
+  "balanced_accuracy": 0.7906832298136646,
+  "baseline_comparison": [
+    {
+      "accuracy": 0.785,
+      "actual_benign": 805,
+      "actual_pathogenic": 195,
+      "balanced_accuracy": 0.7906832298136646,
+      "benign_recall": 0.7813664596273292,
+      "coverage": 1.0,
+      "macro_f1": 0.7230348679778067,
+      "model": "V7",
+      "pathogenic_recall": 0.8,
+      "provenance": "recorded predictions",
+      "records": 1000,
+      "test_set": "V7",
+      "warning": "Temporal record-level test (n=1,000); not gene-independent or clinical validation."
+    },
+    {
+      "accuracy": 0.805,
+      "actual_benign": 805,
+      "actual_pathogenic": 195,
+      "balanced_accuracy": 0.5,
+      "benign_recall": 1.0,
+      "coverage": 1.0,
+      "macro_f1": 0.445983379501385,
+      "model": "majority",
+      "pathogenic_recall": 0.0,
+      "provenance": "deterministic baseline on same IDs",
+      "records": 1000,
+      "test_set": "V7",
+      "warning": "Temporal record-level test (n=1,000); not gene-independent or clinical validation."
+    },
+    {
+      "accuracy": 0.676,
+      "actual_benign": 805,
+      "actual_pathogenic": 195,
+      "balanced_accuracy": 0.4839942666029623,
+      "benign_recall": 0.7987577639751553,
+      "coverage": 1.0,
+      "macro_f1": 0.4839942666029623,
+      "model": "seeded_random_stratified",
+      "pathogenic_recall": 0.16923076923076924,
+      "provenance": "deterministic baseline on same IDs",
+      "records": 1000,
+      "test_set": "V7",
+      "warning": "Temporal record-level test (n=1,000); not gene-independent or clinical validation."
+    }
+  ],
+  "benign_f1": 0.8540393754243042,
+  "benign_precision": 0.9416167664670658,
+  "benign_recall": 0.7813664596273292,
+  "brier_score": 0.08642327628664756,
+  "class_distribution": {
+    "moved_toward_benign": 805,
+    "moved_toward_pathogenic": 195
+  },
+  "confusion_matrix": {
+    "actual_benign": {
+      "predicted_benign": 629,
+      "predicted_pathogenic": 176
+    },
+    "actual_pathogenic": {
+      "predicted_benign": 39,
+      "predicted_pathogenic": 156
+    }
+  },
+  "evaluation_kind": "recorded_hidden_test",
+  "macro_f1": 0.7230348679778067,
+  "macro_precision": 0.7057481422696775,
+  "macro_recall": 0.7906832298136646,
+  "model_id": "V7",
+  "number_correct": 785,
+  "number_no_prediction": 0,
+  "number_not_scorable": 0,
+  "number_of_predictions": 1000,
+  "number_wrong": 215,
+  "pathogenic_f1": 0.5920303605313093,
+  "pathogenic_precision": 0.46987951807228917,
+  "pathogenic_recall": 0.8,
+  "per_class": {
+    "benign": {
+      "f1": 0.8540393754243042,
+      "precision": 0.9416167664670658,
+      "recall": 0.7813664596273292,
+      "support": 805
+    },
+    "pathogenic": {
+      "f1": 0.5920303605313093,
+      "precision": 0.46987951807228917,
+      "recall": 0.8,
+      "support": 195
+    }
+  },
+  "records": 1000,
+  "roc_auc": 0.8849339066730371,
+  "source_predictions": "/home/bob/variant_time_machine/variant-time-machine/outputs/ai_temporal_v7/temporal_test_predictions.csv",
+  "synthetic": false,
+  "tested_at_utc": "2026-08-02T00:13:24.328993+00:00",
+  "warnings": [
+    "V7 is an external temporal test at the record level, but still uses aggregate ClinVar classifications and an outcome-selected resolved subset. Same-gene overlap with development is allowed and will be reported. It is not clinical validation.",
+    "Temporal record-level test (n=1,000); not gene-independent or clinical validation."
+  ],
+  "weighted_f1": 0.8029476175201702
+}

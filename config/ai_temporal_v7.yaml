@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "experiment_version": "AI Temporal V7",
+  "status": "frozen",
+  "frozen_at_utc": "2026-08-01T23:57:56+00:00",
+  "label": "Training-selected calibrated model with a sealed January 2024 to July 2026 temporal test.",
+  "development_source_database_sha256": "d9d66ba2384f2d9e0b8cb55be43432f8e02fdd8fcd70ecd2266d65e52af73a04",
+  "predictor_index_sha256": "a9e0fe334d5286e176dd8367aa5f37f2fe9114b3a6f081cb5aab516c3845dfa4",
+  "predictor_archive_sha256": "1a08aa8c12f6e2a43386ccb6f27d6c3e710c96bc623a1384f46fbc8ebf8c2994",
+  "prediction_snapshot_date": "2024-01-04",
+  "answer_snapshot_date": "2026-07-02",
+  "answer_archive": {
+    "source_url": "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/archive/variant_summary_2026-07.txt.gz",
+    "expected_size_bytes": 439937684
+  },
+  "candidate_rule": "Exact January 2024 Uncertain significance, exclusively germline, numeric Variation ID, and Variation ID absent from the complete January 2022 snapshot. Score every candidate before downloading or reading the July 2026 answer.",
+  "final_test_rule": "After safe answer matching, hash-rank clear benign/pathogenic resolutions by the frozen salt and evaluate exactly 1,000. Selection uses eligibility and a precommitted hash, never predictions or correctness.",
+  "final_test_records": 1000,
+  "final_test_salt": "variant-time-machine-ai-temporal-v7-final-1000-2026-08-01",
+  "features": [
+    "loss_of_function_consequence",
+    "canonical_splice_consequence",
+    "missense_consequence",
+    "synonymous_consequence",
+    "noncoding_consequence",
+    "expert_panel_review",
+    "multiple_agreeing_submitters",
+    "criteria_without_conflict",
+    "conflict_warning",
+    "classification_age_available",
+    "record_completeness_available",
+    "log1p_classification_age_days",
+    "log1p_maximum_submitter_count",
+    "missing_core_field_count"
+  ],
+  "development": {
+    "records": "all 8,818 V2 records, including previously opened V4-V6 tests",
+    "grouping": "connected older-gene components",
+    "folds": 5,
+    "random_state": 173205,
+    "row_weight": "inverse square root of connected-group size",
+    "selection_metric": "grouped out-of-fold balanced accuracy",
+    "calibration": "logistic calibration fitted only to selected-model out-of-fold logits",
+    "threshold": "maximize calibrated out-of-fold balanced accuracy from 0.20 through 0.80 in 0.005 increments; ties choose closest to 0.50"
+  },
+  "candidate_models": {
+    "logistic_regression_C": [0.01, 0.1, 1.0, 10.0],
+    "hist_gradient_boosting": [
+      {"max_leaf_nodes": 7, "learning_rate": 0.05, "l2_regularization": 1.0},
+      {"max_leaf_nodes": 15, "learning_rate": 0.05, "l2_regularization": 1.0},
+      {"max_leaf_nodes": 15, "learning_rate": 0.05, "l2_regularization": 10.0},
+      {"max_leaf_nodes": 31, "learning_rate": 0.03, "l2_regularization": 10.0}
+    ]
+  },
+  "primary_metric": "balanced_accuracy",
+  "design_warning": "V7 is an external temporal test at the record level, but still uses aggregate ClinVar classifications and an outcome-selected resolved subset. Same-gene overlap with development is allowed and will be reported. It is not clinical validation."
+}

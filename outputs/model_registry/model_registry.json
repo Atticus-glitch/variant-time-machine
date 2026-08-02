@@ -1342,7 +1342,7 @@
       "manual_review_status": "not started",
       "metrics": {
         "accuracy": 0.756,
-        "average_precision_pathogenic": "unknown/not recorded",
+        "average_precision_pathogenic": 0.7249931260209987,
         "balanced_accuracy": 0.7435492978780002,
         "benign_f1": 0.8143074581430746,
         "benign_precision": 0.856,
@@ -1430,6 +1430,248 @@
         "V6 is an internal conditional test from the previously inspected V2 cohort, not independent temporal or clinical validation. Its 1,000 records and their connected groups are excluded from V6 training, and all prior V4/V5 test groups are excluded from both V6 training and V6 testing.",
         "This rebuilt local V2 database has the same 8,818-record cohort and IDs used by the manifests, but its byte hash differs from the source hash recorded by V4/V5. V6 freezes and reports the current hash rather than rewriting prior provenance."
       ]
+    },
+    {
+      "answer_snapshot_date": "2026-07-02",
+      "artifact": {
+        "exists": true,
+        "path": "outputs/ai_temporal_v7/model.joblib",
+        "sha256": "8fd75f2d95dffd25a94f7f35905253d3a852806bfc0d84d19c8fcc9987fc2877",
+        "size_bytes": 235141
+      },
+      "author_notes": "Evidence-backed reconstruction from existing frozen artifacts; not an original runtime record.",
+      "class_distribution": {
+        "development": {
+          "moved_toward_benign": 6287,
+          "moved_toward_pathogenic": 2531
+        },
+        "test": {
+          "moved_toward_benign": 805,
+          "moved_toward_pathogenic": 195
+        }
+      },
+      "code_commit_hash": "unknown/not recorded",
+      "conditional_task": true,
+      "confusion_matrix": {
+        "actual_benign": {
+          "predicted_benign": 629,
+          "predicted_pathogenic": 176
+        },
+        "actual_pathogenic": {
+          "predicted_benign": 39,
+          "predicted_pathogenic": 156
+        }
+      },
+      "dataset_version": {
+        "answer_snapshot": "2026-07-02",
+        "prediction_snapshot": "2024-01-04",
+        "source_database_sha256": "d9d66ba2384f2d9e0b8cb55be43432f8e02fdd8fcd70ecd2266d65e52af73a04"
+      },
+      "date_created": "2026-08-01T23:57:56+00:00",
+      "effective_status": "frozen_evaluated",
+      "estimator": {
+        "calibration": "logistic calibration fitted only to selected-model out-of-fold logits",
+        "decision_threshold": 0.2800000000000001,
+        "name": "histgb_leaf_7_l2_1"
+      },
+      "evaluation_reliability": "external temporal holdout",
+      "evaluation_runtime_seconds": "unknown/not recorded",
+      "evaluation_source": "outputs/ai_temporal_v7/temporal_test_predictions.csv",
+      "excluded_feature_list": [
+        "actual_outcome",
+        "answer",
+        "answer_key",
+        "correct",
+        "current_classification",
+        "latest_classification",
+        "new_classification",
+        "new_release_date",
+        "new_review_status",
+        "newer_classification",
+        "newer_release_date",
+        "newer_review_status",
+        "outcome",
+        "outcome_group",
+        "result",
+        "target",
+        "test_label",
+        "2024_classification"
+      ],
+      "feature_count": 14,
+      "features": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age_available",
+        "record_completeness_available",
+        "log1p_classification_age_days",
+        "log1p_maximum_submitter_count",
+        "missing_core_field_count"
+      ],
+      "frozen_at_utc": "2026-08-01T23:57:56+00:00",
+      "hyperparameters": {
+        "calibration": "logistic calibration fitted only to selected-model out-of-fold logits",
+        "decision_threshold": 0.2800000000000001,
+        "name": "histgb_leaf_7_l2_1"
+      },
+      "input_feature_list": [
+        "loss_of_function_consequence",
+        "canonical_splice_consequence",
+        "missense_consequence",
+        "synonymous_consequence",
+        "noncoding_consequence",
+        "expert_panel_review",
+        "multiple_agreeing_submitters",
+        "criteria_without_conflict",
+        "conflict_warning",
+        "classification_age_available",
+        "record_completeness_available",
+        "log1p_classification_age_days",
+        "log1p_maximum_submitter_count",
+        "missing_core_field_count"
+      ],
+      "interpretability": "medium: shallow tree ensemble with recorded selection and calibration",
+      "leakage_audit": {
+        "banned_fields": [
+          "2024_classification",
+          "actual_outcome",
+          "answer",
+          "answer_key",
+          "correct",
+          "current_classification",
+          "latest_classification",
+          "new_classification",
+          "new_release_date",
+          "new_review_status",
+          "newer_classification",
+          "newer_release_date",
+          "newer_review_status",
+          "outcome",
+          "outcome_group",
+          "result",
+          "target",
+          "test_label"
+        ],
+        "declared_fields": [
+          "canonical_splice_consequence",
+          "classification_age_available",
+          "conflict_warning",
+          "criteria_without_conflict",
+          "expert_panel_review",
+          "log1p_classification_age_days",
+          "log1p_maximum_submitter_count",
+          "loss_of_function_consequence",
+          "missense_consequence",
+          "missing_core_field_count",
+          "multiple_agreeing_submitters",
+          "noncoding_consequence",
+          "record_completeness_available",
+          "synonymous_consequence"
+        ],
+        "findings": [],
+        "status": "pass",
+        "warning": "Name-based audit passed; source-date and data-lineage review remain required."
+      },
+      "leakage_audit_status": "pass",
+      "limitations": [
+        "V7 is an external temporal test at the record level, but still uses aggregate ClinVar classifications and an outcome-selected resolved subset. Same-gene overlap with development is allowed and will be reported. It is not clinical validation.",
+        "All test Variation IDs were absent from development, but 69.9% of test records shared at least one gene with development.",
+        "The primary test is conditional on safe clear resolution by July 2026 and does not estimate whether a VUS will resolve."
+      ],
+      "manual_review": "unknown/not recorded",
+      "manual_review_status": "not started",
+      "metrics": {
+        "accuracy": 0.785,
+        "average_precision_pathogenic": 0.7503930325325963,
+        "balanced_accuracy": 0.7906832298136646,
+        "benign_f1": 0.8540393754243042,
+        "benign_precision": 0.9416167664670658,
+        "benign_recall": 0.7813664596273292,
+        "brier_score": 0.08642327628664756,
+        "class_distribution": {
+          "moved_toward_benign": 805,
+          "moved_toward_pathogenic": 195
+        },
+        "macro_f1": 0.7230348679778067,
+        "macro_precision": 0.7057481422696775,
+        "macro_recall": 0.7906832298136646,
+        "number_correct": 785,
+        "number_no_prediction": 0,
+        "number_not_scorable": 0,
+        "number_of_predictions": 1000,
+        "number_wrong": 215,
+        "pathogenic_f1": 0.5920303605313093,
+        "pathogenic_precision": 0.46987951807228917,
+        "pathogenic_recall": 0.8,
+        "per_class": {
+          "benign": {
+            "f1": 0.8540393754243042,
+            "precision": 0.9416167664670658,
+            "recall": 0.7813664596273292,
+            "support": 805
+          },
+          "pathogenic": {
+            "f1": 0.5920303605313093,
+            "precision": 0.46987951807228917,
+            "recall": 0.8,
+            "support": 195
+          }
+        },
+        "roc_auc": 0.8849339066730371,
+        "weighted_f1": 0.8029476175201702
+      },
+      "model_id": "V7",
+      "model_type": "calibrated histogram gradient boosting",
+      "model_version_name": "V7",
+      "name": "AI Temporal V7",
+      "number_test_records": 1000,
+      "number_training_records": 8818,
+      "number_validation_records": "5-fold grouped out-of-fold development",
+      "output_files": [
+        "outputs/ai_temporal_v7/ai_temporal_v7.yaml",
+        "outputs/ai_temporal_v7/model.joblib",
+        "outputs/ai_temporal_v7/sealed_candidate_predictions.sqlite3",
+        "outputs/ai_temporal_v7/temporal_test_predictions.csv",
+        "outputs/ai_temporal_v7/test_metrics.json",
+        "outputs/ai_temporal_v7/training_summary.json"
+      ],
+      "partition": {
+        "candidate_rule": "Exact January 2024 Uncertain significance, exclusively germline, numeric Variation ID, and Variation ID absent from the complete January 2022 snapshot. Score every candidate before downloading or reading the July 2026 answer.",
+        "final_test_records": 1000,
+        "final_test_rule": "After safe answer matching, hash-rank clear benign/pathogenic resolutions by the frozen salt and evaluate exactly 1,000. Selection uses eligibility and a precommitted hash, never predictions or correctness."
+      },
+      "prediction_snapshot_date": "2024-01-04",
+      "preprocessing_steps": {
+        "numeric_transform": "log1p age and submitter count",
+        "row_weight": "inverse square root of connected-group size"
+      },
+      "random_seed": 173205,
+      "schema_version": 1,
+      "source_experiment": "January 2024 to July 2026 temporal cohort",
+      "status": "frozen",
+      "target_outcome_definition": "Later normalized ClinVar aggregate classification outcome; see the frozen version configuration.",
+      "task": "Training-selected calibrated model with a sealed January 2024 to July 2026 temporal test.",
+      "test_records": 1000,
+      "train_records": 8818,
+      "train_validation_test_split_method": {
+        "candidate_rule": "Exact January 2024 Uncertain significance, exclusively germline, numeric Variation ID, and Variation ID absent from the complete January 2022 snapshot. Score every candidate before downloading or reading the July 2026 answer.",
+        "final_test_records": 1000,
+        "final_test_rule": "After safe answer matching, hash-rank clear benign/pathogenic resolutions by the frozen salt and evaluate exactly 1,000. Selection uses eligibility and a precommitted hash, never predictions or correctness."
+      },
+      "training_runtime_seconds": "unknown/not recorded",
+      "training_timestamp": "2026-08-02T00:08:35.672410+00:00",
+      "vcv_verification": "unknown/not recorded",
+      "warnings": [
+        "V7 is an external temporal test at the record level, but still uses aggregate ClinVar classifications and an outcome-selected resolved subset. Same-gene overlap with development is allowed and will be reported. It is not clinical validation.",
+        "All test Variation IDs were absent from development, but 69.9% of test records shared at least one gene with development.",
+        "The primary test is conditional on safe clear resolution by July 2026 and does not estimate whether a VUS will resolve."
+      ]
     }
   ],
   "ranking_policy": [
@@ -1441,6 +1683,6 @@
   "schema_version": 1,
   "unknown_value": "unknown/not recorded",
   "warnings": [
-    "V4, V5, and V6 used different group-isolated internal tests and different training memberships. Their point estimates are descriptive, not paired head-to-head effects."
+    "V4-V6 used different internal group-isolated tests. V7 used a later record-level temporal test, but allowed same-gene overlap. Point estimates across versions are descriptive, not paired head-to-head effects."
   ]
 }

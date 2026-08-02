@@ -185,7 +185,7 @@
   "manual_review_status": "not started",
   "metrics": {
     "accuracy": 0.756,
-    "average_precision_pathogenic": "unknown/not recorded",
+    "average_precision_pathogenic": 0.7249931260209987,
     "balanced_accuracy": 0.7435492978780002,
     "benign_f1": 0.8143074581430746,
     "benign_precision": 0.856,

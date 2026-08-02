@@ -68,5 +68,10 @@
 - V6's 1,000-record test was excluded from V6 fitting by Variation ID and connected group, and prior V4/V5 test groups were excluded from V6 entirely. It is nevertheless another internal split of the previously inspected, outcome-selected V2 cohort.
 - Reserving 1,000 connected groups left only 2,518 V6 training records and quarantined 4,672 companions. V6 therefore differs from V5 in both test cohort and training membership; score differences are not a controlled architecture comparison.
 - The current V2 database contains the same 8,818 cohort IDs but has a different byte hash from the source recorded by V4/V5. V6 freezes the current hash; this does not repair or rewrite prior provenance.
+- V7 test Variation IDs were absent from development, but 69.9% shared at least one gene with development. It is record-level temporal validation, not unseen-gene validation.
+- V7 conditions evaluation on a safe clear July 2026 outcome. It does not predict whether a January 2024 VUS resolves, and only 10,876 of 761,235 sealed candidates met the clear-outcome rule.
+- V7's 78.5% raw accuracy is below the 80.5% majority-benign baseline. Balanced accuracy, pathogenic recall, and ROC AUC capture its actual advantage; accuracy alone does not.
+- Missense variants produced 186 of 215 V7 errors. The current older-only aggregate features remain insufficient for many missense outcomes.
+- V7 protocol and results entered Git history together after evaluation. Local artifact timestamps and hashes document that predictions were sealed before answer ingestion, but there was no independent custodian or public preregistration.
 
 All conclusions will be restricted to the requested VCV versions or chosen releases, matching and comparison rules, feature availability, and evaluation design. These limitations will be updated as empirical problems are discovered.

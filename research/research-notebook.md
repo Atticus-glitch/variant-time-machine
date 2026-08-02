@@ -599,3 +599,22 @@ balanced accuracy, which is useful evidence against overreading the small test. 
 the higher point estimate on its own cohort; V6 has the larger internal test. Neither
 creates a stable winner, and the next stronger question requires a later untouched
 cohort rather than another rearrangement of V2.
+
+## 2026-08-02 V7 Sealed Temporal Test
+
+V6 error analysis showed that the strict group split had left only 2,518 training
+records and that missense variants caused 214 of 244 errors. Reusing V6's opened answers
+as a final V7 test would not have been honest, so V7 moved both dates forward.
+
+Before downloading the July 2026 answer, V7 used grouped development cross-validation
+on all 8,818 older records, selected shallow histogram gradient boosting, calibrated
+from out-of-fold predictions, and sealed 761,235 predictions for January 2024 VUS IDs
+absent from January 2022. The sealed prediction hash was recorded first. The fixed July
+2026 archive was then downloaded and hashed, and 1,000 safe clear outcomes were selected
+by the frozen hash rule.
+
+V7 scored 78.5% accuracy, 79.1% balanced accuracy, and ROC AUC 0.885, with `TN 629, FP
+176, FN 39, TP 156`. Test ID overlap with development was zero. Same-gene overlap was
+69.9%, so the result is temporal at the record level rather than gene-independent.
+Missense still caused 186 of 215 errors. The strongest result did not come from retrying
+the old test; it came from preserving the boundary and waiting for a later answer.

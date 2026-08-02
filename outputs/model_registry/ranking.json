@@ -1,6 +1,6 @@
 {
   "comparison_status": "not_rankable_across_current_evaluations",
-  "conclusion": "No stable winner. V6 supplies the largest internal test; V5 has the highest point balanced accuracy on its own much smaller test.",
+  "conclusion": "V7 provides the strongest current evidence: a sealed n=1,000 temporal record-level test. It is not gene-independent or clinical validation.",
   "criteria": [
     "test design",
     "sample size",
@@ -9,10 +9,11 @@
   ],
   "evidence_summary": {
     "highest_own_test_balanced_accuracy": "V5 (82.2%, n=100)",
-    "largest_internal_test": "V6 (n=1,000)",
-    "most_interpretable_models": "V1-V3"
+    "most_interpretable_models": "V1-V3",
+    "strongest_current_evidence": "V7 temporal test (n=1,000)",
+    "v7_balanced_accuracy": "V7 (79.1%)"
   },
   "ranking": [],
   "stable_winner": null,
-  "warning": "V4, V5, and V6 used different group-isolated internal tests and different training memberships. Their point estimates are descriptive, not paired head-to-head effects."
+  "warning": "V4-V6 used different internal group-isolated tests. V7 used a later record-level temporal test, but allowed same-gene overlap. Point estimates across versions are descriptive, not paired head-to-head effects."
 }

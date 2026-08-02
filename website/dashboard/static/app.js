@@ -159,7 +159,9 @@ function renderModelValidation(summary) {
       ["V4 accuracy", pct(summary.v4?.accuracy)], ["V4 balanced accuracy", pct(summary.v4?.balanced_accuracy)],
       ["V5 accuracy", pct(summary.v5?.accuracy)], ["V5 balanced accuracy", pct(summary.v5?.balanced_accuracy)],
       ["V6 accuracy", pct(summary.v6?.accuracy)], ["V6 balanced accuracy", pct(summary.v6?.balanced_accuracy)],
-      ["Test sizes", "V4: 100; V5: 100; V6: 1,000 (different cohorts)"], ["Leakage audits", Object.entries(summary.leakage_audit_status || {}).map(([key, value]) => `${key}: ${value}`).join("; ")],
+      ["V7 accuracy", pct(summary.v7?.accuracy)], ["V7 balanced accuracy", pct(summary.v7?.balanced_accuracy)],
+      ["V7 temporal boundary", "January 2024 predictions → July 2026 answers; 1,000 IDs absent from development"],
+      ["Test sizes", "V4: 100; V5: 100; V6: 1,000; V7: 1,000 (different cohorts)"], ["Leakage audits", Object.entries(summary.leakage_audit_status || {}).map(([key, value]) => `${key}: ${value}`).join("; ")],
       ["Next validation", summary.next_required_validation_step], ["Upcoming deadline", summary.upcoming_deadline ? `${summary.upcoming_deadline.due_date}: ${summary.upcoming_deadline.title}` : "None"], ["GitHub", summary.github_status],
     ];
     fields.forEach(([label, value]) => addStatusRow(list, label, value));

@@ -20,7 +20,7 @@ function confusion(model) { const matrix = model.confusion_matrix; if (!matrix |
 function renderComparison(models, baselines) {
   const byVersion = Object.fromEntries(models.map((model) => [model.model_id, model]));
   const grid = document.createElement("dl"); grid.className = "prediction-summary-grid";
-  ["V4", "V5", "V6"].forEach((modelId) => {
+  ["V4", "V5", "V6", "V7"].forEach((modelId) => {
     const model = byVersion[modelId];
     metric(grid, `${modelId} test`, `${shown(model.test_records)} records`);
     metric(grid, `${modelId} accuracy`, pct(model.metrics.accuracy));

@@ -31,6 +31,11 @@ excluded every test-connected group from fitting and reached 75.6% accuracy and 
 balanced accuracy. The larger, more modest result was more useful than another polished
 small score.
 
+For V7, I moved the dates forward instead of retrying V6. I sealed 761,235 January 2024
+predictions before downloading July 2026 outcomes. On 1,000 new Variation IDs, V7
+reached 79.1% balanced accuracy and 80% pathogenic recall. The remaining errors were
+mostly missense variants, which turned a result into the next research question.
+
 I kept dated notes, frozen designs, limitations, and failed approaches. I paused a
 multi-gigabyte data route when it was not justified and used bounded official requests
 before scaling. My next step is structured error and calibration review, followed by a

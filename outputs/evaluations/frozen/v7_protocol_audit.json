@@ -1,0 +1,19 @@
+{
+  "accuracy_95_percent_wilson_interval": [
+    0.7584721839546134,
+    0.8093465637086203
+  ],
+  "audit_kind": "post_evaluation_protocol_accounting",
+  "candidate_accounting_complete": true,
+  "development_test_variation_id_overlap": 0,
+  "missing_from_answer_snapshot": 30,
+  "model_id": "V7",
+  "same_gene_overlap_fraction": 0.699,
+  "schema_version": 1,
+  "test_records": 1000,
+  "test_records_sharing_development_gene": 699,
+  "unique_test_genes": 603,
+  "unique_test_genes_seen_in_development": 391,
+  "unique_test_genes_unseen_in_development": 212,
+  "warning": "This audit was calculated after the frozen test. It describes overlap and accounting and did not alter model selection, predictions, or metrics."
+}

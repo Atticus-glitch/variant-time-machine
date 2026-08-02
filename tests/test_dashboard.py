@@ -211,8 +211,8 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
         "storage",
     }.issubset(payload["system"])
     assert "data/example_variants.csv" in payload["system"]["files_created"]
-    assert payload["research_notes"]["title"] == "2026-08-01 V6 1,000-Record Test"
-    assert "75.6%" in payload["research_notes"]["content"]
+    assert payload["research_notes"]["title"] == "2026-08-02 V7 Sealed Temporal Test"
+    assert "78.5%" in payload["research_notes"]["content"]
     assert payload["clinvar_connection"]["connection_status"] == "Not connected"
     assert payload["historical_comparison"] == {
         "total_verified_variants": 0,
@@ -235,10 +235,8 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     assert payload["clue_score_baseline"]["formula_version"] == (
         "Resolved Direction V2"
     )
-    assert payload["model_validation"]["latest_model_version"] == "V6"
-    assert payload["model_validation"]["best_validated_model"] == (
-        "No stable winner yet."
-    )
+    assert payload["model_validation"]["latest_model_version"] == "V7"
+    assert "V7 has the strongest" in payload["model_validation"]["best_validated_model"]
 
 
 def test_model_registry_explorer_and_timeline_apis(
@@ -259,16 +257,16 @@ def test_model_registry_explorer_and_timeline_apis(
 
     models = local_client.get("/api/model-versions")
     assert models.status_code == 200
-    assert models.get_json()["latest_model_version"] == "V6"
+    assert models.get_json()["latest_model_version"] == "V7"
     assert local_client.get("/api/model-versions/V4").status_code == 200
 
     explorer = local_client.get("/api/prediction-explorer").get_json()
-    assert explorer["total"] == 1200
+    assert explorer["total"] == 2200
     explorer_row = explorer["rows"][0]
     identifier = explorer_row["variation_id"]
     model_id = next(
         model
-        for model in ("V4", "V5", "V6")
+        for model in ("V4", "V5", "V6", "V7")
         if explorer_row[f"{model.lower()}_prediction"]
     )
     detail = local_client.get(f"/api/prediction-explorer/{identifier}")

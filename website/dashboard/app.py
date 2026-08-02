@@ -1995,14 +1995,20 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 "v4": model_index.get("V4"),
                 "v5": model_index.get("V5"),
                 "v6": model_index.get("V6"),
+                "v7": model_index.get("V7"),
                 "leakage_audit_status": {
                     item["model_id"]: item["leakage_status"]
                     for item in model_dashboard["models"]
                 },
-                "held_out_test_size": {"V4": 100, "V5": 100, "V6": 1000},
+                "held_out_test_size": {
+                    "V4": 100,
+                    "V5": 100,
+                    "V6": 1000,
+                    "V7": 1000,
+                },
                 "next_required_validation_step": (
-                    "Review V6 errors and seek a genuinely later untouched cohort "
-                    "for independent temporal evidence."
+                    "Review V7 missense errors and replicate on another sealed later "
+                    "snapshot without changing the reported V7 result."
                 ),
                 "upcoming_deadline": next_milestone,
                 "github_status": (
@@ -2010,6 +2016,8 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 ),
                 "warnings": [
                     "V4/V5 used n=100 tests; V6 used a different n=1,000 test.",
+                    "V7 is temporal at the record level; 69.9% shared a "
+                    "development gene.",
                     "Scores across different cohorts are not paired improvements.",
                     "Preliminary research result; not medical advice or clinical use.",
                 ],

@@ -2,7 +2,26 @@
 
 ## Current Scientific Milestone
 
-The current milestone is Model Validation and Error Analysis. Frozen V1 through V6 artifacts remain unchanged. The registry standardizes metrics, leakage audits, baselines, provenance, error-analysis rows, and known missing information. V6 completed the planned larger held-out evaluation with 1,000 records.
+The current milestone is Temporal Validation and Error Analysis. Frozen V1 through V7 artifacts remain unchanged. The registry standardizes metrics, leakage audits, baselines, provenance, error-analysis rows, and known missing information.
+
+## AI Temporal V7
+
+V7 uses all 8,818 V2 development records, including previously opened V4-V6 tests.
+Model selection compares four regularized logistic models and four shallow histogram
+gradient-boosting models in five-fold connected-gene-group cross-validation. Rows are
+weighted by the inverse square root of development group size. Logistic calibration and
+the balanced-accuracy threshold are fit only to selected-model out-of-fold predictions.
+
+The selected model scores every exact January 2024 germline VUS Variation ID absent
+from the complete January 2022 snapshot. All 761,235 probabilities are persisted and
+hashed before the July 2026 archive is downloaded. Safe answer matching requires exact
+Variation ID, an unchanged nonempty Allele ID set, exclusively germline scope, and one
+clear aggregate classification. A frozen hash selects exactly 1,000 eligible resolved
+records without using probabilities or correctness.
+
+V7 scored 78.5% accuracy, 79.1% balanced accuracy, 72.3% macro F1, and ROC AUC 0.885
+(`TN 629, FP 176, FN 39, TP 156`). Development/test Variation ID overlap was zero;
+same-gene overlap was 69.9%.
 
 ## AI Holdout V6
 
@@ -29,7 +48,7 @@ V5 was designed after seeing V4 aggregate performance, so its architecture addre
 
 ## Model Registry And Audits
 
-`scripts/build_model_registry.py` reads existing artifacts without training. It writes one record per version, a combined index, standardized V4-V6 evaluations, deterministic baselines, leakage audits, reconstructed logs, comparison files, and error-analysis tables. Historical gaps remain `unknown/not recorded`. Reconstructed logs are explicitly labeled and never presented as original runtime logs.
+`scripts/build_model_registry.py` reads existing artifacts without training. It writes one record per version, a combined index, standardized V4-V7 evaluations, deterministic baselines, leakage audits, reconstructed logs, comparison files, and error-analysis tables. Historical gaps remain `unknown/not recorded`. Reconstructed logs are explicitly labeled and never presented as original runtime logs.
 
 ## AI Holdout V4
 

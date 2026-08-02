@@ -57,9 +57,14 @@ The V5 partition manifest records the V4 manifest hash, verifies zero V4/V5 test
 
 ## Model Registry And Reporting
 
-`outputs/model_registry/model_v1.json` through `model_v6.json` contain standardized version records. `model_index.json` provides dashboard summaries and an evidence summary that avoids a total ranking across different cohorts. `outputs/evaluations/frozen/` stores standardized official metrics and immutable references; `outputs/evaluations/experiments/` is reserved for temporary evaluations.
+`outputs/model_registry/model_v1.json` through `model_v7.json` contain standardized version records. `model_index.json` provides dashboard summaries and an evidence summary that avoids a total ranking across different cohorts. `outputs/evaluations/frozen/` stores standardized official metrics and immutable references; `outputs/evaluations/experiments/` is reserved for temporary evaluations.
 
-`outputs/leakage_audits/` records declared features, banned and suspicious findings, status, explanation, date, and recommendation. `outputs/logs/` contains paired JSON and Markdown historical reconstructions; they are not original runtime logs. `outputs/error_analysis/model_v4_errors.csv` through `model_v6_errors.csv` include every frozen test row so correct, wrong, high-confidence, low-confidence, and manually reviewed cases remain visible.
+`outputs/leakage_audits/` records declared features, banned and suspicious findings, status, explanation, date, and recommendation. `outputs/logs/` contains paired JSON and Markdown historical reconstructions; they are not original runtime logs. `outputs/error_analysis/model_v4_errors.csv` through `model_v7_errors.csv` include every frozen test row so correct, wrong, high-confidence, low-confidence, and manually reviewed cases remain visible.
+
+`outputs/ai_temporal_v7/sealed_candidate_predictions.sqlite3` is the ignored immutable
+prediction store created before answer download. `temporal_test_predictions.csv` is the
+ignored exact 1,000-record test. Small public metrics, hashes, and error reports are
+generated separately; the 107 MB sealed database is not committed.
 
 `outputs/ai_holdout_v6/partition_manifest.json` uses `train`, `test`, `quarantine`, and
 `prior_holdout_excluded`. `quarantine` means the row shares a connected group with a V6

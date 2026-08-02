@@ -51,11 +51,14 @@ work from proposed next steps and does not claim publication or medical validati
 - **2026-08-01:** Tested V6 once: n=1,000, 75.6% accuracy, 74.4% balanced accuracy,
   TN 535, FP 154, FN 90, TP 221. The larger result was more modest than V5's small-test
   point estimate and made the limits of the earlier comparison clearer.
+- **2026-08-02:** Sealed 761,235 January 2024 candidate predictions before downloading
+  the July 2026 answer archive. V7 then scored 78.5% accuracy and 79.1% balanced
+  accuracy on 1,000 new Variation IDs, with 80% pathogenic recall.
 
 ## Proposed Work
 
-- **Next stage:** Review V6's errors and probability calibration without feeding test
-  answers back into the same model.
+- **Next stage:** Review V7's missense errors and probability calibration without
+  feeding July 2026 test answers back into V7.
 - **Longer-term need:** Evaluate on a genuinely later untouched snapshot for
   independent temporal evidence.
 

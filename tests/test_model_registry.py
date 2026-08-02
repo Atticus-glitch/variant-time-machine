@@ -71,6 +71,7 @@ def test_registry_creation_and_loading(tmp_path: Path) -> None:
         "V4",
         "V5",
         "V6",
+        "V7",
     ]
     assert all("manual_review" in model for model in loaded["models"])
     assert all("input_feature_list" in model for model in loaded["models"])
@@ -143,7 +144,7 @@ def test_ranking_prioritizes_leakage_and_has_no_stable_winner() -> None:
     assert result["ranking"] == []
     assert result["comparison_status"] == "not_rankable_across_current_evaluations"
     assert result["stable_winner"] is None
-    assert "No stable winner" in result["conclusion"]
+    assert "strongest current evidence" in result["conclusion"]
 
 
 def test_small_test_warning_is_explicit() -> None:
@@ -209,7 +210,7 @@ def test_registry_file_rejects_nonstandard_model_set(tmp_path: Path) -> None:
         json.dumps({"schema_version": 1, "models": [{"model_id": "V1"}]}),
         encoding="utf-8",
     )
-    with pytest.raises(RegistryError, match="ordered V1-V6"):
+    with pytest.raises(RegistryError, match="ordered V1-V7"):
         load_registry(path)
 
 
@@ -224,11 +225,11 @@ def test_missing_model_record_is_honest_placeholder(tmp_path: Path) -> None:
 
 def test_generated_registry_contract_and_standardized_v5_metrics() -> None:
     registry_root = ROOT / "outputs" / "model_registry"
-    for version in range(1, 7):
+    for version in range(1, 8):
         assert (registry_root / f"model_v{version}.json").is_file()
     index = json.loads((registry_root / "model_index.json").read_text(encoding="utf-8"))
-    assert index["latest_model_version"] == "V6"
-    assert index["best_validated_model"] == "No stable winner yet."
+    assert index["latest_model_version"] == "V7"
+    assert "V7 has the strongest" in index["best_validated_model"]
 
     metrics = json.loads(
         (ROOT / "outputs/evaluations/frozen/v5_metrics.json").read_text(
@@ -252,6 +253,23 @@ def test_generated_registry_contract_and_standardized_v5_metrics() -> None:
     assert v6_metrics["records"] == 1000
     assert v6_metrics["accuracy"] == 0.756
     assert v6_metrics["balanced_accuracy"] == pytest.approx(0.7435492978780002)
+    v7_metrics = json.loads(
+        (ROOT / "outputs/evaluations/frozen/v7_metrics.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert v7_metrics["records"] == 1000
+    assert v7_metrics["accuracy"] == 0.785
+    assert v7_metrics["balanced_accuracy"] == pytest.approx(0.7906832298136646)
+    v7_audit = json.loads(
+        (ROOT / "outputs/evaluations/frozen/v7_protocol_audit.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert v7_audit["development_test_variation_id_overlap"] == 0
+    assert v7_audit["test_records_sharing_development_gene"] == 699
+    assert v7_audit["missing_from_answer_snapshot"] == 30
+    assert v7_audit["candidate_accounting_complete"] is True
 
 
 def test_generated_logs_audits_errors_and_timeline_have_required_fields() -> None:
@@ -297,7 +315,10 @@ def test_generated_logs_audits_errors_and_timeline_have_required_fields() -> Non
 def test_large_local_artifacts_remain_git_ignored() -> None:
     paths = (
         "data/processed/resolved_direction_v2.sqlite3",
+        "data/raw/clinvar/variant_summary_2026-07.txt.gz",
         "outputs/ai_holdout_v5/model.joblib",
+        "outputs/ai_temporal_v7/model.joblib",
+        "outputs/ai_temporal_v7/sealed_candidate_predictions.sqlite3",
         ".venv/bin/python",
     )
     for path in paths:
