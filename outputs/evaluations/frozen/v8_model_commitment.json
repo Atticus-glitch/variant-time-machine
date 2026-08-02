@@ -1,0 +1,26 @@
+{
+  "config_sha256": "4aaea42b53a922ec9a5718b57dee1b9823c295a76a9dfe3d08156f0e8fb35c04",
+  "development_groups": 1792,
+  "development_records": 9818,
+  "eligible_candidate_predictions": 378552,
+  "experiment_version": "AI Temporal V8",
+  "feature_count": 64,
+  "model_sha256": "295e3bc9218df672764fa9819d797acdfbf074326b6a2e5468b24d5b77b6f4e8",
+  "nested_balanced_accuracy_at_0_5": 0.8156679009259408,
+  "schema_version": 1,
+  "sealed_predictions_sha256": "67775ab8f5325ba00c467986330b4b89827547e15b9bd2f49a7d125ffb9a72c5",
+  "selected_calibrated_oof_balanced_accuracy": 0.8222940399667051,
+  "selected_calibrated_oof_brier": 0.10662867213186157,
+  "selected_calibrated_oof_roc_auc": 0.9092120588672384,
+  "selected_model": "logistic_C_1_l1_0",
+  "selected_threshold": 0.3150000000000001,
+  "source_hashes": {
+    "development_database": "d9d66ba2384f2d9e0b8cb55be43432f8e02fdd8fcd70ecd2266d65e52af73a04",
+    "predictor_index": "a9e0fe334d5286e176dd8367aa5f37f2fe9114b3a6f081cb5aab516c3845dfa4",
+    "sealed_candidates": "2ceee889b39b470c7f5b6ea59d620950ab861068014d40344506acacac3bc4bf",
+    "v7_test_predictions": "77bb9306750f066fd16b117100450ba04db41ba85aabe17ce36907f06ef152c2"
+  },
+  "state": "model_and_predictions_sealed_vault_unopened",
+  "trained_at_utc": "2026-08-02T05:18:58.895795+00:00",
+  "vault_accessed_during_development": false
+}

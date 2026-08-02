@@ -90,3 +90,31 @@ V8 can support gene-component-disjoint evidence within this project's labeled
 development ledger. It cannot establish biological independence between different
 genes, predict whether a VUS resolves, provide condition-specific truth, or support
 clinical use.
+
+## Pre-Evaluation Implementation Record
+
+The sealed model selected logistic regression (`C=1`, `l1_ratio=0`) and fixed its
+threshold at 0.315 before opening the vault. The model and all 378,552 eligible
+candidate predictions are bound by
+`outputs/evaluations/frozen/v8_model_commitment.json`.
+
+An implementation audit before evaluation identified limitations that cannot be
+silently changed after model sealing:
+
+- "membership-hidden" describes the project's procedural separation, not
+  cryptographic secrecy. The published salt and already-accessed archive make the
+  membership reconstructible by someone deliberately rerunning label selection;
+- fitting combined inverse-component sample weights with balanced class weights, so
+  effective fitting weights were not strictly equal total weight per component;
+- the simplicity tie-break preferred logistic regression as a family but did not rank
+  regularization strength within that family;
+- the committed calibrated out-of-fold metrics reuse grouped out-of-fold labels for
+  final candidate selection, calibration, and threshold choice. The separately
+  reported nested 0.5-threshold estimate does not evaluate that full deployed
+  procedure.
+
+These limitations qualify V8's development claims but do not change its sealed test
+predictions. Before evaluation, the reporting-only code was strengthened to cross-bind
+the config, vault, model, prediction, source, and component hashes; create an exclusive
+evaluation-start marker before reading labels; atomically publish result files; and
+include the preregistered missense-only metrics and component bootstrap.

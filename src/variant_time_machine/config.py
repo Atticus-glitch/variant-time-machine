@@ -355,6 +355,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     OUTPUTS_DIR / "evaluations" / "frozen" / "v7_metrics.json",
     OUTPUTS_DIR / "evaluations" / "frozen" / "v7_protocol_audit.json",
     OUTPUTS_DIR / "evaluations" / "frozen" / "v8_vault_commitment.json",
+    OUTPUTS_DIR / "evaluations" / "frozen" / "v8_model_commitment.json",
     OUTPUTS_DIR / "evaluations" / "model_comparison.csv",
     OUTPUTS_DIR / "leakage_audits" / "v4_leakage_audit.json",
     OUTPUTS_DIR / "leakage_audits" / "v5_leakage_audit.json",
