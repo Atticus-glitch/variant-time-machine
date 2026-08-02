@@ -1,0 +1,23 @@
+{
+  "config_sha256": "4aaea42b53a922ec9a5718b57dee1b9823c295a76a9dfe3d08156f0e8fb35c04",
+  "development_test_gene_component_overlap": 0,
+  "development_test_variation_id_overlap": 0,
+  "eligible_gene_components": 728,
+  "eligible_safe_gene_disjoint_records": 1491,
+  "experiment_version": "AI Temporal V8",
+  "membership_and_labels_disclosed": false,
+  "schema_version": 1,
+  "sealed_at_utc": "2026-08-02T04:49:21.594451+00:00",
+  "source_hashes": {
+    "answer_archive": "b3da921c707ff50cb4822f04d961834a9e89ef864b4c28bb5308245b93ac4077",
+    "development_database": "d9d66ba2384f2d9e0b8cb55be43432f8e02fdd8fcd70ecd2266d65e52af73a04",
+    "predictor_index": "a9e0fe334d5286e176dd8367aa5f37f2fe9114b3a6f081cb5aab516c3845dfa4",
+    "sealed_candidates": "2ceee889b39b470c7f5b6ea59d620950ab861068014d40344506acacac3bc4bf",
+    "v7_test_predictions": "77bb9306750f066fd16b117100450ba04db41ba85aabe17ce36907f06ef152c2"
+  },
+  "state": "label_vault_sealed_before_v8_model_development",
+  "test_records": 1000,
+  "v7_test_id_overlap": 0,
+  "vault_sha256": "836262274002e23192b2530712c91d297392e8d31cdbc0e992455d0b1c0c3f50",
+  "warning": "The July 2026 archive was previously accessed for V7. V8 is a publicly committed, membership-hidden retrospective test, not a never-opened future archive or clinical validation."
+}

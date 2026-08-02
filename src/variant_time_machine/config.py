@@ -39,6 +39,8 @@ AI_HOLDOUT_V6_CONFIG_PATH = PROJECT_ROOT / "config" / "ai_holdout_v6.yaml"
 AI_HOLDOUT_V6_RESULTS_DIR = OUTPUTS_DIR / "ai_holdout_v6"
 AI_TEMPORAL_V7_CONFIG_PATH = PROJECT_ROOT / "config" / "ai_temporal_v7.yaml"
 AI_TEMPORAL_V7_RESULTS_DIR = OUTPUTS_DIR / "ai_temporal_v7"
+AI_TEMPORAL_V8_CONFIG_PATH = PROJECT_ROOT / "config" / "ai_temporal_v8.yaml"
+AI_TEMPORAL_V8_RESULTS_DIR = OUTPUTS_DIR / "ai_temporal_v8"
 MODEL_REGISTRY_DIR = OUTPUTS_DIR / "model_registry"
 MODEL_REGISTRY_INDEX_PATH = MODEL_REGISTRY_DIR / "model_index.json"
 PROJECT_TIMELINE_PATH = OUTPUTS_DIR / "project_timeline.json"
@@ -209,6 +211,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "research" / "ai-holdout-v5-results.md",
     PROJECT_ROOT / "research" / "ai-holdout-v6-results.md",
     PROJECT_ROOT / "research" / "ai-temporal-v7-results.md",
+    PROJECT_ROOT / "research" / "ai-temporal-v8-preregistration.md",
     PROJECT_ROOT / "research" / "model-v4-v5-comparison.md",
     PROJECT_ROOT / "research" / "test-set-expansion-plan.md",
     PROJECT_ROOT / "research" / "one-page-abstract.md",
@@ -222,6 +225,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     AI_HOLDOUT_V5_CONFIG_PATH,
     AI_HOLDOUT_V6_CONFIG_PATH,
     AI_TEMPORAL_V7_CONFIG_PATH,
+    AI_TEMPORAL_V8_CONFIG_PATH,
     PROJECT_ROOT / "research" / "data-size-options.md",
     PROJECT_ROOT / "research" / "how-to-select-first-variant.md",
     PROJECT_ROOT / "research" / "research-notebook.md",
@@ -262,6 +266,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "src" / "variant_time_machine" / "ai_holdout_v5.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "ai_holdout_v6.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "ai_temporal_v7.py",
+    PROJECT_ROOT / "src" / "variant_time_machine" / "ai_temporal_v8.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "model_registry.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "parse.py",
     PROJECT_ROOT / "src" / "variant_time_machine" / "match.py",
@@ -285,6 +290,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "scripts" / "train_ai_holdout_v5.py",
     PROJECT_ROOT / "scripts" / "train_ai_holdout_v6.py",
     PROJECT_ROOT / "scripts" / "run_ai_temporal_v7.py",
+    PROJECT_ROOT / "scripts" / "run_ai_temporal_v8.py",
     PROJECT_ROOT / "scripts" / "build_model_registry.py",
     PROJECT_ROOT / "scripts" / "validate_setup.py",
     PROJECT_ROOT / "scripts" / "start_dashboard.py",
@@ -307,6 +313,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     PROJECT_ROOT / "tests" / "test_ai_holdout_v5.py",
     PROJECT_ROOT / "tests" / "test_ai_holdout_v6.py",
     PROJECT_ROOT / "tests" / "test_ai_temporal_v7.py",
+    PROJECT_ROOT / "tests" / "test_ai_temporal_v8.py",
     PROJECT_ROOT / "tests" / "test_model_registry.py",
     FIGURES_DIR / ".gitkeep",
     TABLES_DIR / ".gitkeep",
@@ -347,6 +354,7 @@ IMPORTANT_FILES: tuple[Path, ...] = (
     OUTPUTS_DIR / "evaluations" / "frozen" / "v5_metrics.json",
     OUTPUTS_DIR / "evaluations" / "frozen" / "v7_metrics.json",
     OUTPUTS_DIR / "evaluations" / "frozen" / "v7_protocol_audit.json",
+    OUTPUTS_DIR / "evaluations" / "frozen" / "v8_vault_commitment.json",
     OUTPUTS_DIR / "evaluations" / "model_comparison.csv",
     OUTPUTS_DIR / "leakage_audits" / "v4_leakage_audit.json",
     OUTPUTS_DIR / "leakage_audits" / "v5_leakage_audit.json",

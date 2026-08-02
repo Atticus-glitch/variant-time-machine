@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "experiment_version": "AI Temporal V8",
+  "status": "frozen_before_model_development",
+  "frozen_at_utc": "2026-08-02T04:35:47+00:00",
+  "label": "Gene-component-disjoint temporal test with a publicly committed 1,000-label vault.",
+  "development_sources": {
+    "v2_database_sha256": "d9d66ba2384f2d9e0b8cb55be43432f8e02fdd8fcd70ecd2266d65e52af73a04",
+    "v7_test_predictions_sha256": "77bb9306750f066fd16b117100450ba04db41ba85aabe17ce36907f06ef152c2"
+  },
+  "predictor_index_sha256": "a9e0fe334d5286e176dd8367aa5f37f2fe9114b3a6f081cb5aab516c3845dfa4",
+  "sealed_candidate_predictions_sha256": "2ceee889b39b470c7f5b6ea59d620950ab861068014d40344506acacac3bc4bf",
+  "answer_archive_sha256": "b3da921c707ff50cb4822f04d961834a9e89ef864b4c28bb5308245b93ac4077",
+  "prediction_snapshot_date": "2024-01-04",
+  "answer_snapshot_date": "2026-07-02",
+  "test_records": 1000,
+  "vault_salt": "variant-time-machine-v8-gene-disjoint-vault-2026-08-02",
+  "gene_normalization": "NFKC, uppercase, split on comma/semicolon/pipe, discard empty, dash, and NOT PROVIDED; connect all candidate records sharing any token.",
+  "test_rule": "Exclude every V7 test ID and every January 2024 candidate gene component transitively touching any gene token in either the 8,818-record V2 development cohort or the 1,000-record V7 opened temporal cohort. Exclude gene-less candidates. Apply the frozen V7 safe answer match, hash-rank eligible records without class balancing, and seal exactly 1,000 labels.",
+  "feature_policy": {
+    "forbidden": [
+      "variation_id",
+      "gene_identity",
+      "absolute_coordinate",
+      "condition_identity",
+      "rcv_identity",
+      "newer_classification",
+      "newer_review_status",
+      "newer_submitter_count",
+      "prior_model_prediction",
+      "prior_model_correctness"
+    ],
+    "bundles": [
+      "consequence and variant-type one-hot features",
+      "review strength, criteria, conflict, submitter count, and evaluation age",
+      "RCV count, source-row count, assembly count, coordinate span, and missingness",
+      "predictor-time missense amino-acid chemistry from a frozen static table"
+    ]
+  },
+  "development": {
+    "records": "8,818 V2 records plus 1,000 opened V7 temporal records",
+    "grouping": "connected predictor-time gene components",
+    "outer_folds": 5,
+    "inner_folds": 4,
+    "random_state": 223607,
+    "component_weight": "inverse component size so each component has equal total weight",
+    "primary_selection_metric": "balanced_accuracy",
+    "tie_rule": "within 0.005 balanced accuracy, prefer the simpler model",
+    "calibration": "Platt calibration on grouped out-of-fold logits only",
+    "threshold": "maximize component-weighted out-of-fold balanced accuracy from 0.20 to 0.80 by 0.005; ties choose closest to 0.50"
+  },
+  "candidate_models": {
+    "elastic_net_logistic": {
+      "C": [0.03, 0.1, 0.3, 1.0],
+      "l1_ratio": [0.0, 0.5]
+    },
+    "hist_gradient_boosting": [
+      {"max_leaf_nodes": 7, "learning_rate": 0.03, "l2_regularization": 1.0},
+      {"max_leaf_nodes": 7, "learning_rate": 0.05, "l2_regularization": 10.0},
+      {"max_leaf_nodes": 15, "learning_rate": 0.03, "l2_regularization": 10.0},
+      {"max_leaf_nodes": 15, "learning_rate": 0.05, "l2_regularization": 20.0}
+    ]
+  },
+  "primary_metric": "balanced_accuracy",
+  "uncertainty": "10,000 bootstrap replicates clustered by sealed predictor-time gene component",
+  "design_warning": "The July 2026 archive was previously accessed for V7. V8 is a publicly committed, membership-hidden retrospective test, not a never-opened future archive or clinical validation."
+}
