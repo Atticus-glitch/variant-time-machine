@@ -1,0 +1,21 @@
+{
+  "model_id": "V8",
+  "output_files": [
+    "outputs/ai_temporal_v8/evaluation_started.json",
+    "outputs/ai_temporal_v8/label_vault.sqlite3",
+    "outputs/ai_temporal_v8/model.joblib",
+    "outputs/ai_temporal_v8/sealed_candidate_predictions.sqlite3",
+    "outputs/ai_temporal_v8/temporal_test_predictions.csv",
+    "outputs/ai_temporal_v8/test_metrics.json",
+    "outputs/ai_temporal_v8/training_summary.json"
+  ],
+  "schema_version": 1,
+  "source_artifact": {
+    "exists": true,
+    "path": "outputs/ai_temporal_v8/model.joblib",
+    "sha256": "295e3bc9218df672764fa9819d797acdfbf074326b6a2e5468b24d5b77b6f4e8",
+    "size_bytes": 5410
+  },
+  "status": "frozen_reference",
+  "warning": "Model binary/config remains at its original immutable path."
+}

@@ -1996,6 +1996,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 "v5": model_index.get("V5"),
                 "v6": model_index.get("V6"),
                 "v7": model_index.get("V7"),
+                "v8": model_index.get("V8"),
                 "leakage_audit_status": {
                     item["model_id"]: item["leakage_status"]
                     for item in model_dashboard["models"]
@@ -2005,10 +2006,11 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                     "V5": 100,
                     "V6": 1000,
                     "V7": 1000,
+                    "V8": 1000,
                 },
                 "next_required_validation_step": (
-                    "Review V7 missense errors and replicate on another sealed later "
-                    "snapshot without changing the reported V7 result."
+                    "Review V8 errors and calibration, then replicate on a genuinely "
+                    "later untouched snapshot without changing the reported V8 result."
                 ),
                 "upcoming_deadline": next_milestone,
                 "github_status": (
@@ -2018,6 +2020,10 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                     "V4/V5 used n=100 tests; V6 used a different n=1,000 test.",
                     "V7 is temporal at the record level; 69.9% shared a "
                     "development gene.",
+                    "V8 is development-component-disjoint but retrospective; its "
+                    "hidden membership is reconstructible.",
+                    "V8 exceeded same-record V7 balanced accuracy by 0.4524 points, "
+                    "but the component-bootstrap interval includes zero.",
                     "Scores across different cohorts are not paired improvements.",
                     "Preliminary research result; not medical advice or clinical use.",
                 ],

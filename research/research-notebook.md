@@ -618,3 +618,25 @@ V7 scored 78.5% accuracy, 79.1% balanced accuracy, and ROC AUC 0.885, with `TN 6
 69.9%, so the result is temporal at the record level rather than gene-independent.
 Missense still caused 186 of 215 errors. The strongest result did not come from retrying
 the old test; it came from preserving the boundary and waiting for a later answer.
+
+## 2026-08-02 V8 Component-Disjoint Retrospective Test
+
+V8 followed its preregistered one-evaluation protocol. The 1,000-record test contained
+814 benign and 186 pathogenic outcomes in 559 sealed predictor-time gene components,
+with zero development ID/component overlap and zero V7-test-ID overlap. V8 scored 89.5%
+accuracy, 87.1212% balanced accuracy, 84.0371% macro F1, ROC AUC 0.94594, average
+precision 0.83895, and Brier score 0.06332. Recalls were 90.91% benign and 83.33%
+pathogenic, with `TN 740, FP 74, FN 31, TP 155`.
+
+Frozen V7 predictions reached 86.6688% balanced accuracy on those same records. V8's
++0.4524-point difference had a component-bootstrap 95% confidence interval from -2.45
+to +3.31 points, so V8 did not demonstrate overall superiority. Among 230 missense
+records, V8 reached 63.82% versus V7's 55.88%, but the paired interval also included
+zero.
+
+This remains a membership-hidden retrospective test because July 2026 had already been
+used for V7, and membership is reconstructible from the published salt and archive. The
+pre-evaluation implementation caveats also remain: effective fitting weights were not
+strictly equal per component, the simplicity tie-break did not rank within-family
+regularization, and out-of-fold labels were reused across selection, calibration, and
+threshold choice. None of those caveats permits changing the sealed V8 result.

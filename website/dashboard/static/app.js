@@ -160,8 +160,10 @@ function renderModelValidation(summary) {
       ["V5 accuracy", pct(summary.v5?.accuracy)], ["V5 balanced accuracy", pct(summary.v5?.balanced_accuracy)],
       ["V6 accuracy", pct(summary.v6?.accuracy)], ["V6 balanced accuracy", pct(summary.v6?.balanced_accuracy)],
       ["V7 accuracy", pct(summary.v7?.accuracy)], ["V7 balanced accuracy", pct(summary.v7?.balanced_accuracy)],
-      ["V7 temporal boundary", "January 2024 predictions → July 2026 answers; 1,000 IDs absent from development"],
-      ["Test sizes", "V4: 100; V5: 100; V6: 1,000; V7: 1,000 (different cohorts)"], ["Leakage audits", Object.entries(summary.leakage_audit_status || {}).map(([key, value]) => `${key}: ${value}`).join("; ")],
+      ["V8 accuracy", pct(summary.v8?.accuracy)], ["V8 balanced accuracy", pct(summary.v8?.balanced_accuracy)],
+      ["V8 test boundary", "January 2024 predictors to July 2026 answers; zero development ID/component and V7-test-ID overlap"],
+      ["V8 paired result", "+0.4524 balanced-accuracy points over same-record V7; component-bootstrap CI -2.45 to +3.31 points; no overall superiority"],
+      ["Test sizes", "V4: 100; V5: 100; V6-V8: 1,000 each (only the reported V7/V8 comparison is paired on V8 records)"], ["Leakage audits", Object.entries(summary.leakage_audit_status || {}).map(([key, value]) => `${key}: ${value}`).join("; ")],
       ["Next validation", summary.next_required_validation_step], ["Upcoming deadline", summary.upcoming_deadline ? `${summary.upcoming_deadline.due_date}: ${summary.upcoming_deadline.title}` : "None"], ["GitHub", summary.github_status],
     ];
     fields.forEach(([label, value]) => addStatusRow(list, label, value));

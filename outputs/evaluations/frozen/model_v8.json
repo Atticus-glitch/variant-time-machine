@@ -1,0 +1,54 @@
+{
+  "evaluation_source": "outputs/ai_temporal_v8/temporal_test_predictions.csv",
+  "metrics": {
+    "accuracy": 0.895,
+    "average_precision_pathogenic": 0.8389465335113344,
+    "balanced_accuracy": 0.8712121212121212,
+    "benign_f1": 0.9337539432176656,
+    "benign_precision": 0.959792477302205,
+    "benign_recall": 0.9090909090909091,
+    "brier_score": 0.06332370979984081,
+    "class_distribution": {
+      "moved_toward_benign": 814,
+      "moved_toward_pathogenic": 186
+    },
+    "macro_f1": 0.8403709475124472,
+    "macro_precision": 0.8183241862493558,
+    "macro_recall": 0.8712121212121212,
+    "number_correct": 895,
+    "number_no_prediction": 0,
+    "number_not_scorable": 0,
+    "number_of_predictions": 1000,
+    "number_wrong": 105,
+    "pathogenic_f1": 0.7469879518072289,
+    "pathogenic_precision": 0.6768558951965066,
+    "pathogenic_recall": 0.8333333333333334,
+    "per_class": {
+      "benign": {
+        "f1": 0.9337539432176656,
+        "precision": 0.959792477302205,
+        "recall": 0.9090909090909091,
+        "support": 814
+      },
+      "pathogenic": {
+        "f1": 0.7469879518072289,
+        "precision": 0.6768558951965066,
+        "recall": 0.8333333333333334,
+        "support": 186
+      }
+    },
+    "roc_auc": 0.9459360386779743,
+    "weighted_f1": 0.8990154688153243
+  },
+  "model_id": "V8",
+  "schema_version": 1,
+  "status": "frozen",
+  "synthetic_evaluation": false,
+  "warnings": [
+    "The July 2026 archive was previously accessed for V7. V8 is a publicly committed, membership-hidden retrospective test, not a never-opened future archive or clinical validation.",
+    "V8 is a membership-hidden retrospective temporal test, not a never-opened future archive or clinical validation.",
+    "V8 and the frozen V7 model were evaluated on the same 1,000 V8 records; the balanced-accuracy difference was 0.004524319040448144, with component-bootstrap 95% interval [-0.02450184283147039, 0.03312248143795588] crossing zero.",
+    "V8 fitting combined inverse-component sample weights with balanced class weights, so effective fitting weight was not strictly equal per component.",
+    "The V8 simplicity tie-break ranked model families but not regularization strength within logistic regression."
+  ]
+}

@@ -54,11 +54,17 @@ work from proposed next steps and does not claim publication or medical validati
 - **2026-08-02:** Sealed 761,235 January 2024 candidate predictions before downloading
   the July 2026 answer archive. V7 then scored 78.5% accuracy and 79.1% balanced
   accuracy on 1,000 new Variation IDs, with 80% pathogenic recall.
+- **2026-08-02:** Completed the preregistered V8 retrospective test on 1,000 records in
+  559 predictor-time gene components, with zero development ID/component and V7-test-ID
+  overlap. V8 scored 89.5% accuracy and 87.1212% balanced accuracy (`TN 740, FP 74, FN
+  31, TP 155`). On the same records V7 reached 86.6688%; the +0.4524-point difference
+  had a component-bootstrap interval of -2.45 to +3.31 points, so it did not establish
+  superiority.
 
 ## Proposed Work
 
-- **Next stage:** Review V7's missense errors and probability calibration without
-  feeding July 2026 test answers back into V7.
+- **Next stage:** Review V8 errors and calibration, including the 230-record missense
+  subset, without feeding July 2026 answers back into model development.
 - **Longer-term need:** Evaluate on a genuinely later untouched snapshot for
   independent temporal evidence.
 
@@ -81,6 +87,8 @@ These dates are planning targets, not scientific claims:
 - **October 31, 2026:** Submit MIT Early Action early.
 - **November 5, 2026:** Regeneron STS deadline, if submitting.
 
-All V3, V4, and V5 results described here are internal to a conditional 2022-to-2024
-cohort. They are not independent, clinical, or medical validation. The repository is
-configured with a GitHub remote, but this timeline makes no claim about public access.
+V3-V6 are internal to a conditional 2022-to-2024 cohort. V7 is a later record-level
+test. V8 is development-component-disjoint but membership-hidden and retrospective,
+not a never-opened future test; its membership is reconstructible from the published
+salt and archive. None is clinical or medical validation. The repository is configured
+with a GitHub remote, but this timeline makes no claim about public access.

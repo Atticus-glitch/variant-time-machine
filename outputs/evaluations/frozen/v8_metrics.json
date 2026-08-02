@@ -1,0 +1,492 @@
+{
+  "accuracy": 0.895,
+  "average_precision": 0.8389465335113344,
+  "balanced_accuracy": 0.8712121212121212,
+  "baseline_comparison": [
+    {
+      "accuracy": 0.895,
+      "actual_benign": 814,
+      "actual_pathogenic": 186,
+      "balanced_accuracy": 0.8712121212121212,
+      "benign_recall": 0.9090909090909091,
+      "coverage": 1.0,
+      "macro_f1": 0.8403709475124472,
+      "model": "V8",
+      "pathogenic_recall": 0.8333333333333334,
+      "provenance": "recorded predictions",
+      "records": 1000,
+      "test_set": "V8",
+      "warning": "Sealed gene-component-disjoint temporal test (n=1,000); retrospective and not clinical validation."
+    },
+    {
+      "accuracy": 0.814,
+      "actual_benign": 814,
+      "actual_pathogenic": 186,
+      "balanced_accuracy": 0.5,
+      "benign_recall": 1.0,
+      "coverage": 1.0,
+      "macro_f1": 0.4487320837927232,
+      "model": "majority",
+      "pathogenic_recall": 0.0,
+      "provenance": "deterministic baseline on same IDs",
+      "records": 1000,
+      "test_set": "V8",
+      "warning": "Sealed gene-component-disjoint temporal test (n=1,000); retrospective and not clinical validation."
+    },
+    {
+      "accuracy": 0.694,
+      "actual_benign": 814,
+      "actual_pathogenic": 186,
+      "balanced_accuracy": 0.4947293334390108,
+      "benign_recall": 0.812039312039312,
+      "coverage": 1.0,
+      "macro_f1": 0.4947293334390109,
+      "model": "seeded_random_stratified",
+      "pathogenic_recall": 0.1774193548387097,
+      "provenance": "deterministic baseline on same IDs",
+      "records": 1000,
+      "test_set": "V8",
+      "warning": "Sealed gene-component-disjoint temporal test (n=1,000); retrospective and not clinical validation."
+    },
+    {
+      "accuracy": 0.864,
+      "actual_benign": 814,
+      "actual_pathogenic": 186,
+      "balanced_accuracy": 0.8666878021716731,
+      "benign_recall": 0.8624078624078624,
+      "coverage": 1.0,
+      "macro_f1": 0.8080180688876341,
+      "model": "V7_same_record",
+      "pathogenic_recall": 0.8709677419354839,
+      "provenance": "frozen V7 model predictions recorded on the same V8 test IDs",
+      "records": 1000,
+      "test_set": "V8",
+      "warning": "The paired V8-minus-V7 balanced-accuracy interval crosses zero; no V8 performance improvement is claimed."
+    },
+    {
+      "accuracy": 0.809,
+      "actual_benign": 814,
+      "actual_pathogenic": 186,
+      "balanced_accuracy": 0.8349779398166495,
+      "benign_recall": 0.7936117936117936,
+      "coverage": 1.0,
+      "macro_f1": 0.7508839706225684,
+      "model": "consequence_only",
+      "pathogenic_recall": 0.8763440860215054,
+      "provenance": "deterministic consequence-only baseline on the same V8 test IDs",
+      "records": 1000,
+      "test_set": "V8",
+      "warning": "Sealed gene-component-disjoint temporal test (n=1,000); retrospective and not clinical validation."
+    }
+  ],
+  "benign_f1": 0.9337539432176656,
+  "benign_precision": 0.959792477302205,
+  "benign_recall": 0.9090909090909091,
+  "brier_score": 0.06332370979984081,
+  "calibration_bins": [
+    {
+      "lower": 0.0,
+      "mean_probability": 0.04352508180167274,
+      "observed_pathogenic_fraction": 0.011111111111111112,
+      "records": 630,
+      "upper": 0.1
+    },
+    {
+      "lower": 0.1,
+      "mean_probability": 0.15438007827047415,
+      "observed_pathogenic_fraction": 0.13333333333333333,
+      "records": 45,
+      "upper": 0.2
+    },
+    {
+      "lower": 0.2,
+      "mean_probability": 0.24375954082067883,
+      "observed_pathogenic_fraction": 0.19101123595505617,
+      "records": 89,
+      "upper": 0.30000000000000004
+    },
+    {
+      "lower": 0.30000000000000004,
+      "mean_probability": 0.35350829902788633,
+      "observed_pathogenic_fraction": 0.3,
+      "records": 40,
+      "upper": 0.4
+    },
+    {
+      "lower": 0.4,
+      "mean_probability": 0.4535876965375886,
+      "observed_pathogenic_fraction": 0.4411764705882353,
+      "records": 34,
+      "upper": 0.5
+    },
+    {
+      "lower": 0.5,
+      "mean_probability": 0.5380300307080744,
+      "observed_pathogenic_fraction": 0.35714285714285715,
+      "records": 28,
+      "upper": 0.6
+    },
+    {
+      "lower": 0.6000000000000001,
+      "mean_probability": 0.6659768330388987,
+      "observed_pathogenic_fraction": 0.75,
+      "records": 16,
+      "upper": 0.7000000000000001
+    },
+    {
+      "lower": 0.7000000000000001,
+      "mean_probability": 0.7374883126776864,
+      "observed_pathogenic_fraction": 0.4444444444444444,
+      "records": 9,
+      "upper": 0.8
+    },
+    {
+      "lower": 0.8,
+      "mean_probability": 0.8474884732218391,
+      "observed_pathogenic_fraction": 0.625,
+      "records": 8,
+      "upper": 0.9
+    },
+    {
+      "lower": 0.9,
+      "mean_probability": 0.9642460429351469,
+      "observed_pathogenic_fraction": 0.9702970297029703,
+      "records": 101,
+      "upper": 1.0
+    }
+  ],
+  "class_distribution": {
+    "moved_toward_benign": 814,
+    "moved_toward_pathogenic": 186
+  },
+  "component_bootstrap": {
+    "paired_difference_95_percent": [
+      -0.02450184283147039,
+      0.03312248143795588
+    ],
+    "v7_balanced_accuracy_95_percent": [
+      0.8357349504048228,
+      0.8951028910327405
+    ],
+    "v8_balanced_accuracy_95_percent": [
+      0.8390291115999389,
+      0.9017797716369138
+    ]
+  },
+  "confusion_matrix": {
+    "actual_benign": {
+      "predicted_benign": 740,
+      "predicted_pathogenic": 74
+    },
+    "actual_pathogenic": {
+      "predicted_benign": 31,
+      "predicted_pathogenic": 155
+    }
+  },
+  "consequence_only_baseline": {
+    "accuracy": 0.809,
+    "balanced_accuracy": 0.8349779398166495,
+    "benign_f1": 0.8712070128118679,
+    "benign_precision": 0.9656203288490284,
+    "benign_recall": 0.7936117936117936,
+    "class_distribution": {
+      "moved_toward_benign": 814,
+      "moved_toward_pathogenic": 186
+    },
+    "confusion_matrix": {
+      "actual_benign": {
+        "predicted_benign": 646,
+        "predicted_pathogenic": 168
+      },
+      "actual_pathogenic": {
+        "predicted_benign": 23,
+        "predicted_pathogenic": 163
+      }
+    },
+    "macro_f1": 0.7508839706225684,
+    "macro_precision": 0.729033729379197,
+    "macro_recall": 0.8349779398166495,
+    "number_correct": 809,
+    "number_no_prediction": 0,
+    "number_not_scorable": 0,
+    "number_of_predictions": 1000,
+    "number_wrong": 191,
+    "pathogenic_f1": 0.6305609284332689,
+    "pathogenic_precision": 0.49244712990936557,
+    "pathogenic_recall": 0.8763440860215054,
+    "per_class": {
+      "benign": {
+        "f1": 0.8712070128118679,
+        "precision": 0.9656203288490284,
+        "recall": 0.7936117936117936,
+        "support": 814
+      },
+      "pathogenic": {
+        "f1": 0.6305609284332689,
+        "precision": 0.49244712990936557,
+        "recall": 0.8763440860215054,
+        "support": 186
+      }
+    },
+    "records": 1000,
+    "weighted_f1": 0.8264468411174485
+  },
+  "development_test_gene_component_overlap": 0,
+  "development_test_variation_id_overlap": 0,
+  "evaluation_kind": "recorded_sealed_gene_component_disjoint_temporal_test",
+  "macro_f1": 0.8403709475124472,
+  "macro_precision": 0.8183241862493558,
+  "macro_recall": 0.8712121212121212,
+  "majority_baseline": {
+    "accuracy": 0.814,
+    "balanced_accuracy": 0.5,
+    "benign_f1": 0.8974641675854464,
+    "benign_precision": 0.814,
+    "benign_recall": 1.0,
+    "class_distribution": {
+      "moved_toward_benign": 814,
+      "moved_toward_pathogenic": 186
+    },
+    "confusion_matrix": {
+      "actual_benign": {
+        "predicted_benign": 814,
+        "predicted_pathogenic": 0
+      },
+      "actual_pathogenic": {
+        "predicted_benign": 186,
+        "predicted_pathogenic": 0
+      }
+    },
+    "macro_f1": 0.4487320837927232,
+    "macro_precision": 0.407,
+    "macro_recall": 0.5,
+    "number_correct": 814,
+    "number_no_prediction": 0,
+    "number_not_scorable": 0,
+    "number_of_predictions": 1000,
+    "number_wrong": 186,
+    "pathogenic_f1": 0.0,
+    "pathogenic_precision": 0.0,
+    "pathogenic_recall": 0.0,
+    "per_class": {
+      "benign": {
+        "f1": 0.8974641675854464,
+        "precision": 0.814,
+        "recall": 1.0,
+        "support": 814
+      },
+      "pathogenic": {
+        "f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "support": 186
+      }
+    },
+    "records": 1000,
+    "weighted_f1": 0.7305358324145534
+  },
+  "missense_only": {
+    "accuracy": 0.6260869565217392,
+    "average_precision": 0.4389742978683744,
+    "balanced_accuracy": 0.6382113821138211,
+    "benign_f1": 0.6993006993006993,
+    "benign_precision": 0.819672131147541,
+    "benign_recall": 0.6097560975609756,
+    "brier_score": 0.19987659522609505,
+    "class_distribution": {
+      "moved_toward_benign": 164,
+      "moved_toward_pathogenic": 66
+    },
+    "component_bootstrap": {
+      "paired_difference_95_percent": [
+        -0.004372589199614362,
+        0.16788935152122442
+      ],
+      "v7_balanced_accuracy_95_percent": [
+        0.49165952287645737,
+        0.6243365637418268
+      ],
+      "v8_balanced_accuracy_95_percent": [
+        0.5739831629600595,
+        0.7014716083046307
+      ]
+    },
+    "confusion_matrix": {
+      "actual_benign": {
+        "predicted_benign": 100,
+        "predicted_pathogenic": 64
+      },
+      "actual_pathogenic": {
+        "predicted_benign": 22,
+        "predicted_pathogenic": 44
+      }
+    },
+    "macro_f1": 0.6025239128687405,
+    "macro_precision": 0.6135397692774742,
+    "macro_recall": 0.6382113821138211,
+    "number_correct": 144,
+    "number_no_prediction": 0,
+    "number_not_scorable": 0,
+    "number_of_predictions": 230,
+    "number_wrong": 86,
+    "pathogenic_f1": 0.5057471264367817,
+    "pathogenic_precision": 0.4074074074074074,
+    "pathogenic_recall": 0.6666666666666666,
+    "per_class": {
+      "benign": {
+        "f1": 0.6993006993006993,
+        "precision": 0.819672131147541,
+        "recall": 0.6097560975609756,
+        "support": 164
+      },
+      "pathogenic": {
+        "f1": 0.5057471264367817,
+        "precision": 0.4074074074074074,
+        "recall": 0.6666666666666666,
+        "support": 66
+      }
+    },
+    "records": 230,
+    "roc_auc": 0.6438470066518848,
+    "v7_same_record_baseline": {
+      "accuracy": 0.48695652173913045,
+      "average_precision": 0.3770954071454585,
+      "balanced_accuracy": 0.5587583148558759,
+      "benign_f1": 0.5203252032520325,
+      "benign_precision": 0.7804878048780488,
+      "benign_recall": 0.3902439024390244,
+      "brier_score": 0.20857873528059298,
+      "class_distribution": {
+        "moved_toward_benign": 164,
+        "moved_toward_pathogenic": 66
+      },
+      "confusion_matrix": {
+        "actual_benign": {
+          "predicted_benign": 64,
+          "predicted_pathogenic": 100
+        },
+        "actual_pathogenic": {
+          "predicted_benign": 18,
+          "predicted_pathogenic": 48
+        }
+      },
+      "macro_f1": 0.484461667046577,
+      "macro_precision": 0.5524060646011866,
+      "macro_recall": 0.5587583148558759,
+      "number_correct": 112,
+      "number_no_prediction": 0,
+      "number_not_scorable": 0,
+      "number_of_predictions": 230,
+      "number_wrong": 118,
+      "pathogenic_f1": 0.4485981308411215,
+      "pathogenic_precision": 0.32432432432432434,
+      "pathogenic_recall": 0.7272727272727273,
+      "per_class": {
+        "benign": {
+          "f1": 0.5203252032520325,
+          "precision": 0.7804878048780488,
+          "recall": 0.3902439024390244,
+          "support": 164
+        },
+        "pathogenic": {
+          "f1": 0.4485981308411215,
+          "precision": 0.32432432432432434,
+          "recall": 0.7272727272727273,
+          "support": 66
+        }
+      },
+      "records": 230,
+      "roc_auc": 0.5730783444198078,
+      "weighted_f1": 0.49974265203846674
+    },
+    "v8_minus_v7_balanced_accuracy": 0.07945306725794521,
+    "weighted_f1": 0.6437592392614881
+  },
+  "model_id": "V8",
+  "number_correct": 895,
+  "number_no_prediction": 0,
+  "number_not_scorable": 0,
+  "number_of_predictions": 1000,
+  "number_wrong": 105,
+  "pathogenic_f1": 0.7469879518072289,
+  "pathogenic_precision": 0.6768558951965066,
+  "pathogenic_recall": 0.8333333333333334,
+  "per_class": {
+    "benign": {
+      "f1": 0.9337539432176656,
+      "precision": 0.959792477302205,
+      "recall": 0.9090909090909091,
+      "support": 814
+    },
+    "pathogenic": {
+      "f1": 0.7469879518072289,
+      "precision": 0.6768558951965066,
+      "recall": 0.8333333333333334,
+      "support": 186
+    }
+  },
+  "records": 1000,
+  "roc_auc": 0.9459360386779743,
+  "sealed_gene_components": 559,
+  "source_predictions": "/home/bob/variant_time_machine/variant-time-machine/outputs/ai_temporal_v8/temporal_test_predictions.csv",
+  "synthetic": false,
+  "tested_at_utc": "2026-08-02T05:31:51.434976+00:00",
+  "v7_same_record_baseline": {
+    "accuracy": 0.864,
+    "average_precision": 0.8457353293869218,
+    "balanced_accuracy": 0.8666878021716731,
+    "benign_f1": 0.9116883116883117,
+    "benign_precision": 0.9669421487603306,
+    "benign_recall": 0.8624078624078624,
+    "brier_score": 0.06367925480300515,
+    "class_distribution": {
+      "moved_toward_benign": 814,
+      "moved_toward_pathogenic": 186
+    },
+    "confusion_matrix": {
+      "actual_benign": {
+        "predicted_benign": 702,
+        "predicted_pathogenic": 112
+      },
+      "actual_pathogenic": {
+        "predicted_benign": 24,
+        "predicted_pathogenic": 162
+      }
+    },
+    "macro_f1": 0.8080180688876341,
+    "macro_precision": 0.7790915123363698,
+    "macro_recall": 0.8666878021716731,
+    "number_correct": 864,
+    "number_no_prediction": 0,
+    "number_not_scorable": 0,
+    "number_of_predictions": 1000,
+    "number_wrong": 136,
+    "pathogenic_f1": 0.7043478260869565,
+    "pathogenic_precision": 0.5912408759124088,
+    "pathogenic_recall": 0.8709677419354839,
+    "per_class": {
+      "benign": {
+        "f1": 0.9116883116883117,
+        "precision": 0.9669421487603306,
+        "recall": 0.8624078624078624,
+        "support": 814
+      },
+      "pathogenic": {
+        "f1": 0.7043478260869565,
+        "precision": 0.5912408759124088,
+        "recall": 0.8709677419354839,
+        "support": 186
+      }
+    },
+    "records": 1000,
+    "roc_auc": 0.9483798314443477,
+    "weighted_f1": 0.8731229813664595
+  },
+  "v7_test_id_overlap": 0,
+  "v8_minus_v7_balanced_accuracy": 0.004524319040448144,
+  "warnings": [
+    "The July 2026 archive was previously accessed for V7. V8 is a publicly committed, membership-hidden retrospective test, not a never-opened future archive or clinical validation.",
+    "Sealed gene-component-disjoint temporal test (n=1,000); retrospective and not clinical validation."
+  ],
+  "weighted_f1": 0.8990154688153243
+}

@@ -1,5 +1,6 @@
 """Tests for the publicly committed V8 label-vault protocol."""
 
+import csv
 import json
 import sqlite3
 from pathlib import Path
@@ -87,6 +88,36 @@ def test_v8_model_commitment_keeps_vault_unopened() -> None:
     assert commitment["development_records"] == 9818
     assert commitment["feature_count"] == len(V8_FEATURE_NAMES) == 64
     assert commitment["eligible_candidate_predictions"] == 378552
+
+
+def test_completed_v8_evaluation_is_frozen_and_paired_to_v7_same_records() -> None:
+    output_dir = ROOT / "outputs/ai_temporal_v8"
+    metrics = json.loads((output_dir / "test_metrics.json").read_text(encoding="utf-8"))
+    with (output_dir / "temporal_test_predictions.csv").open(
+        newline="", encoding="utf-8"
+    ) as handle:
+        rows = list(csv.DictReader(handle))
+
+    assert len(rows) == metrics["test_records"] == 1000
+    assert len({row["component_hash"] for row in rows}) == 559
+    assert metrics["sealed_gene_components"] == 559
+    assert metrics["accuracy"] == 0.895
+    assert metrics["balanced_accuracy"] == 0.8712121212121212
+    assert metrics["v7_same_record_baseline"]["balanced_accuracy"] == (
+        0.8666878021716731
+    )
+    assert metrics["v8_minus_v7_balanced_accuracy"] == 0.004524319040448144
+    lower, upper = metrics["component_bootstrap"]["paired_difference_95_percent"]
+    assert lower < 0 < upper
+    assert {
+        "gene_symbols",
+        "answer_classification",
+        "consequence",
+        "v8_probability",
+        "v8_prediction",
+        "v7_probability",
+        "v7_prediction",
+    }.issubset(rows[0])
 
 
 def test_v8_evaluation_refuses_a_changed_vault(tmp_path: Path) -> None:

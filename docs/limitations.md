@@ -73,5 +73,25 @@
 - V7's 78.5% raw accuracy is below the 80.5% majority-benign baseline. Balanced accuracy, pathogenic recall, and ROC AUC capture its actual advantage; accuracy alone does not.
 - Missense variants produced 186 of 215 V7 errors. The current older-only aggregate features remain insufficient for many missense outcomes.
 - V7 protocol and results entered Git history together after evaluation. Local artifact timestamps and hashes document that predictions were sealed before answer ingestion, but there was no independent custodian or public preregistration.
+- V8 has zero development Variation ID and predictor-time gene-component overlap and
+  zero V7-test-ID overlap, but its 1,000 records occupy 559 components and are not 1,000
+  independent gene samples. Component disjointness does not prove biological
+  independence between genes.
+- V8 is a membership-hidden retrospective test, not a never-opened future test. July
+  2026 had already been accessed for V7, and the public salt and archive make V8
+  membership reconstructible by deliberately rerunning label selection.
+- V8 conditions evaluation on a safe clear July 2026 outcome. It does not predict
+  whether a VUS resolves, and aggregate ClinVar direction is not condition-specific
+  truth.
+- V8's 87.1212% balanced accuracy exceeded same-record V7's 86.6688% by 0.4524 points,
+  but the component-bootstrap interval was -2.45 to +3.31 points. Overall superiority
+  was not demonstrated.
+- In the 230-record missense subset, V8 balanced accuracy was 63.82% versus V7's
+  55.88%, but the paired interval included zero. This is not confirmed subgroup
+  superiority.
+- Combined inverse-component and balanced-class weights meant V8 fitting did not give
+  every component strictly equal total weight. Its simplicity tie-break did not rank
+  regularization within the logistic family, and grouped out-of-fold labels were reused
+  for final candidate selection, calibration, and threshold choice.
 
 All conclusions will be restricted to the requested VCV versions or chosen releases, matching and comparison rules, feature availability, and evaluation design. These limitations will be updated as empirical problems are discovered.

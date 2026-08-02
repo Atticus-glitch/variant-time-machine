@@ -36,9 +36,16 @@ predictions before downloading July 2026 outcomes. On 1,000 new Variation IDs, V
 reached 79.1% balanced accuracy and 80% pathogenic recall. The remaining errors were
 mostly missense variants, which turned a result into the next research question.
 
+I then preregistered V8 and excluded every test gene component touching development.
+On 1,000 records in 559 components, it reached 87.1212% balanced accuracy. Frozen V7
+reached 86.6688% on the same records; the +0.4524-point difference had a bootstrap
+interval from -2.45 to +3.31 points, so I reported no overall superiority. The test was
+retrospective and its hidden membership reconstructible, limitations I preserved with
+the result.
+
 I kept dated notes, frozen designs, limitations, and failed approaches. I paused a
 multi-gigabyte data route when it was not justified and used bounded official requests
-before scaling. My next step is structured error and calibration review, followed by a
+before scaling. My next step is structured V8 error and calibration review, followed by a
 genuinely later untouched cohort rather than another rearrangement of the same data.
 
 This is an internal historical research project using a conditional 2022-to-2024

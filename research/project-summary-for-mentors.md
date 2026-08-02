@@ -12,8 +12,9 @@ medical tool.
 
 The project includes a reproducible Python pipeline, conservative matching rules,
 synthetic software tests, source and decision records, a local dashboard, simple
-baselines, logistic regression, three frozen neural-network holdouts, and a sealed
-record-level temporal evaluation.
+baselines, logistic regression, three frozen neural-network holdouts, a sealed
+record-level temporal evaluation, and a preregistered component-disjoint retrospective
+test.
 The repository is configured with a GitHub remote; this summary does not claim that
 the repository or website is publicly accessible.
 
@@ -30,17 +31,27 @@ fields out of model inputs.
 | V5 | 100 | 82.0% | 82.2% | 81.5% | 82.9% | TN 53, FP 12, FN 6, TP 29 |
 | V6 | 1,000 | 75.6% | 74.4% | 77.6% | 71.1% | TN 535, FP 154, FN 90, TP 221 |
 | V7 | 1,000 | 78.5% | 79.1% | 78.1% | 80.0% | TN 629, FP 176, FN 39, TP 156 |
+| V8 | 1,000 | 89.5% | 87.1212% | 90.91% | 83.33% | TN 740, FP 74, FN 31, TP 155 |
 
-Pathogenic is the positive class. Every test uses distinct connected groups. V6's
-1,000 records and their groups were excluded before V6 fitting, as were all prior test
-groups. V5 has the highest point score on its own test, while V6 has the strongest
-sample-size evidence and a more modest estimate. Different cohorts and training sets
-prevent a head-to-head winner claim.
+Pathogenic is the positive class. V6's 1,000 records and their groups were excluded
+before V6 fitting, as were all prior internal-test groups. Different cohorts, training
+sets, and temporal boundaries prevent a cross-version winner claim.
 
 V7 moves the predictor to January 2024 and the answer to July 2026. Candidate
 predictions were hashed before the answer download, and test IDs had zero development
-overlap. V7 is the strongest current evidence, although 69.9% of test records shared a
-gene with development and the test remains conditional on clear resolution.
+overlap. V7 has the strongest archive-time boundary, although 69.9% of test records
+shared a gene with development and the test remains conditional on clear resolution.
+
+V8's 1,000 records span 559 predictor-time gene components and have zero development
+ID/component and V7-test-ID overlap. V8's macro F1 was 84.0371%, ROC AUC 0.94594,
+average precision 0.83895, and Brier score 0.06332. On the same records V7 reached
+86.6688% balanced accuracy; V8's +0.4524-point difference had a component-bootstrap
+interval of -2.45 to +3.31 points, so no overall superiority was demonstrated. The
+230-record missense point comparison favored V8, 63.82% to 55.88%, but its paired
+interval also included zero.
+
+V8 has the strongest component-isolation design, not an unqualified strongest-evidence
+claim. It is retrospective and reconstructible from the already-accessed archive.
 
 ## Main Limitations
 
@@ -57,12 +68,17 @@ gene with development and the test remains conditional on clear resolution.
   freezes the current hash rather than rewriting prior provenance.
 - V7's raw accuracy did not exceed the majority-benign baseline. Its advantage is
   balanced discrimination and 80% pathogenic recall.
+- V8 is membership-hidden but retrospective, and membership is reconstructible from
+  the published salt and already-accessed July 2026 archive.
+- V8's combined component/class weighting was not strictly equal per component, its
+  tie-break did not rank regularization within the selected family, and out-of-fold
+  labels were reused for selection, calibration, and threshold choice.
 
 ## Proposed Next Step
 
-Review a predeclared sample of V7's 215 errors, especially the 186 missense mistakes,
-and assess middle-range calibration. Any changed model must wait for another sealed
-future answer snapshot rather than reusing July 2026 as a test.
+Review V8 errors and calibration, especially missense records, without converting a
+nonsignificant subgroup point difference into a claim. Any changed model must wait for
+another sealed future answer snapshot rather than reusing July 2026 as a test.
 
 ## Where Mentorship Would Help
 

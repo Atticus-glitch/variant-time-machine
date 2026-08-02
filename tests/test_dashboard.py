@@ -211,8 +211,10 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
         "storage",
     }.issubset(payload["system"])
     assert "data/example_variants.csv" in payload["system"]["files_created"]
-    assert payload["research_notes"]["title"] == "2026-08-02 V7 Sealed Temporal Test"
-    assert "78.5%" in payload["research_notes"]["content"]
+    assert payload["research_notes"]["title"] == (
+        "2026-08-02 V8 Component-Disjoint Retrospective Test"
+    )
+    assert "87.1212%" in payload["research_notes"]["content"]
     assert payload["clinvar_connection"]["connection_status"] == "Not connected"
     assert payload["historical_comparison"] == {
         "total_verified_variants": 0,
@@ -235,8 +237,14 @@ def test_status_endpoint_reports_system_and_latest_notes(client: FlaskClient) ->
     assert payload["clue_score_baseline"]["formula_version"] == (
         "Resolved Direction V2"
     )
-    assert payload["model_validation"]["latest_model_version"] == "V7"
-    assert "V7 has the strongest" in payload["model_validation"]["best_validated_model"]
+    assert payload["model_validation"]["latest_model_version"] == "V8"
+    assert payload["model_validation"]["v8"]["balanced_accuracy"] == pytest.approx(
+        0.871212
+    )
+    assert any(
+        "component-bootstrap interval includes zero" in warning
+        for warning in payload["model_validation"]["warnings"]
+    )
 
 
 def test_model_registry_explorer_and_timeline_apis(
@@ -257,16 +265,35 @@ def test_model_registry_explorer_and_timeline_apis(
 
     models = local_client.get("/api/model-versions")
     assert models.status_code == 200
-    assert models.get_json()["latest_model_version"] == "V7"
+    assert models.get_json()["latest_model_version"] == "V8"
+    assert local_client.get("/api/model-versions/V8").status_code == 200
     assert local_client.get("/api/model-versions/V4").status_code == 200
 
     explorer = local_client.get("/api/prediction-explorer").get_json()
-    assert explorer["total"] == 2200
+    assert explorer["total"] == len(explorer["rows"])
+    assert explorer["total"] == 3200
+    v8_row = next(row for row in explorer["rows"] if row["v8_prediction"])
+    assert v8_row["v8_correct"] is not None
+    v8_identifier = v8_row["variation_id"]
+    v8_detail = local_client.get(f"/api/prediction-explorer/{v8_identifier}")
+    assert v8_detail.status_code == 200
+    assert "V8" in v8_detail.get_json()["model_results"]
+    v8_review = local_client.patch(
+        f"/api/prediction-explorer/V8/{v8_identifier}/review",
+        json={"status": "reviewed", "category": "unknown", "notes": "Checked V8."},
+    )
+    assert v8_review.status_code == 200
+    reviewed_detail = local_client.get(
+        f"/api/prediction-explorer/{v8_identifier}"
+    ).get_json()
+    assert reviewed_detail["manual_reviews"][f"V8:{v8_identifier}"]["notes"] == (
+        "Checked V8."
+    )
     explorer_row = explorer["rows"][0]
     identifier = explorer_row["variation_id"]
     model_id = next(
         model
-        for model in ("V4", "V5", "V6", "V7")
+        for model in ("V4", "V5", "V6", "V7", "V8")
         if explorer_row[f"{model.lower()}_prediction"]
     )
     detail = local_client.get(f"/api/prediction-explorer/{identifier}")
@@ -287,6 +314,24 @@ def test_model_registry_explorer_and_timeline_apis(
         json={"title": task["title"], "status": "in_progress"},
     )
     assert updated.status_code == 200
+
+
+def test_v8_result_pages_preserve_metrics_and_claim_boundary(
+    client: FlaskClient,
+) -> None:
+    prediction_page = client.get("/prediction_results.html").get_data(as_text=True)
+    assert "AI Temporal V8" in prediction_page
+    assert "87.1212%" in prediction_page
+    assert "TN 740, FP 74, FN 31, TP 155" in prediction_page
+    assert "-2.45 to +3.31 points" in prediction_page
+    assert "did not establish overall superiority" in prediction_page
+    assert "membership is reconstructible" in prediction_page
+
+    model_page = client.get("/model_versions.html").get_data(as_text=True)
+    assert "V1 Through V8" in model_page
+    assert "retrospective, outcome-selected test" in model_page
+    assert "did not demonstrate overall superiority" in model_page
+    assert "out-of-fold labels were reused" in model_page
 
 
 def test_pilot_endpoint_shows_empty_first_run(

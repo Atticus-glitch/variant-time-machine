@@ -2,7 +2,37 @@
 
 ## Current Scientific Milestone
 
-The current milestone is Temporal Validation and Error Analysis. Frozen V1 through V7 artifacts remain unchanged. The registry standardizes metrics, leakage audits, baselines, provenance, error-analysis rows, and known missing information.
+The current milestone is Temporal Validation and Error Analysis. Frozen V1 through V8 artifacts remain unchanged. The registry standardizes metrics, leakage audits, baselines, provenance, error-analysis rows, and known missing information.
+
+## AI Temporal V8
+
+V8 follows the frozen preregistration and uses the V7 development ledger plus opened V7
+test records only as development exclusions. January 2024 candidate records are linked
+by normalized predictor-time gene token. Every component touching a development gene,
+every V7 final-test ID, and every record without a usable gene token is excluded. Safe
+July 2026 matching requires exact Variation ID, unchanged complete Allele ID set,
+exclusively germline scope, and one clear directional aggregate outcome. A frozen hash
+selects 1,000 records without class balancing or prediction access.
+
+The selected logistic regression (`C=1`, `l1_ratio=0`) uses a threshold of 0.315. Its
+model and 378,552 candidate predictions were committed before the label vault was
+opened. The final test contains 814 benign and 186 pathogenic records in 559 components,
+with zero development ID/component and V7-test-ID overlap. V8 scored 89.5% accuracy,
+87.1212% balanced accuracy, 84.0371% macro F1, ROC AUC 0.94594, average precision
+0.83895, and Brier score 0.06332 (`TN 740, FP 74, FN 31, TP 155`).
+
+Frozen V7 predictions were paired on the same records: V7 balanced accuracy was
+86.6688%, making the V8 difference +0.4524 points. The 10,000-replicate component-
+bootstrap 95% interval was -2.45 to +3.31 points, so overall superiority was not
+established. On 230 missense records, V8 reached 63.82% versus V7's 55.88%; that paired
+interval also includes zero.
+
+V8 is membership-hidden but retrospective, not a never-opened future test, and its
+membership is reconstructible from the public salt and already-accessed July 2026
+archive. Effective fitting weights were not strictly equal per component; the
+simplicity tie-break did not rank regularization within the selected family; and
+grouped out-of-fold labels were reused for candidate selection, calibration, and
+threshold choice. These preserved implementation caveats qualify development claims.
 
 ## AI Temporal V7
 
@@ -48,7 +78,7 @@ V5 was designed after seeing V4 aggregate performance, so its architecture addre
 
 ## Model Registry And Audits
 
-`scripts/build_model_registry.py` reads existing artifacts without training. It writes one record per version, a combined index, standardized V4-V7 evaluations, deterministic baselines, leakage audits, reconstructed logs, comparison files, and error-analysis tables. Historical gaps remain `unknown/not recorded`. Reconstructed logs are explicitly labeled and never presented as original runtime logs.
+`scripts/build_model_registry.py` reads existing artifacts without training. It writes one record per version, a combined index, standardized V4-V8 evaluations, deterministic baselines, leakage audits, reconstructed logs, comparison files, and error-analysis tables. Historical gaps remain `unknown/not recorded`. Reconstructed logs are explicitly labeled and never presented as original runtime logs.
 
 ## AI Holdout V4
 

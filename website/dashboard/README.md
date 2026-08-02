@@ -56,8 +56,8 @@ The initial latest-version lookup is separate from the maximum 25 historical req
 - Variant Spreadsheet pages through the full local two-release index and opens a two-card timeline with all collapsed fields for one Variation ID.
 - Start Here is the recommended landing page. It reports the live older-VUS update queue and presents the review workflow and site map on one page.
 - Prediction Results defaults to Resolved Direction V2: only safely matched older VUS records with a clear pathogenic or benign newer outcome, binary predictions, complete inherited clue calculations, reviews, rerun control, and downloads. Version 1 remains preserved as the broad baseline.
-- Model Versions reads the frozen V1-V7 registry, standardized metrics, leakage audits, same-cohort baselines, and comparison warnings. It identifies V7 as the strongest current evidence without turning different cohorts into a league table.
-- Prediction Explorer joins the distinct V4-V7 test rows to available older-snapshot details and supports model-scoped manual error categories and notes.
+- Model Versions reads the frozen V1-V8 registry, standardized metrics, leakage audits, same-cohort baselines, and comparison warnings. It presents V8's component-disjoint result and same-record V7 comparison without converting the nonsignificant point difference into a winner claim.
+- Prediction Explorer joins the distinct V4-V8 test rows to available older-snapshot details and supports model-scoped manual error categories and notes.
 - Research Timeline displays the dated research, validation, outreach, writing, competition, and admissions milestones; only task status is editable.
 - Pilot Workspace remains available for the older current-record/manual-date workflow.
 

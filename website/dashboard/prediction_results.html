@@ -115,6 +115,16 @@
         <p class="plain-language-note">V7 improved balanced discrimination and pathogenic recall, not raw majority-class accuracy. Its 69.9% same-gene overlap and outcome-selected cohort remain visible limitations.</p>
       </section>
 
+      <section class="panel" aria-labelledby="ai-v8-title">
+        <div class="section-heading"><div><p class="section-number">Component-disjoint retrospective evaluation</p><h2 id="ai-v8-title">AI Temporal V8</h2></div><a class="text-link" href="/model_versions.html">Open full comparison</a></div>
+        <p class="large-explanation">V8 evaluated its preregistered sealed model once on 1,000 January 2024 VUS records with clear July 2026 outcomes. The 814 benign and 186 pathogenic records span 559 predictor-time gene components, with zero development ID/component and V7-test-ID overlap.</p>
+        <dl class="prediction-summary-grid">
+          <div><dt>Accuracy</dt><dd>89.5%</dd></div><div><dt>Balanced accuracy</dt><dd>87.1212%</dd></div><div><dt>Macro F1</dt><dd>84.0371%</dd></div><div><dt>ROC AUC</dt><dd>0.94594</dd></div><div><dt>Average precision</dt><dd>0.83895</dd></div><div><dt>Brier score</dt><dd>0.06332</dd></div><div><dt>Benign recall</dt><dd>90.91%</dd></div><div><dt>Pathogenic recall</dt><dd>83.33%</dd></div><div><dt>Confusion matrix</dt><dd>TN 740, FP 74, FN 31, TP 155</dd></div>
+        </dl>
+        <p class="plain-language-note">On these same records, frozen V7 reached 86.6688% balanced accuracy. V8's +0.4524-point difference had a component-bootstrap interval of -2.45 to +3.31 points, so it did not establish overall superiority. Missense balanced accuracy was 63.82% versus 55.88% on 230 records, but that paired interval also included zero.</p>
+        <p class="plain-language-note">This is membership-hidden retrospective evidence, not a never-opened future test. July 2026 was already accessed for V7 and membership is reconstructible. Preserved weighting, tie-break, and out-of-fold reuse caveats qualify the implementation.</p>
+      </section>
+
       <section class="panel prediction-list-panel" aria-labelledby="results-title">
         <div class="section-heading"><div><p class="section-number">Searchable explanations</p><h2 id="results-title">Prediction List</h2></div><p>Default order: wrong high-confidence results first.</p></div>
         <form id="prediction-search" class="prediction-search">

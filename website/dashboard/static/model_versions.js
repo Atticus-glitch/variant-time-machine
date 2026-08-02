@@ -20,8 +20,9 @@ function confusion(model) { const matrix = model.confusion_matrix; if (!matrix |
 function renderComparison(models, baselines) {
   const byVersion = Object.fromEntries(models.map((model) => [model.model_id, model]));
   const grid = document.createElement("dl"); grid.className = "prediction-summary-grid";
-  ["V4", "V5", "V6", "V7"].forEach((modelId) => {
+  ["V4", "V5", "V6", "V7", "V8"].forEach((modelId) => {
     const model = byVersion[modelId];
+    if (!model) return;
     metric(grid, `${modelId} test`, `${shown(model.test_records)} records`);
     metric(grid, `${modelId} accuracy`, pct(model.metrics.accuracy));
     metric(grid, `${modelId} balanced accuracy`, pct(model.metrics.balanced_accuracy));
@@ -29,6 +30,8 @@ function renderComparison(models, baselines) {
     metric(grid, `${modelId} pathogenic recall`, pct(model.metrics.pathogenic_recall));
     metric(grid, `${modelId} confusion`, confusion(model));
   });
+  metric(grid, "V8 vs same-record V7", "+0.4524 balanced-accuracy points; component-bootstrap CI -2.45 to +3.31; no overall superiority");
+  metric(grid, "Missense subset", "n=230; V8 63.82% vs V7 55.88% balanced accuracy; paired CI includes zero");
   byId("version-comparison").replaceChildren(grid);
   const table = document.createElement("table"); const head = document.createElement("thead"); head.innerHTML = "<tr><th>Test cohort</th><th>Model/baseline</th><th>Records</th><th>Accuracy</th><th>Balanced accuracy</th><th>Benign recall</th><th>Pathogenic recall</th><th>Coverage</th><th>Provenance</th></tr>"; const body = document.createElement("tbody"); baselines.forEach((row) => { const tr = document.createElement("tr"); [row.test_set, row.model, row.records, pct(Number(row.accuracy)), pct(Number(row.balanced_accuracy)), pct(Number(row.benign_recall)), pct(Number(row.pathogenic_recall)), pct(Number(row.coverage)), row.provenance].forEach((value) => { const td = document.createElement("td"); td.textContent = value; tr.append(td); }); tr.title = row.warning; body.append(tr); }); table.append(head, body); byId("baseline-comparison").replaceChildren(table);
 }

@@ -10,7 +10,7 @@ Variant Time Machine is a computational genetics research project that asks whet
 
 **Among variants that were uncertain in the January 2022 snapshot and known to have a clear benign or pathogenic aggregate outcome by January 2024, can older-only information predict the direction of that change?**
 
-The broader long-term question also includes variants that remain uncertain, but the current V2-V6 experiment does not answer that question.
+The broader long-term question also includes variants that remain uncertain, but the current resolved-outcome experiments do not answer that question.
 
 ## Current Status
 
@@ -22,15 +22,27 @@ The project now has indexed January 2022 and January 2024 ClinVar summary snapsh
 | V5 | Different internal connected-group holdout | 100 | 82.0% | 82.2% | 81.5% | 82.9% |
 | V6 | New groups excluded before V6 fitting | 1,000 | 75.6% | 74.4% | 77.6% | 71.1% |
 | V7 | Jan. 2024 predictions, July 2026 answers | 1,000 | 78.5% | 79.1% | 78.1% | 80.0% |
+| V8 | Component-disjoint retrospective July 2026 test | 1,000 | 89.5% | 87.1212% | 90.91% | 83.33% |
 
 V6 was scientifically strict but left only 2,518 training records. Its error analysis showed that 214 of 244 mistakes were missense variants. V7 used all 8,818 permitted development records, selected shallow gradient boosting by grouped cross-validation, calibrated only from out-of-fold predictions, and sealed 761,235 January 2024 predictions before downloading the July 2026 answer archive. The final 1,000 Variation IDs had zero development overlap. V7 reached 79.1% balanced accuracy and 80.0% pathogenic recall. Its raw accuracy did not beat the 80.5% majority-benign baseline, whose balanced accuracy was only 50%; the result is about class discrimination, not a larger headline number.
 
-V7 is the strongest current evidence because it moves the predictor and answer dates forward. It is still conditional on records that clearly resolved, and 69.9% of test records shared at least one gene with development. See the [full comparison](research/model-v4-v5-comparison.md) and [V7 report](research/ai-temporal-v7-results.md).
+V8 adds a preregistered test of 1,000 records in 559 predictor-time gene components,
+with zero development ID/component and V7-test-ID overlap. It reached 84.0371% macro
+F1, ROC AUC 0.94594, average precision 0.83895, and Brier score 0.06332 (`TN 740, FP 74,
+FN 31, TP 155`). Frozen V7 reached 86.6688% balanced accuracy on the same records;
+V8's +0.4524-point difference had a component-bootstrap interval of -2.45 to +3.31
+points, so there is no overall superiority claim. Missense balanced accuracy was 63.82%
+for V8 versus 55.88% for V7 on 230 records, but that paired interval also included zero.
+
+V8 is the strongest isolation design in the project, not a prospective test. July 2026
+had already been accessed for V7, and V8 membership is reconstructible from the
+published salt and archive. Its component/class weighting, within-family tie-break, and
+out-of-fold reuse caveats remain explicit. See the [full comparison](research/model-v4-v5-comparison.md), [V7 report](research/ai-temporal-v7-results.md), and [V8 report](research/ai-temporal-v8-results.md).
 
 ## Research Workflow
 
-1. Open **Model Versions** and review the frozen V1-V7 records, leakage audits, baselines, and provenance warnings.
-2. Use **Prediction Explorer** to review wrong high-confidence V4-V7 predictions before easy correct examples.
+1. Open **Model Versions** and review the frozen V1-V8 records, leakage audits, baselines, and provenance warnings.
+2. Use **Prediction Explorer** to review wrong high-confidence V4-V8 predictions before easy correct examples.
 3. Inspect every older-snapshot feature, warning, prediction, probability, and newer answer label.
 4. Confirm Variation and Allele IDs, germline scope, conditions, and official ClinVar context.
 5. Record reviewed, correctly matched, ambiguous, or excluded decisions separately from automatic results.
@@ -97,7 +109,7 @@ The command refuses to replace an existing output unless `--overwrite` is suppli
 
 ## Model Registry Reports
 
-Rebuild the lightweight V1-V7 registry, standardized evaluations, leakage audits,
+Rebuild the lightweight V1-V8 registry, standardized evaluations, leakage audits,
 logs, comparison tables, error-analysis CSVs, and project timeline from existing
 frozen artifacts without training or opening a new test set:
 
@@ -188,9 +200,13 @@ The command-line workflow confirms the small API request and asks again before s
 
 ## Current Milestone
 
-Review V7's 215 errors, especially the 186 missense mistakes, and precommit any replication before changing the reported model.
+Review V8's errors and calibration, especially the missense subset, and precommit any replication before changing the reported model.
 
-V7's 1,000 test Variation IDs were absent from development and their predictions were sealed before the answer archive was downloaded. Same-gene overlap was allowed, and the outcome-selected design still cannot predict whether resolution will happen. This is record-level temporal evidence, not clinical validation.
+V8's 1,000 records had zero development ID/component and V7-test-ID overlap, but the
+outcome-selected design still cannot predict whether resolution will happen. This is
+membership-hidden retrospective evidence with reconstructible membership, not
+prospective or clinical validation. The paired uncertainty does not establish that V8
+is superior to V7.
 
 ## Reproducibility
 

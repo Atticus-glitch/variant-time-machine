@@ -1,8 +1,8 @@
-# Model V4 Through V7 Comparison
+# Model V4 Through V8 Comparison
 
 ## Question
 
-Do the frozen neural-network experiments show that one model is clearly better at
+Do the frozen learned-model experiments show that one model is clearly better at
 predicting whether a variant that resolved by 2024 moved toward a benign or pathogenic
 classification?
 
@@ -16,6 +16,7 @@ Pathogenic is treated as the positive class in both confusion matrices.
 | V5 | 100 | 65 / 35 | 82.0% | 82.2% | 81.5% | 82.9% | 53 | 12 | 6 | 29 |
 | V6 | 1,000 | 689 / 311 | 75.6% | 74.4% | 77.6% | 71.1% | 535 | 154 | 90 | 221 |
 | V7 | 1,000 | 805 / 195 | 78.5% | 79.1% | 78.1% | 80.0% | 629 | 176 | 39 | 156 |
+| V8 | 1,000 | 814 / 186 | 89.5% | 87.1212% | 90.91% | 83.33% | 740 | 74 | 31 | 155 |
 
 V4's accuracy looked promising until the confusion matrix showed that it found only 8
 of 32 pathogenic outcomes. V5's own test had much more balanced errors. That result
@@ -27,6 +28,12 @@ V7 moved the prediction date to January 2024 and the answer date to July 2026. I
 detected 156 of 195 pathogenic-direction outcomes. Unlike V4-V6, every V7 prediction
 was sealed before the answer archive was downloaded, and all 1,000 test Variation IDs
 were absent from development.
+
+V8 retained those dates but excluded every candidate component touching any development
+gene component and every V7 test ID. Its 1,000 records span 559 components, with zero
+development ID/component overlap and zero V7-test-ID overlap. V8 reached 87.1212%
+balanced accuracy, 84.0371% macro F1, ROC AUC 0.94594, average precision 0.83895, and
+Brier score 0.06332.
 
 ## Design Differences
 
@@ -59,6 +66,11 @@ V7 is different again: it is record-level temporal validation, not a fourth inte
 split. Its test IDs are new, but 69.9% share at least one gene with development. It is
 therefore stronger evidence about later records, not gene-independent validation.
 
+V8 is predictor-time gene-component-disjoint within the project's development ledger.
+It is nevertheless retrospective: the July 2026 archive had already been accessed for
+V7, and the published salt makes hidden test membership reconstructible. It is not a
+never-opened future test or proof that different genes are biologically independent.
+
 ## Interpretation
 
 V5 has the highest point balanced accuracy on its own test. V6 has the largest test and
@@ -72,11 +84,18 @@ raw accuracy was lower than the 80.5% majority-benign baseline, but that baselin
 0% pathogenic recall and 50% balanced accuracy. V7's evidence is stronger because of
 the date boundary and sealed predictions, not because every displayed number is larger.
 
-Both results are internal tests from a conditional cohort: records were uncertain in
+On the same V8 records, frozen V7 reached 86.6688% balanced accuracy and V8 reached
+87.1212%, a +0.4524-point difference. The component-bootstrap 95% confidence interval
+was -2.45 to +3.31 points, so there is no evidence of overall superiority. On 230
+missense records, V8 reached 63.82% versus V7's 55.88%, but that paired interval also
+includes zero.
+
+All results are from conditional cohorts: records were uncertain in
 the January 6, 2022 ClinVar snapshot and were selected because they had a clear benign
 or pathogenic aggregate outcome in the January 4, 2024 snapshot. The experiments do
 not predict whether a variant will resolve. They are not independent temporal,
-clinical, or medical validation and must not be used for patient decisions.
+clinical, or medical validation and must not be used for patient decisions. V8 adds a
+later component-disjoint test but remains conditional on clear July 2026 resolution.
 
 ## Baselines And Audits
 
@@ -90,7 +109,7 @@ On V7, the majority baseline scored 80.5% raw accuracy and 50% balanced accuracy
 seeded stratified baseline scored 67.6% and 48.4%. No V2 same-record baseline exists
 because V7 test IDs were absent from the old V2 cohort.
 
-V4 through V7 pass the current declared-feature leakage audit. The audit is
+V4 through V8 pass the current declared-feature leakage audit. The audit is
 name-and-lineage based and still recommends source-date review. Their configuration
 freeze timestamps occur after their recorded training timestamps, which weakens the
 freeze chronology and is preserved as a registry warning.
@@ -114,8 +133,16 @@ older-only missense evidence, not a threshold chosen after seeing the temporal t
 > V7 is temporal at the record level, but not gene-independent or clinical validation.
 > All comparisons remain conditional on records that later reached a clear outcome.
 
+V8's preregistered implementation record also remains visible: inverse-component and
+class-balanced fitting weights did not produce strictly equal total weight per
+component; the simplicity tie-break did not rank regularization within the logistic
+family; and grouped out-of-fold labels were reused for model selection, calibration,
+and threshold choice. These caveats qualify V8's development claims without changing
+the sealed test result.
+
 ## Next Evidence Needed
 
-Manually review a structured sample of V7 missense errors and inspect the middle-range
-calibration. Any changed model needs a new version and another future sealed answer
-snapshot; the July 2026 answers cannot become both tuning data and V7 validation.
+Review V8's false predictions and calibration, especially the missense subset, without
+treating the nonsignificant paired point gains as proof. Any changed model needs a new
+version and a genuinely later untouched answer snapshot; July 2026 cannot become both
+tuning data and independent validation.

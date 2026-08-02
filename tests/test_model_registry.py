@@ -72,6 +72,7 @@ def test_registry_creation_and_loading(tmp_path: Path) -> None:
         "V5",
         "V6",
         "V7",
+        "V8",
     ]
     assert all("manual_review" in model for model in loaded["models"])
     assert all("input_feature_list" in model for model in loaded["models"])
@@ -121,6 +122,26 @@ def test_v4_v5_metrics_are_derived_without_changing_recorded_headlines() -> None
     assert isinstance(by_id["V4"]["metrics"]["macro_f1"], float)
 
 
+def test_v8_registry_uses_versioned_fields_and_paired_same_record_v7() -> None:
+    registry = create_registry(ROOT)
+    v8 = next(model for model in registry["models"] if model["model_id"] == "V8")
+    assert v8["feature_count"] == 64
+    assert v8["test_records"] == 1000
+    assert v8["class_distribution"]["sealed_test_gene_components"] == 559
+    assert v8["metrics"]["accuracy"] == 0.895
+    assert v8["metrics"]["balanced_accuracy"] == 0.8712121212121212
+    assert v8["paired_same_record_baseline"] == {
+        "model_id": "V7",
+        "records": 1000,
+        "balanced_accuracy": 0.8666878021716731,
+        "v8_minus_v7_balanced_accuracy": 0.004524319040448144,
+        "paired_difference_95_percent": [
+            -0.02450184283147039,
+            0.03312248143795588,
+        ],
+    }
+
+
 def test_ranking_prioritizes_leakage_and_has_no_stable_winner() -> None:
     models = [
         {
@@ -144,7 +165,8 @@ def test_ranking_prioritizes_leakage_and_has_no_stable_winner() -> None:
     assert result["ranking"] == []
     assert result["comparison_status"] == "not_rankable_across_current_evaluations"
     assert result["stable_winner"] is None
-    assert "strongest current evidence" in result["conclusion"]
+    assert "strongest component-isolation design" in result["conclusion"]
+    assert "not ranked" in result["evidence_summary"]["own_test_score_context"]
 
 
 def test_small_test_warning_is_explicit() -> None:
@@ -162,6 +184,25 @@ def test_error_file_contains_all_rows_and_unknown_vcv(tmp_path: Path) -> None:
     assert {row["correct"] for row in saved} == {"true", "false"}
     assert {row["vcv_accession"] for row in saved} == {"not recorded"}
     assert "suspected_error_category" in saved[0]
+
+
+def test_v8_error_analysis_uses_recorded_temporal_context(tmp_path: Path) -> None:
+    path = tmp_path / "v8-errors.csv"
+    rows = [
+        {
+            "variation_id": "8",
+            "actual_outcome": PATHOGENIC,
+            "v8_probability": "0.9",
+            "v8_prediction": "pathogenic",
+            "gene_symbols": "GENE8",
+            "answer_classification": "Pathogenic",
+            "consequence": "missense",
+        }
+    ]
+    generated = generate_error_analysis("V8", rows, path)
+    assert generated[0]["gene"] == "GENE8"
+    assert generated[0]["actual_later_classification"] == "Pathogenic"
+    assert generated[0]["key_features"] == "consequence=missense"
 
 
 def test_timeline_has_exactly_fourteen_ordered_items() -> None:
@@ -210,7 +251,7 @@ def test_registry_file_rejects_nonstandard_model_set(tmp_path: Path) -> None:
         json.dumps({"schema_version": 1, "models": [{"model_id": "V1"}]}),
         encoding="utf-8",
     )
-    with pytest.raises(RegistryError, match="ordered V1-V7"):
+    with pytest.raises(RegistryError, match="ordered V1-V8"):
         load_registry(path)
 
 
@@ -225,11 +266,14 @@ def test_missing_model_record_is_honest_placeholder(tmp_path: Path) -> None:
 
 def test_generated_registry_contract_and_standardized_v5_metrics() -> None:
     registry_root = ROOT / "outputs" / "model_registry"
-    for version in range(1, 8):
+    for version in range(1, 9):
         assert (registry_root / f"model_v{version}.json").is_file()
     index = json.loads((registry_root / "model_index.json").read_text(encoding="utf-8"))
-    assert index["latest_model_version"] == "V7"
-    assert "V7 has the strongest" in index["best_validated_model"]
+    assert index["latest_model_version"] == "V8"
+    assert "strongest component-isolation design" in index["best_validated_model"]
+    assert (
+        "V7 retains the stronger archive-time boundary" in index["best_validated_model"]
+    )
 
     metrics = json.loads(
         (ROOT / "outputs/evaluations/frozen/v5_metrics.json").read_text(
@@ -270,6 +314,29 @@ def test_generated_registry_contract_and_standardized_v5_metrics() -> None:
     assert v7_audit["test_records_sharing_development_gene"] == 699
     assert v7_audit["missing_from_answer_snapshot"] == 30
     assert v7_audit["candidate_accounting_complete"] is True
+    v8_metrics = json.loads(
+        (ROOT / "outputs/evaluations/frozen/v8_metrics.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert v8_metrics["records"] == 1000
+    assert v8_metrics["sealed_gene_components"] == 559
+    assert v8_metrics["accuracy"] == 0.895
+    assert v8_metrics["balanced_accuracy"] == 0.8712121212121212
+    assert v8_metrics["v7_same_record_baseline"]["balanced_accuracy"] == (
+        0.8666878021716731
+    )
+    assert v8_metrics["v8_minus_v7_balanced_accuracy"] == 0.004524319040448144
+    v8_audit = json.loads(
+        (ROOT / "outputs/evaluations/frozen/v8_protocol_audit.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert v8_audit["status"] == "pass"
+    assert v8_audit["paired_interval_crosses_zero"] is True
+    assert v8_audit["checks"]["current_vault_matches_commitment"] is True
+    assert v8_audit["checks"]["current_model_matches_commitment"] is True
+    assert v8_audit["checks"]["current_sources_match_commitments"] is True
 
 
 def test_generated_logs_audits_errors_and_timeline_have_required_fields() -> None:

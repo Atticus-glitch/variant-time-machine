@@ -10,7 +10,7 @@ work is a historical research experiment, not a diagnostic or medical tool.
 ## Method
 
 The development cohort uses January 2022 predictor and January 2024 answer snapshots.
-V7 adds a temporal test with January 2024 predictors and July 2026 answers. Records are
+V7 and V8 use January 2024 predictors and July 2026 answers. Records are
 matched conservatively by Variation and Allele IDs and restricted to germline variants.
 The binary task remains conditional on a clear later benign or pathogenic outcome.
 
@@ -23,6 +23,9 @@ their 4,672 connected companions, and all 628 records in prior V4/V5 test groups
 V7 used all 8,818 development records, selected and calibrated its model with grouped
 out-of-fold predictions, and sealed January 2024 predictions before the July 2026
 answer archive was downloaded.
+V8 excluded every predictor-time gene component touching development and every V7 test
+ID, then evaluated the preregistered sealed model once on 1,000 records in 559
+components.
 
 ## Results
 
@@ -42,14 +45,27 @@ record-level temporal tests (`TN 629, FP 176, FN 39, TP 156`). Test Variation ID
 with development was zero. V7 detected 80% of pathogenic-direction outcomes; a
 majority-benign baseline had 80.5% raw accuracy but 0% pathogenic recall.
 
+V8 contained 814 benign and 186 pathogenic outcomes and achieved 89.5% accuracy,
+87.1212% balanced accuracy, 84.0371% macro F1, ROC AUC 0.94594, average precision
+0.83895, and Brier score 0.06332 (`TN 740, FP 74, FN 31, TP 155`). Development ID and
+component overlap and V7-test-ID overlap were zero. On these same records frozen V7
+reached 86.6688% balanced accuracy. The V8 difference was +0.4524 points, with a
+component-bootstrap interval of -2.45 to +3.31 points, so overall superiority was not
+demonstrated. Missense balanced accuracy was 63.82% for V8 versus 55.88% for V7 on 230
+records, but its paired interval also included zero.
+
 ## Conclusion
 
 The experiment shows why balanced accuracy, confusion matrices, and sample size matter.
 V4's 76% accuracy hid weak pathogenic recall. V5's small test looked much more balanced.
 V6 then tested that pattern at ten times the scale and produced a more modest result.
-Following the result instead of defending it led to V7's later temporal cohort. Its
-remaining challenge is concentrated: 186 of 215 errors were missense variants.
+Following the result instead of defending it led first to V7's later cohort and then to
+V8's development-component-disjoint test. V8 improved the point estimate on the same
+records, but uncertainty rules out an overall superiority claim.
 
-V7 is temporal at the record level, but 69.9% of tests shared a development gene. All
-findings remain conditional on clear later resolution. They are not clinical or medical
-validation, do not predict whether a VUS will resolve, and should not guide patient care.
+V8 remains a retrospective, reconstructible-membership test because July 2026 was
+already accessed for V7. Its fitting weights were not strictly equal per component, its
+simplicity tie-break did not rank within-family regularization, and out-of-fold labels
+were reused for selection, calibration, and threshold choice. All findings remain
+conditional on clear later resolution. They are not clinical or medical validation, do
+not predict whether a VUS will resolve, and should not guide patient care.

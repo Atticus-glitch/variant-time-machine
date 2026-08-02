@@ -1,0 +1,40 @@
+{
+  "accuracy": 0.895,
+  "audit_kind": "post_evaluation_protocol_and_commitment_accounting",
+  "balanced_accuracy": 0.8712121212121212,
+  "checks": {
+    "commitment_states_match_protocol": true,
+    "config_commitments_match": true,
+    "current_config_matches_commitments": true,
+    "current_model_matches_commitment": true,
+    "current_predictions_match_commitment": true,
+    "current_sources_match_commitments": true,
+    "current_vault_matches_commitment": true,
+    "development_sources_cross_bound": true,
+    "development_test_gene_component_overlap_is_zero": true,
+    "development_test_variation_id_overlap_is_zero": true,
+    "model_commitment_matches_training": true,
+    "prediction_commitment_matches_training": true,
+    "prediction_fields_complete": true,
+    "sealed_component_count_matches": true,
+    "test_record_count_matches": true,
+    "v7_test_id_overlap_is_zero": true,
+    "vault_commitment_matches_evaluation": true,
+    "vault_was_unopened_during_development": true
+  },
+  "development_gene_components": 1792,
+  "development_records": 9818,
+  "model_id": "V8",
+  "paired_difference_95_percent": [
+    -0.02450184283147039,
+    0.03312248143795588
+  ],
+  "paired_interval_crosses_zero": true,
+  "schema_version": 1,
+  "sealed_gene_components": 559,
+  "status": "pass",
+  "test_records": 1000,
+  "v7_same_record_balanced_accuracy": 0.8666878021716731,
+  "v8_minus_v7_balanced_accuracy": 0.004524319040448144,
+  "warning": "This post-evaluation audit verifies recorded commitments and accounting. It did not reopen the vault, rerun evaluation, or alter predictions. The paired V8-V7 interval crosses zero, so no performance improvement is claimed."
+}
