@@ -24,7 +24,7 @@
         </div>
         <div class="milestone-card">
           <span>Current milestone</span>
-          <strong id="current-milestone">V8 Results and Manual Review</strong>
+          <strong id="current-milestone">V9 Dataset Preparation</strong>
           <small>Preliminary research; not a medical tool</small>
         </div>
       </div>
@@ -42,7 +42,7 @@
         <div class="section-heading">
           <div>
             <p class="section-number">At a glance</p>
-            <h2 id="explanation-title">V8 Results and Manual Review</h2>
+            <h2 id="explanation-title">V8 Review and V9 Dataset Preparation</h2>
           </div>
         </div>
         <div class="v8-dashboard-grid">
@@ -54,11 +54,16 @@
           <article><span>Wrong</span><strong>105</strong></article>
           <article><span>False positives</span><strong>74</strong></article>
           <article><span>False negatives</span><strong>31</strong></article>
+          <article><span>Review queue</span><strong>1,000</strong></article>
           <article><span>Completed reviews</span><strong id="v8-completed-reviews">Loading...</strong></article>
+          <article><span>V9 clean reviewed</span><strong id="v9-clean-count">Loading...</strong></article>
+          <article><span>Excluded or pending</span><strong id="v9-excluded-count">Loading...</strong></article>
+          <article><span>Final V9</span><strong id="v9-final-status">Locked</strong></article>
           <article class="dashboard-action-card"><span>Strongest claim</span><a class="text-link" href="/v8_results.html#claim-title">Read exact wording</a></article>
           <article class="dashboard-action-card"><span>Next review</span><a id="v8-next-review" class="text-link" href="/v8_review.html?high_confidence=true">High-confidence wrong</a></article>
+          <article class="dashboard-action-card"><span>V9 dataset</span><a class="text-link" href="/v9_dataset.html">Open preparation status</a></article>
         </div>
-        <p class="plain-language-note"><strong>V8 is not clearly superior to V7:</strong> the paired same-record interval crosses zero. This is retrospective research, not clinical validation or medical advice.</p>
+        <p class="plain-language-note"><strong id="v9-stage-label">Loading V9 build status...</strong> V8 is not clearly superior to V7 because the paired same-record interval crosses zero. This is retrospective research, not clinical validation or medical advice.</p>
         <p id="project-explanation" class="visually-hidden">Loading the project boundary...</p>
       </section>
 

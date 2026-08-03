@@ -139,8 +139,10 @@ from variant_time_machine.v8_presentation import (  # noqa: E402
     V8PresentationError,
     list_review_queue,
     load_case_studies,
+    load_json_object,
     load_review_notes,
     load_summary,
+    sha256_file,
     update_review_decision,
 )
 from variant_time_machine.vcv_history import (  # noqa: E402
@@ -646,6 +648,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         V8_REVIEW_NOTES_PATH=(
             PROJECT_ROOT / "outputs" / "manual_review" / "v8_review_notes.json"
         ),
+        V9_DATASET_DIR=PROJECT_ROOT / "data" / "processed" / "v9",
         V8_DOWNLOADS={
             "v8_public_summary.json": PROJECT_ROOT
             / "outputs"
@@ -692,6 +695,10 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             / "outputs"
             / "manual_review"
             / "v8_review_queue.csv",
+            "v8_review_queue_manifest.json": PROJECT_ROOT
+            / "outputs"
+            / "manual_review"
+            / "v8_review_queue_manifest.json",
             "one-page-abstract.md": PROJECT_ROOT / "research" / "one-page-abstract.md",
             "v8-case-studies.md": PROJECT_ROOT / "research" / "v8-case-studies.md",
             "v8-error-analysis.md": PROJECT_ROOT / "research" / "v8-error-analysis.md",
@@ -1591,6 +1598,143 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     def v8_review_page():
         return send_from_directory(Path(__file__).parent, "v8_review.html")
 
+    @app.get("/v9_dataset.html")
+    def v9_dataset_page():
+        return send_from_directory(Path(__file__).parent, "v9_dataset.html")
+
+    @app.get("/v9_training.html")
+    def v9_training_page():
+        return send_from_directory(Path(__file__).parent, "v9_training.html")
+
+    @app.get("/v9_results.html")
+    def v9_results_page():
+        return send_from_directory(Path(__file__).parent, "v9_results.html")
+
+    @app.get("/v9_explorer.html")
+    def v9_explorer_page():
+        return send_from_directory(Path(__file__).parent, "v9_explorer.html")
+
+    @app.get("/api/v9/dataset-summary")
+    def api_v9_dataset_summary():
+        try:
+            manifest = load_json_object(
+                Path(app.config["V9_DATASET_DIR"]) / "v9_dataset_manifest.json"
+            )
+            notes_path = Path(app.config["V8_REVIEW_NOTES_PATH"])
+            recorded_hashes = manifest.get("review_file_hashes", {})
+            recorded_notes_hash = next(
+                (
+                    value
+                    for key, value in recorded_hashes.items()
+                    if str(key).endswith("v8_review_notes.json")
+                ),
+                None,
+            )
+            manifest["review_store_changed_since_build"] = (
+                recorded_notes_hash != sha256_file(notes_path)
+            )
+            queue_path = Path(app.config["V8_REVIEW_QUEUE_PATH"])
+            recorded_queue_hash = next(
+                (
+                    value
+                    for key, value in recorded_hashes.items()
+                    if str(key).endswith("v8_review_queue.csv")
+                ),
+                None,
+            )
+            stale_reasons = []
+            if manifest["review_store_changed_since_build"]:
+                stale_reasons.append("review store changed after dataset build")
+            if recorded_queue_hash != sha256_file(queue_path):
+                stale_reasons.append("review queue changed after dataset build")
+            output_hashes = manifest.get("output_hashes", {})
+            for filename, expected_hash in output_hashes.items():
+                output_path = Path(app.config["V9_DATASET_DIR"]) / filename
+                if (
+                    not output_path.is_file()
+                    or output_path.is_symlink()
+                    or sha256_file(output_path) != expected_hash
+                ):
+                    stale_reasons.append(f"generated output changed: {filename}")
+            for relative, expected_hash in manifest.get(
+                "implementation_hashes", {}
+            ).items():
+                source_path = PROJECT_ROOT / relative
+                if (
+                    not source_path.is_file()
+                    or source_path.is_symlink()
+                    or sha256_file(source_path) != expected_hash
+                ):
+                    stale_reasons.append(f"implementation changed: {relative}")
+            manifest["artifacts_stale"] = bool(stale_reasons)
+            manifest["stale_reasons"] = stale_reasons
+            return jsonify(manifest)
+        except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
+            return jsonify({"error": f"V9 dataset preparation unavailable: {exc}"}), 503
+
+    @app.get("/api/v9/download/<filename>")
+    def api_v9_download(filename: str):
+        allowed = {
+            "v9_messy_dataset.csv",
+            "v9_clean_reviewed_dataset.csv",
+            "v9_excluded_records.csv",
+            "v9_needs_expert_review.csv",
+            "v9_partition_manifest.csv",
+            "v9_dataset_manifest.json",
+        }
+        if filename not in allowed:
+            return jsonify({"error": "Unknown V9 dataset download."}), 404
+        path = Path(app.config["V9_DATASET_DIR"]) / filename
+        if not path.is_file() or path.is_symlink():
+            return jsonify({"error": "V9 dataset download is unavailable."}), 404
+        if filename != "v9_dataset_manifest.json":
+            try:
+                manifest = load_json_object(
+                    Path(app.config["V9_DATASET_DIR"]) / "v9_dataset_manifest.json"
+                )
+                expected_hash = manifest.get("output_hashes", {}).get(filename)
+                recorded_hashes = manifest.get("review_file_hashes", {})
+                current_sources = {
+                    "v8_review_queue.csv": sha256_file(
+                        Path(app.config["V8_REVIEW_QUEUE_PATH"])
+                    ),
+                    "v8_review_notes.json": sha256_file(
+                        Path(app.config["V8_REVIEW_NOTES_PATH"])
+                    ),
+                }
+                sources_match = all(
+                    any(
+                        str(key).endswith(source_name) and value == current_hash
+                        for key, value in recorded_hashes.items()
+                    )
+                    for source_name, current_hash in current_sources.items()
+                )
+                implementation_matches = all(
+                    (PROJECT_ROOT / relative).is_file()
+                    and not (PROJECT_ROOT / relative).is_symlink()
+                    and sha256_file(PROJECT_ROOT / relative) == expected
+                    for relative, expected in manifest.get(
+                        "implementation_hashes", {}
+                    ).items()
+                )
+                if (
+                    expected_hash != sha256_file(path)
+                    or not sources_match
+                    or not implementation_matches
+                ):
+                    return jsonify(
+                        {
+                            "error": (
+                                "V9 dataset artifact is stale; rebuild before download."
+                            )
+                        }
+                    ), 409
+            except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
+                return jsonify(
+                    {"error": f"V9 dataset integrity unavailable: {exc}"}
+                ), 503
+        return send_file(path, as_attachment=True, download_name=filename)
+
     @app.get("/api/v8/summary")
     def api_v8_summary():
         try:
@@ -1654,8 +1798,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 Path(app.config["V8_REVIEW_QUEUE_PATH"]),
                 Path(app.config["V8_REVIEW_NOTES_PATH"]),
                 variation_id,
-                body.get("decision"),
-                body.get("note", ""),
+                body,
             )
             return jsonify({"variation_id": variation_id, "review": review})
         except (V8PresentationError, ValueError) as exc:

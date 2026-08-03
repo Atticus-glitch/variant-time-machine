@@ -42,10 +42,11 @@ The initial latest-version lookup is separate from the maximum 25 historical req
 
 - **Overview** is the canonical start. It states the purpose once, shows key evidence, and gives the three-step flow: find a variant, inspect evidence, and investigate history.
 - **Variants** searches the full local two-release index in a compact six-column table; complete snapshot fields remain in the selected detail panel.
-- **Results** centers the resolved-direction summary and searchable predictions. Formula, run, test-opening, and download controls are disclosed on demand.
+- **Results** has a V1-V8 selector backed by the frozen model registry. V2 retains its detailed searchable calculation workspace; later models link to their available record explorers without pretending that different cohorts form one leaderboard.
 - **Models** is the authoritative location for V1-V8 metrics, leakage audits, comparison limits, and V8 claim boundaries.
 - **V8 Result Summary** (`/v8_results.html`) is the screenshot-ready public aggregate with exact metrics, the same-record V7 caveat, 20 stable case studies, and whitelisted downloads.
-- **Error Review** filters and pages V4-V8 predictions. Its prominent V8 link opens the separate **Manual Review Queue** (`/v8_review.html`), which preserves CSV order and stores only validated decisions and notes in `outputs/manual_review/v8_review_notes.json`.
+- **Error Review** filters and pages V4-V8 predictions. Its prominent V8 link opens **V8 Manual Review** (`/v8_review.html`), a one-case workflow with timeline evidence, V8 feature contributions, computer-suggestion flags, structured V9 inclusion controls, immediate atomic saves, and progress counts.
+- **V9 Dataset Review**, **V9 Model Training**, **V9 Results**, and **V9 Case Explorer** clearly show the current preparation-only state. Training, results, and case predictions remain locked because no final V9 exists.
 - **Timeline** displays dated research and application milestones; only task status is editable.
 
 The **Tools** group is consistent on every page:
@@ -84,6 +85,7 @@ The browser loads information from these Flask API endpoints:
 - `POST /api/predictions/run`, operation progress, manual review, formula, and download routes
 - `GET /api/v8/summary`, `/api/v8/case-studies`, `/api/v8/review-queue`, and `/api/v8/review-notes`
 - `PATCH /api/v8/review/<VariationID>` and `GET /api/v8/download/<filename>`
+- `GET /api/v9/dataset-summary` and `GET /api/v9/download/<filename>`
 
 The separate Current Lookup and Legacy Manual Workspace remain available, but normal exact-history work should use Version History. Current ESummary candidate results are not historical results, and VCV versions are not monthly snapshots.
 
@@ -91,7 +93,7 @@ Legacy Manual Workspace records are stored in `data/manual_review/pilot_workspac
 
 Version-history artifacts are stored under the Git-ignored `data/manual_review/vcv_history/<VCV>/` layout documented in `data/manual_review/README.md`. Automatic parsed data and XML are never overwritten by manual corrections; review annotations and status remain in `review.json`.
 
-V8 review decisions are a separate presentation audit. The API validates queue membership, the exact decision enum, note length, and required notes before atomically replacing only `v8_review_notes.json`; it never writes the temporal prediction CSV or frozen evaluation files. Paths are Flask-configurable for isolated tests.
+V8 review decisions are a separate structured audit. The API validates queue membership, reviewer identity, exact decision and error-category enums, inclusion booleans, corrected outcomes, note length, and required notes before atomically replacing only `v8_review_notes.json`; it never writes the temporal prediction CSV or frozen evaluation files. Run `scripts/build_v9_dataset.py` after review changes to refresh the derived V9 tables and manifest.
 
 To update progress, edit `PROGRESS_ITEMS` in `website/dashboard/app.py`. Change a status only when the explanation is accurate. Do not mark historical comparison complete until real matches have been checked manually.
 

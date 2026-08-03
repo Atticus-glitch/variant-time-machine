@@ -1,10 +1,34 @@
 {
   "allowed_decisions": [
-    "match correct",
-    "match ambiguous",
-    "classification-scope problem",
-    "model genuinely wrong",
-    "exclude from final analysis"
+    "not_reviewed",
+    "match_correct_model_wrong",
+    "match_correct_model_right",
+    "ambiguous_condition_scope",
+    "ambiguous_aggregation",
+    "bad_match",
+    "possible_label_problem",
+    "conflicting_classification_scope",
+    "missing_critical_fields",
+    "exclude_non_germline_or_wrong_scope",
+    "duplicate_or_related_record_problem",
+    "uncertain_manual_review",
+    "needs_expert_review"
+  ],
+  "allowed_error_categories": [
+    "genuine_model_error",
+    "false_positive_pathogenic_direction",
+    "false_negative_pathogenic_direction",
+    "condition_scope_changed",
+    "aggregate_label_ambiguous",
+    "poor_match",
+    "missing_features",
+    "misleading_consequence",
+    "weak_old_evidence",
+    "review_status_shift",
+    "gene_or_component_generalization_failure",
+    "label_noise",
+    "non_germline_scope",
+    "unknown"
   ],
   "provenance": {
     "generation_method": "Deterministic transformation of recorded frozen artifacts; no model was trained, evaluated, or altered.",
@@ -29,7 +53,13 @@
     ]
   },
   "reviews": {},
+  "review_history": {},
+  "reviewer_confidence_options": [
+    "high",
+    "medium",
+    "low"
+  ],
   "schema_version": 1,
   "store_kind": "v8_manual_review_decisions",
-  "warning": "Manual decisions only; this file is never overwritten."
+  "warning": "Manual annotations are separate; frozen predictions and original labels are never overwritten."
 }

@@ -13,6 +13,24 @@ from website.dashboard.app import create_app
 ROOT = Path(__file__).parents[1]
 
 
+def _review_payload(**updates: object) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "reviewer": "test-reviewer",
+        "manual_decision": "match_correct_model_wrong",
+        "manual_error_category": "genuine_model_error",
+        "exclude_from_v9_clean_dataset": False,
+        "include_in_v9_messy_dataset": True,
+        "include_in_v9_clean_dataset": True,
+        "corrected_outcome": "",
+        "cleared_automatic_flags": [],
+        "reviewer_confidence": "high",
+        "note": "Checked source record.",
+        "expected_revision": 0,
+    }
+    payload.update(updates)
+    return payload
+
+
 @pytest.fixture
 def v8_app(tmp_path: Path) -> Flask:
     notes = tmp_path / "v8_review_notes.json"
@@ -66,22 +84,22 @@ def test_v8_pages_load_with_exact_claim_boundaries(v8_client: FlaskClient) -> No
     review = v8_client.get("/v8_review.html")
     assert review.status_code == 200
     review_page = review.get_data(as_text=True)
-    assert "Manual Review Queue" in review_page
+    assert "V8 Manual Review" in review_page
     for label in (
         "FP",
         "FN",
         "V8/V7 disagreement",
-        "High confidence",
+        "High-confidence wrong",
         "Gene",
         "Consequence",
-        "Match warning",
+        "Automatic warning",
         "Unreviewed",
         "Reviewed",
         "Ambiguous",
         "Excluded",
     ):
         assert label in review_page
-    assert "Probability assigned to predicted direction" in review_page
+    assert "Computer suggestions are not manual conclusions" in review_page
     assert "v8-review-previous" in review_page
 
 
@@ -117,10 +135,10 @@ def test_v8_queue_order_filters_and_separate_atomic_persistence(
     v8_client: FlaskClient,
 ) -> None:
     queue = v8_client.get("/api/v8/review-queue").get_json()
-    assert queue["total"] == 198
+    assert queue["total"] == 1000
     assert queue["page"] == 1
     assert queue["page_size"] == 25
-    assert queue["page_count"] == 8
+    assert queue["page_count"] == 40
     assert [int(row["queue_order"]) for row in queue["rows"]] == list(range(1, 26))
     first = queue["rows"][0]
     assert first["confusion_group"] == "FN"
@@ -139,50 +157,110 @@ def test_v8_queue_order_filters_and_separate_atomic_persistence(
     before = hashlib.sha256(predictions.read_bytes()).hexdigest()
     saved = v8_client.patch(
         f"/api/v8/review/{first['variation_id']}",
-        json={"decision": "model genuinely wrong", "note": "Checked source record."},
+        json=_review_payload(),
     )
     assert saved.status_code == 200
     assert hashlib.sha256(predictions.read_bytes()).hexdigest() == before
     notes_path = Path(v8_app.config["V8_REVIEW_NOTES_PATH"])
     stored = json.loads(notes_path.read_text(encoding="utf-8"))
-    assert stored["reviews"][first["variation_id"]]["decision"] == (
-        "model genuinely wrong"
+    assert stored["reviews"][first["variation_id"]]["manual_decision"] == (
+        "match_correct_model_wrong"
     )
+    assert stored["reviews"][first["variation_id"]]["normalized_new_outcome"]
+    assert stored["reviews"][first["variation_id"]]["feature_values_used_by_v8"]
+    assert stored["reviews"][first["variation_id"]]["revision"] == 1
+    stale = v8_client.patch(
+        f"/api/v8/review/{first['variation_id']}", json=_review_payload()
+    )
+    assert stale.status_code == 400
+    assert "another session" in stale.get_json()["error"]
+    updated = v8_client.patch(
+        f"/api/v8/review/{first['variation_id']}",
+        json=_review_payload(expected_revision=1, note="Second verified review."),
+    )
+    assert updated.status_code == 200
+    stored = json.loads(notes_path.read_text(encoding="utf-8"))
+    assert stored["reviews"][first["variation_id"]]["revision"] == 2
+    assert len(stored["review_history"][first["variation_id"]]) == 1
     reviewed = v8_client.get("/api/v8/review-queue?status=reviewed").get_json()
     assert reviewed["filtered_total"] == 1
 
 
 def test_v8_review_validation_rejects_unsafe_updates(v8_client: FlaskClient) -> None:
-    identifier = v8_client.get("/api/v8/review-queue").get_json()["rows"][0][
-        "variation_id"
-    ]
+    first_row = v8_client.get("/api/v8/review-queue").get_json()["rows"][0]
+    identifier = first_row["variation_id"]
     assert (
         v8_client.patch(
             "/api/v8/review/999999999999",
-            json={"decision": "match correct", "note": ""},
+            json=_review_payload(),
+        ).status_code
+        == 400
+    )
+    first_flag = json.loads(first_row["automatic_review_flags"])[0]
+    assert (
+        v8_client.patch(
+            f"/api/v8/review/{identifier}",
+            json=_review_payload(note="", cleared_automatic_flags=[first_flag]),
         ).status_code
         == 400
     )
     assert (
         v8_client.patch(
             f"/api/v8/review/{identifier}",
-            json={"decision": "invented", "note": ""},
+            json=_review_payload(
+                manual_decision="not_reviewed",
+                reviewer="",
+                reviewer_confidence="",
+                corrected_outcome="moved_toward_benign",
+            ),
         ).status_code
         == 400
     )
-    for decision in (
-        "match ambiguous",
-        "classification-scope problem",
-        "exclude from final analysis",
-    ):
+    assert (
+        v8_client.patch(
+            f"/api/v8/review/{identifier}",
+            json=_review_payload(
+                note="",
+                include_in_v9_clean_dataset=False,
+                exclude_from_v9_clean_dataset=True,
+            ),
+        ).status_code
+        == 400
+    )
+    assert (
+        v8_client.patch(
+            f"/api/v8/review/{identifier}",
+            json=_review_payload(note="", corrected_outcome="moved_toward_benign"),
+        ).status_code
+        == 400
+    )
+    assert (
+        v8_client.patch(
+            f"/api/v8/review/{identifier}",
+            json=_review_payload(manual_decision="invented"),
+        ).status_code
+        == 400
+    )
+    for decision in ("bad_match", "possible_label_problem", "needs_expert_review"):
         response = v8_client.patch(
-            f"/api/v8/review/{identifier}", json={"decision": decision, "note": ""}
+            f"/api/v8/review/{identifier}",
+            json=_review_payload(manual_decision=decision, note=""),
         )
         assert response.status_code == 400
     assert (
         v8_client.patch(
             f"/api/v8/review/{identifier}",
-            json={"decision": "match correct", "note": "x" * 5001},
+            json=_review_payload(note="x" * 5001),
+        ).status_code
+        == 400
+    )
+    assert (
+        v8_client.patch(
+            f"/api/v8/review/{identifier}",
+            json=_review_payload(
+                include_in_v9_clean_dataset=True,
+                exclude_from_v9_clean_dataset=True,
+            ),
         ).status_code
         == 400
     )
@@ -198,6 +276,7 @@ def test_v8_download_whitelist_and_model_rendering_sanity(
         "v8_case_studies.json",
         "error_analysis.csv",
         "v8_review_queue.csv",
+        "v8_review_queue_manifest.json",
         "one-page-abstract.md",
         "v8_poster_outline.md",
         "strongest_truthful_claim.txt",
@@ -241,3 +320,29 @@ def test_generic_explorer_cannot_create_a_second_v8_review_store(
     )
     assert response.status_code == 400
     assert "focused Manual Review Queue" in response.get_json()["error"]
+
+
+def test_v9_preparation_pages_and_manifest_are_explicitly_not_final(
+    v8_client: FlaskClient,
+) -> None:
+    for route in (
+        "/v9_dataset.html",
+        "/v9_training.html",
+        "/v9_results.html",
+        "/v9_explorer.html",
+    ):
+        response = v8_client.get(route)
+        assert response.status_code == 200
+        assert "V9" in response.get_data(as_text=True)
+    manifest = v8_client.get("/api/v9/dataset-summary")
+    assert manifest.status_code == 200
+    payload = manifest.get_json()
+    assert payload["number_included_messy"] == 1000
+    assert payload["number_included_clean"] == 0
+    assert payload["training_eligible"] is False
+    assert payload["final_test_allowed"] is False
+    assert payload["artifacts_stale"] is True
+    assert "review store changed after dataset build" in payload["stale_reasons"]
+    assert v8_client.get("/api/v9/download/v9_dataset_manifest.json").status_code == 200
+    assert v8_client.get("/api/v9/download/v9_messy_dataset.csv").status_code == 409
+    assert v8_client.get("/api/v9/download/not-allowed.csv").status_code == 404

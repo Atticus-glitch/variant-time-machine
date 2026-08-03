@@ -73,6 +73,20 @@ predictions before label access. The ignored prediction store and exact test row
 large/private working artifacts; the public result report records aggregate metrics,
 component-bootstrap comparisons, hashes, and the preserved implementation caveats.
 
+## V9 Dataset Preparation
+
+`outputs/manual_review/v8_review_queue.csv` is the authenticated 1,000-row structured
+review queue. `v8_review_queue_manifest.json` records its hash, source hash, fixed salts,
+and selected control IDs. `v8_review_notes.json` stores versioned manual annotations and
+history separately from frozen labels and predictions.
+
+`data/processed/v9/` is generated locally by `scripts/build_v9_dataset.py`. It contains
+the all-record messy table, clean reviewed table, excluded or pending ledger,
+expert-needed table, grouped partition manifest, and dataset manifest. The directory is
+Git-ignored because it is derived from local processed evidence. The manifest records
+all source and output hashes, class and exclusion counts, leakage checks, review gates,
+and the explicit lock on final V9 testing.
+
 `outputs/ai_holdout_v6/partition_manifest.json` uses `train`, `test`, `quarantine`, and
 `prior_holdout_excluded`. `quarantine` means the row shares a connected group with a V6
 test representative. `prior_holdout_excluded` means the row belongs to a complete V4 or

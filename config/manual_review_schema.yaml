@@ -1,0 +1,98 @@
+schema_version: 1
+schema_name: v8_to_v9_manual_review
+store_kind: v8_manual_review_decisions
+original_values_are_immutable: true
+manual_values_are_separate: true
+required_fields:
+  - review_id
+  - reviewed_at
+  - reviewer
+  - model_version
+  - variation_id
+  - vcv_accession
+  - allele_id
+  - gene
+  - old_snapshot_date
+  - new_snapshot_date
+  - old_classification_text
+  - new_classification_text
+  - normalized_old_outcome
+  - normalized_new_outcome
+  - v8_prediction
+  - v8_probability
+  - v8_confidence
+  - v8_correctness
+  - v7_prediction
+  - match_method
+  - match_confidence
+  - old_condition_text
+  - new_condition_text
+  - old_review_status
+  - new_review_status
+  - old_consequence_fields
+  - feature_values_used_by_v8
+  - official_source_links
+  - automatic_warning_flags
+  - cleared_automatic_flags
+  - manual_decision
+  - manual_error_category
+  - exclude_from_v9_clean_dataset
+  - include_in_v9_messy_dataset
+  - include_in_v9_clean_dataset
+  - label_correction
+  - corrected_outcome
+  - note
+  - reviewer_confidence
+  - revision
+manual_decisions:
+  - not_reviewed
+  - match_correct_model_wrong
+  - match_correct_model_right
+  - ambiguous_condition_scope
+  - ambiguous_aggregation
+  - bad_match
+  - possible_label_problem
+  - conflicting_classification_scope
+  - missing_critical_fields
+  - exclude_non_germline_or_wrong_scope
+  - duplicate_or_related_record_problem
+  - uncertain_manual_review
+  - needs_expert_review
+manual_error_categories:
+  - genuine_model_error
+  - false_positive_pathogenic_direction
+  - false_negative_pathogenic_direction
+  - condition_scope_changed
+  - aggregate_label_ambiguous
+  - poor_match
+  - missing_features
+  - misleading_consequence
+  - weak_old_evidence
+  - review_status_shift
+  - gene_or_component_generalization_failure
+  - label_noise
+  - non_germline_scope
+  - unknown
+reviewer_confidence_options:
+  - high
+  - medium
+  - low
+corrected_outcome_options:
+  - moved_toward_benign
+  - moved_toward_pathogenic
+note_required_when:
+  manual_decision:
+    - bad_match
+    - possible_label_problem
+    - uncertain_manual_review
+    - needs_expert_review
+  corrected_outcome_is_set: true
+  exclude_from_v9_clean_dataset: true
+rules:
+  - Original automatic labels and predictions are never overwritten.
+  - Corrected outcomes are stored only as manual annotations.
+  - Clean and excluded states cannot both be true.
+  - Every exclusion remains visible with a documented reason.
+  - Computer suggestions are not manual conclusions.
+  - A severe automatic flag affects clean inclusion only until a reviewer explicitly clears that flag with evidence in the note.
+  - Revision numbers prevent stale browser sessions from silently overwriting newer reviews.

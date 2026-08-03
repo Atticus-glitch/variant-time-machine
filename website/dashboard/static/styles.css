@@ -2840,3 +2840,70 @@ input[type="radio"] {
     grid-column: auto;
   }
 }
+
+/* Registry-driven model selection on Results. */
+.model-result-selector {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.4fr);
+  gap: 1rem 2rem;
+  align-items: end;
+  border-left: 6px solid var(--cyan);
+}
+
+.model-result-selector label {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--muted);
+  font: 800 0.72rem "Trebuchet MS", Arial, sans-serif;
+  text-transform: uppercase;
+}
+
+.model-result-selector select {
+  width: 100%;
+  min-height: 44px;
+  color: var(--ink);
+  background: var(--panel);
+  font-size: 1rem;
+}
+
+.model-selector-status {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+}
+
+.model-result-metadata {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.model-result-metadata > div {
+  padding: 0.8rem;
+  background: #f2f0e8;
+  border-top: 3px solid var(--cyan);
+  overflow-wrap: anywhere;
+}
+
+.model-result-metadata dt {
+  color: var(--muted);
+  font: 800 0.7rem "Trebuchet MS", Arial, sans-serif;
+  text-transform: uppercase;
+}
+
+.model-result-metadata dd {
+  margin: 0.35rem 0 0;
+  line-height: 1.4;
+}
+
+@media (max-width: 850px) {
+  .model-result-selector,
+  .model-result-metadata {
+    grid-template-columns: 1fr;
+  }
+
+  .model-selector-status {
+    grid-column: auto;
+  }
+}

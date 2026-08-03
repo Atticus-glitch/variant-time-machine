@@ -10,7 +10,8 @@ import pytest
 
 from variant_time_machine.v8_presentation import (
     CASE_STUDY_SALT,
-    CORRECT_SAMPLE_SIZE,
+    CORRECT_SAMPLE_SIZE_PER_GROUP,
+    DECISIONS,
     ERROR_FIELDS,
     QUEUE_FIELDS,
     SUGGESTED_CATEGORIES,
@@ -90,10 +91,10 @@ def test_fixture_error_categories_and_queue_are_deterministic() -> None:
 
     first = build_review_queue(rows, contexts, "frozen-hash")
     second = build_review_queue(list(reversed(rows)), contexts, "frozen-hash")
-    assert [row["variation_id"] for row in first] == ["2", "3", "1", "4"]
-    assert [row["variation_id"] for row in second] == ["2", "3", "1", "4"]
+    assert [row["variation_id"] for row in first] == ["3", "2", "1", "4"]
+    assert [row["variation_id"] for row in second] == ["3", "2", "1", "4"]
     assert len({row["variation_id"] for row in first}) == len(first)
-    assert "false positive" in first[0]["reasons"]
+    assert "false negative" in first[0]["reasons"]
     assert "V8/V7 disagreement" in first[0]["reasons"]
 
 
@@ -140,7 +141,8 @@ def test_generated_summary_has_exact_frozen_metrics_and_provenance() -> None:
         0.03312248143795588,
     ]
     for source in summary["provenance"]["source_artifacts"]:
-        assert source["sha256"] == sha256_file(ROOT / source["path"])
+        if "hash_status" not in source:
+            assert source["sha256"] == sha256_file(ROOT / source["path"])
 
 
 def test_generated_case_studies_have_four_balanced_groups_and_stable_ids() -> None:
@@ -212,32 +214,54 @@ def test_generated_queue_has_union_reasons_no_duplicates_and_expected_order() ->
     }
     queue_ids = [row["variation_id"] for row in queue]
     assert set(QUEUE_FIELDS) == set(queue[0])
-    assert len(queue_ids) == len(set(queue_ids))
+    assert len(queue_ids) == len(set(queue_ids)) == 1000
     assert wrong_ids | disagreement_ids <= set(queue_ids)
-    assert sum(row["correct_sample"] == "true" for row in queue) == CORRECT_SAMPLE_SIZE
+    assert sum(row["correct_sample"] == "true" for row in queue) == (
+        CORRECT_SAMPLE_SIZE_PER_GROUP * 2
+    )
+    assert (
+        sum(
+            row["correct_sample"] == "true" and row["confusion_group"] == "TN"
+            for row in queue
+        )
+        == CORRECT_SAMPLE_SIZE_PER_GROUP
+    )
+    assert (
+        sum(
+            row["correct_sample"] == "true" and row["confusion_group"] == "TP"
+            for row in queue
+        )
+        == CORRECT_SAMPLE_SIZE_PER_GROUP
+    )
+    assert sum(row["low_confidence_sample"] == "true" for row in queue) == 25
     assert sum(row["high_confidence"] == "true" for row in queue) == 19
     assert [int(row["queue_order"]) for row in queue] == list(range(1, len(queue) + 1))
-    buckets = []
-    for row in queue:
-        if "high-confidence wrong" in row["reasons"]:
-            buckets.append(0)
-        elif row["error_type"] == "FN":
-            buckets.append(1)
-        elif row["error_type"] == "FP":
-            buckets.append(2)
-        elif row["v8_v7_disagreement"] == "true":
-            buckets.append(3)
-        else:
-            buckets.append(4)
-    assert buckets == sorted(buckets)
+    assert [row["confusion_group"] for row in queue[:31]] == ["FN"] * 31
+    assert [row["confusion_group"] for row in queue[31:105]] == ["FP"] * 74
+    assert all("automatic_review_flags" in row for row in queue)
+    manifest = json.loads(
+        (ROOT / "outputs/manual_review/v8_review_queue_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert manifest["queue_rows"] == 1000
+    assert manifest["queue_sha256"] == sha256_file(
+        ROOT / "outputs/manual_review/v8_review_queue.csv"
+    )
+    assert len(manifest["selection"]["correct_sample_ids"]) == 50
+    assert len(manifest["selection"]["low_confidence_sample_ids"]) == 25
+    assert manifest["selection"]["random_at_build_time"] is False
 
 
-def test_builder_never_overwrites_existing_manual_notes(tmp_path: Path) -> None:
+def test_builder_never_overwrites_existing_manual_notes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     sources = (
         "outputs/ai_temporal_v8/temporal_test_predictions.csv",
         "outputs/evaluations/frozen/v8_metrics.json",
         "outputs/evaluations/frozen/v8_protocol_audit.json",
         "outputs/error_analysis/v8_all_rows.csv",
+        "outputs/ai_temporal_v8/model.joblib",
     )
     for relative in sources:
         destination = tmp_path / relative
@@ -247,6 +271,10 @@ def test_builder_never_overwrites_existing_manual_notes(tmp_path: Path) -> None:
     notes.parent.mkdir(parents=True, exist_ok=True)
     notes.write_text('{"schema_version": 1, "reviews": {"keep": true}}\n')
     before = notes.read_bytes()
+    monkeypatch.setattr(
+        "variant_time_machine.v8_presentation._predictor_contexts",
+        lambda database, rows, model_path: {row["variation_id"]: {} for row in rows},
+    )
     created = build_v8_presentation(tmp_path)
     assert notes.read_bytes() == before
     assert notes not in created
@@ -258,6 +286,7 @@ def test_builder_refuses_changed_frozen_prediction_source(tmp_path: Path) -> Non
         "outputs/evaluations/frozen/v8_metrics.json",
         "outputs/evaluations/frozen/v8_protocol_audit.json",
         "outputs/error_analysis/v8_all_rows.csv",
+        "outputs/ai_temporal_v8/model.joblib",
     )
     for relative in sources:
         destination = tmp_path / relative
@@ -269,16 +298,39 @@ def test_builder_refuses_changed_frozen_prediction_source(tmp_path: Path) -> Non
         build_v8_presentation(tmp_path)
 
 
-def test_builder_creates_reproducible_empty_notes_store(tmp_path: Path) -> None:
+def test_predictor_context_rejoin_rejects_changed_index_hash(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    database = tmp_path / "predictor.sqlite3"
+    model = tmp_path / "model.joblib"
+    database.write_bytes(b"changed")
+    model.write_bytes(b"model")
+    monkeypatch.setattr(
+        "variant_time_machine.v8_presentation.sha256_file", lambda path: "wrong"
+    )
+    from variant_time_machine.v8_presentation import _predictor_contexts
+
+    with pytest.raises(V8PresentationError, match="predictor index hash changed"):
+        _predictor_contexts(database, [], model)
+
+
+def test_builder_creates_reproducible_empty_notes_store(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     for relative in (
         "outputs/ai_temporal_v8/temporal_test_predictions.csv",
         "outputs/evaluations/frozen/v8_metrics.json",
         "outputs/evaluations/frozen/v8_protocol_audit.json",
         "outputs/error_analysis/v8_all_rows.csv",
+        "outputs/ai_temporal_v8/model.joblib",
     ):
         destination = tmp_path / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / relative, destination)
+    monkeypatch.setattr(
+        "variant_time_machine.v8_presentation._predictor_contexts",
+        lambda database, rows, model_path: {row["variation_id"]: {} for row in rows},
+    )
     build_v8_presentation(tmp_path)
     notes = json.loads(
         (tmp_path / "outputs/manual_review/v8_review_notes.json").read_text(
@@ -286,13 +338,7 @@ def test_builder_creates_reproducible_empty_notes_store(tmp_path: Path) -> None:
         )
     )
     assert notes["reviews"] == {}
-    assert notes["allowed_decisions"] == [
-        "match correct",
-        "match ambiguous",
-        "classification-scope problem",
-        "model genuinely wrong",
-        "exclude from final analysis",
-    ]
+    assert notes["allowed_decisions"] == list(DECISIONS)
     assert notes["provenance"]["generator"] == "scripts/build_v8_presentation.py"
 
 

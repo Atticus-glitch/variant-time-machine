@@ -48,7 +48,8 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     page = response.get_data(as_text=True)
     assert "Variant Time Machine" in page
     assert "Project Status" in page
-    assert "V8 Results and Manual Review" in page
+    assert "V9 Dataset Preparation" in page
+    assert "V8 Review and V9 Dataset Preparation" in page
     assert "Best current retrospective model" in page
     assert "V8 is not clearly superior to V7" in page
     assert "Project Progress" in page
@@ -75,6 +76,10 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert client.get("/static/research_timeline.js").status_code == 200
     assert client.get("/static/v8_results.js").status_code == 200
     assert client.get("/static/v8_review.js").status_code == 200
+    assert client.get("/static/v9_status.js").status_code == 200
+    app_script = client.get("/static/app.js").get_data(as_text=True)
+    assert 'fetchJson("/api/v9/dataset-summary").catch' in app_script
+    assert "Preparation unavailable" in app_script
     lookup_page = client.get("/variant_lookup.html")
     assert lookup_page.status_code == 200
     assert "Current Lookup" in lookup_page.get_data(as_text=True)
@@ -90,6 +95,13 @@ def test_dashboard_homepage_and_assets_load(client: FlaskClient) -> None:
     assert client.get("/research_timeline.html").status_code == 200
     assert client.get("/v8_results.html").status_code == 200
     assert client.get("/v8_review.html").status_code == 200
+    for route in (
+        "/v9_dataset.html",
+        "/v9_training.html",
+        "/v9_results.html",
+        "/v9_explorer.html",
+    ):
+        assert client.get(route).status_code == 200
 
 
 def test_ai_v4_endpoint_stays_separate_and_requires_test_approval(
@@ -220,7 +232,8 @@ def test_explorer_controls_and_compact_variant_table(client: FlaskClient) -> Non
     assert "Gene / variant" in table_head.group()
 
     results = client.get("/prediction_results.html").get_data(as_text=True)
-    assert "Resolved Direction V2 Results" in results
+    assert "Choose A Frozen Model" in results
+    assert 'id="result-model"' in results
     assert "Resolved Direction V2 Summary" in results
     assert "V2 Prediction List" in results
 

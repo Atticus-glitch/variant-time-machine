@@ -1,6 +1,6 @@
 "use strict";
 
-const state = {formula: null, page: 1, pageCount: 1, filter: "all", operationId: null, selectedId: null};
+const state = {formula: null, page: 1, pageCount: 1, filter: "all", operationId: null, selectedId: null, models: [], selectedModel: null, v2Loaded: false, v2Loading: false};
 const byId = (id) => document.getElementById(id);
 
 async function api(path, options = {}) {
@@ -32,6 +32,123 @@ function addMetric(list, label, value, help) {
   const term = document.createElement("dt"); term.textContent = label;
   const detail = document.createElement("dd"); detail.textContent = value;
   item.append(term, detail); list.append(item);
+}
+
+function registryValue(value, fallback = "Not recorded") {
+  if (value === null || value === undefined || value === "" || value === "unknown/not recorded" || value === "not recorded") return fallback;
+  if (typeof value === "number") return Number.isFinite(value) ? value.toLocaleString() : fallback;
+  if (typeof value === "string" || typeof value === "boolean") return String(value).replaceAll("_", " ");
+  return fallback;
+}
+
+function registryPercent(value) {
+  return typeof value === "number" && Number.isFinite(value) ? percent(value) : registryValue(value);
+}
+
+function addRegistryLink(container, href, text, secondary = false) {
+  const link = document.createElement("a");
+  link.className = `button-link${secondary ? " button-secondary" : ""}`;
+  link.href = href; link.textContent = text; container.append(link);
+}
+
+function setV2Visibility(visible) {
+  document.querySelectorAll("[data-v2-only]").forEach((element) => {
+    element.hidden = element.id === "prediction-detail" ? true : !visible;
+  });
+  if (!visible) state.selectedId = null;
+}
+
+function renderSelectedModel(model, comparisonWarning) {
+  state.selectedModel = model.model_id;
+  const modelName = `${registryValue(model.model_id)}: ${registryValue(model.name, "Unnamed model")}`;
+  byId("results-page-title").textContent = `${model.model_id} Results`;
+  byId("results-page-subtitle").textContent = registryValue(model.task, "Review this model's frozen registry record and available result surfaces.");
+  byId("selected-model-name").textContent = modelName;
+  byId("selected-model-boundary").textContent = registryValue(model.evaluation_reliability, "Evaluation design not recorded");
+  byId("selected-summary-title").textContent = `${modelName} Summary`;
+  byId("selected-model-status").textContent = registryValue(model.effective_status, registryValue(model.status));
+  byId("selected-model-task").textContent = registryValue(model.task);
+
+  const metadata = byId("selected-model-metadata"); metadata.replaceChildren();
+  [
+    ["Model type", model.model_type],
+    ["Evaluation design", model.evaluation_reliability],
+    ["Prediction snapshot", model.prediction_snapshot_date],
+    ["Answer snapshot", model.answer_snapshot_date],
+    ["Training records", model.train_records],
+    ["Test records", model.test_records],
+    ["Recorded inputs", model.feature_count],
+    ["Interpretability", model.interpretability],
+    ["Leakage audit", model.leakage_audit_status],
+    ["Manual review", model.manual_review_status],
+    ["Frozen", model.frozen_at_utc],
+    ["Evaluation source", model.evaluation_source],
+  ].forEach(([label, value]) => addMetric(metadata, label, registryValue(value), `Registry field: ${label}.`));
+
+  const metrics = model.metrics || {};
+  const metricList = byId("selected-model-metrics"); metricList.replaceChildren();
+  [
+    ["Accuracy", registryPercent(metrics.accuracy), "Recorded accuracy for this model's own evaluation."],
+    ["Balanced accuracy", registryPercent(metrics.balanced_accuracy), "Recorded mean recall across outcome classes."],
+    ["Macro F1", registryPercent(metrics.macro_f1), "Recorded unweighted mean class F1."],
+    ["Benign recall", registryPercent(metrics.benign_recall), "Recorded benign-class recall."],
+    ["Pathogenic recall", registryPercent(metrics.pathogenic_recall), "Recorded pathogenic-class recall."],
+    ["Predictions", registryValue(metrics.number_of_predictions), "Number of recorded predictions."],
+    ["Correct", registryValue(metrics.number_correct), "Number recorded correct."],
+    ["Wrong", registryValue(metrics.number_wrong), "Number recorded wrong."],
+    ["No prediction", registryValue(metrics.number_no_prediction), "Number recorded without a prediction."],
+    ["Not scorable", registryValue(metrics.number_not_scorable), "Number recorded as not scorable."],
+  ].forEach((item) => addMetric(metricList, ...item));
+
+  const recordedWarnings = Array.isArray(model.warnings) ? model.warnings.filter((warning) => warning && warning !== "unknown/not recorded") : [];
+  const warnings = recordedWarnings.length ? recordedWarnings : ["No model-specific warning was recorded in the registry."];
+  byId("selected-model-warnings").replaceChildren(...warnings.map((warning) => { const item = document.createElement("p"); item.textContent = warning; return item; }));
+  byId("model-comparison-warning").textContent = registryValue(comparisonWarning, "Do not rank models evaluated on different tasks or cohorts.");
+
+  const links = byId("selected-model-links"); links.replaceChildren();
+  addRegistryLink(links, "/model_versions.html", "Open Full Registry");
+  if (["V1", "V2", "V3"].includes(model.model_id)) addRegistryLink(links, "/overview.html", "Open Project Context", true);
+  if (["V4", "V5", "V6", "V7", "V8"].includes(model.model_id)) addRegistryLink(links, "/prediction_explorer.html", "Open Prediction Explorer", true);
+  if (model.model_id === "V8") {
+    addRegistryLink(links, "/v8_results.html", "Open V8 Result");
+    addRegistryLink(links, "/v8_review.html", "Open V8 Review", true);
+  }
+
+  const isV2 = model.model_id === "V2";
+  setV2Visibility(isV2);
+  if (isV2) loadV2Workspace();
+}
+
+async function loadModelRegistry() {
+  try {
+    const payload = await api("/api/model-versions");
+    state.models = Array.isArray(payload.model_records) ? payload.model_records : [];
+    if (!state.models.length) throw new Error("No model records were returned.");
+    const selector = byId("result-model"); selector.replaceChildren();
+    state.models.forEach((model) => {
+      const option = document.createElement("option"); option.value = model.model_id;
+      option.textContent = `${model.model_id} - ${registryValue(model.name, "Unnamed model")}`; selector.append(option);
+    });
+    const requested = new URLSearchParams(window.location.search).get("model")?.toUpperCase();
+    selector.value = state.models.some((model) => model.model_id === requested) ? requested : "V2";
+    if (!selector.value) selector.value = state.models[0].model_id;
+    selector.disabled = false;
+    byId("model-registry-status").textContent = `${state.models.length} frozen model records loaded. Select a version to change this view.`;
+    renderSelectedModel(state.models.find((model) => model.model_id === selector.value), payload.ranking?.warning || payload.warnings?.[0]);
+  } catch (error) {
+    byId("model-registry-status").textContent = `Could not load model versions: ${error.message}`;
+    byId("selected-model-task").textContent = "The model registry is unavailable, so no model metrics are being shown.";
+    byId("selected-model-metrics").replaceChildren();
+    byId("selected-model-warnings").replaceChildren();
+  }
+}
+
+async function loadV2Workspace() {
+  if (state.v2Loaded || state.v2Loading) return;
+  state.v2Loading = true;
+  const [available] = await Promise.all([loadSummary(), loadAI(), loadV5()]);
+  if (available) await loadList();
+  state.v2Loaded = true; state.v2Loading = false;
 }
 
 function renderSummary(summary) {
@@ -142,6 +259,12 @@ async function loadV5() { try { const summary = await api("/api/ai-v5/summary");
 async function testV5() { try { byId("ai-v5-test").disabled = true; byId("ai-v5-status").textContent = "Testing V5 on 100 fresh records..."; await api("/api/ai-v5/test", {method: "POST", body: JSON.stringify({approved: true})}); await loadV5(); } catch (error) { byId("ai-v5-status").textContent = `V5 test failed: ${error.message}`; } }
 
 byId("toggle-formula").addEventListener("click", () => { byId("formula-content").hidden = !byId("formula-content").hidden; });
+byId("result-model").addEventListener("change", (event) => {
+  const model = state.models.find((item) => item.model_id === event.target.value);
+  if (!model) return;
+  const url = new URL(window.location.href); url.searchParams.set("model", model.model_id); window.history.replaceState({}, "", url);
+  renderSelectedModel(model, byId("model-comparison-warning").textContent);
+});
 byId("formula-approval").addEventListener("change", (event) => { byId("run-predictions").disabled = !event.target.checked; });
 byId("run-predictions").addEventListener("click", runPredictions); byId("refresh-predictions").addEventListener("click", async () => { await loadSummary(); await loadList(); });
 byId("ai-v4-approval").addEventListener("change", (event) => { byId("ai-v4-test").disabled = !event.target.checked; }); byId("ai-v4-test").addEventListener("click", testAI);
@@ -151,4 +274,4 @@ byId("prediction-filters").addEventListener("click", (event) => { if (!event.tar
 byId("prediction-previous").addEventListener("click", () => { if (state.page > 1) { state.page -= 1; loadList(); } }); byId("prediction-next").addEventListener("click", () => { if (state.page < state.pageCount) { state.page += 1; loadList(); } });
 byId("close-prediction-detail").addEventListener("click", () => { byId("prediction-detail").hidden = true; }); document.querySelectorAll("[data-review]").forEach((button) => button.addEventListener("click", () => saveReview(button.dataset.review)));
 
-Promise.all([loadSummary(), loadAI(), loadV5()]).then(([available]) => { if (available) loadList(); });
+loadModelRegistry();

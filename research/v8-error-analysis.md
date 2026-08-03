@@ -49,20 +49,27 @@ The `suggested_category` field is a deterministic triage suggestion, not a revie
 - **Severe-consequence false positives:** both canonical-splice errors and both loss-of-function errors were FP; all four had confidence at least 0.8. Review whether the recorded consequence is appropriate for the relevant transcript and record.
 - **Unrecognized consequences:** five errors had `unrecognized` consequence (four FP, one FN), matching the five unverified `possible missing consequence` suggestions.
 - **In-frame indels:** four errors split evenly between FP and FN.
-- **Missing context:** all 105 errors lack recorded VCV accession, review status, and match confidence, and all have blank warning flags. Manual review must not infer clean provenance from blank fields.
+- **Missing context:** the frozen prediction artifact lacks VCV accession and later condition/review-status fields. Predictor-time review status, Allele ID, RCV accessions, conditions, and coordinates are now rejoined from the committed January 2024 index. The queue labels that provenance and does not synthesize unavailable VCV or later fields.
 - **Model disagreement:** the full review queue contains 119 V8/V7 disagreements, including errors and correct V8 records. Disagreement is useful for review prioritization, not evidence that either model is correct.
 
 ## Exact Manual Review Priorities
 
-The frozen queue contains 198 rows and applies these rules in order:
+The expanded deterministic queue contains all 1,000 V8 rows because every row has at
+least one computer suggestion, including the missing retained VCV accession. It applies
+these priorities:
 
-1. **High, bucket 0:** every wrong record with confidence at least 0.8, sorted by descending confidence and then numeric Variation ID. There are 19 records.
-2. **High, bucket 1:** every remaining false negative, sorted by descending confidence and then Variation ID. There are 18 records; together with bucket 0, the high tier contains 37 rows.
-3. **Medium, bucket 2:** every remaining false positive, sorted by descending confidence and then Variation ID. There are 68 records.
-4. **Medium, bucket 3:** remaining V8/V7 disagreements, including correct V8 predictions, sorted by descending confidence and then Variation ID. There are 75 records; together with bucket 2, the medium tier contains 143 rows.
-5. **Low, bucket 4:** remaining members of a deterministic 20-record correct sample, sorted by descending confidence and then Variation ID. The low tier contains 18 rows because two sampled correct records also disagreed with V7 and were raised to medium.
+1. All 31 false negatives, with higher-confidence cases first.
+2. All 74 false positives, with higher-confidence cases first.
+3. Remaining V8/V7 disagreements.
+4. Remaining automatic warning or missing-field cases.
+5. Seeded controls: 25 TN, 25 TP, and 25 low-confidence records.
 
-The correct control sample is selected independently of correctness interpretation by ranking correct TN/TP records with a fixed hash rule. It is included so review does not examine only failures. Within each reviewed row, check the cross-snapshot identity and scope, later aggregate label, relevant transcript/consequence, review status, submitter or condition conflict, and whether predictor fields were truly available at the predictor date. Record findings separately; do not overwrite frozen predictions or convert these suggestions into verified labels without evidence.
+The control IDs are selected by fixed SHA-256 salts and saved in
+`v8_review_queue_manifest.json`; they do not change between runs. Computer flags are
+review aids, not conclusions. Within each row, inspect identity and scope, the later
+aggregate label, transcript/consequence, review status, and whether predictor fields
+were available at the predictor date. Record findings separately and never overwrite
+frozen predictions.
 
 ## Boundary
 

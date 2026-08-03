@@ -158,6 +158,28 @@ function renderV8Summary(summary, queue) {
   }
 }
 
+function renderV9Summary(manifest) {
+  if (!manifest || manifest.unavailable) {
+    document.querySelector("#v9-clean-count").textContent = "Not built";
+    document.querySelector("#v9-excluded-count").textContent = "Not built";
+    document.querySelector("#v9-final-status").textContent = "Preparation unavailable";
+    document.querySelector("#v9-stage-label").textContent =
+      "V9 dataset build unavailable; manual review remains pending.";
+    return;
+  }
+  document.querySelector("#v9-clean-count").textContent =
+    Number(manifest.number_included_clean).toLocaleString();
+  document.querySelector("#v9-excluded-count").textContent =
+    Number(manifest.number_excluded).toLocaleString();
+  document.querySelector("#v9-final-status").textContent =
+    manifest.artifacts_stale
+      ? "Refresh required"
+      : manifest.final_test_allowed ? "Allowed by manifest" : "Not valid yet";
+  document.querySelector("#v9-stage-label").textContent = manifest.artifacts_stale
+    ? "V9 dataset build is stale and must be refreshed."
+    : manifest.headline;
+}
+
 function renderModelValidation(summary) {
   const list = document.querySelector("#model-validation-summary");
   const warnings = document.querySelector("#model-validation-warnings");
@@ -324,17 +346,19 @@ function renderError(error) {
 
 async function loadDashboard() {
   try {
-    const [status, progress, dataset, v8Summary, v8Queue] = await Promise.all([
+    const [status, progress, dataset, v8Summary, v8Queue, v9Summary] = await Promise.all([
       fetchJson("/api/status"),
       fetchJson("/api/progress"),
       fetchJson("/api/dataset"),
       fetchJson("/api/v8/summary"),
       fetchJson("/api/v8/review-queue?high_confidence=true"),
+      fetchJson("/api/v9/dataset-summary").catch((error) => ({unavailable: true, error: error.message})),
     ]);
     renderStatus(status);
     renderProgress(progress);
     renderDataset(dataset);
     renderV8Summary(v8Summary, v8Queue);
+    renderV9Summary(v9Summary);
     document.querySelector("#dashboard-health").textContent =
       "Local API connected";
   } catch (error) {
