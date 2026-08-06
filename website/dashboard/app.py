@@ -648,6 +648,9 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         V8_REVIEW_NOTES_PATH=(
             PROJECT_ROOT / "outputs" / "manual_review" / "v8_review_notes.json"
         ),
+        V8_AI_REVIEW_PATH=(
+            PROJECT_ROOT / "outputs" / "manual_review" / "v8_ai_review_suggestions.json"
+        ),
         V9_DATASET_DIR=PROJECT_ROOT / "data" / "processed" / "v9",
         V8_DOWNLOADS={
             "v8_public_summary.json": PROJECT_ROOT
@@ -699,6 +702,13 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             / "outputs"
             / "manual_review"
             / "v8_review_queue_manifest.json",
+            "v8_ai_review_suggestions.json": PROJECT_ROOT
+            / "outputs"
+            / "manual_review"
+            / "v8_ai_review_suggestions.json",
+            "v8-ai-assisted-review.md": PROJECT_ROOT
+            / "research"
+            / "v8-ai-assisted-review.md",
             "one-page-abstract.md": PROJECT_ROOT / "research" / "one-page-abstract.md",
             "v8-case-studies.md": PROJECT_ROOT / "research" / "v8-case-studies.md",
             "v8-error-analysis.md": PROJECT_ROOT / "research" / "v8-error-analysis.md",
@@ -1789,6 +1799,22 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             return jsonify(load_review_notes(Path(app.config["V8_REVIEW_NOTES_PATH"])))
         except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
             return jsonify({"error": f"V8 review notes unavailable: {exc}"}), 503
+
+    @app.get("/api/v8/ai-review-suggestions")
+    def api_v8_ai_review_suggestions():
+        try:
+            payload = load_json_object(Path(app.config["V8_AI_REVIEW_PATH"]))
+            if (
+                payload.get("review_type")
+                != "ai_assisted_suggestion_not_human_manual_review"
+                or payload.get("records_reviewed") != 105
+            ):
+                raise V8PresentationError("AI review suggestion artifact is invalid.")
+            return jsonify(payload)
+        except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
+            return jsonify(
+                {"error": f"V8 AI review suggestions unavailable: {exc}"}
+            ), 503
 
     @app.patch("/api/v8/review/<variation_id>")
     def api_v8_review_decision(variation_id: str):

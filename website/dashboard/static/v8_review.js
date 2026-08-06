@@ -102,7 +102,7 @@ function applyShortcut(kind, controls) {
   controls.note.focus();
 }
 
-function reviewCard(row, payload) {
+function reviewCard(row, payload, aiSuggestion) {
   const review = row.review || {};
   const article = document.createElement("article");
   article.className = `panel v8-review-card confusion-${row.confusion_group.toLowerCase()}`;
@@ -145,6 +145,13 @@ function reviewCard(row, payload) {
     ["Computer suggestions - not manual conclusions", flags.length ? flags.join("; ") : "None recorded"],
     ["Field provenance", row.field_provenance],
   ]);
+  const aiReview = section("AI-Assisted Triage - Human Confirmation Required", aiSuggestion ? [
+    ["Suggested decision", aiSuggestion.suggested_manual_decision.replaceAll("_", " ")],
+    ["Suggested category", aiSuggestion.suggested_error_category.replaceAll("_", " ")],
+    ["AI confidence", aiSuggestion.suggested_reviewer_confidence],
+    ["Archived evidence note", aiSuggestion.note],
+    ["Human confirmation required", aiSuggestion.requires_human_confirmation ? "Yes" : "No"],
+  ] : [["Status", "No AI suggestion recorded for this correct control"]]);
 
   const links = document.createElement("div"); links.className = "button-row review-source-actions";
   parsed(row.official_source_links, []).map(safeSourceLink).filter(Boolean).forEach((link) => links.append(link));
@@ -184,7 +191,7 @@ function reviewCard(row, payload) {
   const status = document.createElement("p"); status.className = "save-message";
   form.addEventListener("submit", (event) => { event.preventDefault(); saveReview(row, controls, status); });
   form.append(reviewerLabel, decisionField.label, categoryField.label, confidenceField.label, correctedField.label, includeMessyField.label, includeCleanField.label, excludeCleanField.label, flagResolution, noteLabel, shortcuts, submit, status);
-  article.append(header, reasons, identity, timeline, explanation, links, form); return article;
+  article.append(header, reasons, identity, timeline, explanation, aiReview, links, form); return article;
 }
 
 function queryString() {
@@ -205,8 +212,12 @@ function renderProgress(progress) {
 async function loadQueue() {
   byId("review-status-message").textContent = "Loading review case...";
   try {
-    const payload = await getJson(`/api/v8/review-queue?${queryString()}`);
-    byId("review-items").replaceChildren(...payload.rows.map((row) => reviewCard(row, payload)));
+    const [payload, aiPayload] = await Promise.all([
+      getJson(`/api/v8/review-queue?${queryString()}`),
+      getJson("/api/v8/ai-review-suggestions"),
+    ]);
+    const aiById = Object.fromEntries(aiPayload.reviews.map((review) => [review.variation_id, review]));
+    byId("review-items").replaceChildren(...payload.rows.map((row) => reviewCard(row, payload, aiById[row.variation_id])));
     byId("review-count").textContent = `${payload.progress.reviewed} / ${payload.total}`;
     renderProgress(payload.progress);
     byId("review-status-message").textContent = `${payload.filtered_total} of ${payload.total} records match. Computer flags remain suggestions.`;

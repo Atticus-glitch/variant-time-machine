@@ -1,0 +1,5707 @@
+{
+  "confusion_groups": {
+    "FN": 31,
+    "FP": 74
+  },
+  "generated_at_utc": "2026-08-06T17:48:48.979541+00:00",
+  "method": "Compare frozen predictor-time identity, RCV, and condition evidence with the exact archived July 2026 rows. Require unchanged Allele IDs, germline scope, one clear later label, and RCV or condition overlap before suggesting a genuine model error.",
+  "records_reviewed": 105,
+  "review_type": "ai_assisted_suggestion_not_human_manual_review",
+  "reviewer": "OpenCode GPT-5.6 AI-assisted evidence review",
+  "reviews": [
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": false,
+      "confusion_group": "FN",
+      "gene": "GRIA1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1668033"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [
+        "intellectual developmental disorder, autosomal dominant 67"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV004738558"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Identity and later label checks pass, but comparable old/later condition scope is not established. Human expert review is required.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1676545/",
+      "old_allele_ids": [
+        "1668033"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002221927"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [],
+      "suggested_error_category": "condition_scope_changed",
+      "suggested_exclude_from_v9_clean_dataset": true,
+      "suggested_include_in_v9_clean_dataset": false,
+      "suggested_manual_decision": "ambiguous_condition_scope",
+      "suggested_reviewer_confidence": "low",
+      "v8_confidence": 0.9989353891888757,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1676545"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "SLC24A5",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1439788"
+      ],
+      "new_classifications": [
+        "Pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002040457"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1508577/",
+      "old_allele_ids": [
+        "1439788"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002040457"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002040457"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.9293531892054593,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1508577"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "TBR1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2799426"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [
+        "tbr1-related disorder"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003410523"
+      ],
+      "new_review_statuses": [
+        "no assertion criteria provided"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2635421/",
+      "old_allele_ids": [
+        "2799426"
+      ],
+      "old_conditions": [
+        "tbr1-related condition"
+      ],
+      "old_rcv_accessions": [
+        "RCV003410523"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003410523"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.9205154563051283,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2635421"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "SPAG1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1919536"
+      ],
+      "new_classifications": [
+        "Pathogenic"
+      ],
+      "new_conditions": [
+        "primary ciliary dyskinesia 28"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002591755",
+        "RCV004721114"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2179139/",
+      "old_allele_ids": [
+        "1919536"
+      ],
+      "old_conditions": [
+        "primary ciliary dyskinesia 28"
+      ],
+      "old_rcv_accessions": [
+        "RCV002591755"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "primary ciliary dyskinesia 28"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002591755"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.9204452691277565,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2179139"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "PTH",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1971094"
+      ],
+      "new_classifications": [
+        "Pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002625575"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1917357/",
+      "old_allele_ids": [
+        "1971094"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002625575"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002625575"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.9156838739500988,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1917357"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "EXOC6B",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2174572"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003043769"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2125741/",
+      "old_allele_ids": [
+        "2174572"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003043769"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003043769"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.9144231238837542,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2125741"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "FECH",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1442526"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002011785"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1510471/",
+      "old_allele_ids": [
+        "1442526"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002011785"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002011785"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.9097781799895677,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1510471"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "DEAF1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1343111"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002043593"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1518918/",
+      "old_allele_ids": [
+        "1343111"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002043593"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002043593"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.8668825948468588,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1518918"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "SERPINF1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1499012"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002040827"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1516358/",
+      "old_allele_ids": [
+        "1499012"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002040827"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002040827"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.8445714496799983,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1516358"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "KATNIP",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2417119"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003151990"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2443383/",
+      "old_allele_ids": [
+        "2417119"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003151990"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003151990"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.8209815011693885,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2443383"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": false,
+      "confusion_group": "FN",
+      "gene": "ACACA",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2417694"
+      ],
+      "new_classifications": [
+        "Pathogenic"
+      ],
+      "new_conditions": [
+        "acetyl-coa: carboxylase deficiency"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003485860"
+      ],
+      "new_review_statuses": [
+        "no assertion criteria provided"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Identity and later label checks pass, but comparable old/later condition scope is not established. Human expert review is required.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2443957/",
+      "old_allele_ids": [
+        "2417694"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003152565"
+      ],
+      "old_review_status": "no assertion criteria provided",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [],
+      "suggested_error_category": "aggregate_label_ambiguous",
+      "suggested_exclude_from_v9_clean_dataset": true,
+      "suggested_include_in_v9_clean_dataset": false,
+      "suggested_manual_decision": "needs_expert_review",
+      "suggested_reviewer_confidence": "low",
+      "v8_confidence": 0.8156845698439319,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2443957"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": false,
+      "confusion_group": "FN",
+      "gene": "LAMB3",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2738329"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [
+        "junctional epidermolysis bullosa"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003561290",
+        "RCV005429437"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Identity and later label checks pass, but comparable old/later condition scope is not established. Human expert review is required.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2573382/",
+      "old_allele_ids": [
+        "2738329"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003317718"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [],
+      "suggested_error_category": "condition_scope_changed",
+      "suggested_exclude_from_v9_clean_dataset": true,
+      "suggested_include_in_v9_clean_dataset": false,
+      "suggested_manual_decision": "ambiguous_condition_scope",
+      "suggested_reviewer_confidence": "low",
+      "v8_confidence": 0.8151114006258867,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2573382"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "MTFMT",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2059623"
+      ],
+      "new_classifications": [
+        "Pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002806503"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1993961/",
+      "old_allele_ids": [
+        "2059623"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002806503"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002806503"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.8118932489483583,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1993961"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "CTSA",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1774520"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [
+        "combined deficiency of sialidase and beta galactosidase"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002301976"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1719216/",
+      "old_allele_ids": [
+        "1774520"
+      ],
+      "old_conditions": [
+        "combined deficiency of sialidase and beta galactosidase"
+      ],
+      "old_rcv_accessions": [
+        "RCV002301976"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "combined deficiency of sialidase and beta galactosidase"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002301976"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7967840067362129,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1719216"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "RIT1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2432534"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [
+        "cardiovascular phenotype"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003167957"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2447640/",
+      "old_allele_ids": [
+        "2432534"
+      ],
+      "old_conditions": [
+        "cardiovascular phenotype"
+      ],
+      "old_rcv_accessions": [
+        "RCV003167957"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "cardiovascular phenotype"
+      ],
+      "shared_rcv_accessions": [
+        "RCV003167957"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.79540741164783,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2447640"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "KCNJ16",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2801830"
+      ],
+      "new_classifications": [
+        "Pathogenic"
+      ],
+      "new_conditions": [
+        "hypokalemic tubulopathy and deafness",
+        "kcnj16-related disorder"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003400166",
+        "RCV006451858"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2633613/",
+      "old_allele_ids": [
+        "2801830"
+      ],
+      "old_conditions": [
+        "kcnj16-related condition"
+      ],
+      "old_rcv_accessions": [
+        "RCV003400166"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003400166"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7919758401151255,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2633613"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "CD40",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1868505"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003064608"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2138351/",
+      "old_allele_ids": [
+        "1868505"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003064608"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003064608"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7887415234185611,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2138351"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "PEPD",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1467146"
+      ],
+      "new_classifications": [
+        "Pathogenic/Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001901306"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1403780/",
+      "old_allele_ids": [
+        "1467146"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001901306"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001901306"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7840041314433392,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1403780"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "NDP",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1899667"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003100666"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2169644/",
+      "old_allele_ids": [
+        "1899667"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003100666"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003100666"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7823223512662469,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2169644"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "GPAA1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1346828"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002038950"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1523531/",
+      "old_allele_ids": [
+        "1346828"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002038950"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002038950"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.780035244797727,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1523531"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "DRAM2",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1404922"
+      ],
+      "new_classifications": [
+        "Pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001962249"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1367200/",
+      "old_allele_ids": [
+        "1404922"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001962249"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001962249"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7795431023140043,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1367200"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "TUBB3",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1334657"
+      ],
+      "new_classifications": [
+        "Pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001843614"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1343012/",
+      "old_allele_ids": [
+        "1334657"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001843614"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001843614"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7774288159356756,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1343012"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "NSF",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1691398"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [
+        "developmental and epileptic encephalopathy 96"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002272881"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1699024/",
+      "old_allele_ids": [
+        "1691398"
+      ],
+      "old_conditions": [
+        "developmental and epileptic encephalopathy 96"
+      ],
+      "old_rcv_accessions": [
+        "RCV002272881"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "developmental and epileptic encephalopathy 96"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002272881"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7671152638952466,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1699024"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": false,
+      "confusion_group": "FN",
+      "gene": "SLC12A1",
+      "generic_rcv_with_added_scope": true,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1871280"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [
+        "bartter disease type 1",
+        "bartter syndrome"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003064255",
+        "RCV004765639",
+        "RCV005002930"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "3"
+      ],
+      "note": "Identity and later label checks pass, but comparable old/later condition scope is not established. Human expert review is required.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2137670/",
+      "old_allele_ids": [
+        "1871280"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003064255"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003064255"
+      ],
+      "suggested_error_category": "condition_scope_changed",
+      "suggested_exclude_from_v9_clean_dataset": true,
+      "suggested_include_in_v9_clean_dataset": false,
+      "suggested_manual_decision": "ambiguous_condition_scope",
+      "suggested_reviewer_confidence": "low",
+      "v8_confidence": 0.766499917358587,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2137670"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "HTRA1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1381500"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001905962"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1387135/",
+      "old_allele_ids": [
+        "1381500"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001905962"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001905962"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.765057496327348,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1387135"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "AMHR2",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1903518"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003093199"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2169571/",
+      "old_allele_ids": [
+        "1903518"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003093199"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003093199"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7409345818809238,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2169571"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": false,
+      "confusion_group": "FN",
+      "gene": "HTRA1",
+      "generic_rcv_with_added_scope": true,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1969149"
+      ],
+      "new_classifications": [
+        "Pathogenic/Likely pathogenic"
+      ],
+      "new_conditions": [
+        "carasil syndrome",
+        "cerebral arterial disease",
+        "cerebral arteriopathy, autosomal dominant, with subcortical infarcts and leukoencephalopathy, type 2"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002593107",
+        "RCV005412426",
+        "RCV005622179",
+        "RCV006695719"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "4"
+      ],
+      "note": "Identity and later label checks pass, but comparable old/later condition scope is not established. Human expert review is required.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1910224/",
+      "old_allele_ids": [
+        "1969149"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002593107"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002593107"
+      ],
+      "suggested_error_category": "condition_scope_changed",
+      "suggested_exclude_from_v9_clean_dataset": true,
+      "suggested_include_in_v9_clean_dataset": false,
+      "suggested_manual_decision": "ambiguous_condition_scope",
+      "suggested_reviewer_confidence": "low",
+      "v8_confidence": 0.7338416980535025,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "1910224"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "DEAF1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2136737"
+      ],
+      "new_classifications": [
+        "Pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002996242"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2085378/",
+      "old_allele_ids": [
+        "2136737"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002996242"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002996242"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7328051006751531,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2085378"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "LOXL3",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1912109"
+      ],
+      "new_classifications": [
+        "Pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002616719"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2191065/",
+      "old_allele_ids": [
+        "1912109"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002616719"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002616719"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7226421724597356,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2191065"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "MAB21L1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1908619"
+      ],
+      "new_classifications": [
+        "Pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002582144"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2175962/",
+      "old_allele_ids": [
+        "1908619"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002582144"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002582144"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7222505002212423,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2175962"
+    },
+    {
+      "automatic_outcome": "moved_toward_pathogenic",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FN",
+      "gene": "TMC1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2146708"
+      ],
+      "new_classifications": [
+        "Likely pathogenic"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003019012"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2097852/",
+      "old_allele_ids": [
+        "2146708"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003019012"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003019012"
+      ],
+      "suggested_error_category": "false_negative_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.6942603797746273,
+      "v8_prediction": "moved_toward_benign",
+      "variation_id": "2097852"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "GP1BA",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1329223"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "bernard soulier syndrome",
+        "bernard-soulier syndrome, type a2, autosomal dominant",
+        "gp1ba-related disorder",
+        "nonarteritic anterior ischemic optic neuropathy, susceptibility to",
+        "pseudo von willebrand disease"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001822812",
+        "RCV002243466",
+        "RCV002466701",
+        "RCV002503325",
+        "RCV003407827"
+      ],
+      "new_review_statuses": [
+        "reviewed by expert panel"
+      ],
+      "new_submitter_counts": [
+        "10"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1338214/",
+      "old_allele_ids": [
+        "1329223"
+      ],
+      "old_conditions": [
+        "bernard soulier syndrome",
+        "bernard-soulier syndrome, type a2, autosomal dominant",
+        "gp1ba-related condition",
+        "nonarteritic anterior ischemic optic neuropathy, susceptibility to",
+        "pseudo von willebrand disease"
+      ],
+      "old_rcv_accessions": [
+        "RCV001822812|RCV002243466|RCV002466701|RCV002503325|RCV003407827"
+      ],
+      "old_review_status": "criteria provided, multiple submitters, no conflicts",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "bernard soulier syndrome",
+        "bernard-soulier syndrome, type a2, autosomal dominant",
+        "nonarteritic anterior ischemic optic neuropathy, susceptibility to",
+        "pseudo von willebrand disease"
+      ],
+      "shared_rcv_accessions": [],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.9950571074176209,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1338214"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "CFHR4",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1861735"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002470017"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1804720/",
+      "old_allele_ids": [
+        "1861735"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002470017"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002470017"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.9368828432310298,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1804720"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "DVL3",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1892057"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003079050"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2151981/",
+      "old_allele_ids": [
+        "1892057"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003079050"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003079050"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.9332021249391163,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2151981"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "GLI2",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1451752"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "holoprosencephaly 9",
+        "postaxial polydactyly-anterior pituitary anomalies-facial dysmorphism syndrome"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002000512"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1481314/",
+      "old_allele_ids": [
+        "1451752"
+      ],
+      "old_conditions": [
+        "holoprosencephaly 9",
+        "postaxial polydactyly-anterior pituitary anomalies-facial dysmorphism syndrome"
+      ],
+      "old_rcv_accessions": [
+        "RCV002000512"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "holoprosencephaly 9",
+        "postaxial polydactyly-anterior pituitary anomalies-facial dysmorphism syndrome"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002000512"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.8707431677760239,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1481314"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "HMCN1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1384661"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001982485"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1444570/",
+      "old_allele_ids": [
+        "1384661"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001982485"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001982485"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.8400167965860683,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1444570"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "TSEN54",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1920770"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002600034"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2184261/",
+      "old_allele_ids": [
+        "1920770"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002600034"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002600034"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.827144316186327,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2184261"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "AMPD1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1375620"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "muscle amp deaminase deficiency"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001961743"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1469777/",
+      "old_allele_ids": [
+        "1375620"
+      ],
+      "old_conditions": [
+        "muscle amp deaminase deficiency"
+      ],
+      "old_rcv_accessions": [
+        "RCV001961743"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "muscle amp deaminase deficiency"
+      ],
+      "shared_rcv_accessions": [
+        "RCV001961743"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7927954210383035,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1469777"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "UCP3",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2804046"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "ucp3-related disorder"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003392810",
+        "RCV004362865"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2634522/",
+      "old_allele_ids": [
+        "2804046"
+      ],
+      "old_conditions": [
+        "ucp3-related condition"
+      ],
+      "old_rcv_accessions": [
+        "RCV003392810"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003392810"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7726437574044066,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2634522"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "NKX2-5",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1491896"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "atrial septal defect 7"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002026496"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1514081/",
+      "old_allele_ids": [
+        "1491896"
+      ],
+      "old_conditions": [
+        "atrial septal defect 7"
+      ],
+      "old_rcv_accessions": [
+        "RCV002026496"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "atrial septal defect 7"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002026496"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7461180715141321,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1514081"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "MT-ND6",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1336254"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [
+        "leber optic atrophy",
+        "mitochondrial inheritance"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001848640",
+        "RCV005225527"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1344550/",
+      "old_allele_ids": [
+        "1336254"
+      ],
+      "old_conditions": [
+        "mitochondrial inheritance"
+      ],
+      "old_rcv_accessions": [
+        "RCV001848640"
+      ],
+      "old_review_status": "no assertion criteria provided",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "mitochondrial inheritance"
+      ],
+      "shared_rcv_accessions": [
+        "RCV001848640"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7122207985475159,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1344550"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "SYNPO",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1901346"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002582418"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2176499/",
+      "old_allele_ids": [
+        "1901346"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002582418"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002582418"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.7003407341304048,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2176499"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "KCNC3",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2014532"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002700150"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1953098/",
+      "old_allele_ids": [
+        "2014532"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002700150"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002700150"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.6930011043924129,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1953098"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "GPIHBP1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1791351"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "cardiovascular phenotype"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002333737"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1740318/",
+      "old_allele_ids": [
+        "1791351"
+      ],
+      "old_conditions": [
+        "cardiovascular phenotype"
+      ],
+      "old_rcv_accessions": [
+        "RCV002333737"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "cardiovascular phenotype"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002333737"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.6817339840129508,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1740318"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "DVL3",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1502094"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001907809"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1365050/",
+      "old_allele_ids": [
+        "1502094"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001907809"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001907809"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.668469734759352,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1365050"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "TECTA",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1435016"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001913913"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1409760/",
+      "old_allele_ids": [
+        "1435016"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001913913"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001913913"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.6061348725515225,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1409760"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ADAM22",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2401039"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002779716"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2411525/",
+      "old_allele_ids": [
+        "2401039"
+      ],
+      "old_conditions": [
+        "inborn genetic diseases"
+      ],
+      "old_rcv_accessions": [
+        "RCV002779716"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "inborn genetic diseases"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002779716"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5916305553228872,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2411525"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "GHR",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1964183"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002583089"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1902652/",
+      "old_allele_ids": [
+        "1964183"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002583089"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002583089"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5694189492842154,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1902652"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "RAB11A",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2089369"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002867228"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2031464/",
+      "old_allele_ids": [
+        "2089369"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002867228"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002867228"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5673187756375103,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2031464"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": false,
+      "confusion_group": "FP",
+      "gene": "ASXL2",
+      "generic_rcv_with_added_scope": true,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1407909"
+      ],
+      "new_classifications": [
+        "Benign/Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001881296",
+        "RCV004953259"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "3"
+      ],
+      "note": "Identity and later label checks pass, but comparable old/later condition scope is not established. Human expert review is required.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1378717/",
+      "old_allele_ids": [
+        "1407909"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001881296"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001881296"
+      ],
+      "suggested_error_category": "condition_scope_changed",
+      "suggested_exclude_from_v9_clean_dataset": true,
+      "suggested_include_in_v9_clean_dataset": false,
+      "suggested_manual_decision": "ambiguous_condition_scope",
+      "suggested_reviewer_confidence": "low",
+      "v8_confidence": 0.5642916458381362,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1378717"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "NFE2L2",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1472116"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002000979"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1485769/",
+      "old_allele_ids": [
+        "1472116"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002000979"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002000979"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.561016840283596,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1485769"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "P4HB",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1490198"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001940472"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1418602/",
+      "old_allele_ids": [
+        "1490198"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001940472"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001940472"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.556531159161481,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1418602"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "CASZ1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1943550"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003110535"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2415116/",
+      "old_allele_ids": [
+        "1943550"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003110535"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003110535"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5458121561463424,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2415116"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "PEX16",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2695378"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003291125"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2530789/",
+      "old_allele_ids": [
+        "2695378"
+      ],
+      "old_conditions": [
+        "inborn genetic diseases"
+      ],
+      "old_rcv_accessions": [
+        "RCV003291125"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "inborn genetic diseases"
+      ],
+      "shared_rcv_accessions": [
+        "RCV003291125"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5451477329458659,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2530789"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "HEPACAM",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2091265"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002907973"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2039803/",
+      "old_allele_ids": [
+        "2091265"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002907973"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002907973"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5430684911859297,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2039803"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "P4HB",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2114698"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002932197"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2049055/",
+      "old_allele_ids": [
+        "2114698"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002932197"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002932197"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5404414154528234,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2049055"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "P4HB",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2052542"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002796261"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1992889/",
+      "old_allele_ids": [
+        "2052542"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002796261"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002796261"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5373421269181842,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1992889"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ERCC6",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1875250"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003056608"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2140752/",
+      "old_allele_ids": [
+        "1875250"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003056608"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003056608"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5321746621774255,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2140752"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "SLC39A14",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1978998"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002590977"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1920086/",
+      "old_allele_ids": [
+        "1978998"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002590977"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002590977"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5235589696442413,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1920086"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "TSEN54",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1451894"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001994190"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1481456/",
+      "old_allele_ids": [
+        "1451894"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001994190"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001994190"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5161412583117678,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1481456"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": false,
+      "confusion_group": "FP",
+      "gene": "FGD1",
+      "generic_rcv_with_added_scope": true,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1932096"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002607735",
+        "RCV006660562"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Identity and later label checks pass, but comparable old/later condition scope is not established. Human expert review is required.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2192947/",
+      "old_allele_ids": [
+        "1932096"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002607735"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002607735"
+      ],
+      "suggested_error_category": "condition_scope_changed",
+      "suggested_exclude_from_v9_clean_dataset": true,
+      "suggested_include_in_v9_clean_dataset": false,
+      "suggested_manual_decision": "ambiguous_condition_scope",
+      "suggested_reviewer_confidence": "low",
+      "v8_confidence": 0.5121985889358127,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2192947"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "HLTF",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2797320"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "hltf-related disorder"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003427850"
+      ],
+      "new_review_statuses": [
+        "no assertion criteria provided"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2634181/",
+      "old_allele_ids": [
+        "2797320"
+      ],
+      "old_conditions": [
+        "hltf-related condition"
+      ],
+      "old_rcv_accessions": [
+        "RCV003427850"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003427850"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5095398904426833,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2634181"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ARCN1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2050129"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002807120"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1996920/",
+      "old_allele_ids": [
+        "2050129"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002807120"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002807120"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.5076603699621796,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1996920"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ITGB4",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1962400"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002581389"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1908216/",
+      "old_allele_ids": [
+        "1962400"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002581389"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002581389"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.500116285327123,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1908216"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "TRPV3",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1925595"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002643643"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2192096/",
+      "old_allele_ids": [
+        "1925595"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002643643"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002643643"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.49917475802934785,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2192096"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "KDM1A",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2258477"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002788604",
+        "RCV005434038"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2260860/",
+      "old_allele_ids": [
+        "2258477"
+      ],
+      "old_conditions": [
+        "inborn genetic diseases"
+      ],
+      "old_rcv_accessions": [
+        "RCV002788604"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "inborn genetic diseases"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002788604"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.4967638422980666,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2260860"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "MRPS34",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2456289"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003195593"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2487837/",
+      "old_allele_ids": [
+        "2456289"
+      ],
+      "old_conditions": [
+        "inborn genetic diseases"
+      ],
+      "old_rcv_accessions": [
+        "RCV003195593"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "inborn genetic diseases"
+      ],
+      "shared_rcv_accessions": [
+        "RCV003195593"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.4942818817850339,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2487837"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ASXL2",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1513567"
+      ],
+      "new_classifications": [
+        "Benign/Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001940037"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1410260/",
+      "old_allele_ids": [
+        "1513567"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001940037"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001940037"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.48042790207350533,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1410260"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "PEPD",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1882484"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003077705"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2153622/",
+      "old_allele_ids": [
+        "1882484"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003077705"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003077705"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.4800239693475896,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2153622"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ZBTB18",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1870760"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003077021"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2147112/",
+      "old_allele_ids": [
+        "1870760"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003077021"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003077021"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.47756393071303266,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2147112"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "IFITM5",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2178316"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003047569"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2127003/",
+      "old_allele_ids": [
+        "2178316"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003047569"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003047569"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.4758426758094477,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2127003"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "TUBB3",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2149164"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003021085"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2093950/",
+      "old_allele_ids": [
+        "2149164"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003021085"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003021085"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.4716232622112248,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2093950"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ABCA12",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1405622"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001899115"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1404861/",
+      "old_allele_ids": [
+        "1405622"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001899115"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001899115"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.47059957279038445,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1404861"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "SOX9",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1408073"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [
+        "camptomelic dysplasia"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001883493"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1378882/",
+      "old_allele_ids": [
+        "1408073"
+      ],
+      "old_conditions": [
+        "camptomelic dysplasia"
+      ],
+      "old_rcv_accessions": [
+        "RCV001883493"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "camptomelic dysplasia"
+      ],
+      "shared_rcv_accessions": [
+        "RCV001883493"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.47011971451645823,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1378882"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "HMCN1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2125801"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002954242"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2068277/",
+      "old_allele_ids": [
+        "2125801"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002954242"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002954242"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.4688345264682361,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2068277"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ARFGEF1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2361701"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002679274"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2380813/",
+      "old_allele_ids": [
+        "2361701"
+      ],
+      "old_conditions": [
+        "inborn genetic diseases"
+      ],
+      "old_rcv_accessions": [
+        "RCV002679274"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "inborn genetic diseases"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002679274"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.4673504342597057,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2380813"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "MAST1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2078267"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002880771"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2029336/",
+      "old_allele_ids": [
+        "2078267"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002880771"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002880771"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.44776007789448513,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2029336"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "STUB1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2805075"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003404894"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2637596/",
+      "old_allele_ids": [
+        "2805075"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003404894"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003404894"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.4451035900577196,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2637596"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "SPTA1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1986223"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002642553"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1936392/",
+      "old_allele_ids": [
+        "1986223"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002642553"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002642553"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.4146209657642129,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1936392"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": false,
+      "confusion_group": "FP",
+      "gene": "LEPR",
+      "generic_rcv_with_added_scope": true,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1465828"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "lepr-related disorder"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002050590",
+        "RCV004734287"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Identity and later label checks pass, but comparable old/later condition scope is not established. Human expert review is required.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1347398/",
+      "old_allele_ids": [
+        "1465828"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002050590"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002050590"
+      ],
+      "suggested_error_category": "condition_scope_changed",
+      "suggested_exclude_from_v9_clean_dataset": true,
+      "suggested_include_in_v9_clean_dataset": false,
+      "suggested_manual_decision": "ambiguous_condition_scope",
+      "suggested_reviewer_confidence": "low",
+      "v8_confidence": 0.41441237849811385,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1347398"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ASXL2",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1965900"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002600103"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1909126/",
+      "old_allele_ids": [
+        "1965900"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002600103"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002600103"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.4056356729267961,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1909126"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ERCC6",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1875255"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003056612"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2140757/",
+      "old_allele_ids": [
+        "1875255"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003056612"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003056612"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.4044404939891501,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2140757"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "P4HB",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1460513"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001904104"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1358214/",
+      "old_allele_ids": [
+        "1460513"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001904104"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001904104"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.403244439222074,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1358214"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "STAT4",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1363724"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001864918"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1360281/",
+      "old_allele_ids": [
+        "1363724"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001864918"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001864918"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3996791847533945,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1360281"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "SOX11",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1772006"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002299574"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1718030/",
+      "old_allele_ids": [
+        "1772006"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002299574"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002299574"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3985000227064132,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1718030"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "SOX9",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1442703"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "camptomelic dysplasia"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002013752"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1508049/",
+      "old_allele_ids": [
+        "1442703"
+      ],
+      "old_conditions": [
+        "camptomelic dysplasia"
+      ],
+      "old_rcv_accessions": [
+        "RCV002013752"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "camptomelic dysplasia"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002013752"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3922204085709789,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1508049"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "NFE2L2",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1346887"
+      ],
+      "new_classifications": [
+        "Benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002038993"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1523590/",
+      "old_allele_ids": [
+        "1346887"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002038993"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002038993"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.38644655607127015,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1523590"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "KCND3",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1510162"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "spinocerebellar ataxia type 19/22"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001920263"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1410725/",
+      "old_allele_ids": [
+        "1510162"
+      ],
+      "old_conditions": [
+        "spinocerebellar ataxia type 19/22"
+      ],
+      "old_rcv_accessions": [
+        "RCV001920263"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "spinocerebellar ataxia type 19/22"
+      ],
+      "shared_rcv_accessions": [
+        "RCV001920263"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.37713752988550886,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1410725"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ASXL2",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1384847"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001982583"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1444757/",
+      "old_allele_ids": [
+        "1384847"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001982583"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001982583"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3745915315397886,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1444757"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "SPEN",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2297820"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002875068"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2308472/",
+      "old_allele_ids": [
+        "2297820"
+      ],
+      "old_conditions": [
+        "inborn genetic diseases"
+      ],
+      "old_rcv_accessions": [
+        "RCV002875068"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "inborn genetic diseases"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002875068"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3743171965286271,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2308472"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "MTFMT",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2194439"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002677033"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2210992/",
+      "old_allele_ids": [
+        "2194439"
+      ],
+      "old_conditions": [
+        "inborn genetic diseases"
+      ],
+      "old_rcv_accessions": [
+        "RCV002677033"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "inborn genetic diseases"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002677033"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.37213672750844745,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2210992"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "MAST1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2147319"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003021875"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2099761/",
+      "old_allele_ids": [
+        "2147319"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003021875"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003021875"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.37204469798756246,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2099761"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "MYO15A",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1357164"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001894348"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1358885/",
+      "old_allele_ids": [
+        "1357164"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001894348"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001894348"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3706502725675724,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1358885"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "KCNN2",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2827939"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003428581"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2655642/",
+      "old_allele_ids": [
+        "2827939"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003428581"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003428581"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.36791804457440874,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2655642"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "CYP4F22",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1425570"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001928731"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1423291/",
+      "old_allele_ids": [
+        "1425570"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001928731"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001928731"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.36079388541626045,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1423291"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "ETFB",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "200351"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "multiple acyl-coa dehydrogenase deficiency"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001985428"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1446180/",
+      "old_allele_ids": [
+        "200351"
+      ],
+      "old_conditions": [
+        "multiple acyl-coa dehydrogenase deficiency"
+      ],
+      "old_rcv_accessions": [
+        "RCV001985428"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "multiple acyl-coa dehydrogenase deficiency"
+      ],
+      "shared_rcv_accessions": [
+        "RCV001985428"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3553859829625787,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1446180"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "PHF8",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1854274"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002437981"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1797356/",
+      "old_allele_ids": [
+        "1854274"
+      ],
+      "old_conditions": [
+        "inborn genetic diseases"
+      ],
+      "old_rcv_accessions": [
+        "RCV002437981"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "inborn genetic diseases"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002437981"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.35305417649903975,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1797356"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "RAD21",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1429233"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "cornelia de lange syndrome 4",
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002000434",
+        "RCV004656806"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1481022/",
+      "old_allele_ids": [
+        "1429233"
+      ],
+      "old_conditions": [
+        "cornelia de lange syndrome 4"
+      ],
+      "old_rcv_accessions": [
+        "RCV002000434"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "cornelia de lange syndrome 4"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002000434"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3529893107466268,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1481022"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "NFE2L2",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1417517"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002047881"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1504767/",
+      "old_allele_ids": [
+        "1417517"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV002047881"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV002047881"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3529893107466268,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1504767"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "CASZ1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1356294"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001943260"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1412696/",
+      "old_allele_ids": [
+        "1356294"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001943260"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001943260"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3529603817109909,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1412696"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "KRT17",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1892178"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV003079118"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2152101/",
+      "old_allele_ids": [
+        "1892178"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV003079118"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV003079118"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3528936853823114,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2152101"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "TBR1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1825706"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002387246",
+        "RCV005424891"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1768273/",
+      "old_allele_ids": [
+        "1825706"
+      ],
+      "old_conditions": [
+        "inborn genetic diseases"
+      ],
+      "old_rcv_accessions": [
+        "RCV002387246"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "inborn genetic diseases"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002387246"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.34983679827076886,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1768273"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "GPIHBP1",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1809777"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "cardiovascular phenotype"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002340895"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1746288/",
+      "old_allele_ids": [
+        "1809777"
+      ],
+      "old_conditions": [
+        "cardiovascular phenotype"
+      ],
+      "old_rcv_accessions": [
+        "RCV002340895"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "cardiovascular phenotype"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002340895"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.3476336335886846,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1746288"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": false,
+      "confusion_group": "FP",
+      "gene": "ASXL2",
+      "generic_rcv_with_added_scope": true,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "1379282"
+      ],
+      "new_classifications": [
+        "Benign/Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV001906264",
+        "RCV005729583"
+      ],
+      "new_review_statuses": [
+        "criteria provided, multiple submitters, no conflicts"
+      ],
+      "new_submitter_counts": [
+        "2"
+      ],
+      "note": "Identity and later label checks pass, but comparable old/later condition scope is not established. Human expert review is required.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/1401295/",
+      "old_allele_ids": [
+        "1379282"
+      ],
+      "old_conditions": [],
+      "old_rcv_accessions": [
+        "RCV001906264"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [],
+      "shared_rcv_accessions": [
+        "RCV001906264"
+      ],
+      "suggested_error_category": "condition_scope_changed",
+      "suggested_exclude_from_v9_clean_dataset": true,
+      "suggested_include_in_v9_clean_dataset": false,
+      "suggested_manual_decision": "ambiguous_condition_scope",
+      "suggested_reviewer_confidence": "low",
+      "v8_confidence": 0.34696236350648746,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "1401295"
+    },
+    {
+      "automatic_outcome": "moved_toward_benign",
+      "clear_label_check": true,
+      "condition_scope_support": true,
+      "confusion_group": "FP",
+      "gene": "PCDH12",
+      "generic_rcv_with_added_scope": false,
+      "germline_scope_check": true,
+      "identity_check": true,
+      "new_allele_ids": [
+        "2389549"
+      ],
+      "new_classifications": [
+        "Likely benign"
+      ],
+      "new_conditions": [
+        "inborn genetic diseases"
+      ],
+      "new_origins": [
+        "germline"
+      ],
+      "new_rcv_accessions": [
+        "RCV002764855"
+      ],
+      "new_review_statuses": [
+        "criteria provided, single submitter"
+      ],
+      "new_submitter_counts": [
+        "1"
+      ],
+      "note": "Frozen identity, germline, and clear-label checks pass; archived RCV or condition scope overlaps. This is a likely genuine V8 model error, pending human confirmation.",
+      "official_source": "https://www.ncbi.nlm.nih.gov/clinvar/variation/2408951/",
+      "old_allele_ids": [
+        "2389549"
+      ],
+      "old_conditions": [
+        "inborn genetic diseases"
+      ],
+      "old_rcv_accessions": [
+        "RCV002764855"
+      ],
+      "old_review_status": "criteria provided, single submitter",
+      "requires_human_confirmation": true,
+      "shared_conditions": [
+        "inborn genetic diseases"
+      ],
+      "shared_rcv_accessions": [
+        "RCV002764855"
+      ],
+      "suggested_error_category": "false_positive_pathogenic_direction",
+      "suggested_exclude_from_v9_clean_dataset": false,
+      "suggested_include_in_v9_clean_dataset": true,
+      "suggested_manual_decision": "match_correct_model_wrong",
+      "suggested_reviewer_confidence": "medium",
+      "v8_confidence": 0.31634766633004036,
+      "v8_prediction": "moved_toward_pathogenic",
+      "variation_id": "2408951"
+    }
+  ],
+  "schema_version": 1,
+  "source_hashes": {
+    "answer_archive": "b3da921c707ff50cb4822f04d961834a9e89ef864b4c28bb5308245b93ac4077",
+    "review_queue": "f5c3f57c3ac39cd5b3bf5b4be8405b8c8130dd62dc04ed32c9ce1174135e5a42"
+  },
+  "suggested_decisions": {
+    "ambiguous_condition_scope": 8,
+    "match_correct_model_wrong": 96,
+    "needs_expert_review": 1
+  },
+  "warning": "These are AI-assisted triage suggestions, not human genetics review, not medical advice, and not sufficient to unlock final V9 training."
+}

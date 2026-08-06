@@ -4,37 +4,37 @@
 
 **Frozen planning document: 2026-08-02. No final V9 model exists.**
 
-This plan must be frozen before any final-test labels are accessed. It authorizes no
-final-test evaluation today. Dataset preparation exists, but review adjudication and
-candidate fitting are incomplete.
+I must freeze this plan before I access any final-test labels. It does not authorize a
+final-test evaluation today. I have prepared the dataset structure, but review
+adjudication and candidate fitting are incomplete.
 
 ## Research Question
 
-Can an older-snapshot model improve balanced discrimination of later benign-direction
-versus pathogenic-direction aggregate outcomes under stricter review, temporal
-separation, and connected-gene-component isolation than the current development
-process? The task remains conditional on records that later have a clear aggregate
-direction; it does not predict whether an unresolved record will resolve.
+I want to find out whether an older-snapshot model can improve balanced discrimination
+of later benign-direction versus pathogenic-direction aggregate outcomes under stricter
+review, temporal separation, and connected-gene-component isolation than the current
+development process. My task remains conditional on records that later have a clear
+aggregate direction; it does not predict whether an unresolved record will resolve.
 
 ## Review Gate
 
-No official V9 candidate fitting may begin until all V8 false negatives, all
+I cannot begin official V9 candidate fitting until all V8 false negatives, all
 high-confidence V8 false positives, at least 25 true negatives, and at least 25 true
 positives have completed schema-valid manual reviews. Every V8/V7 disagreement must be
-reviewed or remain explicitly queued with status, and exclusion-reason counts must be
-reported. Uncertain or expert-needed decisions do not count as clean approval.
+reviewed or remain explicitly queued with status, and I must report exclusion-reason
+counts. Uncertain or expert-needed decisions do not count as clean approval.
 
-Passing the numerical gate does not permit silent edits. Originals remain immutable;
-accepted corrections and exclusions are applied only while producing a new versioned
-development dataset linked to review IDs. The current completed-review count is 0, so
-the gate has not passed.
+Passing the numerical gate would not let me make silent edits. Originals remain
+immutable; I can apply accepted corrections and exclusions only while producing a new
+versioned development dataset linked to review IDs. The current completed-review count
+is 0, so the gate has not passed.
 
 ## Dataset Freeze
 
-Before model work, publish a manifest containing source paths and hashes, snapshot
-dates, inclusion and exclusion rules, accepted review IDs, correction policy, duplicate
-checks, class counts, component counts, and a dataset hash. Any data-affecting change
-creates a new dataset version and invalidates downstream candidate results.
+Before model work, I must publish a manifest containing source paths and hashes,
+snapshot dates, inclusion and exclusion rules, accepted review IDs, correction policy,
+duplicate checks, class counts, component counts, and a dataset hash. Any data-affecting
+change creates a new dataset version and invalidates downstream candidate results.
 
 ## Grouped Development Splits
 
@@ -66,7 +66,7 @@ creates a new dataset version and invalidates downstream candidate results.
 
 ## Candidate Families
 
-Evaluate a small frozen set rather than an open-ended search:
+I will evaluate a small frozen set instead of doing an open-ended search:
 
 1. Elastic-net logistic regression.
 2. Calibrated histogram gradient boosting.
@@ -76,9 +76,9 @@ Evaluate a small frozen set rather than an open-ended search:
 6. Majority-direction baseline.
 7. Frozen V8 evaluated on the same records where possible.
 
-Hyperparameter grids, random seeds, weighting, calibration choices, and threshold grids
-must be fixed in the dataset/model preregistration before fitting. Adding a family after
-seeing grouped validation results starts a new plan version.
+I must fix hyperparameter grids, random seeds, weighting, calibration choices, and
+threshold grids in the dataset/model preregistration before fitting. If I add a family
+after seeing grouped validation results, I must start a new plan version.
 
 ## Candidate Ranking Rules
 
@@ -97,11 +97,11 @@ seeing grouped validation results starts a new plan version.
 
 ## Calibration And Threshold
 
-Calibration and threshold selection use only grouped out-of-fold predictions generated
-inside development. The exact calibrator and threshold grid must be frozen before
-candidate fitting. Tied thresholds choose the value closest to 0.5 and then the lower
-value. Report the uncalibrated 0.5 result as a sensitivity analysis, not as a replacement
-selected after inspection.
+I will use only grouped out-of-fold predictions generated inside development for
+calibration and threshold selection. I must freeze the exact calibrator and threshold
+grid before candidate fitting. For tied thresholds, I will choose the value closest to
+0.5 and then the lower value. I will report the uncalibrated 0.5 result as a sensitivity
+analysis, not as a replacement selected after inspection.
 
 ## Final-Test Guardrails
 
@@ -120,21 +120,21 @@ selected after inspection.
 
 ## Reporting
 
-The preregistered primary metric is component-weighted balanced accuracy. Also report
-record-weighted balanced accuracy, accuracy and majority baseline, per-class recall,
-macro F1, ROC AUC, average precision, Brier score, fixed-bin calibration, confusion
-matrix, prevalence, component counts, and 10,000 component-bootstrap intervals. Label
-subgroup analyses as secondary and report their denominators.
+My preregistered primary metric is component-weighted balanced accuracy. I will also
+report record-weighted balanced accuracy, accuracy and majority baseline, per-class
+recall, macro F1, ROC AUC, average precision, Brier score, fixed-bin calibration,
+confusion matrix, prevalence, component counts, and 10,000 component-bootstrap
+intervals. I will label subgroup analyses as secondary and report their denominators.
 
 ## Stop Conditions
 
-Stop before fitting if the review gate, provenance checks, dataset accounting, or
-grouped split checks fail. Stop before final evaluation if any artifact is unfrozen or
-any final membership or label was accessed. A weak or negative valid final result is
-reported unchanged.
+I will stop before fitting if the review gate, provenance checks, dataset accounting, or
+grouped split checks fail. I will stop before final evaluation if any artifact is
+unfrozen or any final membership or label was accessed. I will report a weak or negative
+valid final result unchanged.
 
 ## Current Decision
 
-There is no selected V9 candidate, no trained final V9 pipeline, no V9 prediction
-commitment, and no valid V9 final-test result. V8 remains the latest completed model
+I have no selected V9 candidate, no trained final V9 pipeline, no V9 prediction
+commitment, and no valid V9 final-test result. V8 remains my latest completed model
 evaluation while this plan is pending.

@@ -128,6 +128,13 @@ def test_v8_summary_and_case_studies_are_internally_consistent(
         sum(case["confusion_group"] == group for case in cases) == 5
         for group in ("TN", "FP", "FN", "TP")
     )
+    ai_review = v8_client.get("/api/v8/ai-review-suggestions")
+    assert ai_review.status_code == 200
+    assert ai_review.get_json()["suggested_decisions"] == {
+        "ambiguous_condition_scope": 8,
+        "match_correct_model_wrong": 96,
+        "needs_expert_review": 1,
+    }
 
 
 def test_v8_queue_order_filters_and_separate_atomic_persistence(
@@ -277,6 +284,8 @@ def test_v8_download_whitelist_and_model_rendering_sanity(
         "error_analysis.csv",
         "v8_review_queue.csv",
         "v8_review_queue_manifest.json",
+        "v8_ai_review_suggestions.json",
+        "v8-ai-assisted-review.md",
         "one-page-abstract.md",
         "v8_poster_outline.md",
         "strongest_truthful_claim.txt",
