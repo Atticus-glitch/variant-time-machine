@@ -1,1 +1,20 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>V9 Model Training | Variant Time Machine</title><link rel="stylesheet" href="/static/styles.css"><script src="/static/v9_status.js" defer></script></head><body><a class="skip-link" href="#main-content">Skip to main content</a><header class="site-header"><div class="header-grid"><div><p class="eyebrow">Candidate stage is locked</p><h1>V9 Model Training</h1><p class="subtitle">I cannot train candidates until the manual-review minimum is met.</p></div></div></header><main id="main-content" class="prediction-main"><section class="panel v8-warning"><h2 id="v9-status">Loading gate...</h2><p>I have not trained a V9 candidate or official model.</p></section><section class="panel"><h2>Planned Candidates</h2><p>I plan to compare elastic-net logistic regression, calibrated histogram gradient boosting, ExtraTrees, clue-score, consequence-only, majority, and the frozen V8 same-record baseline.</p><p>I will follow <code>research/v9-model-selection-plan.md</code> and use grouped leakage controls, validation balanced accuracy, macro F1, pathogenic recall, calibration, bootstrap stability, interpretability, and simplicity.</p><ul id="v9-gate"></ul><p><a class="button-link" href="/v9_dataset.html">Open Dataset Review</a></p></section></main><footer><p>I will not use final test data during model selection.</p></footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>V9 Exploratory Training | Variant Time Machine</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/v9_status.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="header-grid"><div><p class="eyebrow">Opened-data exploration only</p><h1>V9 Exploratory Training</h1><p class="subtitle">I trained a fixed set of candidates with nested grouped validation, but I did not select an official V9 model or open a final test set.</p></div></div></header>
+  <main id="main-content" class="prediction-main">
+    <section class="panel v8-warning"><h2 id="v9-status">Loading review gate...</h2><p id="v9-exploratory-status">Loading exploratory results...</p></section>
+    <section class="panel"><h2>Same-Record Development Evidence</h2><p>These 1,000 records were already opened during V8 analysis. I used five outer component-grouped folds and four inner grouped folds so related records stayed together. The primary metric gives each connected component equal total weight.</p><div class="table-wrap"><table><thead><tr><th>Candidate</th><th>Component-weighted balanced accuracy</th><th>Row balanced accuracy</th><th>Macro F1</th><th>Brier</th><th>TN / FP / FN / TP</th></tr></thead><tbody id="v9-candidate-rows"><tr><td colspan="6">Loading candidates...</td></tr></tbody></table></div><p>The frozen V8 reference was not eligible to become a new candidate-family leader. It is shown because it is the strongest same-record reference and prevents me from overstating the new models.</p></section>
+    <section class="panel"><h2>What Is Still Locked</h2><ul id="v9-gate"></ul><p>All 1,000 labels are still pending human review, the clean reviewed dataset has zero rows, and no later untouched component-disjoint cohort exists. That means the official winner remains <code>null</code> and final testing remains false.</p><div class="download-grid"><a href="/api/v9/exploratory/download/candidate_metrics.json">Candidate metrics</a><a href="/api/v9/exploratory/download/bootstrap_intervals.json">Bootstrap intervals</a><a href="/api/v9/exploratory/download/nested_selections.json">Fold selections</a><a href="/api/v9/exploratory/download/oof_predictions.csv">OOF predictions</a><a href="/api/v9/exploratory/download/run_manifest.json">Run manifest</a></div><p><a class="button-link" href="/v9_dataset.html">Open Dataset Review</a></p></section>
+  </main>
+  <footer><p>This exploration is not clinical validation, an official V9 result, or evidence that a new model beats frozen V8.</p></footer>
+</body>
+</html>

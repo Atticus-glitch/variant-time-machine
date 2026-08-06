@@ -72,54 +72,89 @@ V8 errors.
 
 ## 9. V9 Model Candidates
 
-My frozen candidate plan includes elastic-net logistic regression, calibrated histogram
-gradient boosting, ExtraTrees or random forest, clue-score, consequence-only, majority,
-and frozen V8 same-record baselines. I have not trained any candidate.
+I ran a fixed exploratory comparison on the 1,000 previously opened V8 records. I used
+five outer component-grouped folds and four inner grouped folds for elastic-net logistic
+regression, calibrated histogram gradient boosting, and ExtraTrees. I also scored
+consequence-only, majority, frozen V8, and Clue Score V1 baselines. This run did not use
+the empty clean-reviewed dataset and cannot select an official V9 model.
+
+| Candidate | Component-weighted balanced accuracy | Row balanced accuracy | Macro F1 | Brier score | TN / FP / FN / TP |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Frozen V8 reference | 88.22% | 87.12% | 84.04% | 0.0633 | 740 / 74 / 31 / 155 |
+| Elastic-net logistic | 87.35% | 85.80% | 80.18% | 0.0687 | 701 / 113 / 27 / 159 |
+| Histogram gradient boosting | 86.17% | 86.15% | 81.13% | 0.0707 | 711 / 103 / 28 / 158 |
+| ExtraTrees | 85.70% | 84.99% | 78.13% | 0.0638 | 679 / 135 / 25 / 161 |
+| Consequence only | 84.29% | 83.50% | 75.09% | 0.1910 | 646 / 168 / 23 / 163 |
+| Majority | 50.00% | 50.00% | 44.87% | 0.1860 | 814 / 0 / 186 / 0 |
+
+Elastic net led the new candidate families, with outer-fold component-weighted balanced
+accuracy ranging from 84.77% to 90.46%. Frozen V8 still had the higher same-record point
+estimate and better macro F1 and Brier score. I therefore call V8 the strongest
+same-record reference, not elastic net the overall winner.
+
+Clue Score V1 made directional calls for 450 of 1,000 records and abstained on 550. It
+was correct on 446 of the 450 covered records, but that 45% coverage was selected by the
+score's directional thresholds. I report it only as a coverage-conditioned baseline and
+do not rank its 99.45% covered-record component-weighted balanced accuracy against models
+that predict every row.
 
 ## 10. V9 Model Selection Rule
 
-I follow `research/v9-model-selection-plan.md`, which requires a leakage pass,
-grouped-validation balanced accuracy, macro F1, pathogenic recall, calibration,
-bootstrap stability, interpretability, and simplicity. I cannot use final-test labels in
-selection.
+I left the official gates in `research/v9-model-selection-plan.md` locked and used the
+separate opened-data protocol in `config/v9_exploratory.json`. The outer and inner folds
+were grouped by connected component, each component had equal total weight, and
+calibration and threshold selection stayed inside each outer training partition. The
+fixed exploratory rule named elastic net the leader among new candidate families.
+Frozen V8 and coverage-conditioned Clue Score V1 were references, not rank-eligible new
+candidates. I cannot use final-test labels in selection.
 
 ## 11. Final V9 Results
 
-I have no final V9 metrics. The manual-review minimum is not met, the manifest sets
-`training_eligible` and `final_test_allowed` to false, and I have not trained or
-evaluated a candidate or final model.
+I still have no final V9 metrics. The manual-review minimum is not met, the dataset
+manifest sets `training_eligible` and `final_test_allowed` to false, the official winner
+is `null`, and `final_test_evaluated` is false. The values above are nested out-of-fold
+development estimates on opened V8 records, not final V9 results.
 
 ## 12. Comparison To V8 And V7
 
-I am keeping V8 frozen at 89.5% accuracy and 87.12% balanced accuracy with TN 740, FP
-74, FN 31, and TP 155. Same-record V7 balanced accuracy was 86.67%; the paired interval
-for the V8-V7 difference crossed zero, so I do not claim clear superiority. There is no
-V9 comparison yet.
+I am keeping V8 frozen at 89.5% accuracy and 87.12% row balanced accuracy with TN 740,
+FP 74, FN 31, and TP 155. Its component-weighted balanced accuracy on these records was
+88.22%, compared with 87.35% for exploratory elastic net. The 10,000-component bootstrap
+interval for elastic net minus V8 was -3.35 to +1.74 percentage points, which crosses
+zero. This bootstrap conditions on fixed out-of-fold predictions and does not include
+all model-selection uncertainty. Also, the comparison is asymmetric: V8 was evaluated
+while sealed, while the exploratory candidates were developed with folds drawn from the
+already opened V8 labels. I do not claim that elastic net improves on V8.
 
 ## 13. Error Analysis
 
-I queued all 105 V8 errors. Computer flags identify high-confidence wrong cases, V8/V7
-disagreement, missing retained VCV accession, unrecognized consequence, and related
-component groups. I treat these as suggestions for review, not conclusions.
+I queued all 105 V8 errors. An AI-assisted evidence review marked 96 as likely genuine
+model errors, 8 as condition-scope ambiguities, and 1 as needing expert provenance
+review. Every suggestion still requires human confirmation and did not alter the human
+review ledger. The new candidates traded fewer false negatives for many more false
+positives: elastic net reduced FN from 31 to 27 but increased FP from 74 to 113.
 
 ## 14. Limitations
 
 My task is retrospective and outcome-selected. It does not predict whether a VUS will
-resolve. Later condition and review-status fields were not retained in the frozen V8
-artifact and remain `not recorded`. I previously accessed the July 2026 archive for V7,
-and V8 membership is reconstructible. Nothing here supports clinical use.
+resolve. The exploratory labels were already opened, manual review is incomplete, fold
+estimates reuse the same 1,000-record cohort, and no later untouched component-disjoint
+cohort exists. Later condition and review-status fields were not retained in the frozen
+V8 artifact and remain `not recorded`. I previously accessed the July 2026 archive for
+V7, and V8 membership is reconstructible. The run used Python 3.14.4 even though the
+documented project environment is Python 3.12. Nothing here supports clinical use.
 
 ## 15. Strongest Truthful Claim
 
-My V9 dataset preparation now reproducibly preserves all V8 records, queues every error,
-stores review decisions separately, and can build messy, clean, excluded, and
-expert-needed tables without overwriting original labels. It is not yet a trained or
-validated V9 model.
+My V9 preparation now preserves every V8 record, separates review decisions from frozen
+labels, and provides an authenticated nested grouped exploratory comparison. Elastic net
+was the strongest new candidate family, but frozen V8 had the stronger same-record point
+estimate and the paired uncertainty crossed zero. No official or validated V9 model
+exists.
 
 ## 16. Next Step
 
 My next step is to complete all 31 false-negative and 6 high-confidence false-positive
 reviews, review at least 25 true negatives and 25 true positives, resolve or explicitly
 queue all 119 V8/V7 disagreements, rebuild the manifest, and inspect exclusion balance.
-Until that gate is met, I must use this label: **V9 dataset preparation complete; final
-V9 model not yet valid.**
+Until that gate is met, I must use this label: **V9 dataset preparation complete; final V9 model not yet valid.**

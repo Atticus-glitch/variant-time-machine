@@ -652,6 +652,17 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             PROJECT_ROOT / "outputs" / "manual_review" / "v8_ai_review_suggestions.json"
         ),
         V9_DATASET_DIR=PROJECT_ROOT / "data" / "processed" / "v9",
+        V9_EXPLORATORY_DIR=PROJECT_ROOT / "outputs" / "v9_exploratory",
+        V9_EXPLORATORY_CONFIG_PATH=PROJECT_ROOT / "config" / "v9_exploratory.json",
+        V9_EXPLORATORY_CLUE_CONFIG_PATH=(
+            PROJECT_ROOT / "config" / "clue_score_v1.yaml"
+        ),
+        V9_EXPLORATORY_DATASET_PATH=(
+            PROJECT_ROOT / "data" / "processed" / "v9" / "v9_messy_dataset.csv"
+        ),
+        V9_EXPLORATORY_DATASET_MANIFEST_PATH=(
+            PROJECT_ROOT / "data" / "processed" / "v9" / "v9_dataset_manifest.json"
+        ),
         V8_DOWNLOADS={
             "v8_public_summary.json": PROJECT_ROOT
             / "outputs"
@@ -1681,6 +1692,110 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             return jsonify(manifest)
         except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
             return jsonify({"error": f"V9 dataset preparation unavailable: {exc}"}), 503
+
+    def load_v9_exploratory_bundle() -> tuple[Path, dict[str, Any], list[str]]:
+        output_dir = Path(app.config["V9_EXPLORATORY_DIR"])
+        manifest = load_json_object(output_dir / "run_manifest.json")
+        if (
+            manifest.get("status") != "exploratory_opened_v8_only"
+            or manifest.get("official_v9_winner") is not None
+            or manifest.get("final_test_evaluated") is not False
+        ):
+            raise V8PresentationError("Exploratory V9 lock state is invalid.")
+        stale_reasons = []
+        source_checks = {
+            "config_sha256": Path(app.config["V9_EXPLORATORY_CONFIG_PATH"]),
+            "clue_score_config_sha256": Path(
+                app.config["V9_EXPLORATORY_CLUE_CONFIG_PATH"]
+            ),
+            "dataset_sha256": Path(app.config["V9_EXPLORATORY_DATASET_PATH"]),
+            "dataset_manifest_sha256": Path(
+                app.config["V9_EXPLORATORY_DATASET_MANIFEST_PATH"]
+            ),
+        }
+        for field, path in source_checks.items():
+            if (
+                not path.is_file()
+                or path.is_symlink()
+                or manifest.get(field) != sha256_file(path)
+            ):
+                stale_reasons.append(f"source changed: {path.name}")
+        for filename, expected_hash in manifest.get("output_hashes", {}).items():
+            path = output_dir / filename
+            if (
+                not path.is_file()
+                or path.is_symlink()
+                or sha256_file(path) != expected_hash
+            ):
+                stale_reasons.append(f"generated output changed: {filename}")
+        for relative, expected_hash in manifest.get(
+            "implementation_hashes", {}
+        ).items():
+            path = PROJECT_ROOT / relative
+            if (
+                not path.is_file()
+                or path.is_symlink()
+                or sha256_file(path) != expected_hash
+            ):
+                stale_reasons.append(f"implementation changed: {relative}")
+        return output_dir, manifest, stale_reasons
+
+    @app.get("/api/v9/exploratory-summary")
+    def api_v9_exploratory_summary():
+        try:
+            output_dir, manifest, stale_reasons = load_v9_exploratory_bundle()
+            if stale_reasons:
+                return jsonify(
+                    {
+                        "error": "V9 exploratory artifacts are stale.",
+                        "artifacts_stale": True,
+                        "stale_reasons": stale_reasons,
+                    }
+                ), 409
+            return jsonify(
+                {
+                    "manifest": manifest,
+                    "metrics": load_json_object(output_dir / "candidate_metrics.json"),
+                    "bootstrap": load_json_object(
+                        output_dir / "bootstrap_intervals.json"
+                    ),
+                    "artifacts_stale": False,
+                    "stale_reasons": [],
+                }
+            )
+        except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
+            return jsonify({"error": f"V9 exploration unavailable: {exc}"}), 503
+
+    @app.get("/api/v9/exploratory/download/<filename>")
+    def api_v9_exploratory_download(filename: str):
+        allowed = {
+            "bootstrap_intervals.json",
+            "calibration_bins.csv",
+            "candidate_failures.json",
+            "candidate_metrics.csv",
+            "candidate_metrics.json",
+            "fold_assignments.csv",
+            "nested_selections.json",
+            "oof_predictions.csv",
+            "run_manifest.json",
+        }
+        if filename not in allowed:
+            return jsonify({"error": "Unknown V9 exploratory download."}), 404
+        try:
+            output_dir, _, stale_reasons = load_v9_exploratory_bundle()
+            if stale_reasons:
+                return jsonify(
+                    {
+                        "error": "V9 exploratory artifacts are stale.",
+                        "stale_reasons": stale_reasons,
+                    }
+                ), 409
+        except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
+            return jsonify({"error": f"V9 exploration unavailable: {exc}"}), 503
+        path = output_dir / filename
+        if not path.is_file() or path.is_symlink():
+            return jsonify({"error": "V9 exploratory download is unavailable."}), 404
+        return send_from_directory(output_dir, filename, as_attachment=True)
 
     @app.get("/api/v9/download/<filename>")
     def api_v9_download(filename: str):

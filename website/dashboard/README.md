@@ -86,6 +86,7 @@ The browser loads information from these Flask API endpoints:
 - `GET /api/v8/summary`, `/api/v8/case-studies`, `/api/v8/review-queue`, and `/api/v8/review-notes`
 - `PATCH /api/v8/review/<VariationID>` and `GET /api/v8/download/<filename>`
 - `GET /api/v9/dataset-summary` and `GET /api/v9/download/<filename>`
+- `GET /api/v9/exploratory-summary` and `GET /api/v9/exploratory/download/<filename>`
 
 The separate Current Lookup and Legacy Manual Workspace remain available, but normal exact-history work should use Version History. Current ESummary candidate results are not historical results, and VCV versions are not monthly snapshots.
 

@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import shutil
 from pathlib import Path
 
 import pytest
@@ -355,3 +356,47 @@ def test_v9_preparation_pages_and_manifest_are_explicitly_not_final(
     assert v8_client.get("/api/v9/download/v9_dataset_manifest.json").status_code == 200
     assert v8_client.get("/api/v9/download/v9_messy_dataset.csv").status_code == 409
     assert v8_client.get("/api/v9/download/not-allowed.csv").status_code == 404
+    exploration = v8_client.get("/api/v9/exploratory-summary")
+    assert exploration.status_code == 200
+    exploratory_payload = exploration.get_json()
+    assert exploratory_payload["manifest"]["official_v9_winner"] is None
+    assert exploratory_payload["manifest"]["final_test_evaluated"] is False
+    assert exploratory_payload["artifacts_stale"] is False
+    assert (
+        exploratory_payload["metrics"]["frozen_v8_reference"][
+            "component_weighted_balanced_accuracy"
+        ]
+        > exploratory_payload["metrics"]["elastic_net_logistic"][
+            "component_weighted_balanced_accuracy"
+        ]
+    )
+    assert (
+        v8_client.get("/api/v9/exploratory/download/candidate_metrics.json").status_code
+        == 200
+    )
+    assert (
+        v8_client.get(
+            "/api/v9/exploratory/download/exploratory_leader.joblib"
+        ).status_code
+        == 404
+    )
+
+
+def test_v9_exploration_rejects_tampered_outputs(
+    v8_client: FlaskClient, tmp_path: Path
+) -> None:
+    copied = tmp_path / "v9_exploratory"
+    shutil.copytree(ROOT / "outputs/v9_exploratory", copied)
+    metrics_path = copied / "candidate_metrics.json"
+    metrics_path.write_text("{}\n", encoding="utf-8")
+    v8_client.application.config["V9_EXPLORATORY_DIR"] = copied
+    summary = v8_client.get("/api/v9/exploratory-summary")
+    assert summary.status_code == 409
+    assert "metrics" not in summary.get_json()
+    assert "candidate_metrics.json" in " ".join(summary.get_json()["stale_reasons"])
+    assert (
+        v8_client.get(
+            "/api/v9/exploratory/download/bootstrap_intervals.json"
+        ).status_code
+        == 409
+    )

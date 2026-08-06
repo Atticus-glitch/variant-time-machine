@@ -1,0 +1,98 @@
+{
+  "elastic_net_logistic": [
+    {
+      "fold": 0,
+      "inner_component_weighted_balanced_accuracy": 0.8783184990207198,
+      "selected_configuration": "logistic_C_0.1_l1_0",
+      "threshold": 0.20500000000000002
+    },
+    {
+      "fold": 1,
+      "inner_component_weighted_balanced_accuracy": 0.8989248286155795,
+      "selected_configuration": "logistic_C_0.1_l1_0",
+      "threshold": 0.22000000000000003
+    },
+    {
+      "fold": 2,
+      "inner_component_weighted_balanced_accuracy": 0.8706529597499681,
+      "selected_configuration": "logistic_C_0.1_l1_0",
+      "threshold": 0.2
+    },
+    {
+      "fold": 3,
+      "inner_component_weighted_balanced_accuracy": 0.8756792310876027,
+      "selected_configuration": "logistic_C_0.1_l1_0.5",
+      "threshold": 0.20500000000000002
+    },
+    {
+      "fold": 4,
+      "inner_component_weighted_balanced_accuracy": 0.8859599944687342,
+      "selected_configuration": "logistic_C_0.1_l1_0",
+      "threshold": 0.20500000000000002
+    }
+  ],
+  "extra_trees": [
+    {
+      "fold": 0,
+      "inner_component_weighted_balanced_accuracy": 0.8909536326874954,
+      "selected_configuration": "extra_trees_leaf_5",
+      "threshold": 0.20500000000000002
+    },
+    {
+      "fold": 1,
+      "inner_component_weighted_balanced_accuracy": 0.8969180024088084,
+      "selected_configuration": "extra_trees_leaf_5",
+      "threshold": 0.2
+    },
+    {
+      "fold": 2,
+      "inner_component_weighted_balanced_accuracy": 0.8807765354835688,
+      "selected_configuration": "extra_trees_leaf_5",
+      "threshold": 0.2800000000000001
+    },
+    {
+      "fold": 3,
+      "inner_component_weighted_balanced_accuracy": 0.8762630293793094,
+      "selected_configuration": "extra_trees_leaf_2",
+      "threshold": 0.26000000000000006
+    },
+    {
+      "fold": 4,
+      "inner_component_weighted_balanced_accuracy": 0.8920826059865445,
+      "selected_configuration": "extra_trees_leaf_5",
+      "threshold": 0.2750000000000001
+    }
+  ],
+  "hist_gradient_boosting": [
+    {
+      "fold": 0,
+      "inner_component_weighted_balanced_accuracy": 0.8613703410366054,
+      "selected_configuration": "histgb_leaf_15_l2_20",
+      "threshold": 0.36500000000000016
+    },
+    {
+      "fold": 1,
+      "inner_component_weighted_balanced_accuracy": 0.8831926134682839,
+      "selected_configuration": "histgb_leaf_7_l2_10",
+      "threshold": 0.21500000000000002
+    },
+    {
+      "fold": 2,
+      "inner_component_weighted_balanced_accuracy": 0.8569241563066388,
+      "selected_configuration": "histgb_leaf_15_l2_20",
+      "threshold": 0.21500000000000002
+    },
+    {
+      "fold": 3,
+      "inner_component_weighted_balanced_accuracy": 0.8533106459486107,
+      "selected_configuration": "histgb_leaf_15_l2_20",
+      "threshold": 0.21000000000000002
+    },
+    {
+      "fold": 4,
+      "inner_component_weighted_balanced_accuracy": 0.8663702681907761,
+      "selected_configuration": "histgb_leaf_15_l2_20",
+      "threshold": 0.22500000000000003
+    }
+  ]
+}

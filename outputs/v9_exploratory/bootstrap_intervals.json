@@ -1,0 +1,54 @@
+{
+  "component_weighted_balanced_accuracy_95_percent": {
+    "consequence_only": [
+      0.8088636836903863,
+      0.874208461952168
+    ],
+    "elastic_net_logistic": [
+      0.8411134495703799,
+      0.903813084580967
+    ],
+    "extra_trees": [
+      0.8234735676937666,
+      0.888431405267671
+    ],
+    "frozen_v8_reference": [
+      0.8488338480680492,
+      0.9131896050179875
+    ],
+    "hist_gradient_boosting": [
+      0.8272135905851697,
+      0.8940664207920969
+    ],
+    "majority": [
+      0.5,
+      0.5
+    ]
+  },
+  "paired_difference_from_frozen_v8_95_percent": {
+    "consequence_only": [
+      -0.07791419486341207,
+      -0.0012890788650432225
+    ],
+    "elastic_net_logistic": [
+      -0.03348082779284969,
+      0.017352991883290033
+    ],
+    "extra_trees": [
+      -0.059814038695212776,
+      0.009522975053552495
+    ],
+    "hist_gradient_boosting": [
+      -0.0563575748550321,
+      0.015543570790587895
+    ],
+    "majority": [
+      -0.41318960501798746,
+      -0.3488338480680492
+    ]
+  },
+  "replicates_requested": 10000,
+  "replicates_skipped": 0,
+  "replicates_used": 10000,
+  "warning": "Component bootstrap conditions on fixed exploratory OOF predictions and does not include all model-selection uncertainty."
+}

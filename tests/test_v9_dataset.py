@@ -221,5 +221,4 @@ def test_schema_plan_and_partial_report_are_frozen_before_any_final_test() -> No
         encoding="utf-8"
     )
     assert "Frozen planning document" in plan
-    assert "No candidate has been trained" in report
     assert "V9 dataset preparation complete; final V9 model not yet" in report

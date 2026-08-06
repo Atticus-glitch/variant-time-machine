@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "status": "frozen_exploratory_opened_v8_plan",
+  "purpose": "Compare a small fixed candidate set by nested grouped cross-validation on previously opened V8 records without selecting or evaluating an official V9 model.",
+  "random_state": 223607,
+  "outer_folds": 5,
+  "inner_folds": 4,
+  "bootstrap_replicates": 10000,
+  "threshold_minimum": 0.2,
+  "threshold_maximum": 0.8,
+  "threshold_step": 0.005,
+  "preprocessing": "StandardScaler inside each training partition for elastic-net only; tree candidates use raw authenticated features.",
+  "sample_weighting": "Each connected component has total weight 1 inside each fit or metric partition.",
+  "class_weight": null,
+  "calibration": "Platt logistic regression with C=1000000 fitted on grouped inner out-of-fold logits inside each outer-training partition.",
+  "threshold_selection": "Choose the component-weighted balanced-accuracy maximum on calibrated inner OOF predictions; ties prefer closest to 0.5 and then the lower threshold.",
+  "candidates": {
+    "elastic_net_logistic": [
+      {"C": 0.1, "l1_ratio": 0.0},
+      {"C": 0.1, "l1_ratio": 0.5},
+      {"C": 1.0, "l1_ratio": 0.0},
+      {"C": 1.0, "l1_ratio": 0.5}
+    ],
+    "hist_gradient_boosting": [
+      {"max_leaf_nodes": 7, "learning_rate": 0.05, "l2_regularization": 10.0},
+      {"max_leaf_nodes": 15, "learning_rate": 0.05, "l2_regularization": 20.0}
+    ],
+    "extra_trees": [
+      {"n_estimators": 500, "max_features": "sqrt", "min_samples_leaf": 2},
+      {"n_estimators": 500, "max_features": "sqrt", "min_samples_leaf": 5}
+    ]
+  },
+  "selection_order": [
+    "component_weighted_balanced_accuracy",
+    "macro_f1_within_0.005",
+    "pathogenic_recall",
+    "brier_score",
+    "simplicity"
+  ],
+  "reference_models_excluded_from_candidate_ranking": [
+    "frozen_v8_reference",
+    "clue_score_coverage_only"
+  ],
+  "official_v9_winner": null,
+  "final_test_evaluated": false,
+  "warning": "Exploratory analysis on previously opened V8 records. Not an official V9 model selection or final evaluation."
+}
