@@ -1,0 +1,334 @@
+{
+  "artifact": {
+    "path": "outputs/v9_exploratory/exploratory_leader.joblib",
+    "sha256": "ad01bb6ac96fb5b533dce9f17dc4197827f61b6aadcd2adb325e5e044292d86a",
+    "size_bytes": 6098
+  },
+  "class_distribution": {
+    "moved_toward_benign": 814,
+    "moved_toward_pathogenic": 186
+  },
+  "confusion_matrix": {
+    "actual_benign": {
+      "predicted_benign": 701,
+      "predicted_pathogenic": 113
+    },
+    "actual_pathogenic": {
+      "predicted_benign": 27,
+      "predicted_pathogenic": 159
+    }
+  },
+  "creation_time": "2026-08-06T22:15:06.276896+00:00",
+  "effective_status": "frozen_exploratory_opened_data",
+  "estimator": {
+    "family": "elastic_net_logistic",
+    "full_data_configuration": "logistic_C_0.1_l1_0",
+    "full_data_threshold": 0.21000000000000002,
+    "outer_fold_selections": [
+      {
+        "fold": 0,
+        "inner_component_weighted_balanced_accuracy": 0.8783184990207198,
+        "selected_configuration": "logistic_C_0.1_l1_0",
+        "threshold": 0.20500000000000002
+      },
+      {
+        "fold": 1,
+        "inner_component_weighted_balanced_accuracy": 0.8989248286155795,
+        "selected_configuration": "logistic_C_0.1_l1_0",
+        "threshold": 0.22000000000000003
+      },
+      {
+        "fold": 2,
+        "inner_component_weighted_balanced_accuracy": 0.8706529597499681,
+        "selected_configuration": "logistic_C_0.1_l1_0",
+        "threshold": 0.2
+      },
+      {
+        "fold": 3,
+        "inner_component_weighted_balanced_accuracy": 0.8756792310876027,
+        "selected_configuration": "logistic_C_0.1_l1_0.5",
+        "threshold": 0.20500000000000002
+      },
+      {
+        "fold": 4,
+        "inner_component_weighted_balanced_accuracy": 0.8859599944687342,
+        "selected_configuration": "logistic_C_0.1_l1_0",
+        "threshold": 0.20500000000000002
+      }
+    ]
+  },
+  "feature_count": 64,
+  "features": [
+    "feature__absolute_hydropathy_change",
+    "feature__absolute_residue_mass_change_scaled",
+    "feature__aromatic_gain",
+    "feature__aromatic_loss",
+    "feature__assembly_count",
+    "feature__canonical_splice_text",
+    "feature__charge_gain",
+    "feature__charge_loss",
+    "feature__charge_reversal",
+    "feature__coding_hgvs_present",
+    "feature__conflicting_interpretations",
+    "feature__consequence_canonical_splice",
+    "feature__consequence_inframe_indel",
+    "feature__consequence_loss_of_function",
+    "feature__consequence_missense",
+    "feature__consequence_noncoding",
+    "feature__consequence_synonymous",
+    "feature__consequence_unrecognized",
+    "feature__coordinate_parse_available",
+    "feature__criteria_supplied",
+    "feature__cysteine_gain",
+    "feature__cysteine_loss",
+    "feature__evaluation_age_missing",
+    "feature__expert_panel",
+    "feature__glycine_gain",
+    "feature__glycine_loss",
+    "feature__hgvs_deletion",
+    "feature__hgvs_duplication",
+    "feature__hgvs_insertion",
+    "feature__intronic_hgvs_present",
+    "feature__log1p_coordinate_span",
+    "feature__log1p_evaluation_age_days",
+    "feature__log1p_rcv_count",
+    "feature__log1p_source_row_count",
+    "feature__log1p_submitter_count",
+    "feature__missense_chemistry_available",
+    "feature__missing_coordinate",
+    "feature__missing_gene",
+    "feature__missing_phenotype_ids",
+    "feature__multiple_rcvs",
+    "feature__multiple_submitters_no_conflict",
+    "feature__point_variant",
+    "feature__polarity_change",
+    "feature__proline_gain",
+    "feature__proline_loss",
+    "feature__protein_hgvs_present",
+    "feature__review_criteria_provided_conflicting_interpretations",
+    "feature__review_criteria_provided_multiple_submitters_no_conflicts",
+    "feature__review_criteria_provided_single_submitter",
+    "feature__review_no_assertion_criteria_provided",
+    "feature__review_no_assertion_provided",
+    "feature__review_other",
+    "feature__review_reviewed_by_expert_panel",
+    "feature__signed_hydropathy_change",
+    "feature__variant_type_copy_number_gain",
+    "feature__variant_type_copy_number_loss",
+    "feature__variant_type_deletion",
+    "feature__variant_type_duplication",
+    "feature__variant_type_indel",
+    "feature__variant_type_insertion",
+    "feature__variant_type_inversion",
+    "feature__variant_type_microsatellite",
+    "feature__variant_type_other",
+    "feature__variant_type_single_nucleotide_variant"
+  ],
+  "frozen_by_git_commit": "14056fff8086104091d3c3f75409860af3d79531",
+  "label_warning": "The requested historical label is retained, but no completed human-review dataset was used. This was exploration on previously opened V8 records.",
+  "leakage_audit": {
+    "eligible_features": "exact authenticated feature__* allowlist",
+    "final_test_protection": "not applicable; no final test existed",
+    "outer_component_overlap": 0,
+    "status": "pass"
+  },
+  "limitations": [
+    "All 1,000 outcomes had already been opened during V8 analysis.",
+    "No completed human reviews or clean-reviewed rows were used.",
+    "Only 1,000 records were available for nested development, compared with 9,818 V8 development records.",
+    "There was no independent temporal or component-disjoint final V9 test.",
+    "The OOF comparison with frozen V8 is asymmetric because V8 was evaluated while sealed.",
+    "The task is retrospective aggregate-direction prediction, not prediction of whether a VUS resolves.",
+    "The artifact is not clinically validated and must not be used for medical decisions."
+  ],
+  "manual_review_dataset": {
+    "clean_reviewed_records": 0,
+    "completed_reviews": 0,
+    "review_pending_records": 1000,
+    "used_for_model_fitting": false
+  },
+  "metrics": {
+    "accuracy": 0.86,
+    "average_precision": 0.7980486508106361,
+    "balanced_accuracy": 0.8580090354283902,
+    "benign_f1": 0.9092088197146563,
+    "benign_precision": 0.9629120879120879,
+    "benign_recall": 0.8611793611793612,
+    "brier_score": 0.06871947187020888,
+    "component_weighted_balanced_accuracy": 0.8735399970482861,
+    "confusion_matrix": {
+      "FN": 27,
+      "FP": 113,
+      "TN": 701,
+      "TP": 159
+    },
+    "log_loss": 0.23679925438408173,
+    "macro_f1": 0.8017659819097298,
+    "outer_fold_metrics": [
+      {
+        "accuracy": 0.815,
+        "average_precision": 0.8297327953339237,
+        "balanced_accuracy": 0.8238268943790417,
+        "benign_f1": 0.8770764119601329,
+        "benign_precision": 0.9565217391304348,
+        "benign_recall": 0.8098159509202454,
+        "brier_score": 0.07300198361123947,
+        "component_weighted_balanced_accuracy": 0.8598305752561071,
+        "confusion_matrix": {
+          "FN": 6,
+          "FP": 31,
+          "TN": 132,
+          "TP": 31
+        },
+        "fold": 0,
+        "log_loss": 0.24179273435763662,
+        "macro_f1": 0.7516695191113796,
+        "pathogenic_f1": 0.6262626262626263,
+        "pathogenic_precision": 0.5,
+        "pathogenic_recall": 0.8378378378378378,
+        "records": 200,
+        "roc_auc": 0.9268777980434422,
+        "weighted_f1": 0.8306758616060942
+      },
+      {
+        "accuracy": 0.875,
+        "average_precision": 0.8670408009536121,
+        "balanced_accuracy": 0.8825536062378168,
+        "benign_f1": 0.9185667752442996,
+        "benign_precision": 0.9724137931034482,
+        "benign_recall": 0.8703703703703703,
+        "brier_score": 0.057800394270959864,
+        "component_weighted_balanced_accuracy": 0.8648981324278437,
+        "confusion_matrix": {
+          "FN": 4,
+          "FP": 21,
+          "TN": 141,
+          "TP": 34
+        },
+        "fold": 1,
+        "log_loss": 0.20597981481937494,
+        "macro_f1": 0.8248747854716122,
+        "pathogenic_f1": 0.7311827956989247,
+        "pathogenic_precision": 0.6181818181818182,
+        "pathogenic_recall": 0.8947368421052632,
+        "records": 200,
+        "roc_auc": 0.9309616634178037,
+        "weighted_f1": 0.8829638191306783
+      },
+      {
+        "accuracy": 0.89,
+        "average_precision": 0.7955830843114826,
+        "balanced_accuracy": 0.9011772508705025,
+        "benign_f1": 0.9290322580645162,
+        "benign_precision": 0.9795918367346939,
+        "benign_recall": 0.8834355828220859,
+        "brier_score": 0.0652415335355921,
+        "component_weighted_balanced_accuracy": 0.9046392621356726,
+        "confusion_matrix": {
+          "FN": 3,
+          "FP": 19,
+          "TN": 144,
+          "TP": 34
+        },
+        "fold": 2,
+        "log_loss": 0.22150520716422434,
+        "macro_f1": 0.8422939068100359,
+        "pathogenic_f1": 0.7555555555555555,
+        "pathogenic_precision": 0.6415094339622641,
+        "pathogenic_recall": 0.918918918918919,
+        "records": 200,
+        "roc_auc": 0.9560603548333609,
+        "weighted_f1": 0.8969390681003584
+      },
+      {
+        "accuracy": 0.86,
+        "average_precision": 0.7743528666405423,
+        "balanced_accuracy": 0.840988227491295,
+        "benign_f1": 0.9102564102564102,
+        "benign_precision": 0.9530201342281879,
+        "benign_recall": 0.8711656441717791,
+        "brier_score": 0.07412805228152848,
+        "component_weighted_balanced_accuracy": 0.8477194326903084,
+        "confusion_matrix": {
+          "FN": 7,
+          "FP": 21,
+          "TN": 142,
+          "TP": 30
+        },
+        "fold": 3,
+        "log_loss": 0.2788463624758652,
+        "macro_f1": 0.796037296037296,
+        "pathogenic_f1": 0.6818181818181818,
+        "pathogenic_precision": 0.5882352941176471,
+        "pathogenic_recall": 0.8108108108108109,
+        "records": 200,
+        "roc_auc": 0.9418006964019234,
+        "weighted_f1": 0.8679953379953379
+      },
+      {
+        "accuracy": 0.86,
+        "average_precision": 0.7721444944347937,
+        "balanced_accuracy": 0.840988227491295,
+        "benign_f1": 0.9102564102564102,
+        "benign_precision": 0.9530201342281879,
+        "benign_recall": 0.8711656441717791,
+        "brier_score": 0.07342539565172453,
+        "component_weighted_balanced_accuracy": 0.887368689444161,
+        "confusion_matrix": {
+          "FN": 7,
+          "FP": 21,
+          "TN": 142,
+          "TP": 30
+        },
+        "fold": 4,
+        "log_loss": 0.2358721531033077,
+        "macro_f1": 0.796037296037296,
+        "pathogenic_f1": 0.6818181818181818,
+        "pathogenic_precision": 0.5882352941176471,
+        "pathogenic_recall": 0.8108108108108109,
+        "records": 200,
+        "roc_auc": 0.9442878461283369,
+        "weighted_f1": 0.8679953379953379
+      }
+    ],
+    "pathogenic_f1": 0.6943231441048034,
+    "pathogenic_precision": 0.5845588235294118,
+    "pathogenic_recall": 0.8548387096774194,
+    "records": 1000,
+    "roc_auc": 0.9396383186705767,
+    "weighted_f1": 0.8692400840512235
+  },
+  "model_id": "V9-original",
+  "model_type": "Platt-calibrated elastic-net logistic regression",
+  "name": "V9 original reviewed-dataset model",
+  "official_model": false,
+  "official_v9_winner": null,
+  "schema_version": 1,
+  "scientific_name": "V9 original opened-V8 exploratory model",
+  "source_hashes": {
+    "candidate_metrics": "5b6af72f817a3789b5024e328defcbae715aa693c71b6f803a1a5ada7ba12f6d",
+    "config": "cbeb2949a099d77effd4728126c80cd17e5c9fd239ddf2014767f89837c0c480",
+    "dataset": "cd59e48040674e88f79d48ebb78e53fc1bbc3e4a2f2315bb1a877dc0fef9e362",
+    "dataset_manifest": "9ed855403610b937c086a4f1dc842af0a354e18fc2bb286d1ec8cd11baf9a2cd",
+    "oof_predictions": "bdbde57ffa8b442add72f8350d179fc1102d97d027772942b1cc4e094f9f07c7",
+    "run_manifest": "49d05345805836f263cebda6e14c78bcec43295d149c30bb0bf8ceb164cb3c6a"
+  },
+  "test_data": {
+    "records": 0,
+    "status": "no independent or final V9 test was evaluated"
+  },
+  "training_data": {
+    "components": 559,
+    "dataset": "data/processed/v9/v9_messy_dataset.csv",
+    "labels": "unchanged original automatic V8 outcomes",
+    "opened_records_available": 1000,
+    "records_per_outer_fit": 800
+  },
+  "validation_data": {
+    "component_overlap": 0,
+    "fold_assignments": "outputs/v9_exploratory/fold_assignments.csv",
+    "inner_folds": 4,
+    "method": "5-fold nested component-grouped out-of-fold validation",
+    "outer_validation_records_per_fold": 200
+  }
+}

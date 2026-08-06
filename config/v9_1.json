@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "status": "frozen_internal_validation_plan",
+  "random_state": 223607,
+  "outer_folds": 5,
+  "inner_folds": 4,
+  "bootstrap_replicates": 10000,
+  "threshold_minimum": 0.1,
+  "threshold_maximum": 0.9,
+  "threshold_step": 0.01,
+  "primary_metric": "component_weighted_balanced_accuracy",
+  "close_metric_tolerance": 0.005,
+  "safety_balanced_accuracy_tolerance": 0.02,
+  "training_regimes": {
+    "opened_v9_only": {
+      "prior_v8_development_records": false,
+      "purpose": "diagnostic replication of the original V9 data-size constraint"
+    },
+    "v8_development_plus_opened_outer_training": {
+      "prior_v8_development_records": true,
+      "purpose": "primary internal-validation regime; prior V8 development components have audited zero overlap with all V9 outer folds"
+    }
+  },
+  "primary_training_regime": "v8_development_plus_opened_outer_training",
+  "feature_groups": {
+    "consequence": [
+      "consequence_loss_of_function", "consequence_canonical_splice", "consequence_missense", "consequence_synonymous", "consequence_inframe_indel", "consequence_noncoding", "consequence_unrecognized", "variant_type_single_nucleotide_variant", "variant_type_deletion", "variant_type_duplication", "variant_type_insertion", "variant_type_indel", "variant_type_microsatellite", "variant_type_copy_number_gain", "variant_type_copy_number_loss", "variant_type_inversion", "variant_type_other"
+    ],
+    "metadata": [
+      "review_criteria_provided_single_submitter", "review_criteria_provided_multiple_submitters_no_conflicts", "review_criteria_provided_conflicting_interpretations", "review_no_assertion_criteria_provided", "review_no_assertion_provided", "review_reviewed_by_expert_panel", "review_other", "criteria_supplied", "multiple_submitters_no_conflict", "conflicting_interpretations", "expert_panel", "log1p_submitter_count", "log1p_evaluation_age_days", "evaluation_age_missing"
+    ],
+    "completeness": [
+      "log1p_rcv_count", "multiple_rcvs", "log1p_source_row_count", "assembly_count", "coordinate_parse_available", "log1p_coordinate_span", "point_variant", "protein_hgvs_present", "coding_hgvs_present", "intronic_hgvs_present", "hgvs_deletion", "hgvs_duplication", "hgvs_insertion", "canonical_splice_text", "missing_gene", "missing_phenotype_ids", "missing_coordinate"
+    ],
+    "chemistry": [
+      "missense_chemistry_available", "absolute_hydropathy_change", "signed_hydropathy_change", "absolute_residue_mass_change_scaled", "charge_gain", "charge_loss", "charge_reversal", "polarity_change", "aromatic_gain", "aromatic_loss", "glycine_gain", "glycine_loss", "proline_gain", "proline_loss", "cysteine_gain", "cysteine_loss"
+    ]
+  },
+  "feature_sets": {
+    "consequence_only": ["consequence"],
+    "metadata_only": ["metadata"],
+    "consequence_metadata": ["consequence", "metadata"],
+    "consequence_metadata_completeness": ["consequence", "metadata", "completeness"],
+    "all_allowed_non_leaky": ["consequence", "metadata", "completeness", "chemistry"],
+    "all_allowed_without_gene": ["consequence", "metadata", "completeness", "chemistry"]
+  },
+  "gene_identity_feature_set": {
+    "status": "ineligible_not_fit",
+    "reason": "Component-disjoint folds make fold-local gene identities unseen; fold-global encoding would leak."
+  },
+  "ablation_model": "calibrated_elastic_net",
+  "candidates": {
+    "elastic_net": {
+      "calibrated": [false, true],
+      "C": [0.03, 0.1, 1.0],
+      "l1_ratio": [0.0, 0.5],
+      "class_weight": [null, "balanced"]
+    },
+    "hist_gradient_boosting": {
+      "calibrated": [false, true],
+      "max_leaf_nodes": [7, 15],
+      "learning_rate": [0.05],
+      "l2_regularization": [10.0, 20.0],
+      "min_samples_leaf": [10, 20]
+    },
+    "random_forest": {
+      "n_estimators": 300,
+      "max_depth": [null, 12],
+      "min_samples_leaf": [2, 5],
+      "class_weight": [null, "balanced"]
+    },
+    "extra_trees": {
+      "n_estimators": 300,
+      "max_depth": [null, 12],
+      "min_samples_leaf": [2, 5],
+      "class_weight": [null, "balanced"]
+    },
+    "linear_svm": {
+      "calibrated": true,
+      "C": [0.03, 0.1, 1.0],
+      "class_weight": [null, "balanced"]
+    },
+    "small_mlp": {
+      "hidden_layer_sizes": [[16], [32, 16]],
+      "alpha": [0.001, 0.01],
+      "early_stopping": true,
+      "max_iter": 500
+    }
+  },
+  "selection_order": [
+    "leakage_audit_pass",
+    "component_weighted_balanced_accuracy",
+    "macro_f1_within_0.005",
+    "pathogenic_recall",
+    "brier_score",
+    "bootstrap_and_fold_stability",
+    "interpretability",
+    "simplicity"
+  ],
+  "official_v9_1_model": false,
+  "final_test_available": false,
+  "final_test_evaluated": false,
+  "warning": "Internal nested grouped validation on previously opened V8 records. Not an official or final V9.1 evaluation."
+}
