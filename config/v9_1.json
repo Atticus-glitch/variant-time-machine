@@ -52,39 +52,51 @@
   "candidates": {
     "elastic_net": {
       "calibrated": [false, true],
-      "C": [0.03, 0.1, 1.0],
-      "l1_ratio": [0.0, 0.5],
-      "class_weight": [null, "balanced"]
+      "configurations": [
+        {"C": 0.1, "l1_ratio": 0.0, "class_weight": null},
+        {"C": 1.0, "l1_ratio": 0.0, "class_weight": null},
+        {"C": 0.1, "l1_ratio": 0.5, "class_weight": null},
+        {"C": 1.0, "l1_ratio": 0.5, "class_weight": null},
+        {"C": 0.1, "l1_ratio": 0.0, "class_weight": "balanced"},
+        {"C": 1.0, "l1_ratio": 0.0, "class_weight": "balanced"}
+      ]
     },
     "hist_gradient_boosting": {
       "calibrated": [false, true],
-      "max_leaf_nodes": [7, 15],
-      "learning_rate": [0.05],
-      "l2_regularization": [10.0, 20.0],
-      "min_samples_leaf": [10, 20]
+      "max_iter": 150,
+      "configurations": [
+        {"max_leaf_nodes": 7, "learning_rate": 0.05, "l2_regularization": 10.0, "min_samples_leaf": 20},
+        {"max_leaf_nodes": 15, "learning_rate": 0.05, "l2_regularization": 20.0, "min_samples_leaf": 10}
+      ]
     },
     "random_forest": {
-      "n_estimators": 300,
-      "max_depth": [null, 12],
-      "min_samples_leaf": [2, 5],
-      "class_weight": [null, "balanced"]
+      "n_estimators": 100,
+      "configurations": [
+        {"max_depth": null, "min_samples_leaf": 2, "class_weight": null},
+        {"max_depth": null, "min_samples_leaf": 5, "class_weight": "balanced"},
+        {"max_depth": 12, "min_samples_leaf": 2, "class_weight": "balanced"},
+        {"max_depth": 12, "min_samples_leaf": 5, "class_weight": null}
+      ]
     },
     "extra_trees": {
-      "n_estimators": 300,
-      "max_depth": [null, 12],
-      "min_samples_leaf": [2, 5],
-      "class_weight": [null, "balanced"]
+      "n_estimators": 100,
+      "configurations": [
+        {"max_depth": null, "min_samples_leaf": 2, "class_weight": null},
+        {"max_depth": null, "min_samples_leaf": 5, "class_weight": "balanced"},
+        {"max_depth": 12, "min_samples_leaf": 2, "class_weight": "balanced"},
+        {"max_depth": 12, "min_samples_leaf": 5, "class_weight": null}
+      ]
     },
     "linear_svm": {
       "calibrated": true,
-      "C": [0.03, 0.1, 1.0],
+      "C": [0.1, 1.0],
       "class_weight": [null, "balanced"]
     },
     "small_mlp": {
-      "hidden_layer_sizes": [[16], [32, 16]],
+      "hidden_layer_sizes": [[16]],
       "alpha": [0.001, 0.01],
       "early_stopping": true,
-      "max_iter": 500
+      "max_iter": 200
     }
   },
   "selection_order": [

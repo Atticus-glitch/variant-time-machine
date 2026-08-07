@@ -89,8 +89,11 @@ The fixed modest search includes:
 10. Consequence-only baseline.
 11. Majority baseline.
 
-The exact grids, seeds, tree counts, early-stopping rule, weighting variants, calibrator,
-and threshold grid are fixed in `config/v9_1.json`. Candidate failures remain visible.
+The exact curated configurations, seeds, 100-tree budget, early-stopping rule, weighting
+variants, calibrator, and threshold grid are fixed in `config/v9_1.json`. The first
+pre-result trial was stopped after exceeding one hour without publishing metrics; the
+curated budget preserves every family and scientific safeguard while removing redundant
+Cartesian combinations. Candidate failures remain visible.
 
 ## Validation Strategy
 
