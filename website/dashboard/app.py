@@ -663,6 +663,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         V9_EXPLORATORY_DATASET_MANIFEST_PATH=(
             PROJECT_ROOT / "data" / "processed" / "v9" / "v9_dataset_manifest.json"
         ),
+        V9_1_DEVELOPMENT_DIR=PROJECT_ROOT / "outputs" / "v9_1_development",
         V8_DOWNLOADS={
             "v8_public_summary.json": PROJECT_ROOT
             / "outputs"
@@ -1795,6 +1796,173 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         path = output_dir / filename
         if not path.is_file() or path.is_symlink():
             return jsonify({"error": "V9 exploratory download is unavailable."}), 404
+        return send_from_directory(output_dir, filename, as_attachment=True)
+
+    def load_v9_1_bundle() -> tuple[Path, dict[str, Any]]:
+        output_dir = Path(app.config["V9_1_DEVELOPMENT_DIR"])
+        manifest = load_json_object(output_dir / "run_manifest.json")
+        if (
+            manifest.get("status") != "v9_1_internal_development_complete_fully_nested"
+            or manifest.get("official_v9_1_model") is not False
+            or manifest.get("final_test_evaluated") is not False
+        ):
+            raise V8PresentationError("V9.1 lock state is invalid.")
+        for filename, expected_hash in manifest.get("output_hashes", {}).items():
+            path = output_dir / filename
+            if (
+                not path.is_file()
+                or path.is_symlink()
+                or sha256_file(path) != expected_hash
+            ):
+                raise V8PresentationError(f"V9.1 output changed: {filename}.")
+        for relative, expected_hash in manifest.get(
+            "implementation_hashes", {}
+        ).items():
+            path = PROJECT_ROOT / relative
+            if (
+                not path.is_file()
+                or path.is_symlink()
+                or sha256_file(path) != expected_hash
+            ):
+                raise V8PresentationError(f"V9.1 implementation changed: {relative}.")
+        return output_dir, manifest
+
+    def read_csv_rows(path: Path) -> list[dict[str, str]]:
+        with path.open(encoding="utf-8", newline="") as handle:
+            return list(csv.DictReader(handle))
+
+    @app.get("/api/v9-1/summary")
+    def api_v9_1_summary():
+        try:
+            output_dir, manifest = load_v9_1_bundle()
+            candidates = read_csv_rows(output_dir / "candidate_models.csv")
+            comparisons = read_csv_rows(output_dir / "same_record_comparisons.csv")
+            selected = next(
+                row
+                for row in candidates
+                if row["candidate"] == "nested_family_selection_procedure"
+            )
+            oof = read_csv_rows(output_dir / "oof_predictions.csv")
+            confusion = {"TN": 0, "FP": 0, "FN": 0, "TP": 0}
+            for row in oof:
+                actual_positive = row["actual_outcome"] == "moved_toward_pathogenic"
+                predicted_positive = row["v9_1_prediction"] == "moved_toward_pathogenic"
+                key = (
+                    "TP"
+                    if actual_positive and predicted_positive
+                    else "FN"
+                    if actual_positive
+                    else "FP"
+                    if predicted_positive
+                    else "TN"
+                )
+                confusion[key] += 1
+            return jsonify(
+                {
+                    "manifest": manifest,
+                    "selected": selected,
+                    "confusion_matrix": confusion,
+                    "candidates": candidates,
+                    "comparisons": comparisons,
+                    "bootstrap": load_json_object(
+                        output_dir / "bootstrap_intervals.json"
+                    ),
+                    "threshold_selection": load_json_object(
+                        output_dir / "threshold_selection.json"
+                    ),
+                    "feature_ablation": read_csv_rows(
+                        output_dir / "feature_ablation.csv"
+                    ),
+                }
+            )
+        except (
+            OSError,
+            json.JSONDecodeError,
+            StopIteration,
+            V8PresentationError,
+        ) as exc:
+            return jsonify({"error": f"V9.1 results unavailable: {exc}"}), 503
+
+    @app.get("/api/v9-1/cases")
+    def api_v9_1_cases():
+        try:
+            output_dir, _ = load_v9_1_bundle()
+            rows = read_csv_rows(output_dir / "oof_predictions.csv")
+            correctness = request.args.get("correctness", "all")
+            family = request.args.get("family", "all")
+            disagreement = request.args.get("disagreement", "all")
+            query = request.args.get("q", "").strip().casefold()
+            if correctness in {"correct", "wrong"}:
+                expected = "True" if correctness == "correct" else "False"
+                rows = [row for row in rows if row["v9_1_correct"] == expected]
+            if family != "all":
+                rows = [
+                    row for row in rows if row["v9_1_outer_selected_family"] == family
+                ]
+            if disagreement == "v9":
+                rows = [
+                    row
+                    for row in rows
+                    if row["v9_1_prediction"] != row["original_v9_prediction"]
+                ]
+            elif disagreement == "v8":
+                rows = [
+                    row
+                    for row in rows
+                    if row["v9_1_prediction"] != row["v8_prediction"]
+                ]
+            if query:
+                rows = [
+                    row
+                    for row in rows
+                    if query in row["variation_id"].casefold()
+                    or query in row["gene"].casefold()
+                ]
+            try:
+                page = max(1, int(request.args.get("page", "1")))
+                page_size = min(100, max(1, int(request.args.get("page_size", "24"))))
+            except ValueError:
+                return jsonify({"error": "Page values must be integers."}), 400
+            total = len(rows)
+            start = (page - 1) * page_size
+            return jsonify(
+                {
+                    "items": rows[start : start + page_size],
+                    "page": page,
+                    "page_size": page_size,
+                    "total": total,
+                    "pages": max(1, (total + page_size - 1) // page_size),
+                    "warning": (
+                        "Out-of-fold internal-development predictions on opened "
+                        "labels; "
+                        "not final or clinical predictions."
+                    ),
+                }
+            )
+        except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
+            return jsonify({"error": f"V9.1 cases unavailable: {exc}"}), 503
+
+    @app.get("/api/v9-1/download/<filename>")
+    def api_v9_1_download(filename: str):
+        allowed = {
+            "bootstrap_intervals.json",
+            "calibration.csv",
+            "candidate_failures.json",
+            "candidate_models.csv",
+            "feature_ablation.csv",
+            "feature_audit.json",
+            "model_registry.json",
+            "oof_predictions.csv",
+            "run_manifest.json",
+            "same_record_comparisons.csv",
+            "threshold_selection.json",
+        }
+        if filename not in allowed:
+            return jsonify({"error": "Unknown V9.1 download."}), 404
+        try:
+            output_dir, _ = load_v9_1_bundle()
+        except (OSError, json.JSONDecodeError, V8PresentationError) as exc:
+            return jsonify({"error": f"V9.1 download unavailable: {exc}"}), 503
         return send_from_directory(output_dir, filename, as_attachment=True)
 
     @app.get("/api/v9/download/<filename>")

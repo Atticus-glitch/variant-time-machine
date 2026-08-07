@@ -1,1 +1,20 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>V9 Case Explorer | Variant Time Machine</title><link rel="stylesheet" href="/static/styles.css"><script src="/static/v9_status.js" defer></script></head><body><a class="skip-link" href="#main-content">Skip to main content</a><header class="site-header"><div class="header-grid"><div><p class="eyebrow">A place for future results</p><h1>V9 Case Explorer</h1><p class="subtitle">I do not have any V9 predictions yet.</p></div></div></header><main id="main-content" class="prediction-main"><section class="panel v8-warning"><h2 id="v9-status">Loading gate...</h2><p>I will not invent V9 predictions for this explorer. For now, I keep case-level work on the V8 Manual Review page.</p></section><section class="panel"><h2>Available Now</h2><p>I can review the original old snapshot evidence, later automatic label, V8 and V7 predictions, model features, flags, manual decision, inclusion reason, source links, and notes.</p><p><a class="button-link" href="/v8_review.html">Open V8 Manual Review</a></p></section></main><footer><p>I have not finalized V9.</p></footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>V9.1 Case Explorer | Variant Time Machine</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/v9_status.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="header-grid"><div><p class="eyebrow">Opened-label error analysis</p><h1>V9.1 Case Explorer</h1><p class="subtitle">Inspect nested out-of-fold predictions without presenting them as final or clinical predictions.</p></div></div></header>
+  <main id="main-content" class="prediction-main">
+    <section class="panel v8-warning"><h2 id="v9-1-case-status">Loading cases...</h2><p>Each family shown was selected using only that outer fold's training data. Every label was already opened.</p></section>
+    <section class="panel"><h2>Filter Cases</h2><div class="filter-grid"><label>Variation ID or gene<input id="v9-1-query" type="search" placeholder="GRIA1 or 1676545"></label><label>Outcome<select id="v9-1-correctness"><option value="all">All outcomes</option><option value="wrong">Errors</option><option value="correct">Correct</option></select></label><label>Selected family<select id="v9-1-family"><option value="all">All families</option><option value="extra_trees">Extra Trees</option><option value="random_forest">Random forest</option></select></label><label>Disagreement<select id="v9-1-disagreement"><option value="all">All cases</option><option value="v9">Differs from original V9</option><option value="v8">Differs from V8</option></select></label></div></section>
+    <section class="panel"><div class="table-wrap"><table><thead><tr><th>Variation / gene</th><th>Actual</th><th>V9.1 prediction</th><th>Probability</th><th>Outer family</th><th>V9 / V8</th><th>Review</th></tr></thead><tbody id="v9-1-case-rows"><tr><td colspan="7">Loading cases...</td></tr></tbody></table></div><div class="pagination-row"><button id="v9-1-previous" type="button">Previous</button><span id="v9-1-page">Page 1</span><button id="v9-1-next" type="button">Next</button></div></section>
+  </main>
+  <footer><p>Research error analysis only. Do not use these records for patient interpretation.</p></footer>
+</body>
+</html>

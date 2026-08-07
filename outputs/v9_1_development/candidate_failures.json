@@ -1,0 +1,6 @@
+[
+  {
+    "candidate": "small_mlp",
+    "error": "Invalid diagnostic: source trial used record-level early stopping, which did not preserve component groups. It was excluded from all family selection."
+  }
+]

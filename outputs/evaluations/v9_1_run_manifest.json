@@ -1,0 +1,88 @@
+{
+  "candidate_failures": [
+    {
+      "candidate": "small_mlp",
+      "error": "Invalid diagnostic: source trial used record-level early stopping, which did not preserve component groups. It was excluded from all family selection."
+    }
+  ],
+  "config_sha256": "5c7a68036ae6f3c507e208dc42d78be5edafe5e7a00961467fe055f31c233ce5",
+  "created_at_utc": "2026-08-07T03:00:24.767731+00:00",
+  "dataset_components": 559,
+  "dataset_manifest_sha256": "376cd95753837387797fd19d073f46ed93cc35e7f6cc7931146b71d1bf647856",
+  "dataset_records": 1000,
+  "dataset_sha256": "7f3427559ac40cf2981844294a8407a8577eca113b90646c7129b99a30bff000",
+  "environment": {
+    "joblib": "1.5.3",
+    "numpy": "2.5.1",
+    "pandas": "3.0.5",
+    "python": "3.14.4",
+    "scikit_learn": "1.9.0"
+  },
+  "feature_count": 64,
+  "final_test_available": false,
+  "final_test_evaluated": false,
+  "full_development_selected_configuration": "depth_None_min_5_class_balanced",
+  "full_development_selected_family": "extra_trees",
+  "implementation_hashes": {
+    "src/variant_time_machine/ai_temporal_v8.py": "bc309f548a18cdf70d442e2c398ae61516a31b862253c5781ea399e72e9351bb",
+    "src/variant_time_machine/v9_1.py": "4b96ac42a7e38931aaf755d8ae8672e9a6e17360c2db632a4ee7767192e7f961",
+    "src/variant_time_machine/v9_1_finalize.py": "8b146030cccf2cbc42458320e0081b7467ab481007af0783b38bab698e898916",
+    "src/variant_time_machine/v9_exploratory.py": "0011a265174a4471e8567ddf11c34b4a0f8a487563a7e1e45eb65f5d75566e16"
+  },
+  "official_v9_1_model": false,
+  "outer_selected_family_counts": {
+    "extra_trees": 800,
+    "random_forest": 200
+  },
+  "output_hashes": {
+    "bootstrap_intervals.json": "f4bec7e43cdb390885dd3422de8a0a7f7eb7c5f55c18962464b4e5ef5aab23b5",
+    "calibration.csv": "aba1c9b8a3561802244107b69447d162b883d407e375c2f41031a8908b423ac8",
+    "candidate_failures.json": "63687fcae9ba9572c13eace3eda07f05a5b6ff4ad22c6e8ee03380285a667873",
+    "candidate_models.csv": "96e43fa84f742e36891155ba2b83ea28f3e59ce1e44e768846c67cacdb8312da",
+    "feature_ablation.csv": "e4d178a3bf5f8668e496f6515d9e9a02e6a6d6f471dea0c961e25ddc4860adf8",
+    "feature_audit.json": "477717fa7aeb04447edcd53fee54c35dc5d706441839d5cef4a6dcfbbe9a9e87",
+    "model.joblib": "0d7a19a6289041daf79e56e7e407aa735d691742f01537ef64efbcb937533c13",
+    "model_registry.json": "598cac1297f29dca0b242d23565d2a1c72d431e46cab15ba1b1e0444eb4627f3",
+    "oof_predictions.csv": "2f19179d5d40bf0f1c16bd683fd32f85d051601ee76eebb51589537f6dbe280c",
+    "same_record_comparisons.csv": "b6048212f6ce3ff40735da1c3b04a8a296625ac3bb60615f8761acdde779ac21",
+    "threshold_selection.json": "28e9e39391da6d293245fbab1c325a2577328d6d75ea4e455de3d98b48633c9d"
+  },
+  "prior_opened_gene_overlap": 0,
+  "prior_opened_variation_id_overlap": 0,
+  "prior_v8_development_components": 1792,
+  "prior_v8_development_records": 9818,
+  "schema_version": 1,
+  "self_checks": {
+    "accuracy_reported_with_balanced_accuracy": true,
+    "clean_dataset_too_small_warning_present": true,
+    "clinical_use_claim": false,
+    "family_selection_nested_inside_outer_folds": true,
+    "feature_leakage_audit_passed": true,
+    "final_test_used_for_selection": false,
+    "labels_unchanged": true,
+    "outer_component_overlap": 0,
+    "prior_development_gene_overlap": 0,
+    "prior_development_variation_id_overlap": 0,
+    "same_record_comparison_present": true
+  },
+  "source_hashes": {
+    "clue_score_config": "2ee751040aa9c86ebe8645c0e02b1cca51d9d9b7d3a4cbdc4675819f10c50d3c",
+    "frozen_outer_folds": "de44c23c5f6bd084c1aa4c729168179832f94b4b9cd22e9aae33fa641859feb8",
+    "historical_predictor_index": "a9e0fe334d5286e176dd8367aa5f37f2fe9114b3a6f081cb5aab516c3845dfa4",
+    "original_v9_predictions": "bdbde57ffa8b442add72f8350d179fc1102d97d027772942b1cc4e094f9f07c7",
+    "v7_predictions": "77bb9306750f066fd16b117100450ba04db41ba85aabe17ce36907f06ef152c2",
+    "v8_development_database": "d9d66ba2384f2d9e0b8cb55be43432f8e02fdd8fcd70ecd2266d65e52af73a04",
+    "v8_review_queue": "f5c3f57c3ac39cd5b3bf5b4be8405b8c8130dd62dc04ed32c9ce1174135e5a42",
+    "v9_1_dataset_manifest": "376cd95753837387797fd19d073f46ed93cc35e7f6cc7931146b71d1bf647856"
+  },
+  "source_trial": {
+    "candidate_models_sha256": "a75306b4910b85158dc2fb70edbcc2f05112cd0c1213f1b1d0c8c521a19d35e5",
+    "eligible_protocol_sha256": "925a72d8c7b0e23529e0b28a4a7b3e0ec837a4eff2f4f3b2ac3b16453bdd4559",
+    "run_manifest_sha256": "22e89673f53604e0ebb226ee1c926a01f4ad534ba15df6f5879f20a73dcbb4ac",
+    "threshold_selection_sha256": "c31c0e0d6cdf937cb28552205c8466cabbecebd80890ced18e173643a3689c13",
+    "trial_config_sha256": "f603738a02429889b9b9d4ef6c992cea6c2f678c897f4b08bdf553139fd19db7"
+  },
+  "status": "v9_1_internal_development_complete_fully_nested",
+  "validation_estimate": "nested_family_selection_procedure",
+  "warning": "Internal nested grouped validation on previously opened V8 records. Not an official or final V9.1 evaluation."
+}

@@ -1,6 +1,19 @@
 # V9.1 Improvement Plan
 
-**Status: frozen internal-validation plan written before V9.1 training.**
+**Status: internal-validation plan with an explicit prepublication revision history.**
+
+Revision 1 was committed before training. A first no-output attempt exceeded one hour, so
+revision 2 removed redundant Cartesian configurations without inspecting candidate
+metrics. A nonpublishing revision-2 trial then showed that configuration selection was
+nested but family selection needed one more nested layer. Canonical V9.1 results require
+family selection inside every outer training partition. These changes are preserved in
+Git rather than being presented as an untouched preregistration.
+
+The revision-2 trial also used sklearn's record-level MLP early stopping. That candidate
+did not preserve components and is invalid. It is retained in diagnostics with an invalid
+status but excluded from every outer and full-development family decision. A protocol
+fingerprint verifies that the seven remaining eligible family definitions, data regimes,
+features, folds, thresholds, and ranking settings are byte-equivalent to the trial.
 
 ## Purpose
 
@@ -84,7 +97,8 @@ The fixed modest search includes:
 5. Random forest.
 6. ExtraTrees.
 7. Platt-calibrated linear SVM.
-8. A small standardized MLP with early stopping.
+8. A small standardized MLP with a fixed iteration budget. Sklearn's record-level early
+   stopping is disabled because it would split connected components.
 9. Frozen Clue Score V1 coverage baseline.
 10. Consequence-only baseline.
 11. Majority baseline.
@@ -103,8 +117,11 @@ Cartesian combinations. Candidate failures remain visible.
   training rows, and the primary augmented regime adding all 9,818 prior V8 development
   records to every outer and inner fit. The held-out outer V9 fold is never added to
   training. This directly tests the training-size diagnosis.
+- The all-allowed 64-feature set is fixed for candidate-family selection. Feature
+  ablations are diagnostic and cannot be used post hoc to substitute a feature set.
 - Within each outer training partition, use four stratified component-grouped folds for
-  feature-set/configuration selection, optional Platt calibration, and threshold choice.
+  family selection, configuration selection, optional Platt calibration, and threshold
+  choice.
 - Fit preprocessing only on the applicable training partition.
 - Require every row to receive exactly one outer OOF prediction and every component to
   remain in one outer fold.

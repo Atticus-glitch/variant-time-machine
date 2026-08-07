@@ -1,0 +1,8 @@
+feature_set,status,feature_count,training_regime,component_weighted_balanced_accuracy,balanced_accuracy,accuracy,macro_f1,pathogenic_recall,benign_recall,brier_score,warning
+consequence_only,evaluated,17,v8_development_plus_opened_outer_training,0.851730144095057,0.8425008586298909,0.828,0.7688060174954703,0.8655913978494624,0.8194103194103194,0.06308136428621855,
+metadata_only,evaluated,14,v8_development_plus_opened_outer_training,0.5487307110808975,0.553169004781908,0.438,0.42246666337822064,0.7365591397849462,0.36977886977886976,0.15071184657725328,
+consequence_metadata,evaluated,31,v8_development_plus_opened_outer_training,0.8855973028122617,0.8736889382050672,0.818,0.7691527143581938,0.9623655913978495,0.785012285012285,0.06252701722402539,
+consequence_metadata_completeness,evaluated,48,v8_development_plus_opened_outer_training,0.8832581996912299,0.8710007661620565,0.817,0.7676128506283977,0.956989247311828,0.785012285012285,0.06325467160445875,
+all_allowed_non_leaky,evaluated,64,v8_development_plus_opened_outer_training,0.8864360870869716,0.8759874243745212,0.842,0.7904464816229522,0.9301075268817204,0.8218673218673219,0.061287043764352934,
+all_allowed_without_gene,evaluated,64,v8_development_plus_opened_outer_training,0.8864360870869716,0.8759874243745212,0.842,0.7904464816229522,0.9301075268817204,0.8218673218673219,0.061287043764352934,Identical to all_allowed_non_leaky; gene identity is forbidden.
+all_allowed_with_gene_identity,ineligible_not_fit,,not_fit,,,,,,,,Component-disjoint folds make fold-local gene identities unseen; fold-global encoding would leak.

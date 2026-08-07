@@ -1,6 +1,11 @@
 {
   "schema_version": 1,
-  "status": "frozen_internal_validation_plan",
+  "status": "frozen_internal_validation_plan_revision_2",
+  "protocol_history": [
+    "Revision 1 was committed before training in de628e7.",
+    "A no-output trial exceeded one hour; revision 2 removed redundant Cartesian configurations without inspecting candidate metrics.",
+    "A nonpublishing revision-2 trial exposed that family selection needed another nested layer; canonical results require nested family selection and retain the trial only as diagnostic history."
+  ],
   "random_state": 223607,
   "outer_folds": 5,
   "inner_folds": 4,
@@ -95,7 +100,7 @@
     "small_mlp": {
       "hidden_layer_sizes": [[16]],
       "alpha": [0.001, 0.01],
-      "early_stopping": true,
+      "early_stopping": false,
       "max_iter": 200
     }
   },
@@ -112,5 +117,5 @@
   "official_v9_1_model": false,
   "final_test_available": false,
   "final_test_evaluated": false,
-  "warning": "Internal nested grouped validation on previously opened V8 records. Not an official or final V9.1 evaluation."
+  "warning": "Internal nested grouped validation on previously opened V8 records. The protocol has an explicit prepublication revision history. Not an official or final V9.1 evaluation."
 }

@@ -128,6 +128,19 @@ def build_v9_1_datasets(project_root: Path) -> dict[str, Any]:
         source_path
     ):
         raise V91DatasetError("V9 source dataset hash does not match its manifest.")
+    recorded_review_hashes = source_manifest.get("review_file_hashes", {})
+    current_review_hashes = {
+        "v8_review_queue.csv": sha256_file(queue_path),
+        "v8_review_notes.json": sha256_file(notes_path),
+    }
+    for source_name, current_hash in current_review_hashes.items():
+        if not any(
+            str(key).endswith(source_name) and value == current_hash
+            for key, value in recorded_review_hashes.items()
+        ):
+            raise V91DatasetError(
+                f"V9 source is stale after {source_name} changed; rebuild V9 first."
+            )
     if len(rows) != 1000 or len({row["variation_id"] for row in rows}) != 1000:
         raise V91DatasetError("V9.1 source accounting changed from 1,000 unique rows.")
     if {row["variation_id"] for row in rows} != {

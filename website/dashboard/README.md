@@ -46,7 +46,7 @@ The initial latest-version lookup is separate from the maximum 25 historical req
 - **Models** is the authoritative location for V1-V8 metrics, leakage audits, comparison limits, and V8 claim boundaries.
 - **V8 Result Summary** (`/v8_results.html`) is the screenshot-ready public aggregate with exact metrics, the same-record V7 caveat, 20 stable case studies, and whitelisted downloads.
 - **Error Review** filters and pages V4-V8 predictions. Its prominent V8 link opens **V8 Manual Review** (`/v8_review.html`), a one-case workflow with timeline evidence, V8 feature contributions, computer-suggestion flags, structured V9 inclusion controls, immediate atomic saves, and progress counts.
-- **V9 Dataset Review**, **V9 Model Training**, **V9 Results**, and **V9 Case Explorer** clearly show the current preparation-only state. Training, results, and case predictions remain locked because no final V9 exists.
+- **V9 Dataset Review** shows the still-empty human-review gate. **V9 Model Training**, **V9 Results**, and **V9 Case Explorer** expose the authenticated V9.1 internal-development evidence while clearly retaining the no-official-model and no-final-test locks.
 - **Timeline** displays dated research and application milestones; only task status is editable.
 
 The **Tools** group is consistent on every page:
@@ -87,6 +87,7 @@ The browser loads information from these Flask API endpoints:
 - `PATCH /api/v8/review/<VariationID>` and `GET /api/v8/download/<filename>`
 - `GET /api/v9/dataset-summary` and `GET /api/v9/download/<filename>`
 - `GET /api/v9/exploratory-summary` and `GET /api/v9/exploratory/download/<filename>`
+- `GET /api/v9-1/summary`, `GET /api/v9-1/cases`, and `GET /api/v9-1/download/<filename>`
 
 The separate Current Lookup and Legacy Manual Workspace remain available, but normal exact-history work should use Version History. Current ESummary candidate results are not historical results, and VCV versions are not monthly snapshots.
 

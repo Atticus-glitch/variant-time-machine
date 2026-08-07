@@ -1,0 +1,1117 @@
+{
+  "artifact": {
+    "path": "outputs/v9_1_development/model.joblib",
+    "sha256": "0d7a19a6289041daf79e56e7e407aa735d691742f01537ef64efbcb937533c13",
+    "size_bytes": 2801028,
+    "trust_boundary": "Trusted executable serialization; verify SHA-256 before loading."
+  },
+  "bootstrap_intervals": {
+    "intervals_95_percent": {
+      "consequence_only": {
+        "accuracy": [
+          0.7708880840071878,
+          0.8450265566180607
+        ],
+        "benign_recall": [
+          0.74842707053182,
+          0.8366274484482591
+        ],
+        "component_weighted_balanced_accuracy": [
+          0.8088636836903863,
+          0.874208461952168
+        ],
+        "macro_f1": [
+          0.705253059525524,
+          0.7929200479361752
+        ],
+        "pathogenic_recall": [
+          0.8243885959129861,
+          0.9230769230769231
+        ]
+      },
+      "frozen_v7": {
+        "accuracy": [
+          0.8369554602581523,
+          0.8892247269346967
+        ],
+        "benign_recall": [
+          0.8317754260582738,
+          0.8914433839163639
+        ],
+        "component_weighted_balanced_accuracy": [
+          0.8400303502509336,
+          0.8988300448487326
+        ],
+        "macro_f1": [
+          0.7683423119347768,
+          0.8430772373104971
+        ],
+        "pathogenic_recall": [
+          0.8176450715421304,
+          0.9193548387096774
+        ]
+      },
+      "frozen_v8": {
+        "accuracy": [
+          0.872899110578811,
+          0.9163138836042891
+        ],
+        "benign_recall": [
+          0.8844280710119943,
+          0.9317010309278351
+        ],
+        "component_weighted_balanced_accuracy": [
+          0.8488338480680492,
+          0.9131896050179875
+        ],
+        "macro_f1": [
+          0.8042068001322561,
+          0.8731972078319258
+        ],
+        "pathogenic_recall": [
+          0.7730053059194163,
+          0.8888888888888888
+        ]
+      },
+      "majority": {
+        "accuracy": [
+          0.7803327292593876,
+          0.8466022318493018
+        ],
+        "benign_recall": [
+          1.0,
+          1.0
+        ],
+        "component_weighted_balanced_accuracy": [
+          0.5,
+          0.5
+        ],
+        "macro_f1": [
+          0.4383072424528441,
+          0.45846485899700196
+        ],
+        "pathogenic_recall": [
+          0.0,
+          0.0
+        ]
+      },
+      "original_v9": {
+        "accuracy": [
+          0.8273451298841167,
+          0.8893361182322361
+        ],
+        "benign_recall": [
+          0.8243412797992472,
+          0.8948656021738665
+        ],
+        "component_weighted_balanced_accuracy": [
+          0.8411134495703799,
+          0.903813084580967
+        ],
+        "macro_f1": [
+          0.7563633373503702,
+          0.8414502389347118
+        ],
+        "pathogenic_recall": [
+          0.7954512227538543,
+          0.9090909090909091
+        ]
+      },
+      "selected_v9_1": {
+        "accuracy": [
+          0.8490740740740741,
+          0.8998128619962752
+        ],
+        "benign_recall": [
+          0.8396106602416034,
+          0.8989368592216955
+        ],
+        "component_weighted_balanced_accuracy": [
+          0.8656497143120374,
+          0.9191954802229492
+        ],
+        "macro_f1": [
+          0.7854899732200613,
+          0.8582019321688813
+        ],
+        "pathogenic_recall": [
+          0.8502994011976048,
+          0.9405405405405406
+        ]
+      }
+    },
+    "replicates_requested": 10000,
+    "replicates_skipped": 0,
+    "replicates_used": 10000,
+    "selected_v9_1_paired_component_weighted_balanced_accuracy_difference": {
+      "consequence_only": [
+        0.01636907464948715,
+        0.08701970658988925
+      ],
+      "frozen_v7": [
+        -0.004344220523870439,
+        0.050520907634996934
+      ],
+      "frozen_v8": [
+        -0.01225969755422339,
+        0.03776786472753351
+      ],
+      "majority": [
+        0.36564971431203735,
+        0.41919548022294917
+      ],
+      "original_v9": [
+        -0.004337129101370551,
+        0.04638130065986453
+      ]
+    },
+    "warning": "Component bootstrap conditions on fixed OOF predictions and omits full feature, candidate, calibration, and threshold selection uncertainty."
+  },
+  "calibration": {
+    "calibration_file": "outputs/evaluations/v9_1_calibration.csv",
+    "final_pipeline_calibrated": false,
+    "nested_selection_procedure_brier_score": 0.07362984090866574
+  },
+  "comparison_to_original_v9": {
+    "clear_paired_improvement": false,
+    "paired_interval": [
+      -0.004337129101370551,
+      0.04638130065986453
+    ],
+    "point_estimate_improved": true
+  },
+  "comparison_to_v8": {
+    "fairly_beat_v8": false,
+    "paired_interval": [
+      -0.01225969755422339,
+      0.03776786472753351
+    ],
+    "selected_component_weighted_balanced_accuracy": 0.8938749515640781,
+    "v8_component_weighted_balanced_accuracy": 0.882249362672237,
+    "warning": "V8 was evaluated while sealed; V9.1 used opened labels. A future equivalent untouched test is required for a fair win."
+  },
+  "dataset_used": "V8 development plus V9.1 all-eligible outer-training rows",
+  "effective_status": "selected_internal_validation_no_final_test",
+  "feature_count": 64,
+  "feature_set": "all_allowed_non_leaky",
+  "final_test_available": false,
+  "final_test_evaluated": false,
+  "leakage_audit_result": {
+    "config_sha256": "5c7a68036ae6f3c507e208dc42d78be5edafe5e7a00961467fe055f31c233ce5",
+    "dataset_sha256": "7f3427559ac40cf2981844294a8407a8577eca113b90646c7129b99a30bff000",
+    "feature_count": 64,
+    "feature_sets": {
+      "all_allowed_non_leaky": [
+        "consequence_loss_of_function",
+        "consequence_canonical_splice",
+        "consequence_missense",
+        "consequence_synonymous",
+        "consequence_inframe_indel",
+        "consequence_noncoding",
+        "consequence_unrecognized",
+        "variant_type_single_nucleotide_variant",
+        "variant_type_deletion",
+        "variant_type_duplication",
+        "variant_type_insertion",
+        "variant_type_indel",
+        "variant_type_microsatellite",
+        "variant_type_copy_number_gain",
+        "variant_type_copy_number_loss",
+        "variant_type_inversion",
+        "variant_type_other",
+        "review_criteria_provided_single_submitter",
+        "review_criteria_provided_multiple_submitters_no_conflicts",
+        "review_criteria_provided_conflicting_interpretations",
+        "review_no_assertion_criteria_provided",
+        "review_no_assertion_provided",
+        "review_reviewed_by_expert_panel",
+        "review_other",
+        "criteria_supplied",
+        "multiple_submitters_no_conflict",
+        "conflicting_interpretations",
+        "expert_panel",
+        "log1p_submitter_count",
+        "log1p_evaluation_age_days",
+        "evaluation_age_missing",
+        "log1p_rcv_count",
+        "multiple_rcvs",
+        "log1p_source_row_count",
+        "assembly_count",
+        "coordinate_parse_available",
+        "log1p_coordinate_span",
+        "point_variant",
+        "protein_hgvs_present",
+        "coding_hgvs_present",
+        "intronic_hgvs_present",
+        "hgvs_deletion",
+        "hgvs_duplication",
+        "hgvs_insertion",
+        "canonical_splice_text",
+        "missense_chemistry_available",
+        "absolute_hydropathy_change",
+        "signed_hydropathy_change",
+        "absolute_residue_mass_change_scaled",
+        "charge_gain",
+        "charge_loss",
+        "charge_reversal",
+        "polarity_change",
+        "aromatic_gain",
+        "aromatic_loss",
+        "glycine_gain",
+        "glycine_loss",
+        "proline_gain",
+        "proline_loss",
+        "cysteine_gain",
+        "cysteine_loss",
+        "missing_gene",
+        "missing_phenotype_ids",
+        "missing_coordinate"
+      ],
+      "all_allowed_without_gene": [
+        "consequence_loss_of_function",
+        "consequence_canonical_splice",
+        "consequence_missense",
+        "consequence_synonymous",
+        "consequence_inframe_indel",
+        "consequence_noncoding",
+        "consequence_unrecognized",
+        "variant_type_single_nucleotide_variant",
+        "variant_type_deletion",
+        "variant_type_duplication",
+        "variant_type_insertion",
+        "variant_type_indel",
+        "variant_type_microsatellite",
+        "variant_type_copy_number_gain",
+        "variant_type_copy_number_loss",
+        "variant_type_inversion",
+        "variant_type_other",
+        "review_criteria_provided_single_submitter",
+        "review_criteria_provided_multiple_submitters_no_conflicts",
+        "review_criteria_provided_conflicting_interpretations",
+        "review_no_assertion_criteria_provided",
+        "review_no_assertion_provided",
+        "review_reviewed_by_expert_panel",
+        "review_other",
+        "criteria_supplied",
+        "multiple_submitters_no_conflict",
+        "conflicting_interpretations",
+        "expert_panel",
+        "log1p_submitter_count",
+        "log1p_evaluation_age_days",
+        "evaluation_age_missing",
+        "log1p_rcv_count",
+        "multiple_rcvs",
+        "log1p_source_row_count",
+        "assembly_count",
+        "coordinate_parse_available",
+        "log1p_coordinate_span",
+        "point_variant",
+        "protein_hgvs_present",
+        "coding_hgvs_present",
+        "intronic_hgvs_present",
+        "hgvs_deletion",
+        "hgvs_duplication",
+        "hgvs_insertion",
+        "canonical_splice_text",
+        "missense_chemistry_available",
+        "absolute_hydropathy_change",
+        "signed_hydropathy_change",
+        "absolute_residue_mass_change_scaled",
+        "charge_gain",
+        "charge_loss",
+        "charge_reversal",
+        "polarity_change",
+        "aromatic_gain",
+        "aromatic_loss",
+        "glycine_gain",
+        "glycine_loss",
+        "proline_gain",
+        "proline_loss",
+        "cysteine_gain",
+        "cysteine_loss",
+        "missing_gene",
+        "missing_phenotype_ids",
+        "missing_coordinate"
+      ],
+      "consequence_metadata": [
+        "consequence_loss_of_function",
+        "consequence_canonical_splice",
+        "consequence_missense",
+        "consequence_synonymous",
+        "consequence_inframe_indel",
+        "consequence_noncoding",
+        "consequence_unrecognized",
+        "variant_type_single_nucleotide_variant",
+        "variant_type_deletion",
+        "variant_type_duplication",
+        "variant_type_insertion",
+        "variant_type_indel",
+        "variant_type_microsatellite",
+        "variant_type_copy_number_gain",
+        "variant_type_copy_number_loss",
+        "variant_type_inversion",
+        "variant_type_other",
+        "review_criteria_provided_single_submitter",
+        "review_criteria_provided_multiple_submitters_no_conflicts",
+        "review_criteria_provided_conflicting_interpretations",
+        "review_no_assertion_criteria_provided",
+        "review_no_assertion_provided",
+        "review_reviewed_by_expert_panel",
+        "review_other",
+        "criteria_supplied",
+        "multiple_submitters_no_conflict",
+        "conflicting_interpretations",
+        "expert_panel",
+        "log1p_submitter_count",
+        "log1p_evaluation_age_days",
+        "evaluation_age_missing"
+      ],
+      "consequence_metadata_completeness": [
+        "consequence_loss_of_function",
+        "consequence_canonical_splice",
+        "consequence_missense",
+        "consequence_synonymous",
+        "consequence_inframe_indel",
+        "consequence_noncoding",
+        "consequence_unrecognized",
+        "variant_type_single_nucleotide_variant",
+        "variant_type_deletion",
+        "variant_type_duplication",
+        "variant_type_insertion",
+        "variant_type_indel",
+        "variant_type_microsatellite",
+        "variant_type_copy_number_gain",
+        "variant_type_copy_number_loss",
+        "variant_type_inversion",
+        "variant_type_other",
+        "review_criteria_provided_single_submitter",
+        "review_criteria_provided_multiple_submitters_no_conflicts",
+        "review_criteria_provided_conflicting_interpretations",
+        "review_no_assertion_criteria_provided",
+        "review_no_assertion_provided",
+        "review_reviewed_by_expert_panel",
+        "review_other",
+        "criteria_supplied",
+        "multiple_submitters_no_conflict",
+        "conflicting_interpretations",
+        "expert_panel",
+        "log1p_submitter_count",
+        "log1p_evaluation_age_days",
+        "evaluation_age_missing",
+        "log1p_rcv_count",
+        "multiple_rcvs",
+        "log1p_source_row_count",
+        "assembly_count",
+        "coordinate_parse_available",
+        "log1p_coordinate_span",
+        "point_variant",
+        "protein_hgvs_present",
+        "coding_hgvs_present",
+        "intronic_hgvs_present",
+        "hgvs_deletion",
+        "hgvs_duplication",
+        "hgvs_insertion",
+        "canonical_splice_text",
+        "missing_gene",
+        "missing_phenotype_ids",
+        "missing_coordinate"
+      ],
+      "consequence_only": [
+        "consequence_loss_of_function",
+        "consequence_canonical_splice",
+        "consequence_missense",
+        "consequence_synonymous",
+        "consequence_inframe_indel",
+        "consequence_noncoding",
+        "consequence_unrecognized",
+        "variant_type_single_nucleotide_variant",
+        "variant_type_deletion",
+        "variant_type_duplication",
+        "variant_type_insertion",
+        "variant_type_indel",
+        "variant_type_microsatellite",
+        "variant_type_copy_number_gain",
+        "variant_type_copy_number_loss",
+        "variant_type_inversion",
+        "variant_type_other"
+      ],
+      "metadata_only": [
+        "review_criteria_provided_single_submitter",
+        "review_criteria_provided_multiple_submitters_no_conflicts",
+        "review_criteria_provided_conflicting_interpretations",
+        "review_no_assertion_criteria_provided",
+        "review_no_assertion_provided",
+        "review_reviewed_by_expert_panel",
+        "review_other",
+        "criteria_supplied",
+        "multiple_submitters_no_conflict",
+        "conflicting_interpretations",
+        "expert_panel",
+        "log1p_submitter_count",
+        "log1p_evaluation_age_days",
+        "evaluation_age_missing"
+      ]
+    },
+    "features": [
+      {
+        "allowed": true,
+        "feature": "feature__consequence_loss_of_function",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__consequence_canonical_splice",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__consequence_missense",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__consequence_synonymous",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__consequence_inframe_indel",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__consequence_noncoding",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__consequence_unrecognized",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__variant_type_single_nucleotide_variant",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__variant_type_deletion",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__variant_type_duplication",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__variant_type_insertion",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__variant_type_indel",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__variant_type_microsatellite",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__variant_type_copy_number_gain",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__variant_type_copy_number_loss",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__variant_type_inversion",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__variant_type_other",
+        "group": "consequence",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__review_criteria_provided_single_submitter",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__review_criteria_provided_multiple_submitters_no_conflicts",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__review_criteria_provided_conflicting_interpretations",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__review_no_assertion_criteria_provided",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__review_no_assertion_provided",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__review_reviewed_by_expert_panel",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__review_other",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__criteria_supplied",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__multiple_submitters_no_conflict",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__conflicting_interpretations",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__expert_panel",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__log1p_submitter_count",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__log1p_evaluation_age_days",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__evaluation_age_missing",
+        "group": "metadata",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__log1p_rcv_count",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__multiple_rcvs",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__log1p_source_row_count",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__assembly_count",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__coordinate_parse_available",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__log1p_coordinate_span",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__point_variant",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__protein_hgvs_present",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__coding_hgvs_present",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__intronic_hgvs_present",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__hgvs_deletion",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__hgvs_duplication",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__hgvs_insertion",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__canonical_splice_text",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__missense_chemistry_available",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__absolute_hydropathy_change",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__signed_hydropathy_change",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__absolute_residue_mass_change_scaled",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__charge_gain",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__charge_loss",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__charge_reversal",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__polarity_change",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__aromatic_gain",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__aromatic_loss",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__glycine_gain",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__glycine_loss",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__proline_gain",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__proline_loss",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__cysteine_gain",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__cysteine_loss",
+        "group": "chemistry",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__missing_gene",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__missing_phenotype_ids",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      },
+      {
+        "allowed": true,
+        "feature": "feature__missing_coordinate",
+        "group": "completeness",
+        "lineage": "frozen V8 feature transformer",
+        "source_snapshot": "2022-01-06 or 2024-01-04 predictor row"
+      }
+    ],
+    "forbidden_audit_columns": [
+      "variation_id",
+      "gene",
+      "component_hash",
+      "original_automatic_outcome",
+      "dataset_outcome",
+      "label_source",
+      "v8_prediction",
+      "v8_probability",
+      "v8_correct",
+      "confusion_group",
+      "manual_decision",
+      "manual_error_category",
+      "automatic_review_flags"
+    ],
+    "forbidden_name_findings": [],
+    "future_or_newer_features": 0,
+    "gene_identity": "ineligible_not_fit",
+    "manual_review_features": 0,
+    "schema_version": 1,
+    "status": "pass",
+    "warning": "Name and allowlist audit passed; source hashes and frozen transformer lineage provide the date/provenance control."
+  },
+  "leakage_audit_status": "pass",
+  "limitations": [
+    "Internal nested grouped validation on previously opened V8 records. Not an official or final V9.1 evaluation.",
+    "No human-reviewed clean rows or independent final test were available.",
+    "The V8 comparison is same-record but asymmetric.",
+    "Bootstrap intervals condition on fixed OOF predictions.",
+    "This artifact has no clinical-use validity."
+  ],
+  "manual_review_status": "not started; 0 completed reviews",
+  "metrics": {
+    "accuracy": 0.875,
+    "average_precision": 0.8654386346668596,
+    "balanced_accuracy": 0.8838141660722305,
+    "benign_f1": 0.9188838416612589,
+    "benign_precision": 0.9738651994497937,
+    "benign_recall": 0.8697788697788698,
+    "brier_score": 0.07362984090866574,
+    "component_weighted_balanced_accuracy": 0.8938749515640781,
+    "confusion_matrix": {
+      "FN": 19,
+      "FP": 106,
+      "TN": 708,
+      "TP": 167
+    },
+    "log_loss": 0.25022269554611254,
+    "macro_f1": 0.8232763434885815,
+    "outer_fold_metrics": [
+      {
+        "accuracy": 0.91,
+        "average_precision": 0.8941776392568481,
+        "balanced_accuracy": 0.8925551318189355,
+        "benign_f1": 0.9433962264150944,
+        "benign_precision": 0.967741935483871,
+        "benign_recall": 0.9202453987730062,
+        "brier_score": 0.05485678020304596,
+        "component_weighted_balanced_accuracy": 0.8978043936250624,
+        "confusion_matrix": {
+          "FN": 5,
+          "FP": 13,
+          "TN": 150,
+          "TP": 32
+        },
+        "fold": 0,
+        "log_loss": 0.18724182859028787,
+        "macro_f1": 0.8619420156465716,
+        "pathogenic_f1": 0.7804878048780488,
+        "pathogenic_precision": 0.7111111111111111,
+        "pathogenic_recall": 0.8648648648648649,
+        "records": 200,
+        "roc_auc": 0.9587133145415354,
+        "selected_family": "extra_trees",
+        "weighted_f1": 0.9132581684307409
+      },
+      {
+        "accuracy": 0.88,
+        "average_precision": 0.9096466952192227,
+        "balanced_accuracy": 0.8856400259909032,
+        "benign_f1": 0.922077922077922,
+        "benign_precision": 0.9726027397260274,
+        "benign_recall": 0.8765432098765432,
+        "brier_score": 0.07526639674532155,
+        "component_weighted_balanced_accuracy": 0.8741325339558573,
+        "confusion_matrix": {
+          "FN": 4,
+          "FP": 20,
+          "TN": 142,
+          "TP": 34
+        },
+        "fold": 1,
+        "log_loss": 0.26187631000403805,
+        "macro_f1": 0.8306041784302653,
+        "pathogenic_f1": 0.7391304347826086,
+        "pathogenic_precision": 0.6296296296296297,
+        "pathogenic_recall": 0.8947368421052632,
+        "records": 200,
+        "roc_auc": 0.9601202079272255,
+        "selected_family": "extra_trees",
+        "weighted_f1": 0.8873178994918125
+      },
+      {
+        "accuracy": 0.865,
+        "average_precision": 0.8852360468683202,
+        "balanced_accuracy": 0.8649477698557453,
+        "benign_f1": 0.912621359223301,
+        "benign_precision": 0.9657534246575342,
+        "benign_recall": 0.8650306748466258,
+        "brier_score": 0.07416169791551104,
+        "component_weighted_balanced_accuracy": 0.890743630442328,
+        "confusion_matrix": {
+          "FN": 5,
+          "FP": 22,
+          "TN": 141,
+          "TP": 32
+        },
+        "fold": 2,
+        "log_loss": 0.24095065664240634,
+        "macro_f1": 0.8079590312600022,
+        "pathogenic_f1": 0.7032967032967034,
+        "pathogenic_precision": 0.5925925925925926,
+        "pathogenic_recall": 0.8648648648648649,
+        "records": 200,
+        "roc_auc": 0.9603714143591444,
+        "selected_family": "random_forest",
+        "weighted_f1": 0.8738962978768804
+      },
+      {
+        "accuracy": 0.855,
+        "average_precision": 0.8164888755406019,
+        "balanced_accuracy": 0.8797048582324656,
+        "benign_f1": 0.9042904290429042,
+        "benign_precision": 0.9785714285714285,
+        "benign_recall": 0.8404907975460123,
+        "brier_score": 0.08903957417532901,
+        "component_weighted_balanced_accuracy": 0.9023850838527783,
+        "confusion_matrix": {
+          "FN": 3,
+          "FP": 26,
+          "TN": 137,
+          "TP": 34
+        },
+        "fold": 3,
+        "log_loss": 0.2971144495523379,
+        "macro_f1": 0.8026606784389778,
+        "pathogenic_f1": 0.7010309278350515,
+        "pathogenic_precision": 0.5666666666666667,
+        "pathogenic_recall": 0.918918918918919,
+        "records": 200,
+        "roc_auc": 0.9518322002984579,
+        "selected_family": "extra_trees",
+        "weighted_f1": 0.8666874213194515
+      },
+      {
+        "accuracy": 0.865,
+        "average_precision": 0.8334405725319544,
+        "balanced_accuracy": 0.8962858564085558,
+        "benign_f1": 0.9108910891089109,
+        "benign_precision": 0.9857142857142858,
+        "benign_recall": 0.8466257668711656,
+        "brier_score": 0.07482475550412115,
+        "component_weighted_balanced_accuracy": 0.9015943798813709,
+        "confusion_matrix": {
+          "FN": 2,
+          "FP": 25,
+          "TN": 138,
+          "TP": 35
+        },
+        "fold": 4,
+        "log_loss": 0.2639302329414928,
+        "macro_f1": 0.8162702868224967,
+        "pathogenic_f1": 0.7216494845360825,
+        "pathogenic_precision": 0.5833333333333334,
+        "pathogenic_recall": 0.9459459459459459,
+        "records": 200,
+        "roc_auc": 0.9615320842314709,
+        "selected_family": "extra_trees",
+        "weighted_f1": 0.8758813922629378
+      }
+    ],
+    "pathogenic_f1": 0.7276688453159041,
+    "pathogenic_precision": 0.6117216117216118,
+    "pathogenic_recall": 0.8978494623655914,
+    "records": 1000,
+    "roc_auc": 0.9567778922617634,
+    "weighted_f1": 0.8833178523410229
+  },
+  "metrics_scope": "Fully nested OOF estimate of the selection procedure; not test metrics for the serialized full-data pipeline.",
+  "model_id": "V9.1-development",
+  "model_type": "extra_trees",
+  "name": "V9.1 internal-development candidate",
+  "official_model": false,
+  "official_v9_1_model": false,
+  "protocol_history": [
+    "Revision 1 was committed before training in de628e7.",
+    "A no-output trial exceeded one hour; revision 2 removed redundant Cartesian configurations without inspecting candidate metrics.",
+    "A nonpublishing revision-2 trial exposed that family selection needed another nested layer; canonical results require nested family selection and retain the trial only as diagnostic history."
+  ],
+  "safety_threshold_report_only": 0.3699999999999999,
+  "schema_version": 1,
+  "selected_configuration": "depth_None_min_5_class_balanced",
+  "selected_threshold_full_development": 0.4999999999999998,
+  "split_method": "fully nested family/configuration/calibration/threshold selection on frozen component-grouped outer folds",
+  "test_records": 0,
+  "training_records_per_outer_fold": 10618,
+  "validation_records_per_outer_fold": 200,
+  "warnings": [
+    "Internal nested grouped validation on previously opened V8 records. Not an official or final V9.1 evaluation.",
+    "The protocol has a disclosed prepublication revision history.",
+    "The serialized full-data pipeline has no test metrics."
+  ]
+}

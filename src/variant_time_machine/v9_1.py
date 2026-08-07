@@ -8,6 +8,7 @@ import math
 import os
 import shutil
 import tempfile
+from collections import Counter
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -507,6 +508,48 @@ def _candidate_specs(config: dict[str, Any]) -> dict[str, list[CandidateSpec]]:
     return values
 
 
+def _rank_families(
+    metrics: dict[str, dict[str, Any]], config: dict[str, Any]
+) -> tuple[str, dict[str, Any]]:
+    """Apply the frozen family rule to metrics from training-isolated predictions."""
+    best_primary = max(
+        summary["component_weighted_balanced_accuracy"] for summary in metrics.values()
+    )
+    close = [
+        family
+        for family, summary in metrics.items()
+        if summary["component_weighted_balanced_accuracy"]
+        >= best_primary - float(config["close_metric_tolerance"])
+    ]
+    selected = min(
+        close,
+        key=lambda family: (
+            -metrics[family]["macro_f1"],
+            -metrics[family]["pathogenic_recall"],
+            metrics[family]["brier_score"],
+            metrics[family].get("stability_penalty", 0.0),
+            INTERPRETABILITY[family],
+            family,
+        ),
+    )
+    return selected, {
+        "best_primary": best_primary,
+        "close_families": close,
+        "selected_family": selected,
+        "selection_reached_stability_tie_break": False,
+        "selection_reached_simplicity_tie_break": False,
+    }
+
+
+def _selected_inner_metrics(selection: dict[str, Any]) -> dict[str, Any]:
+    identifier = selection["selected_configuration"]
+    return next(
+        row
+        for row in selection["inner_configuration_results"]
+        if row["configuration"] == identifier
+    )
+
+
 def _feature_sets(config: dict[str, Any]) -> dict[str, list[str]]:
     groups = config["feature_groups"]
     canonical = list(V8_FEATURE_NAMES)
@@ -632,6 +675,24 @@ def _comparison_row(
     }
 
 
+def _transition_counts(
+    targets: np.ndarray, selected: np.ndarray, reference: np.ndarray
+) -> dict[str, int]:
+    selected_correct = selected == targets
+    reference_correct = reference == targets
+    return {
+        "prediction_disagreements": int((selected != reference).sum()),
+        "reference_wrong_v9_1_correct": int(
+            ((~reference_correct) & selected_correct).sum()
+        ),
+        "reference_correct_v9_1_wrong": int(
+            (reference_correct & (~selected_correct)).sum()
+        ),
+        "both_correct": int((reference_correct & selected_correct).sum()),
+        "both_wrong": int(((~reference_correct) & (~selected_correct)).sum()),
+    }
+
+
 def _feature_audit(
     feature_sets: dict[str, list[str]], config_path: Path, dataset_path: Path
 ) -> dict[str, Any]:
@@ -690,6 +751,14 @@ def _feature_audit(
 
 
 def _publish_outputs(root: Path, working: Path) -> None:
+    canonical = root / "outputs/v9_1_development"
+    if canonical.exists():
+        raise V91Error(f"Refusing to overwrite canonical V9.1 bundle: {canonical}")
+    staging = canonical.with_name(f".{canonical.name}.tmp")
+    if staging.exists():
+        shutil.rmtree(staging)
+    shutil.copytree(working, staging)
+    os.replace(staging, canonical)
     evaluation_dir = root / "outputs/evaluations"
     audit_dir = root / "outputs/leakage_audits"
     model_dir = root / "outputs/models"
@@ -713,7 +782,7 @@ def _publish_outputs(root: Path, working: Path) -> None:
     }
     for source, destination in mappings.items():
         temporary = destination.with_name(f".{destination.name}.tmp")
-        shutil.copy2(working / source, temporary)
+        shutil.copy2(canonical / source, temporary)
         os.replace(temporary, destination)
 
 
@@ -722,10 +791,14 @@ def run_v9_1_development(
 ) -> dict[str, Any]:
     """Run preregistered V9.1 internal development; never evaluate a final test."""
     root = project_root.resolve()
+    if output_dir is None and not publish:
+        raise V91Error(
+            "Choose --output-dir for a trial or --publish for canonical output."
+        )
     config_path = root / "config/v9_1.json"
     config = _load_json(config_path)
     if (
-        config.get("status") != "frozen_internal_validation_plan"
+        config.get("status") != "frozen_internal_validation_plan_revision_2"
         or config.get("official_v9_1_model") is not False
         or config.get("final_test_available") is not False
         or config.get("final_test_evaluated") is not False
@@ -734,6 +807,29 @@ def run_v9_1_development(
     dataset_path = root / "data/processed/v9_1/v9_1_all_eligible_dataset.csv"
     dataset_manifest_path = root / "data/processed/v9_1/v9_1_dataset_manifest.json"
     dataset_manifest = _load_json(dataset_manifest_path)
+    if (
+        dataset_manifest.get("status") != "internal_development_only_review_gate_failed"
+        or dataset_manifest.get("official_model_selection_allowed") is not False
+        or dataset_manifest.get("final_test_allowed") is not False
+    ):
+        raise V91Error("V9.1 dataset manifest does not preserve the official lock.")
+    if dataset_manifest.get("source_hashes", {}).get("config/v9_1.json") != sha256_file(
+        config_path
+    ):
+        raise V91Error("V9.1 dataset manifest is stale after the plan changed.")
+    dataset_source_paths = {
+        "v9_messy_dataset.csv": root / "data/processed/v9/v9_messy_dataset.csv",
+        "v9_dataset_manifest.json": root / "data/processed/v9/v9_dataset_manifest.json",
+        "v8_review_queue.csv": root / "outputs/manual_review/v8_review_queue.csv",
+        "v8_review_notes.json": root / "outputs/manual_review/v8_review_notes.json",
+    }
+    for name, path in dataset_source_paths.items():
+        if dataset_manifest.get("source_hashes", {}).get(name) != sha256_file(path):
+            raise V91Error(f"V9.1 dataset source changed after build: {name}")
+    for relative, expected in dataset_manifest.get("implementation_hashes", {}).items():
+        path = root / relative
+        if not path.is_file() or path.is_symlink() or sha256_file(path) != expected:
+            raise V91Error(f"V9.1 dataset implementation changed: {relative}")
     expected_hash = dataset_manifest.get("output_hashes", {}).get(dataset_path.name)
     if expected_hash != sha256_file(dataset_path):
         raise V91Error("V9.1 all-eligible data do not match the dataset manifest.")
@@ -759,9 +855,11 @@ def run_v9_1_development(
     groups = np.asarray(
         [f"opened:{value}" for value in frame["component_hash"]], dtype=str
     )
-    outer_splits = _outer_splits(
-        frame, root / "outputs/v9_exploratory/fold_assignments.csv"
-    )
+    fold_path = root / "outputs/v9_exploratory/fold_assignments.csv"
+    original_manifest = _load_json(root / "outputs/v9_exploratory/run_manifest.json")
+    if original_manifest.get("fold_assignments_sha256") != sha256_file(fold_path):
+        raise V91Error("Frozen original V9 outer folds changed.")
+    outer_splits = _outer_splits(frame, fold_path)
 
     development_db = root / "data/processed/resolved_direction_v2.sqlite3"
     predictor_index = root / "data/processed/clinvar_history.sqlite3"
@@ -781,6 +879,8 @@ def run_v9_1_development(
     )
     if opened_gene_tokens & base_gene_tokens:
         raise V91Error("Prior V8 development genes overlap the opened V9 cohort.")
+    if {record["variation_id"] for record in base_records} & set(frame["variation_id"]):
+        raise V91Error("Prior V8 development Variation IDs overlap V9.1 rows.")
     base_groups = np.asarray([f"base:{value}" for value in base_raw_groups], dtype=str)
     empty_x = np.empty((0, x.shape[1]), dtype=float)
     empty_y = np.empty(0, dtype=int)
@@ -944,26 +1044,54 @@ def run_v9_1_development(
                 }
                 for fold, (_, validation) in enumerate(outer_splits)
             ]
-        best_primary = max(
-            summary["component_weighted_balanced_accuracy"]
-            for summary in candidate_metrics.values()
+        selected_probabilities = np.full(len(y), np.nan, dtype=float)
+        selected_predictions = np.full(len(y), -1, dtype=int)
+        selected_family_by_index = np.full(len(y), "", dtype=object)
+        outer_family_selections = []
+        for fold, (_, validation) in enumerate(outer_splits):
+            isolated_metrics = {
+                family: _selected_inner_metrics(candidate_selections[family][fold])
+                for family in candidate_predictions
+            }
+            selected_fold_family, trace = _rank_families(isolated_metrics, config)
+            selected_probabilities[validation] = candidate_probabilities[
+                selected_fold_family
+            ][validation]
+            selected_predictions[validation] = candidate_predictions[
+                selected_fold_family
+            ][validation]
+            selected_family_by_index[validation] = selected_fold_family
+            outer_family_selections.append(
+                {
+                    "fold": fold,
+                    "selected_family": selected_fold_family,
+                    "family_metrics_from_inner_oof": isolated_metrics,
+                    "selection_trace": trace,
+                }
+            )
+        if (
+            not np.isfinite(selected_probabilities).all()
+            or (selected_predictions < 0).any()
+            or (selected_family_by_index == "").any()
+        ):
+            raise V91Error("Nested family-selection predictions are incomplete.")
+        selected_metrics = _metric_summary(
+            y, selected_probabilities, selected_predictions, _weights(groups)
         )
-        close = [
-            family
-            for family, summary in candidate_metrics.items()
-            if summary["component_weighted_balanced_accuracy"]
-            >= best_primary - float(config["close_metric_tolerance"])
+        selected_metrics["outer_fold_metrics"] = [
+            {
+                "fold": fold,
+                "selected_family": outer_family_selections[fold]["selected_family"],
+                **_metric_summary(
+                    y[validation],
+                    selected_probabilities[validation],
+                    selected_predictions[validation],
+                    _weights(groups[validation]),
+                ),
+            }
+            for fold, (_, validation) in enumerate(outer_splits)
         ]
-        selected_family = min(
-            close,
-            key=lambda family: (
-                -candidate_metrics[family]["macro_f1"],
-                -candidate_metrics[family]["pathogenic_recall"],
-                candidate_metrics[family]["brier_score"],
-                INTERPRETABILITY[family],
-                family,
-            ),
-        )
+        candidate_selections["nested_outer_family_selection"] = outer_family_selections
 
         consequence_predictions = (
             frame[
@@ -1002,8 +1130,8 @@ def run_v9_1_development(
 
         comparisons = {
             "selected_v9_1": (
-                candidate_probabilities[selected_family],
-                candidate_predictions[selected_family],
+                selected_probabilities,
+                selected_predictions,
             ),
             "original_v9": (original_probabilities, original_predictions),
             "frozen_v8": (frozen_v8_probabilities, frozen_v8_predictions),
@@ -1019,10 +1147,13 @@ def run_v9_1_development(
             for name, (probability, prediction) in comparisons.items()
         ]
         for row in comparison_rows:
-            selected = candidate_metrics[selected_family]
             row["selected_v9_1_minus_model_component_weighted_ba"] = (
-                selected["component_weighted_balanced_accuracy"]
+                selected_metrics["component_weighted_balanced_accuracy"]
                 - row["component_weighted_balanced_accuracy"]
+            )
+            reference_prediction = comparisons[row["model"]][1]
+            row.update(
+                _transition_counts(y, selected_predictions, reference_prediction)
             )
             row["same_records"] = True
             row["comparison_warning"] = (
@@ -1041,6 +1172,11 @@ def run_v9_1_development(
                 "pathogenic_recall",
                 "brier_score",
                 "selected_v9_1_minus_model_component_weighted_ba",
+                "prediction_disagreements",
+                "reference_wrong_v9_1_correct",
+                "reference_correct_v9_1_wrong",
+                "both_correct",
+                "both_wrong",
                 "same_records",
                 "comparison_warning",
             ],
@@ -1058,8 +1194,8 @@ def run_v9_1_development(
         candidate_rows = [
             {
                 "candidate": family,
-                "status": "evaluated",
-                "selected": family == selected_family,
+                "status": "family_specific_diagnostic",
+                "selected": False,
                 "training_regime": config["primary_training_regime"],
                 "feature_set": "all_allowed_non_leaky",
                 "feature_count": len(V8_FEATURE_NAMES),
@@ -1075,6 +1211,29 @@ def run_v9_1_development(
             }
             for family, summary in candidate_metrics.items()
         ]
+        candidate_rows.append(
+            {
+                "candidate": "nested_family_selection_procedure",
+                "status": "selected_internal_validation_procedure",
+                "selected": True,
+                "training_regime": config["primary_training_regime"],
+                "feature_set": "all_allowed_non_leaky",
+                "feature_count": len(V8_FEATURE_NAMES),
+                "fold_min_component_weighted_ba": min(
+                    fold["component_weighted_balanced_accuracy"]
+                    for fold in selected_metrics["outer_fold_metrics"]
+                ),
+                "fold_max_component_weighted_ba": max(
+                    fold["component_weighted_balanced_accuracy"]
+                    for fold in selected_metrics["outer_fold_metrics"]
+                ),
+                **selected_metrics,
+                "warning": (
+                    "Metrics estimate the full nested family-selection procedure; "
+                    "outer folds may select different model families."
+                ),
+            }
+        )
         candidate_rows.extend(
             {
                 "candidate": item["candidate"],
@@ -1168,6 +1327,11 @@ def run_v9_1_development(
             for family, probabilities in candidate_probabilities.items()
             for row in _calibration_rows(family, y, probabilities)
         ]
+        calibration_rows.extend(
+            _calibration_rows(
+                "nested_family_selection_procedure", y, selected_probabilities
+            )
+        )
         _write_csv(
             temporary / "calibration.csv",
             list(calibration_rows[0]),
@@ -1175,24 +1339,51 @@ def run_v9_1_development(
         )
         _write_json(temporary / "candidate_failures.json", failures)
 
-        selected_specs = candidate_specs[selected_family]
-        (
-            final_spec,
-            final_calibrator,
-            final_threshold,
-            safety_threshold,
-            final_audits,
-        ) = _select_spec(
-            selected_specs,
-            base_x,
-            base_y,
-            base_groups,
-            x,
-            y,
-            groups,
+        full_family_results: dict[str, dict[str, Any]] = {}
+        for family, specs in candidate_specs.items():
+            (
+                family_spec,
+                family_calibrator,
+                family_threshold,
+                family_safety_threshold,
+                family_audits,
+            ) = _select_spec(
+                specs,
+                base_x,
+                base_y,
+                base_groups,
+                x,
+                y,
+                groups,
+                config,
+                int(config["random_state"]) + 100,
+            )
+            family_metrics = next(
+                row
+                for row in family_audits
+                if row["configuration"] == family_spec.identifier
+            )
+            full_family_results[family] = {
+                "spec": family_spec,
+                "calibrator": family_calibrator,
+                "threshold": family_threshold,
+                "safety_threshold": family_safety_threshold,
+                "configuration_results": family_audits,
+                "selected_configuration_metrics": family_metrics,
+            }
+        final_family, full_family_trace = _rank_families(
+            {
+                family: item["selected_configuration_metrics"]
+                for family, item in full_family_results.items()
+            },
             config,
-            int(config["random_state"]) + 100,
         )
+        final_result = full_family_results[final_family]
+        final_spec = final_result["spec"]
+        final_calibrator = final_result["calibrator"]
+        final_threshold = final_result["threshold"]
+        safety_threshold = final_result["safety_threshold"]
+        final_audits = final_result["configuration_results"]
         final_x, final_y, final_groups, final_weights = _combine_training(
             base_x, base_y, base_groups, x, y, groups
         )
@@ -1202,7 +1393,7 @@ def run_v9_1_development(
             "status": "v9_1_internal_development_candidate",
             "official_v9_1_model": False,
             "final_test_evaluated": False,
-            "family": selected_family,
+            "family": final_family,
             "configuration": final_spec.identifier,
             "base_model": final_model,
             "calibrator": final_calibrator,
@@ -1214,7 +1405,42 @@ def run_v9_1_development(
         }
         joblib.dump(model_bundle, temporary / "model.joblib")
 
-        selected_metrics = candidate_metrics[selected_family]
+        _write_json(
+            temporary / "threshold_selection.json",
+            {
+                "selection_scope": (
+                    "family, configuration, calibration, and threshold selected from "
+                    "grouped inner OOF predictions inside each outer training fold"
+                ),
+                "optimized_metric": config["primary_metric"],
+                "primary_threshold_rule": (
+                    "maximize component-weighted balanced accuracy; ties closest to "
+                    "0.5 then lower"
+                ),
+                "safety_threshold_rule": (
+                    "maximize pathogenic recall within 0.02 of the best inner "
+                    "component-weighted balanced accuracy; report only"
+                ),
+                "candidate_outer_fold_selections": candidate_selections,
+                "full_development_family_selection": {
+                    "selected_family": final_family,
+                    "selected_configuration": final_spec.identifier,
+                    "selected_threshold": final_threshold,
+                    "safety_threshold_report_only": safety_threshold,
+                    "family_results": {
+                        family: {
+                            key: value
+                            for key, value in result.items()
+                            if key not in {"spec", "calibrator"}
+                        }
+                        for family, result in full_family_results.items()
+                    },
+                    "selection_trace": full_family_trace,
+                },
+                "final_test_used": False,
+            },
+        )
+
         original_metrics = next(
             row for row in comparison_rows if row["model"] == "original_v9"
         )
@@ -1237,7 +1463,8 @@ def run_v9_1_development(
             "official_v9_1_model": False,
             "final_test_available": False,
             "final_test_evaluated": False,
-            "model_type": selected_family,
+            "model_type": final_family,
+            "selected_configuration": final_spec.identifier,
             "feature_set": "all_allowed_non_leaky",
             "feature_count": len(V8_FEATURE_NAMES),
             "dataset_used": "V8 development plus V9.1 all-eligible outer-training rows",
@@ -1248,10 +1475,19 @@ def run_v9_1_development(
             "selected_threshold_full_development": final_threshold,
             "safety_threshold_report_only": safety_threshold,
             "metrics": selected_metrics,
+            "metrics_scope": (
+                "Fully nested OOF estimate of the family/configuration/calibration/"
+                "threshold selection procedure; not a test of the serialized full-data "
+                "pipeline."
+            ),
             "leakage_audit_result": feature_audit,
+            "leakage_audit_status": feature_audit["status"],
+            "manual_review_status": "not started; 0 completed reviews",
             "calibration": {
                 "calibrated": final_spec.calibrated,
-                "brier_score": selected_metrics["brier_score"],
+                "nested_selection_procedure_brier_score": selected_metrics[
+                    "brier_score"
+                ],
                 "calibration_file": "outputs/evaluations/v9_1_calibration.csv",
             },
             "bootstrap_intervals": bootstrap,
@@ -1277,7 +1513,7 @@ def run_v9_1_development(
             },
             "training_regime_diagnosis": regime_metrics,
             "artifact": {
-                "path": "outputs/models/v9_1_development.joblib",
+                "path": "outputs/v9_1_development/model.joblib",
                 "sha256": sha256_file(temporary / "model.joblib"),
                 "size_bytes": (temporary / "model.joblib").stat().st_size,
             },
@@ -1289,12 +1525,18 @@ def run_v9_1_development(
                 "Bootstrap intervals condition on fixed OOF predictions.",
                 "This artifact has no clinical-use validity.",
             ],
+            "warnings": [
+                WARNING,
+                "The nested estimate evaluates a selection procedure on opened labels, "
+                "not an independent final test.",
+                "The serialized full-data pipeline has no test metrics.",
+            ],
         }
         _write_json(temporary / "model_registry.json", registry)
 
         prediction_rows = []
-        selected_probability = candidate_probabilities[selected_family]
-        selected_prediction = candidate_predictions[selected_family]
+        selected_probability = selected_probabilities
+        selected_prediction = selected_predictions
         for index, source in frame.iterrows():
             prediction_rows.append(
                 {
@@ -1309,6 +1551,7 @@ def run_v9_1_development(
                         else "moved_toward_benign"
                     ),
                     "v9_1_correct": bool(selected_prediction[index] == y[index]),
+                    "v9_1_outer_selected_family": selected_family_by_index[index],
                     "original_v9_prediction": (
                         "moved_toward_pathogenic"
                         if original_predictions[index]
@@ -1324,9 +1567,9 @@ def run_v9_1_development(
                     "clue_score": float(clue_score[index]),
                     "clue_score_directional": bool(clue_directional[index]),
                     "model_explanation": (
-                        f"{selected_family} using 64 authenticated old-snapshot "
-                        "features; "
-                        "OOF prediction from a fold that excluded this component."
+                        f"{selected_family_by_index[index]} selected inside this outer "
+                        "training partition using 64 authenticated old-snapshot "
+                        "features; the OOF prediction excluded this component."
                     ),
                 }
             )
@@ -1344,7 +1587,12 @@ def run_v9_1_development(
             "schema_version": 1,
             "status": "v9_1_internal_development_complete",
             "warning": WARNING,
-            "selected_family": selected_family,
+            "full_development_selected_family": final_family,
+            "full_development_selected_configuration": final_spec.identifier,
+            "validation_estimate": "nested_family_selection_procedure",
+            "outer_selected_family_counts": dict(
+                Counter(selected_family_by_index.tolist())
+            ),
             "official_v9_1_model": False,
             "final_test_available": False,
             "final_test_evaluated": False,
@@ -1369,6 +1617,15 @@ def run_v9_1_development(
                 "frozen_outer_folds": sha256_file(
                     root / "outputs/v9_exploratory/fold_assignments.csv"
                 ),
+                "v8_feature_and_development_loader": sha256_file(
+                    root / "src/variant_time_machine/ai_temporal_v8.py"
+                ),
+                "v9_metric_and_clue_helpers": sha256_file(
+                    root / "src/variant_time_machine/v9_exploratory.py"
+                ),
+                "v9_1_dataset_builder": sha256_file(
+                    root / "src/variant_time_machine/v9_1_dataset.py"
+                ),
             },
             "implementation_sha256": sha256_file(
                 root / "src/variant_time_machine/v9_1.py"
@@ -1386,7 +1643,9 @@ def run_v9_1_development(
                 "labels_unchanged": True,
                 "outer_component_overlap": 0,
                 "prior_development_gene_overlap": 0,
+                "prior_development_variation_id_overlap": 0,
                 "same_record_comparison_present": True,
+                "family_selection_nested_inside_outer_folds": True,
                 "accuracy_reported_with_balanced_accuracy": True,
                 "clean_dataset_too_small_warning_present": True,
                 "clinical_use_claim": False,
@@ -1407,7 +1666,7 @@ def run_v9_1_development(
             "manifest": run_manifest,
             "registry": registry,
             "candidate_metrics": candidate_metrics,
-            "selected_family": selected_family,
+            "selected_family": final_family,
             "working_output": str(temporary),
         }
     finally:

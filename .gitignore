@@ -72,6 +72,7 @@ outputs/ai_temporal_v7/
 outputs/ai_temporal_v8/
 *.joblib
 !outputs/v9_exploratory/exploratory_leader.joblib
+!outputs/v9_1_development/model.joblib
 *.pkl
 
 # Notebook and temporary files

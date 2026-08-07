@@ -1,1 +1,21 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>V9 Results | Variant Time Machine</title><link rel="stylesheet" href="/static/styles.css"><script src="/static/v9_status.js" defer></script></head><body><a class="skip-link" href="#main-content">Skip to main content</a><header class="site-header"><div class="header-grid"><div><p class="eyebrow">I have not run an official evaluation</p><h1>V9 Results</h1><p class="subtitle">I will keep this page clearly incomplete until review, selection, and locked testing are valid.</p></div></div></header><main id="main-content" class="prediction-main"><section class="panel v8-warning"><h2 id="v9-status">Loading gate...</h2><p>I have no V9 test metrics, winner, or superiority claim.</p></section><section class="panel"><h2>Required Future Reporting</h2><p>If I eventually report a result, I must show all-record and clean-reviewed performance, excluded or ambiguous performance where meaningful, same-record baselines, uncertainty, calibration, consequence and review-status strata, class-distribution changes, and exclusion effects.</p><div id="v9-warnings" class="warning-list"></div><p><a class="button-link" href="/v8_results.html">View Frozen V8 Result</a></p></section></main><footer><p>This is not medical advice or clinical validation.</p></footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>V9.1 Internal Results | Variant Time Machine</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/v9_status.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="header-grid"><div><p class="eyebrow">Fully nested estimate</p><h1>V9.1 Internal Results</h1><p class="subtitle">A stronger point estimate than original V9, with uncertainty and opened-label limits kept visible.</p></div><div class="milestone-card"><span>Official model</span><strong>No</strong><small>Final test evaluated: no</small></div></div></header>
+  <main id="main-content" class="prediction-main">
+    <section class="panel v8-warning"><h2 id="v9-1-result-status">Loading V9.1 result...</h2><p>These are out-of-fold internal-development estimates, not scores for the fitted full-development artifact.</p></section>
+    <section class="panel"><h2>Nested Selection Estimate</h2><dl id="v9-1-metrics" class="prediction-summary-grid"></dl><p id="v9-1-confusion"></p></section>
+    <section class="panel"><h2>Same-Record References</h2><div class="table-wrap"><table><thead><tr><th>Procedure</th><th>Component-weighted BA</th><th>Balanced accuracy</th><th>Accuracy</th><th>Macro F1</th><th>Pathogenic recall</th><th>Benign recall</th></tr></thead><tbody id="v9-1-comparison-rows"><tr><td colspan="7">Loading comparisons...</td></tr></tbody></table></div><p id="v9-1-interval-note"></p></section>
+    <section class="panel"><h2>Strongest Truthful Claim</h2><p>The V9.1 point estimate recovered the primary-metric loss seen in original V9 and increased pathogenic recall. Paired intervals cross zero against original V9 and V8. Because V9.1 used labels that were sealed for V8, it does not fairly beat V8.</p><div class="download-grid"><a href="/api/v9-1/download/bootstrap_intervals.json">Bootstrap intervals</a><a href="/api/v9-1/download/same_record_comparisons.csv">Same-record comparison</a><a href="/api/v9-1/download/calibration.csv">Calibration</a><a href="/api/v9-1/download/model_registry.json">Registry record</a></div></section>
+  </main>
+  <footer><p>No clean reviewed-cohort result, independent final test, clinical validity, or deployment claim.</p></footer>
+</body>
+</html>

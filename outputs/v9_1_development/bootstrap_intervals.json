@@ -1,0 +1,162 @@
+{
+  "intervals_95_percent": {
+    "consequence_only": {
+      "accuracy": [
+        0.7708880840071878,
+        0.8450265566180607
+      ],
+      "benign_recall": [
+        0.74842707053182,
+        0.8366274484482591
+      ],
+      "component_weighted_balanced_accuracy": [
+        0.8088636836903863,
+        0.874208461952168
+      ],
+      "macro_f1": [
+        0.705253059525524,
+        0.7929200479361752
+      ],
+      "pathogenic_recall": [
+        0.8243885959129861,
+        0.9230769230769231
+      ]
+    },
+    "frozen_v7": {
+      "accuracy": [
+        0.8369554602581523,
+        0.8892247269346967
+      ],
+      "benign_recall": [
+        0.8317754260582738,
+        0.8914433839163639
+      ],
+      "component_weighted_balanced_accuracy": [
+        0.8400303502509336,
+        0.8988300448487326
+      ],
+      "macro_f1": [
+        0.7683423119347768,
+        0.8430772373104971
+      ],
+      "pathogenic_recall": [
+        0.8176450715421304,
+        0.9193548387096774
+      ]
+    },
+    "frozen_v8": {
+      "accuracy": [
+        0.872899110578811,
+        0.9163138836042891
+      ],
+      "benign_recall": [
+        0.8844280710119943,
+        0.9317010309278351
+      ],
+      "component_weighted_balanced_accuracy": [
+        0.8488338480680492,
+        0.9131896050179875
+      ],
+      "macro_f1": [
+        0.8042068001322561,
+        0.8731972078319258
+      ],
+      "pathogenic_recall": [
+        0.7730053059194163,
+        0.8888888888888888
+      ]
+    },
+    "majority": {
+      "accuracy": [
+        0.7803327292593876,
+        0.8466022318493018
+      ],
+      "benign_recall": [
+        1.0,
+        1.0
+      ],
+      "component_weighted_balanced_accuracy": [
+        0.5,
+        0.5
+      ],
+      "macro_f1": [
+        0.4383072424528441,
+        0.45846485899700196
+      ],
+      "pathogenic_recall": [
+        0.0,
+        0.0
+      ]
+    },
+    "original_v9": {
+      "accuracy": [
+        0.8273451298841167,
+        0.8893361182322361
+      ],
+      "benign_recall": [
+        0.8243412797992472,
+        0.8948656021738665
+      ],
+      "component_weighted_balanced_accuracy": [
+        0.8411134495703799,
+        0.903813084580967
+      ],
+      "macro_f1": [
+        0.7563633373503702,
+        0.8414502389347118
+      ],
+      "pathogenic_recall": [
+        0.7954512227538543,
+        0.9090909090909091
+      ]
+    },
+    "selected_v9_1": {
+      "accuracy": [
+        0.8490740740740741,
+        0.8998128619962752
+      ],
+      "benign_recall": [
+        0.8396106602416034,
+        0.8989368592216955
+      ],
+      "component_weighted_balanced_accuracy": [
+        0.8656497143120374,
+        0.9191954802229492
+      ],
+      "macro_f1": [
+        0.7854899732200613,
+        0.8582019321688813
+      ],
+      "pathogenic_recall": [
+        0.8502994011976048,
+        0.9405405405405406
+      ]
+    }
+  },
+  "replicates_requested": 10000,
+  "replicates_skipped": 0,
+  "replicates_used": 10000,
+  "selected_v9_1_paired_component_weighted_balanced_accuracy_difference": {
+    "consequence_only": [
+      0.01636907464948715,
+      0.08701970658988925
+    ],
+    "frozen_v7": [
+      -0.004344220523870439,
+      0.050520907634996934
+    ],
+    "frozen_v8": [
+      -0.01225969755422339,
+      0.03776786472753351
+    ],
+    "majority": [
+      0.36564971431203735,
+      0.41919548022294917
+    ],
+    "original_v9": [
+      -0.004337129101370551,
+      0.04638130065986453
+    ]
+  },
+  "warning": "Component bootstrap conditions on fixed OOF predictions and omits full feature, candidate, calibration, and threshold selection uncertainty."
+}
